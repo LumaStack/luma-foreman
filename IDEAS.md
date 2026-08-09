@@ -21,6 +21,8 @@ Open design question: the check needs to know which identities are private, but 
 
 When something goes wrong, foreman runs the response rather than leaving it to memory and chat: prompts for what is known, tracks what has been tried, and captures the timeline as it happens rather than reconstructing it afterward. The record is markdown, committed in the affected project.
 
+Likely delivered as a skill foreman installs into a project, rather than something foreman runs itself — the response happens inside the affected repository, with whoever is already working there.
+
 Open: whether incident records conform to the Luma Knowledge Format and live in `.backlog/`, or are their own thing. Also open is whether driving and recording are one capability or two — recording a timeline is useful even when nobody is being walked through the response.
 
 ## Other capabilities named but not yet captured properly
