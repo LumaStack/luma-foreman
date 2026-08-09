@@ -23,7 +23,9 @@ When something goes wrong, foreman runs the response rather than leaving it to m
 
 Likely delivered as a skill foreman installs into a project, rather than something foreman runs itself — the response happens inside the affected repository, with whoever is already working there.
 
-Open: whether incident records conform to the Luma Knowledge Format and live in `.backlog/`, or are their own thing. Also open is whether driving and recording are one capability or two — recording a timeline is useful even when nobody is being walked through the response.
+**Settled:** incident records conform to the Luma Knowledge Format. They are knowledge like any other record, not a separate filing system.
+
+Open: whether the format already has a record type that fits, or whether an incident needs a new one — a timeline that accumulates during an event is a different shape from a record written once. If it needs one, that is a format request, not a reason to contort around the gap. Also open: where the records live, and whether driving and recording are one capability or two, since recording a timeline is useful even when nobody is being walked through the response.
 
 ## Other capabilities named but not yet captured properly
 
