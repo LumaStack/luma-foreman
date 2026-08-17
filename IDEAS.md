@@ -33,10 +33,47 @@ Open: whether the format already has a record type that fits, or whether an inci
 - Install the standard tooling — linting, tests, continuous integration, independent review, a backlog.
 - Meta-skills: skills that generate a project's own best-practice skills, rather than copying a template.
 - Return periodically to confirm the latest learnings were actually applied.
+- Git worktee workflows
 
-## Claud code modes
+## New repo survey
 
-I want to be able to edit how claude code hooks allow or disallow using a command that changes how the hooks code works.  Either by editing claude config or by having claude config run a command and i can change how the command works.
+When setting up a new repo, capture infromation that will drive how it gets used now and later.  Ensure these are fluid and don't rot.
+
+- greenfield vs brown field
+- where are we in the design process
+  - these ideas are locked in
+  - this is all experimental and much of it may head in a different direction
+- how established is this project
+  - changes are expensive, change as little as possible
+  - move fast and break things
+- capture creates optimal change request output
+  - for examplek: design (cheapest) < prototype < implementation < production (most expensive)
+  - at what point does this change?
+  - this might change by project
+- how many users now, and how many intended
+  - this tells us how much we can break for rapid development
+- how critical is this system
+- how sensitive are the users
+- distribution of user expertise
+- what is our intended test strategy
+  - vs what is the reality
+- what are the default user profiles
+- what are your example names, addresses, etc so identifiable info doesn't leak in
+- when is editing decisions not allowed (e.g. on the first day, it should be ok to edit a decision instead of taking on tech debt)
+
+## Define how to resolve common terms or requests
+
+What does it mean when i say:
+- I want a situation report
+  you should respond with: "Let me drop the options and show you the actual situation."
+- I need help coming up to speed
+- Where did we leave off
+- What do you know to be true
+- Checkpoint
+
+## Claude Code modes
+
+Change what Claude Code's hooks allow or disallow with a command, per project, without editing the hook or restarting the session.
 
 - Full trust mode
 - Allow/disallow downloads
@@ -44,3 +81,15 @@ I want to be able to edit how claude code hooks allow or disallow using a comman
 - Allow "trusted" ssh only
 - Allow/disallow curl
 - Allow harmless curl (non-executable files)
+
+**Settled by a working prototype**, currently living in the maintainer's dotfiles as `permission-gate.sh` plus a `luma-policy` command:
+
+- The policy has to live in a file the hook reads on every call, not in `settings.json`. Claude Code snapshots hook *configuration* at session start, so a settings-based design needs a session restart per change; a file the hook re-reads takes effect on the next tool call.
+- Resolution is per key, most specific wins: project, then a global fallback, then built-in defaults. A project only names what it overrides.
+- Projects are keyed by repository root, slugged the way Claude Code names `~/.claude/projects`, so every session in a repo shares one policy no matter which subdirectory it started in.
+- This is **workstation state, per project** — never committed. What an agent may do in a repository is the operator's call, not something every clone inherits.
+- The value vocabulary is Claude Code's own — `allow`, `ask`, `deny` — plus `always` for bypass-proof, and refinements like `trusted` for ssh and `safe` for fetches. Not `disallow`; nothing in this space uses that word.
+- Textual command matching is not a security boundary and must not be described as one. It catches your own slips and an agent's carelessness. Sandboxing is the boundary; this rides on top for ergonomics.
+- Whatever governs the agent has to be something the agent cannot edit, including the gate itself. The prototype protects the policy files and *not* the gate script, which is a live gap.
+
+Open: relocating it here from the dotfiles, and what that means for installation on a workstation that has no chezmoi. Also open: whether foreman additionally writes *committed* per-project Claude Code settings — the shared floor a team gets from a clone — with this machine-local layer as overrides on top. Those are two different capabilities that happen to touch the same file format.
