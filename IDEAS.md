@@ -98,3 +98,22 @@ Change what Claude Code's hooks allow or disallow with a command, per project, w
 - A tool that has to touch someone else's config writes freely into the directory it owns and never silently edits the directory the user owns. `policy install` copies the gate and *prints* the `settings.json` changes, following `pre-commit install`.
 
 Open: whether foreman additionally writes *committed* per-project Claude Code settings — the shared floor a team gets from a clone — with this machine-local layer as overrides on top. Those are two different capabilities that happen to touch the same file format. Also open: distribution. Install is currently a clone plus a symlink, which is fine for one operator and not for an organization.
+
+## Workflows
+
+I want all skill logic to live under workflows/ and then add thin adapaters to make it work with various agent harnesses so they can trigger the skills.  A workflow can be a single skill file or a folder of files, scripts, templates, examples, and more.
+
+## Strategry selection
+
+I want to have a catalog of strategies to apply to each project.  And for each project I can choose from the catalog (either via copy or maybe symlink, this mechanism needs to get fleshed out) to apply them to my given project.   The `luma-hq` project will help us define the strageties we can select from for our org.   
+
+There will be three buckets of stategies:
+- Universal stategies, provided by luma organization for all other organizations to select from (not just for the luma organization)
+- Organization strategies, provided by your organization - specific to your organization, these will go under your own git repo and your own version of luma-hq will help you establish them
+- Project strategies, provided by a given project and not shared enough to get promoted to organization or universal strategies
+
+Then each project will somehow select from these buckets what strategies get applied.  And we need to select in a way where as strategies change the project doesn't get it's strategy changed from underneath it.  For example if a universal strategy XYZ goes from v1.0.0 to v2.0.0 then the project should not automatically adopt v2.0.0 but it should be made aware that new stratgies are available.
+
+And either this project luma-foreman and/or luma-hq should be able to force new strategies down for critical stuff where projects are not allowed to adopt on their own schedule.  It's mandated and immediate.  
+
+A nice to have is when new strategies are published they should also publish some kind of date that let's projects know what kind of timeline they have to reasonabily adopt them before they "fall out of compliance".

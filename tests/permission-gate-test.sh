@@ -3,6 +3,10 @@
 #
 #   sh tests/permission-gate-test.sh [path-to-hook]
 #
+# The hook is run through its own shebang, exactly as Claude Code runs it, so
+# this suite is a contract about stdin/stdout and says nothing about the
+# language the gate is written in.
+#
 # Two groups:
 #
 #   File tools. settings.json allows Read/Edit under //tmp/**, and those rules
@@ -26,7 +30,7 @@
 set -u
 
 HOOK=${1:-$(dirname "$0")/../libexec/permission-gate.sh}
-[ -r "$HOOK" ] || { echo "cannot read hook: $HOOK" >&2; exit 2; }
+[ -x "$HOOK" ] || { echo "hook is not executable: $HOOK" >&2; exit 2; }
 command -v jq >/dev/null || { echo "jq is required" >&2; exit 2; }
 
 T=$(mktemp -d /tmp/pgt.XXXXXX) || exit 2
@@ -65,13 +69,13 @@ check() { # check <expect> <label> <got>
 tf() { # tf <expect> <tool> <path>
   check "$1" "$2 $3" "$(jq -nc --arg t "$2" --arg p "$3" \
     '{tool_name:$t,permission_mode:"default",cwd:"/",tool_input:{file_path:$p}}' \
-    | sh "$HOOK" 2>/dev/null | jq -r '.hookSpecificOutput.permissionDecision // empty' 2>/dev/null)"
+    | "$HOOK" 2>/dev/null | jq -r '.hookSpecificOutput.permissionDecision // empty' 2>/dev/null)"
 }
 tb() { # tb <expect> <command> [mode] [cwd]
   check "$1" "$2 [${3:-default}${4:+ @$4}]" "$(jq -nc \
     --arg c "$2" --arg m "${3:-default}" --arg d "${4:-$REPO}" \
     '{tool_name:"Bash",permission_mode:$m,cwd:$d,tool_input:{command:$c}}' \
-    | sh "$HOOK" 2>/dev/null | jq -r '.hookSpecificOutput.permissionDecision // empty' 2>/dev/null)"
+    | "$HOOK" 2>/dev/null | jq -r '.hookSpecificOutput.permissionDecision // empty' 2>/dev/null)"
 }
 
 # ---------------------------------------------------------------- file tools --
@@ -256,10 +260,17 @@ clear_policy
 # --------------------------------------------------------------- malformed input
 # A broken config must not silently disable the gate: unknown keys and junk are
 # skipped, and the built-in defaults still apply.
+# A malformed file must not PARTIALLY apply. The original shell parser read
+# files line by line, so a file full of junk still honoured whichever lines
+# happened to parse — which meant a typo could silently LOOSEN the gate. Real
+# TOML parsing rejects the file whole and falls back to the defaults, so a
+# broken policy file can only ever make the gate stricter.
 policy "$PROJECT" 'this is not toml' '[section]' 'bogus_key = "allow"' 'curl = allow'
-tb none 'curl https://example.com'            # unquoted value is still honoured
+tb ask  'curl https://example.com'
 policy "$PROJECT" 'curl = "nonsense"'
 tb ask  'curl https://example.com'            # unknown value fails safe to a prompt
+policy "$PROJECT" 'curl = "allow"'
+tb none 'curl https://example.com'            # ...and a well-formed file still applies
 
 printf '%s\n' "pass=$pass fail=$fail"
 [ "$fail" -eq 0 ]

@@ -12,7 +12,7 @@
 set -u
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd -P)
-CLI=$ROOT/bin/luma-foreman
+CLI=${LUMA_FOREMAN_CLI:-$ROOT/bin/luma-foreman}
 
 T=$(mktemp -d /tmp/pct.XXXXXX) || exit 2
 trap 'rm -rf "$T"' EXIT INT TERM
