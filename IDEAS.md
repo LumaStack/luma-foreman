@@ -15,7 +15,11 @@ Four surfaces, and the non-obvious ones are where the leaks actually happen:
 
 Delivery mechanism is undecided. Candidates: install a hook into every project, write the rule into each project's `CLAUDE.md`, run as an inspection only, or some combination. Prevention and detection are both wanted; which one leads is open.
 
-Open design question: the check needs to know which identities are private, but foreman must run with no organization context. That pushes the list into each project being checked — where it is itself published. Hashes rather than literals is one way out.
+The check needs to know which identities are private, and that list must not end up published in the project being checked.
+
+**Half of this is settled by the state model in the README.** Who the operator is counts as workstation state — a local fact, not organization knowledge — so the identity list lives in workstation config and never enters a repository at all. That covers prevention: bootstrap, outfit, and anything running at a workstation before a commit exists.
+
+Still open: Inspect has to survive a bare environment with no configuration, and a check that silently passes because its list is absent is worse than no check. Hashes rather than literals, committed to the project, is one way out. Another is for Inspect to report honestly that it ran without an identity list rather than reporting clean.
 
 ## Drive an incident, and store it as markdown
 
