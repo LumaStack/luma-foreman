@@ -11,6 +11,9 @@
 # ~/.config/luma/foreman and ~/.claude are never read or written.
 set -u
 
+# py_compile would otherwise litter __pycache__ through the source tree.
+export PYTHONDONTWRITEBYTECODE=1
+
 ROOT=$(cd "$(dirname "$0")/.." && pwd -P)
 CLI=${LUMA_FOREMAN_CLI:-$ROOT/bin/luma-foreman}
 
@@ -42,9 +45,14 @@ contains() {
   case $LAST in *"$2"*) ok ;; *) bad "$1: output missing '$2'" ;; esac
 }
 
-# --- syntax: every shipped script must parse -----------------------------------
-for f in "$CLI" "$ROOT/libexec/policy" "$ROOT/libexec/permission-gate.sh"; do
-  if sh -n "$f" 2>/dev/null; then ok; else bad "syntax error in $f"; fi
+# --- syntax: every shipped executable must parse --------------------------------
+# Checked per language rather than assuming shell, so this survives the port.
+for f in "$CLI" "$ROOT/libexec/permission-gate.py" "$ROOT"/src/foreman/*.py "$ROOT"/src/foreman/policy/*.py; do
+  case $f in
+    *.py) python3 -m py_compile "$f" 2>/dev/null && ok || bad "syntax error in $f" ;;
+    *)    head -1 "$f" | grep -q python && { python3 -m py_compile "$f" 2>/dev/null && ok || bad "syntax error in $f"; } \
+             || { sh -n "$f" 2>/dev/null && ok || bad "syntax error in $f"; } ;;
+  esac
 done
 
 # --- dispatcher -----------------------------------------------------------------
@@ -66,8 +74,17 @@ run 'install'         0 policy install
 contains 'install' 'gate installed'
 contains 'install' 'TODO PreToolUse'
 [ -x "$LUMA_FOREMAN_HOME/permission-gate.sh" ] && ok || bad 'install did not produce an executable gate'
-cmp -s "$ROOT/libexec/permission-gate.sh" "$LUMA_FOREMAN_HOME/permission-gate.sh" \
-  && ok || bad 'installed gate differs from source'
+# The installed gate is generated, not copied: a shim next to a private copy of
+# the modules it needs. That is deliberate — a shim pointing back at a checkout
+# would fail OPEN the moment the checkout moved, because a hook that exits
+# non-zero is a hook Claude Code ignores.
+grep -q 'gate/run.py' "$LUMA_FOREMAN_HOME/permission-gate.sh" \
+  && ok || bad 'installed gate does not reference its runner'
+[ -f "$LUMA_FOREMAN_HOME/gate/foreman/policy/gate.py" ] \
+  && ok || bad 'install did not place the gate modules'
+# ...and it must still refuse to run rather than exit non-zero when broken.
+grep -q 'permissionDecision' "$LUMA_FOREMAN_HOME/permission-gate.sh" \
+  && ok || bad 'installed gate cannot fail closed'
 run 'install twice'   0 policy install
 contains 'idempotent install' 'already current'
 

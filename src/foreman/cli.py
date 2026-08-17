@@ -1,0 +1,122 @@
+"""luma-foreman — the entrypoint.
+
+Each job lives under its own module so that `luma-foreman <job>` is the only
+thing anyone has to remember.
+"""
+
+from __future__ import annotations
+
+import sys
+
+from .policy import commands
+
+USAGE = """usage: luma-foreman <job> [args]
+
+Jobs:
+  policy      what an agent is allowed to do in this repository
+  bootstrap   stand a new project up with the structure it should have had
+  outfit      install the tooling every project is expected to carry
+  inspect     check a project against the baseline and report shortfalls
+  refit       confirm the latest learnings were actually applied
+
+Run `luma-foreman <job> --help` for a job's own options."""
+
+POLICY_USAGE = """Read and write the per-project permission policy that the permission gate
+consults on every Bash tool call. Changes take effect on the NEXT tool call — no
+session restart, because the hook re-reads these files each time it runs.
+
+  luma-foreman policy                      the effective policy for this project
+  luma-foreman policy list                 the same thing, spelled the way git/npm/gh spell it
+  luma-foreman policy keys [<key>]         what you can set, and what each key gates
+
+  luma-foreman policy allow <key>          shorthand for: set <key> allow
+  luma-foreman policy ask <key>            shorthand for: set <key> ask
+  luma-foreman policy deny <key>           shorthand for: set <key> deny
+  luma-foreman policy set <key> <value>    the general form — reaches safe, trusted, always
+  luma-foreman policy reset [<key>]        drop one override, or every override in this scope
+
+  luma-foreman policy projects             every project that has a config
+  luma-foreman policy path                 print the config file path
+  luma-foreman policy edit                 open it in $EDITOR
+  luma-foreman policy install              install or update the gate, and report what
+                                           Claude Code's settings.json still needs
+  luma-foreman policy doctor               check it is actually working, not just wired up
+
+Add -g/--global to any write to target the global fallback instead of this
+project. Reads always show the merged result. Add --json to `policy`, `keys`
+and `doctor` for machine-readable output."""
+
+UNBUILT = ("bootstrap", "outfit", "inspect", "refit")
+
+
+def _policy(argv: list[str]) -> int:
+    scope_global = False
+    as_json = False
+    args: list[str] = []
+    for arg in argv:
+        if arg in ("-g", "--global"):
+            scope_global = True
+        elif arg == "--json":
+            as_json = True
+        elif arg in ("-h", "--help"):
+            print(POLICY_USAGE)
+            return 0
+        else:
+            args.append(arg)
+
+    verb = args[0] if args else "show"
+    rest = args[1:]
+
+    if verb in ("show", "list"):
+        return commands.show(scope_global, as_json)
+    if verb == "keys":
+        if len(rest) > 1:
+            return commands._err("usage: luma-foreman policy keys [<key>]")
+        return commands.keys(rest[0] if rest else None, as_json)
+    if verb in ("allow", "ask", "deny"):
+        if len(rest) != 1:
+            return commands._err(f"usage: luma-foreman policy {verb} [-g] <key>")
+        return commands.shorthand(verb, rest[0], scope_global)
+    if verb == "set":
+        if len(rest) != 2:
+            return commands._err("usage: luma-foreman policy set [-g] <key> <value>")
+        return commands.set_value(rest[0], rest[1], scope_global)
+    if verb in ("reset", "unset"):
+        if len(rest) > 1:
+            return commands._err("usage: luma-foreman policy reset [-g] [<key>]")
+        return commands.reset(rest[0] if rest else None, scope_global)
+    if verb == "projects":
+        return commands.projects()
+    if verb == "path":
+        return commands.path(scope_global)
+    if verb == "edit":
+        return commands.edit(scope_global)
+    if verb == "install":
+        return commands.install_cmd()
+    if verb == "doctor":
+        return commands.doctor(as_json)
+    if verb == "help":
+        print(POLICY_USAGE)
+        return 0
+    return commands._err(f"unknown command: {verb} (try luma-foreman policy --help)")
+
+
+def main(argv: list[str] | None = None) -> int:
+    argv = list(sys.argv[1:] if argv is None else argv)
+    job = argv[0] if argv else "help"
+
+    if job in ("help", "-h", "--help"):
+        print(USAGE)
+        return 0
+    if job == "policy":
+        return _policy(argv[1:])
+    if job in UNBUILT:
+        print(f"luma-foreman: {job} is not built yet — see docs/IDEAS.md", file=sys.stderr)
+        return 2
+    print(f"luma-foreman: unknown job: {job}", file=sys.stderr)
+    print(USAGE, file=sys.stderr)
+    return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

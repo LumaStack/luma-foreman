@@ -1,61 +1,9 @@
-#!/bin/sh
-# luma-foreman — walks into a project repository, sets it up to succeed, and
-# comes back periodically to check the work still holds.
-#
-# This is the entrypoint. Each job lives in libexec/ and is run from here so
-# that `luma-foreman <job>` is the only thing anyone has to remember.
-set -u
+#!/usr/bin/env python3
+"""luma-foreman — entrypoint, runnable straight from a checkout."""
+import sys
+from pathlib import Path
 
-# Resolve $0 through any symlinks before deriving the repository root, so that
-# `ln -s .../luma-foreman/bin/luma-foreman ~/.local/bin/luma-foreman` still
-# finds libexec/ next door.
-self=$0
-while [ -L "$self" ]; do
-  link=$(readlink "$self")
-  case $link in
-    /*) self=$link ;;
-    *)  self=$(dirname "$self")/$link ;;
-  esac
-done
-root=$(cd "$(dirname "$self")/.." && pwd -P) || exit 1
-me=${0##*/}
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
+from foreman.cli import main  # noqa: E402
 
-usage() {
-  cat <<EOF
-usage: $me <job> [args]
-
-Jobs:
-  policy      what an agent is allowed to do in this repository
-  bootstrap   stand a new project up with the structure it should have had
-  outfit      install the tooling every project is expected to carry
-  inspect     check a project against the baseline and report shortfalls
-  refit       confirm the latest learnings were actually applied
-
-Run \`$me <job> --help\` for a job's own options.
-EOF
-}
-
-not_yet() {
-  printf '%s: %s is not built yet — see IDEAS.md\n' "$me" "$1" >&2
-  exit 2
-}
-
-job=${1:-help}
-[ $# -gt 0 ] && shift
-
-case $job in
-  policy)
-    FOREMAN_CMD="$me policy" exec "$root/libexec/policy" "$@"
-    ;;
-  bootstrap|outfit|inspect|refit)
-    not_yet "$job"
-    ;;
-  help|-h|--help)
-    usage
-    ;;
-  *)
-    printf '%s: unknown job: %s\n' "$me" "$job" >&2
-    usage >&2
-    exit 1
-    ;;
-esac
+raise SystemExit(main())

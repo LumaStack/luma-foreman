@@ -1,5 +1,5 @@
 #!/bin/sh
-# Tests for libexec/permission-gate.sh.
+# Tests for libexec/permission-gate.py.
 #
 #   sh tests/permission-gate-test.sh [path-to-hook]
 #
@@ -29,7 +29,7 @@
 # Nothing here executes the commands under test; they are only fed to the hook.
 set -u
 
-HOOK=${1:-$(dirname "$0")/../libexec/permission-gate.sh}
+HOOK=${1:-$(dirname "$0")/../libexec/permission-gate.py}
 [ -x "$HOOK" ] || { echo "hook is not executable: $HOOK" >&2; exit 2; }
 command -v jq >/dev/null || { echo "jq is required" >&2; exit 2; }
 
