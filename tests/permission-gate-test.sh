@@ -233,10 +233,25 @@ tb none 'luma-foreman policy keys trust'
 tb none 'luma-foreman policy projects'
 tb none 'luma-foreman policy path'
 
-# ...but naming a gated command still prompts, even in a read-only invocation.
-# The hook matches text and cannot tell an argument from a command. Intentional:
-# it fails safe toward prompting. See docs/claude-permission-policy.md.
-tb ask  'luma-foreman policy keys curl'
+# Naming a gated command as an ARGUMENT to the CLI must not trigger that
+# command's own rule. Found the hard way: with curl=deny set, the string "curl"
+# inside `luma-foreman policy reset curl` matched the curl rule, and the gate
+# refused the one command that could undo the deny. A policy you cannot reverse
+# from inside a session is a trap, not a guard.
+clear_policy
+policy "$PROJECT" 'curl = "deny"' 'ssh = "deny"' 'sudo = "deny"'
+tb ask  'luma-foreman policy reset curl'        # the undo must stay reachable
+tb ask  'luma-foreman policy allow curl'
+tb ask  'luma-foreman policy set ssh trusted'
+tb none 'luma-foreman policy keys curl'         # reads stay ungated too
+tb none 'luma-foreman policy'
+tb deny 'curl https://example.com'              # ...while the rule itself still bites
+tb deny 'ssh host'
+tb deny 'sudo ls'
+
+# The exemption is scoped to this CLI, not to any command mentioning it.
+tb deny 'echo luma-foreman policy && curl https://x'
+clear_policy
 
 # --------------------------------------------------------------- malformed input
 # A broken config must not silently disable the gate: unknown keys and junk are

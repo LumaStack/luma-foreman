@@ -208,6 +208,30 @@ has_word() {
 }
 
 matches() {
+  # `luma-foreman policy ...` talks ABOUT gated commands; it does not run them.
+  # Exempt it from every per-command key, or naming a key locks you out of
+  # changing it: with curl=deny, the string "curl" inside
+  # `luma-foreman policy reset curl` matches the curl rule and refuses the one
+  # command that would undo the deny. policy_write still applies, so writes
+  # through the CLI are gated as before — it is only the *subject* of the
+  # command that stops being mistaken for the command.
+  # The exemption is deliberately narrow: the command must BE a lone
+  # `luma-foreman policy ...` invocation. Anything with a shell separator is
+  # excluded, or `echo luma-foreman policy && curl evil` would disarm every
+  # rule by merely naming the CLI — an escape hatch worse than the lockout.
+  case $1 in
+    policy_write) ;;
+    *)
+      case $cmd in
+        *';'*|*'&'*|*'|'*|*'`'*|*'$('*|*'<('*) ;;   # compound: no exemption
+        *)
+          printf '%s' "$cmd" \
+            | grep -Eq '^[[:space:]]*luma-foreman[[:space:]]+policy([[:space:]]|$)' \
+            && return 1
+          ;;
+      esac
+      ;;
+  esac
   case $1 in
     recursive_rm)
       # `rm` as a command word, then within its own argument list (not crossing
