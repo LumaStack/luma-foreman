@@ -24,6 +24,8 @@ REPO=$(cd "$T/repo" && pwd -P)
 SLUG=$(printf '%s' "$REPO" | tr '/.' '--')
 export HOME=$T/home
 export LUMA_FOREMAN_HOME=$T/home/.config/luma/foreman
+# The gate is program data, not configuration, and lives apart from policy.
+export LUMA_FOREMAN_DATA=$T/home/.local/share/luma/foreman
 PROJECT_FILE=$LUMA_FOREMAN_HOME/projects/$SLUG.toml
 echo '{"permissions":{"allow":["Bash(ls *)"]}}' > "$T/home/.claude/settings.json"
 
@@ -73,20 +75,33 @@ run 'path'            0 policy path;     contains 'path' "$SLUG"
 run 'install'         0 policy install
 contains 'install' 'gate installed'
 contains 'install' 'TODO PreToolUse'
-[ -x "$LUMA_FOREMAN_HOME/permission-gate.sh" ] && ok || bad 'install did not produce an executable gate'
+[ -x "$LUMA_FOREMAN_DATA/permission-gate.sh" ] && ok || bad 'install did not produce an executable gate'
 # The installed gate is generated, not copied: a shim next to a private copy of
 # the modules it needs. That is deliberate — a shim pointing back at a checkout
 # would fail OPEN the moment the checkout moved, because a hook that exits
 # non-zero is a hook Claude Code ignores.
-grep -q 'gate/run.py' "$LUMA_FOREMAN_HOME/permission-gate.sh" \
+grep -q 'gate/run.py' "$LUMA_FOREMAN_DATA/permission-gate.sh" \
   && ok || bad 'installed gate does not reference its runner'
-[ -f "$LUMA_FOREMAN_HOME/gate/foreman/policy/gate.py" ] \
+[ -f "$LUMA_FOREMAN_DATA/gate/foreman/policy/gate.py" ] \
   && ok || bad 'install did not place the gate modules'
 # ...and it must still refuse to run rather than exit non-zero when broken.
-grep -q 'permissionDecision' "$LUMA_FOREMAN_HOME/permission-gate.sh" \
+grep -q 'permissionDecision' "$LUMA_FOREMAN_DATA/permission-gate.sh" \
   && ok || bad 'installed gate cannot fail closed'
 run 'install twice'   0 policy install
 contains 'idempotent install' 'already current'
+
+# Configuration and program files are separate, per XDG. This is not tidiness:
+# someone clearing ~/.config/luma to reset their settings must not thereby
+# delete the gate, because a missing hook is a NON-blocking error in Claude Code
+# and the tool call proceeds. A config reset would fail the gate open.
+[ -e "$LUMA_FOREMAN_HOME/permission-gate.sh" ] \
+  && bad 'gate was installed into the configuration directory' || ok
+[ -e "$LUMA_FOREMAN_HOME/gate" ] \
+  && bad 'gate modules were installed into the configuration directory' || ok
+[ -d "$LUMA_FOREMAN_HOME/projects" ] \
+  && ok || bad 'policy directory was not created'
+[ -x "$LUMA_FOREMAN_DATA/permission-gate.sh" ] \
+  && ok || bad 'gate is not under the data directory'
 
 # A hook pointing at some OTHER permission-gate.sh must be reported, not passed.
 # Matching the filename rather than the installed path once made an upgrade look
@@ -99,7 +114,7 @@ contains 'stale hook reported' 'somewhere'
 contains 'stale hook not passed' 'TODO PreToolUse'
 
 # The correct path is accepted.
-jq --arg g "$LUMA_FOREMAN_HOME/permission-gate.sh" \
+jq --arg g "$LUMA_FOREMAN_DATA/permission-gate.sh" \
   '.hooks.PreToolUse = [{matcher:"Bash",hooks:[{type:"command",command:$g}]}]
    | .permissions.deny = ["Edit(~/.config/luma/**)"]' \
   "$SETTINGS" > "$SETTINGS.t" && mv "$SETTINGS.t" "$SETTINGS"
@@ -109,9 +124,9 @@ contains 'wired hook accepted' 'Nothing left to do'
 # The same path spelled the other legitimate ways must also be accepted. A hook
 # command is a shell string, and "$HOME/..." is what you get if you wrote the
 # settings by hand rather than pasting the absolute path.
-for form in '"$HOME/.config/luma/foreman/permission-gate.sh"' \
-            '${HOME}/.config/luma/foreman/permission-gate.sh' \
-            '~/.config/luma/foreman/permission-gate.sh'; do
+for form in '"$HOME/.local/share/luma/foreman/permission-gate.sh"' \
+            '${HOME}/.local/share/luma/foreman/permission-gate.sh' \
+            '~/.local/share/luma/foreman/permission-gate.sh'; do
   jq --arg g "$form" '.hooks.PreToolUse = [{matcher:"Bash",hooks:[{type:"command",command:$g}]}]' \
     "$SETTINGS" > "$SETTINGS.t" && mv "$SETTINGS.t" "$SETTINGS"
   run "hook spelled $form" 0 policy install
@@ -160,7 +175,7 @@ contains 'doctor checks behaviour' 'behaviour'
 contains 'doctor reports no failures' 'fail=0'
 
 # A gate that returns nothing: installed, wired, and silently protecting nothing.
-GATE=$LUMA_FOREMAN_HOME/permission-gate.sh
+GATE=$LUMA_FOREMAN_DATA/permission-gate.sh
 cp "$GATE" "$T/gate.bak"
 printf '#!/bin/sh\nexit 0\n' > "$GATE"; chmod 755 "$GATE"
 run 'doctor catches a no-op gate' 1 policy doctor

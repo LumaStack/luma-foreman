@@ -23,11 +23,31 @@ from . import model
 
 
 def home() -> Path:
-    """The policy directory. XDG-aware, overridable for tests."""
+    """The policy directory — configuration the operator edits.
+
+    XDG puts configuration in ~/.config and program-installed files in
+    ~/.local/share, and the split matters here beyond tidiness: someone clearing
+    ~/.config/luma to reset their settings must not thereby delete the gate.
+    A missing hook is a non-blocking error in Claude Code, so the tool call
+    proceeds — the gate would fail OPEN because a config reset looked safe.
+    """
     if override := os.environ.get("LUMA_FOREMAN_HOME"):
         return Path(override)
     config = os.environ.get("XDG_CONFIG_HOME") or (Path.home() / ".config")
     return Path(config) / "luma" / "foreman"
+
+
+def data_home() -> Path:
+    """Where the installed gate lives — code foreman writes and overwrites."""
+    if override := os.environ.get("LUMA_FOREMAN_DATA"):
+        return Path(override)
+    data = os.environ.get("XDG_DATA_HOME") or (Path.home() / ".local" / "share")
+    return Path(data) / "luma" / "foreman"
+
+
+def legacy_gate() -> Path:
+    """Where the gate used to be installed, before the config/data split."""
+    return home() / "permission-gate.sh"
 
 
 def _read(path: Path) -> dict[str, str]:

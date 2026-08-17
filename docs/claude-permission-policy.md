@@ -14,7 +14,7 @@ loosening a rule for one repository does not loosen it everywhere.
 luma-foreman policy install
 ```
 
-That copies the gate into `~/.config/luma/foreman/`, then prints the two changes
+That installs the gate into `~/.local/share/luma/foreman/`, then prints the changes
 you have to make to `~/.claude/settings.json` yourself. It does not edit that
 file — it is yours, and it is where your own rules live. Re-run it after every
 upgrade; it is idempotent and tells you when there is nothing to do.
@@ -104,8 +104,18 @@ Outside a repo it is the session cwd. Worktrees have their own `.git` and so
 their own policy, deliberately.
 
 Nothing is stored inside the project, so none of it can be committed by
-accident. `$LUMA_FOREMAN_HOME` overrides the location; `$XDG_CONFIG_HOME` is
-honored.
+accident.
+
+The installed gate is **not** here. Policy is configuration you edit and lives
+under `$XDG_CONFIG_HOME`; the gate is program data foreman installs and
+overwrites, and lives under `$XDG_DATA_HOME`:
+
+```
+~/.config/luma/foreman/         policy.toml, projects/*.toml   (yours)
+~/.local/share/luma/foreman/    the gate and its modules       (foreman's)
+```
+
+`$LUMA_FOREMAN_HOME` overrides the first, `$LUMA_FOREMAN_DATA` the second.
 
 ```bash
 luma-foreman policy                    # effective policy here, and where each value came from
@@ -168,13 +178,21 @@ Related: the hook matches textually, so it over-prompts on string literals like
 
 Two things stop a session editing the policy that governs it:
 
-- `Edit(~/.config/luma/**)` in `permissions.deny` — absolute, covers the file
-  tools.
+- `Edit(~/.config/luma/**)` and `Edit(~/.local/share/luma/**)` in
+  `permissions.deny` — absolute, and covering the file tools for both the policy
+  and the gate.
 - The `policy_write` key, `always` by default — catches Bash writes to those
   paths and the CLI's own writing subcommands, in every mode including bypass.
 
-The gate script lives in the **same directory as the policy it reads**, so one
-deny rule protects both. A gate an agent can rewrite is not a gate.
+Both need protecting, which is why there are two rules. A gate an agent can
+rewrite is not a gate.
+
+They are in **different** directories on purpose. Configuration belongs in
+`~/.config` and program files in `~/.local/share`, and beyond following XDG that
+split removes a real failure: someone clearing `~/.config/luma` to reset their
+settings would otherwise delete the gate, and a missing hook is a *non-blocking*
+error in Claude Code — the tool call proceeds. A config reset would silently fail
+the gate open.
 
 Reads stay ungated: `luma-foreman policy` and `cat`ting the files are fine, and
 being able to see the policy is what makes a refusal legible.
@@ -243,7 +261,7 @@ testing in both modes:
 
 ```bash
 echo '{"tool_name":"Bash","cwd":"'"$PWD"'","tool_input":{"command":"sudo reboot"},"permission_mode":"default"}' \
-  | ~/.config/luma/foreman/permission-gate.sh
+  | ~/.local/share/luma/foreman/permission-gate.sh
 ```
 
 A gate that stops firing after a policy edit is almost always one of: the value

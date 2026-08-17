@@ -43,7 +43,7 @@ ln -s "$PWD/luma-foreman/bin/luma-foreman" ~/.local/bin/luma-foreman   # or add 
 luma-foreman policy install
 ```
 
-`policy install` copies the permission gate into `~/.config/luma/foreman/` and then **prints** the two changes you need to make to `~/.claude/settings.json`. It does not edit that file: foreman writes freely into the directory it owns and never silently edits config you own. Re-run it after every upgrade — it is idempotent and says when there is nothing to do.
+`policy install` installs the permission gate into `~/.local/share/luma/foreman/` and then **prints** the two changes you need to make to `~/.claude/settings.json`. It does not edit that file: foreman writes freely into the directory it owns and never silently edits config you own. Re-run it after every upgrade — it is idempotent and says when there is nothing to do.
 
 The only thing you have to change by hand is `~/.claude/settings.json`, and `policy install` shows you exactly what. Hook wiring needs a Claude Code restart to take effect; policy changes after that are live.
 

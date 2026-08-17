@@ -19,9 +19,10 @@ from __future__ import annotations
 import json
 import os
 import re
-import shutil
 import sys
 from pathlib import Path
+
+from . import store
 
 # The shim checks its own prerequisites and emits an "ask" if they are missing,
 # rather than exiting non-zero — a hook that errors is a hook Claude Code
@@ -68,44 +69,57 @@ def package_root() -> Path:
     return Path(__file__).resolve().parent.parent
 
 
-def gate_path(home: Path) -> Path:
-    return home / "permission-gate.sh"
+def gate_path() -> Path:
+    """The installed gate: program data, not configuration."""
+    return store.data_home() / "permission-gate.sh"
 
 
-def _payload(home: Path) -> dict[Path, str]:
+def _payload() -> dict[Path, str]:
     """Every file install writes, and its content. Used to write and to compare."""
     src = package_root()
+    data = store.data_home()
     files: dict[Path, str] = {
-        gate_path(home): SHIM,
-        home / "gate" / "run.py": RUNNER,
+        gate_path(): SHIM,
+        data / "gate" / "run.py": RUNNER,
     }
     for rel in GATE_MODULES:
-        files[home / "gate" / "foreman" / rel] = (src / rel).read_text()
+        files[data / "gate" / "foreman" / rel] = (src / rel).read_text()
     return files
 
 
-def status(home: Path) -> str:
+def status() -> str:
     """'installed' | 'updated' | 'already current'"""
-    if not gate_path(home).exists():
+    if not gate_path().exists():
         return "installed"
-    for path, text in _payload(home).items():
+    for path, text in _payload().items():
         if not path.exists() or path.read_text() != text:
             return "updated"
     return "already current"
 
 
-def install(home: Path) -> str:
-    verb = status(home)
+def install() -> str:
+    verb = status()
     if verb != "already current":
-        for path, text in _payload(home).items():
+        for path, text in _payload().items():
             path.parent.mkdir(parents=True, exist_ok=True)
             tmp = path.with_name(f".{path.name}.tmp")
             tmp.write_text(text)
             os.replace(tmp, path)
-        gate_path(home).chmod(0o755)
-        (home / "gate" / "run.py").chmod(0o755)
-    (home / "projects").mkdir(parents=True, exist_ok=True)
+        gate_path().chmod(0o755)
+        (store.data_home() / "gate" / "run.py").chmod(0o755)
+    # The policy directory is configuration and lives elsewhere on purpose.
+    (store.home() / "projects").mkdir(parents=True, exist_ok=True)
     return verb
+
+
+def legacy_install() -> Path | None:
+    """A gate left behind by the pre-XDG layout, or None.
+
+    Worth reporting rather than deleting: settings.json may still point at it,
+    and removing it before the wiring moves would leave the session unguarded.
+    """
+    old = store.legacy_gate()
+    return old if old.exists() else None
 
 
 def settings_path() -> Path:
@@ -129,7 +143,7 @@ def _normalise(command: str) -> str:
     return text
 
 
-def wiring(home: Path) -> dict[str, object]:
+def wiring() -> dict[str, object]:
     """What settings.json currently says, without changing it."""
     path = settings_path()
     result: dict[str, object] = {
@@ -149,7 +163,7 @@ def wiring(home: Path) -> dict[str, object]:
         for entry in (data.get("hooks", {}).get("PreToolUse") or [])
         for h in (entry.get("hooks") or [])
     ]
-    target = str(gate_path(home))
+    target = str(gate_path())
     result["hook_ok"] = any(target in _normalise(c) for c in commands)
     if not result["hook_ok"]:
         result["stale_hook"] = any("permission-gate" in c for c in commands)
@@ -158,17 +172,17 @@ def wiring(home: Path) -> dict[str, object]:
     return result
 
 
-def snippet(home: Path) -> str:
+def snippet() -> str:
     return f"""  {{
     "permissions": {{
-      "deny": ["Edit(~/.config/luma/**)"]
+      "deny": ["Edit(~/.config/luma/**)", "Edit(~/.local/share/luma/**)"]
     }},
     "hooks": {{
       "PreToolUse": [
         {{
           "matcher": "Bash|Read|Write|Edit|MultiEdit|NotebookEdit",
           "hooks": [
-            {{ "type": "command", "command": "{gate_path(home)}" }}
+            {{ "type": "command", "command": "{gate_path()}" }}
           ]
         }}
       ]

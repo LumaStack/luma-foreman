@@ -192,11 +192,11 @@ def edit(scope_global: bool) -> int:
 
 def install_cmd() -> int:
     home = store.home()
-    verb = _install.install(home)
-    gate = _install.gate_path(home)
+    verb = _install.install()
+    gate = _install.gate_path()
     print(f"gate {verb}: {gate}\n")
 
-    state = _install.wiring(home)
+    state = _install.wiring()
     print(f"Claude Code settings: {state['settings']}")
     if not state["exists"]:
         print("  (does not exist yet — create it with the JSON below)")
@@ -206,15 +206,23 @@ def install_cmd() -> int:
         print("       ELSE. Repoint it at the path above, or you are running an old gate.")
     print(f"  {'OK  ' if state['deny_ok'] else 'TODO'} deny rule protecting the policy directory")
 
+    if old := _install.legacy_install():
+        print(f"\n  note  a gate from the previous layout remains at\n        {old}")
+        print("        Configuration and program files are separate now: policy stays in")
+        print("        ~/.config, the gate moved to ~/.local/share. Delete the old file")
+        print("        once the hook above points at the new path AND Claude Code has")
+        print("        been restarted — not before, or the running session is unguarded.")
+
     if state["hook_ok"] and state["deny_ok"]:
         print(f"\nNothing left to do. Run `{CMD}` to see the effective policy.")
         return 0
 
     print(f"\nAdd these to {state['settings']} by hand — this file is yours, so nothing")
     print("here edits it. Merge into the existing arrays rather than replacing them:\n")
-    print(_install.snippet(home))
+    print(_install.snippet())
     print("\nThe deny rule is not optional. It is what stops a session editing the policy —")
-    print("and the gate itself, which is why both live in the same directory.\n")
+    print("and the gate itself. Two rules, because configuration and program files\n")
+    print("live in different places — deleting your config must not delete the gate.\n")
     print("Hook changes need a Claude Code restart; Claude Code snapshots hook")
     print("configuration at session start. Policy changes after that are live.")
     return 0

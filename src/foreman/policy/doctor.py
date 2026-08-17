@@ -73,7 +73,7 @@ def _decide(gate: Path, home: Path, cmd: str, cwd: str, mode: str = "default") -
 
 def run(as_json: bool = False) -> int:
     home = store.home()
-    gate = _install.gate_path(home)
+    gate = _install.gate_path()
     report = Report()
 
     report.section("installation")
@@ -84,7 +84,7 @@ def run(as_json: bool = False) -> int:
         report.bad(f"no executable gate at {gate} — run: luma-foreman policy install")
 
     if gate.exists():
-        state = _install.status(home)
+        state = _install.status()
         if state == "already current":
             report.ok("installed gate matches this version")
         else:
@@ -96,7 +96,7 @@ def run(as_json: bool = False) -> int:
 
     report.section("claude code wiring")
     # -- wiring --------------------------------------------------------------
-    wiring = _install.wiring(home)
+    wiring = _install.wiring()
     if wiring["exists"]:
         report.ok(f"settings found at {wiring['settings']}")
         if wiring["hook_ok"]:

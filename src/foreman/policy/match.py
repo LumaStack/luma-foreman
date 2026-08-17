@@ -49,7 +49,9 @@ CLI_WRITE = re.compile(
     r"(?:^|[^\w.\-])luma-foreman\s+policy\s+(?:-\S+\s+)*"
     r"(?:set|unset|reset|edit|allow|ask|deny|install)(?:\s|$)"
 )
-POLICY_PATH = re.compile(r"\.config/luma|LUMA_FOREMAN_HOME|permission-gate")
+POLICY_PATH = re.compile(
+    r"\.config/luma|\.local/share/luma|LUMA_FOREMAN_HOME|LUMA_FOREMAN_DATA|permission-gate"
+)
 WRITE_OP = re.compile(r">|>>|tee|sed\s+-i|\bcp\b|\bmv\b|\brm\b|install|truncate|chmod|chown|\bln\b")
 
 # A lone `luma-foreman policy ...` invocation, anchored, with no shell
