@@ -1,6 +1,6 @@
 # Ideas
 
-Wanted capabilities, captured so they survive. Nothing here is designed, ordered, or committed to — this is a holding pen, like `examples/`. Expect it to be replaced by `.backlog/` once the repository is ready for it.
+Wanted capabilities, captured so they survive. Nothing here is designed, ordered, or committed to — this is a holding pen, like `docs/examples/`. Expect it to be replaced by `.backlog/` once the repository is ready for it.
 
 ## Stop personally identifiable information from leaking into git
 
