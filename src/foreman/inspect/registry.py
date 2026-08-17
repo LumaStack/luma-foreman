@@ -1,8 +1,10 @@
 """The rules Inspect knows about.
 
-A list, not a configuration format. There is one rule; a config schema designed
-around one example would be wrong in ways nobody could yet see. The shape should
-emerge from the second and third rules, not be guessed at now.
+A dict, not a configuration format. Two rules in, nothing yet wants configuring:
+both are shape-based, both run everywhere, and neither has a knob worth exposing.
+The moment one needs per-project tuning is the moment to design a schema — and
+not before, because a schema drawn around today's two rules would be wrong in
+ways nobody can see yet.
 """
 
 from __future__ import annotations
@@ -10,10 +12,11 @@ from __future__ import annotations
 from pathlib import Path
 
 from .finding import Result
-from .rules import identity
+from .rules import identity, secrets
 
 RULES = {
     identity.RULE: identity.check,
+    secrets.RULE: secrets.check,
 }
 
 

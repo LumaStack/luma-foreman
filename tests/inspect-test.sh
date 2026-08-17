@@ -71,22 +71,26 @@ has 'not valid email addresses'
 has 'first.last.com'
 
 # --- home paths in tracked content -------------------------------------------------
-d=$(repo homepath 'dev@example.com' 'see /Users/alice/notes.txt for details')
+# Fixtures are assembled at run time rather than written literally. A scanner
+# whose own test file contains what it detects reports itself, and the fix is
+# not to exclude tests from scanning — it is to not commit the literal.
+U=alice; V=bob
+d=$(repo homepath 'dev@example.com' "see /Users/$U/notes.txt for details")
 run 'home path in content' 1 "$d"
 has 'home directory paths'
 has 'alice'
 
-d=$(repo linuxhome 'dev@example.com' 'path is /home/bob/src')
+d=$(repo linuxhome 'dev@example.com' "path is /home/$V/src")
 run 'linux home path' 1 "$d"
 has 'bob'
 
 # Constructed and placeholder paths are not people. The first of these shipped
 # as a false positive against this repository's own test suite.
-d=$(repo dotdir 'dev@example.com' 'export TMPHOME=$T/home/.config/luma')
+d=$(repo dotdir 'dev@example.com' 'export TMPHOME=$T/home/.config/tool')
 run 'dot-directory is not a username' 0 "$d"
 lacks 'home directory paths'
 
-d=$(repo ci 'dev@example.com' 'workdir: /home/runner/work/project')
+d=$(repo ci 'dev@example.com' "workdir: /home/runner/work/project")
 run 'CI runner path ignored' 0 "$d"
 lacks 'home directory paths'
 
@@ -115,9 +119,65 @@ run 'json reports skips' 0 --json "$T/notrepo"
 printf '%s' "$LAST" | python3 -c '
 import json,sys
 d = json.load(sys.stdin)
-assert d["summary"]["skipped"] == 1, "skip not reported"
-assert d["skipped"][0]["rule"] == "identity"
+assert d["summary"]["skipped"] >= 1, "skip not reported"
+assert "identity" in [s["rule"] for s in d["skipped"]], "identity skip missing"
 ' 2>/dev/null && ok || bad 'json does not report skipped checks'
+
+# --- secrets ---------------------------------------------------------------------
+# Fake credentials are assembled at run time, never written literally, for the
+# same reason as the home paths above: this file is tracked and scanned.
+AWSK="AKIA$(printf 'ABCDEFGHIJKLMNOP')"
+GHT="ghp_$(printf 'abcdefghijklmnopqrstuvwxyz0123456789')"
+
+d=$(repo awskey 'dev@example.com' "aws_access_key_id = $AWSK")
+run 'aws key in content' 1 "$d"
+has 'credential'
+has 'AWS access key id'
+# The finding must NOT contain the secret — these land in CI logs.
+lacks "$AWSK"
+has 'AKIA'          # a short prefix is fine, the full value is not
+
+d=$(repo ghtoken 'dev@example.com' "token: $GHT")
+run 'github token in content' 1 "$d"
+has 'GitHub personal access token'
+lacks "$GHT"
+
+d=$(repo pkey 'dev@example.com' '-----BEGIN OPENSSH PRIVATE KEY-----')
+run 'private key block' 1 "$d"
+has 'private key block'
+
+# Files that are the finding by their name alone.
+d=$(repo envfile 'dev@example.com')
+printf 'SECRET=x\n' > "$d/.env"; git -C "$d" add -A
+GIT_AUTHOR_NAME=T GIT_AUTHOR_EMAIL=d@e.com GIT_COMMITTER_NAME=T GIT_COMMITTER_EMAIL=d@e.com \
+  git -C "$d" commit -q -m env
+run 'tracked .env' 1 "$d"
+has 'normally hold credentials'
+has '.env'
+
+# ...but templates exist to be committed, and flagging them trains people to
+# ignore the scanner.
+d=$(repo envexample 'dev@example.com')
+printf 'SECRET=replace-me\n' > "$d/.env.example"; git -C "$d" add -A
+GIT_AUTHOR_NAME=T GIT_AUTHOR_EMAIL=d@e.com GIT_COMMITTER_NAME=T GIT_COMMITTER_EMAIL=d@e.com \
+  git -C "$d" commit -q -m example
+run 'env template not flagged' 0 "$d"
+lacks 'normally hold credentials'
+
+# Things that merely look secret-ish must stay quiet.
+d=$(repo lookalike 'dev@example.com' 'password = "changeme"  # not a real credential')
+run 'placeholder not flagged' 0 "$d"
+lacks 'credential'
+
+d=$(repo shortsk 'dev@example.com' 'sk-tooshort')
+run 'short sk- string not flagged' 0 "$d"
+lacks 'credential'
+
+# History is not scanned, and the report says so rather than implying clean.
+run 'history limitation stated' 0 "$clean"
+has 'history was not scanned'
+
+run 'secrets rule alone'  0 --rule secrets "$clean"
 
 # --- argument handling ---------------------------------------------------------------
 run 'unknown rule'      2 --rule nonsense "$clean"

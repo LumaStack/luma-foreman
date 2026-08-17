@@ -21,7 +21,10 @@ luma-foreman policy allow curl      # ...and change it, effective on the next to
 luma-foreman policy doctor          # ...and confirm it is actually working, not just wired up
 ```
 
-**`luma-foreman inspect`** — checks a repository against the baseline and reports where it falls short. Findings, exit codes, runnable in continuous integration. The first rule covers personal information published through git: machine-derived author identities, malformed addresses, and home directory paths in tracked content.
+**`luma-foreman inspect`** — checks a repository against the baseline and reports where it falls short. Findings, exit codes, runnable in continuous integration. Two rules so far:
+
+- **identity** — personal information published through git: machine-derived author identities, malformed addresses, home directory paths in tracked content.
+- **secrets** — provider-issued credentials in tracked content, and files that normally hold them. Findings never contain the secret itself, because findings end up in continuous integration logs.
 
 ```bash
 luma-foreman inspect                # 0 nothing found, 1 findings, 2 could not run
