@@ -2,7 +2,7 @@
 
 Runs the site. It walks into a project repository, sets it up to succeed, and comes back periodically to check the work still holds.
 
-> **Status:** early. One capability is built and tested; the four jobs below are still mostly shape.
+> **Status:** early. Two of the four jobs have working code; the rest is still shape.
 
 ## The four jobs
 
@@ -21,11 +21,20 @@ luma-foreman policy allow curl      # ...and change it, effective on the next to
 luma-foreman policy doctor          # ...and confirm it is actually working, not just wired up
 ```
 
-Everything else prints "not built yet" and exits 2.
+**`luma-foreman inspect`** — checks a repository against the baseline and reports where it falls short. Findings, exit codes, runnable in continuous integration. The first rule covers personal information published through git: machine-derived author identities, malformed addresses, and home directory paths in tracked content.
+
+```bash
+luma-foreman inspect                # 0 nothing found, 1 findings, 2 could not run
+luma-foreman inspect --json         # for continuous integration
+```
+
+Every check works in a bare clone with no configuration, and a check that *cannot* run is reported as skipped rather than passed — an inspection that reads clean while silently skipping half its checks is worse than no inspection.
+
+`bootstrap`, `outfit` and `refit` print "not built yet" and exit 2.
 
 ## Install
 
-Requires `sh`, `jq`, and `awk`. No build step.
+Requires Python 3.11+ and git. No build step, no dependencies to install.
 
 ```bash
 git clone https://github.com/LumaStack/luma-foreman.git

@@ -17,6 +17,10 @@ Delivery mechanism is undecided. Candidates: install a hook into every project, 
 
 The check needs to know which identities are private, and that list must not end up published in the project being checked.
 
+**Partly built.** `luma-foreman inspect` now covers the shape-detectable half, and that turned out to be most of it. A machine-derived identity like `alice@laptop.local` is recognisable without knowing who alice is; so is a malformed address, and so is a home path in tracked content. None of it needs an identity list, so it runs in a bare clone — which is what the "must survive continuous integration" constraint demanded. Validated against a real repository: it reproduced, in a second and with no configuration, what a long manual investigation had found by hand.
+
+Still wanted: the identity *list* for the narrower "this specific address is private" case, secret scanning as the obvious sibling, and history-content scanning (committed once and deleted later is still published).
+
 **Half of this is settled by the state model in the README.** Who the operator is counts as workstation state — a local fact, not organization knowledge — so the identity list lives in workstation config and never enters a repository at all. That covers prevention: bootstrap, outfit, and anything running at a workstation before a commit exists.
 
 Still open: Inspect has to survive a bare environment with no configuration, and a check that silently passes because its list is absent is worse than no check. Hashes rather than literals, committed to the project, is one way out. Another is for Inspect to report honestly that it ran without an identity list rather than reporting clean.

@@ -58,7 +58,7 @@ done
 # --- dispatcher -----------------------------------------------------------------
 run 'help'            0 help;            contains 'help' 'Jobs:'
 run 'unknown job'     1 not-a-job
-run 'unbuilt job'     2 inspect
+run 'unbuilt job'     2 bootstrap   # inspect is built now; bootstrap is not
 run 'policy default'  0 policy;          contains 'policy default' 'KEY'
 
 # --- reads work before anything is configured ------------------------------------

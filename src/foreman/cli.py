@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import sys
 
+from .inspect import registry, report
 from .policy import commands
 
 USAGE = """usage: luma-foreman <job> [args]
@@ -46,7 +47,7 @@ Add -g/--global to any write to target the global fallback instead of this
 project. Reads always show the merged result. Add --json to `policy`, `keys`
 and `doctor` for machine-readable output."""
 
-UNBUILT = ("bootstrap", "outfit", "inspect", "refit")
+UNBUILT = ("bootstrap", "outfit", "refit")
 
 
 def _policy(argv: list[str]) -> int:
@@ -101,6 +102,50 @@ def _policy(argv: list[str]) -> int:
     return commands._err(f"unknown command: {verb} (try luma-foreman policy --help)")
 
 
+INSPECT_USAGE = """Check a project against the baseline and report where it falls short.
+
+  luma-foreman inspect [<path>]      inspect a repository (default: the current one)
+  luma-foreman inspect --json        machine-readable findings, for continuous integration
+  luma-foreman inspect --rule <name> run one rule only
+
+Exit codes: 0 nothing found, 1 findings, 2 could not run.
+
+Every check here works in a bare clone with no configuration. A check that
+cannot run is reported as skipped, never as a pass."""
+
+
+def _inspect(argv: list[str]) -> int:
+    from pathlib import Path
+
+    as_json = False
+    rule: str | None = None
+    target = Path.cwd()
+    rest = list(argv)
+    while rest:
+        arg = rest.pop(0)
+        if arg == "--json":
+            as_json = True
+        elif arg == "--rule":
+            if not rest:
+                print("luma-foreman inspect: --rule needs a name", file=sys.stderr)
+                return 2
+            rule = rest.pop(0)
+        elif arg in ("-h", "--help"):
+            print(INSPECT_USAGE)
+            return 0
+        else:
+            target = Path(arg)
+
+    if not target.is_dir():
+        print(f"luma-foreman inspect: not a directory: {target}", file=sys.stderr)
+        return 2
+    if rule and rule not in registry.RULES:
+        known = ", ".join(registry.RULES)
+        print(f"luma-foreman inspect: unknown rule: {rule} (known: {known})", file=sys.stderr)
+        return 2
+    return report.render(registry.run(target, rule), as_json)
+
+
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     job = argv[0] if argv else "help"
@@ -110,6 +155,8 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if job == "policy":
         return _policy(argv[1:])
+    if job == "inspect":
+        return _inspect(argv[1:])
     if job in UNBUILT:
         print(f"luma-foreman: {job} is not built yet — see docs/IDEAS.md", file=sys.stderr)
         return 2
