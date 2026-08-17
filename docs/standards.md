@@ -6,6 +6,6 @@ This is a temporary stop gap until we have a proper standards system + ecosystem
 
 XDG is explicit about where config, data, and executables live:
 
-- ~/.config/<org>/<repo>/ — configuration: things the user edits
-- ~/.local/share/<org>/<repo>/ — data: things a program installs and manages
-- ~/.local/bin — executables
+- ~/.config/<org>/<project>/ — configuration: things the user edits
+- ~/.local/share/<org>/<project>/ — data: things a program installs and manages
+- ~/.local/bin/ — executables

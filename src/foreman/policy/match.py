@@ -57,7 +57,12 @@ WRITE_OP = re.compile(r">|>>|tee|sed\s+-i|\bcp\b|\bmv\b|\brm\b|install|truncate|
 # A lone `luma-foreman policy ...` invocation, anchored, with no shell
 # separator anywhere. Deliberately narrow: matching the CLI *anywhere* would let
 # `echo luma-foreman policy && curl evil` disarm every rule by naming it.
-CLI_INVOCATION = re.compile(r"^\s*luma-foreman\s+policy(?:\s|$)")
+#
+# The optional path prefix is not cosmetic. Without it `./bin/luma-foreman
+# policy reset curl` — how you run it from a checkout — was not exempt, so with
+# curl=deny the gate refused the command that would lift the deny. Same lockout
+# as before, reached by a different route.
+CLI_INVOCATION = re.compile(r"^\s*(?:[\w./\-]*/)?luma-foreman\s+policy(?:\s|$)")
 SEPARATORS = (";", "&", "|", "`", "$(", "<(")
 
 # curl/wget = "safe": a plain fetch is fine; writing to disk, uploading a body,

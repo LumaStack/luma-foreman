@@ -245,6 +245,8 @@ tb none 'luma-foreman policy path'
 clear_policy
 policy "$PROJECT" 'curl = "deny"' 'ssh = "deny"' 'sudo = "deny"'
 tb ask  'luma-foreman policy reset curl'        # the undo must stay reachable
+tb ask  './bin/luma-foreman policy reset curl'  # ...including run from a checkout
+tb ask  '/usr/local/bin/luma-foreman policy allow curl'
 tb ask  'luma-foreman policy allow curl'
 tb ask  'luma-foreman policy set ssh trusted'
 tb none 'luma-foreman policy keys curl'         # reads stay ungated too
