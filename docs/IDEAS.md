@@ -121,3 +121,9 @@ Then each project will somehow select from these buckets what strategies get app
 And either this project luma-foreman and/or luma-hq should be able to force new strategies down for critical stuff where projects are not allowed to adopt on their own schedule.  It's mandated and immediate.  
 
 A nice to have is when new strategies are published they should also publish some kind of date that let's projects know what kind of timeline they have to reasonabily adopt them before they "fall out of compliance".
+
+## Permission modes
+
+I want to be able to setup a mode in the config or via the command line or both.
+
+It will make it so when I say I want to be in "foobar" mode it auto applies all my permissions to the way I set them.  The simpliest way is the setting sits as a mapping in the config.  The nice to have would be taking a snapshot of my current settings, name it, and then the current settings get added to config as a new mapping set.

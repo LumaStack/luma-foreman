@@ -103,6 +103,13 @@ contains 'idempotent install' 'already current'
 [ -x "$LUMA_FOREMAN_DATA/permission-gate.sh" ] \
   && ok || bad 'gate is not under the data directory'
 
+# The gate must not write bytecode into its own install directory — that is
+# inside the deny rule protecting it, and it goes stale on upgrade.
+jq -nc '{tool_name:"Bash",permission_mode:"default",cwd:"/tmp",tool_input:{command:"sudo ls"}}' \
+  | "$LUMA_FOREMAN_DATA/permission-gate.sh" >/dev/null 2>&1
+[ -z "$(find "$LUMA_FOREMAN_DATA" -name '__pycache__' 2>/dev/null)" ] \
+  && ok || bad 'the gate wrote bytecode into its install directory'
+
 # A hook pointing at some OTHER permission-gate.sh must be reported, not passed.
 # Matching the filename rather than the installed path once made an upgrade look
 # complete while the old gate was still the one running.

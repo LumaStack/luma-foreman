@@ -37,7 +37,9 @@ refuse() {
 }
 [ -f "$dir/gate/run.py" ] || refuse "gate files are missing; run luma-foreman policy install"
 command -v python3 >/dev/null 2>&1 || refuse "python3 not found"
-exec python3 "$dir/gate/run.py" "$@"
+# -B: never write bytecode. The gate would otherwise litter __pycache__
+# through its own install directory, inside the deny rule that protects it.
+exec python3 -B "$dir/gate/run.py" "$@"
 """
 
 RUNNER = """#!/usr/bin/env python3
