@@ -128,6 +128,7 @@ session restart, because the hook re-reads these files each time it runs.
   $me edit                 open it in \$EDITOR
   $me install              install or update the gate, and report what
                            Claude Code's settings.json still needs
+  $me doctor               check it is actually working, not just wired up
 
 Add -g/--global to any write to target the global fallback instead of this
 project. Reads always show the merged result.
@@ -241,6 +242,125 @@ effective() {
   [ -n "$v" ] || { v=$(default_for "$1"); s=default; }
   [ -n "$v" ] || v='(unset)'
   printf '%s\t%s' "$v" "$s"
+}
+
+# `install` answers "is it wired up". `doctor` answers "is it actually working",
+# which is a different question and the one that catches real breakage: a gate
+# that is installed, wired, and silently returning nothing looks fine to
+# `install` and protects you from nothing.
+#
+# The behaviour checks run the INSTALLED gate — the file Claude Code executes —
+# against a TEMPORARY policy directory, so this never reads or writes the policy
+# you actually rely on.
+dr_pass=0 dr_fail=0
+dr_ok()   { dr_pass=$((dr_pass + 1)); printf '  ok    %s\n' "$1"; }
+dr_bad()  { dr_fail=$((dr_fail + 1)); printf '  FAIL  %s\n' "$1"; }
+dr_warn() { printf '  warn  %s\n' "$1"; }
+
+cmd_doctor() {
+  gate=$FOREMAN_HOME/permission-gate.sh
+  settings=${CLAUDE_CONFIG_DIR:-$HOME/.claude}/settings.json
+
+  printf 'dependencies\n'
+  for dep in jq awk; do
+    command -v "$dep" >/dev/null 2>&1 && dr_ok "$dep" || dr_bad "$dep is required and was not found"
+  done
+
+  printf 'installation\n'
+  if [ -x "$gate" ]; then dr_ok "gate installed at $gate"
+  else dr_bad "no executable gate at $gate — run: $me install"; fi
+  if [ -r "$libexec_dir/permission-gate.sh" ] && [ -r "$gate" ]; then
+    cmp -s "$libexec_dir/permission-gate.sh" "$gate" \
+      && dr_ok 'installed gate matches this checkout' \
+      || dr_bad "installed gate is out of date — run: $me install"
+  fi
+  command -v luma-foreman >/dev/null 2>&1 && dr_ok 'luma-foreman is on PATH' \
+    || dr_warn 'luma-foreman is not on PATH; you are running it by full path'
+  [ -e "$HOME/.claude/permission-gate.sh" ] \
+    && dr_warn 'a stale gate remains at ~/.claude/permission-gate.sh — delete it'
+
+  printf 'claude code wiring\n'
+  if [ -r "$settings" ]; then
+    dr_ok "settings found at $settings"
+    jq -e --arg d "$gate" --arg home "$HOME" '
+      [.hooks.PreToolUse // [] | .[].hooks // [] | .[].command // ""]
+      | map(gsub("\\$\\{HOME\\}"; $home) | gsub("\\$HOME"; $home)
+            | gsub("\""; "") | gsub("^~"; $home))
+      | any(contains($d))' "$settings" >/dev/null 2>&1 \
+      && dr_ok 'PreToolUse hook points at the installed gate' \
+      || dr_bad "no PreToolUse hook points at the gate — run: $me install"
+    jq -e '[.permissions.deny // []] | flatten | any(test("luma"))' \
+      "$settings" >/dev/null 2>&1 \
+      && dr_ok 'deny rule protects the policy directory' \
+      || dr_bad 'no deny rule protects the policy directory; an agent can rewrite its own rules'
+  else
+    dr_bad "no settings file at $settings"
+  fi
+
+  [ -x "$gate" ] || { printf '\npass=%s fail=%s\n' "$dr_pass" "$dr_fail"; return 1; }
+
+  printf 'behaviour  (temporary policy directory; your real policy is untouched)\n'
+  t=$(mktemp -d "${TMPDIR:-/tmp}/luma-doctor.XXXXXX") || { dr_bad 'cannot create a temp dir'; return 1; }
+  mkdir -p "$t/repo/.git" "$t/repo/sub" "$t/home/projects"
+  proj=$(cd "$t/repo" && pwd -P)
+  pf=$t/home/projects/$(printf '%s' "$proj" | tr '/.' '--').toml
+
+  # ask <want> <cmd> [mode] [cwd] — runs the installed gate hermetically
+  d_() {
+    out=$(jq -nc --arg c "$2" --arg m "${3:-default}" --arg w "${4:-$proj}" \
+      '{tool_name:"Bash",permission_mode:$m,cwd:$w,tool_input:{command:$c}}' \
+      | LUMA_FOREMAN_HOME=$t/home sh "$gate" 2>/dev/null \
+      | jq -r '.hookSpecificOutput.permissionDecision // empty' 2>/dev/null)
+    printf '%s' "${out:-none}"
+  }
+  chk() { got=$(d_ "$@"); [ "$got" = "$1" ] && return 0 || return 1; }
+
+  chk ask 'sudo ls' && chk ask 'ssh host' && chk ask 'curl https://example.com' \
+    && dr_ok 'gates ssh, curl and sudo by default' \
+    || dr_bad 'default gating is not firing — the gate may be returning nothing'
+  chk none 'git status' && chk none 'ls -la' \
+    && dr_ok 'read-only commands pass without an opinion' \
+    || dr_bad 'ordinary commands are being gated'
+  chk ask 'rm -rf /tmp/x' bypassPermissions \
+    && dr_ok 'always-tier still fires under bypassPermissions' \
+    || dr_bad 'bypassPermissions silences the always tier — recursive rm is unguarded'
+  chk ask "echo x > $FOREMAN_HOME/permission-gate.sh" bypassPermissions \
+    && dr_ok 'the gate refuses writes to itself' \
+    || dr_bad 'the gate does not protect itself'
+
+  printf 'curl = "deny"\n' > "$pf"
+  chk deny 'curl https://example.com' \
+    && dr_ok 'deny blocks outright, and policy applies with no restart' \
+    || dr_bad 'a deny rule did not take effect'
+  chk ask "$me reset curl" \
+    && dr_ok 'a deny rule does not block its own undo' \
+    || dr_bad 'a deny rule blocks the command that would lift it'
+  rm -f "$pf"
+  chk ask 'curl https://example.com' \
+    && dr_ok 'removing a policy reverts to the default, with no restart' \
+    || dr_bad 'policy removal did not take effect'
+
+  printf 'sudo = "allow"\n' > "$pf"
+  chk none 'sudo ls' '' "$proj/sub" \
+    && dr_ok 'one policy per repository, from any subdirectory' \
+    || dr_bad 'subdirectories do not resolve to the repository policy'
+  rm -rf "$t"
+
+  printf 'your policy here\n'
+  printf '  project %s\n' "$project_dir"
+  for k in $KEYS; do
+    IFS=$(printf '\t') read -r v src <<EOF
+$(effective "$k")
+EOF
+    [ "$src" = default ] || printf '  %-14s %-10s (%s)\n' "$k" "$v" "$src"
+  done
+  [ "$(effective trust | cut -f1)" = full ] \
+    && dr_warn 'trust = "full" here: every ask-tier gate is silenced in this project'
+  [ "$(effective policy_write | cut -f1)" = always ] \
+    || dr_warn 'policy_write is below "always": an agent can change its own rules'
+
+  printf '\npass=%s fail=%s\n' "$dr_pass" "$dr_fail"
+  [ "$dr_fail" -eq 0 ]
 }
 
 cmd_show() {
@@ -441,6 +561,7 @@ case ${1:-show} in
   reset|unset) shift; [ $# -le 1 ] || die "usage: $me reset [-g] [<key>]"; cmd_reset "$@" ;;
   projects)    cmd_projects ;;
   install)     cmd_install ;;
+  doctor)      cmd_doctor ;;
   path)        printf '%s\n' "$target" ;;
   edit)        mkdir -p "$(dirname "$target")"; ${EDITOR:-vi} "$target" ;;
   help)        usage ;;

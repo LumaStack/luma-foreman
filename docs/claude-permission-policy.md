@@ -218,11 +218,25 @@ forking a `grep` per key.
 ## Verify
 
 ```bash
+luma-foreman policy doctor         # is it actually working on this machine
 sh tests/run                       # hermetic: never touches your real config
 jq . ~/.claude/settings.json       # still valid JSON
 luma-foreman policy                # what the hook thinks the policy is here
-luma-foreman policy install        # what settings.json is still missing
 ```
+
+`doctor` is the one to reach for first. `install` answers "is it wired up";
+`doctor` answers "is it working", which is a different question and the one that
+catches real breakage — a gate that is installed, wired, and silently returning
+nothing looks perfect to `install` and protects you from nothing.
+
+It runs the **installed** gate, the file Claude Code actually executes, against a
+temporary policy directory, so it never reads or writes the policy you rely on.
+Beyond wiring it checks that defaults fire, that ordinary commands are *not*
+gated, that the always-tier survives `bypassPermissions`, that the gate refuses
+writes to itself, that `deny` blocks, that policy changes apply with no restart,
+that subdirectories resolve to the repository policy, and that a `deny` rule does
+not block its own undo. It also warns about a stale gate left in `~/.claude`,
+about `trust = "full"`, and about `policy_write` set below `always`.
 
 Exercise the hook directly — `cwd` selects the project, and gated commands need
 testing in both modes:

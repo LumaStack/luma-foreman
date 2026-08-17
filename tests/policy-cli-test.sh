@@ -134,5 +134,41 @@ run 'show sources'    0 policy
 contains 'global source shown' 'global'
 [ -e "$PROJECT_FILE" ] && bad 'global write touched the project file' || ok
 
+# --- doctor -----------------------------------------------------------------------
+# The point of doctor is catching a gate that is installed and wired and still
+# does nothing. A doctor that only ever agrees with `install` is worthless, so
+# the load-bearing cases here are the failing ones.
+run 'doctor healthy'  0 policy doctor
+contains 'doctor checks behaviour' 'behaviour'
+contains 'doctor reports no failures' 'fail=0'
+
+# A gate that returns nothing: installed, wired, and silently protecting nothing.
+GATE=$LUMA_FOREMAN_HOME/permission-gate.sh
+cp "$GATE" "$T/gate.bak"
+printf '#!/bin/sh\nexit 0\n' > "$GATE"; chmod 755 "$GATE"
+run 'doctor catches a no-op gate' 1 policy doctor
+contains 'no-op gate reported' 'default gating is not firing'
+cp "$T/gate.bak" "$GATE"; chmod 755 "$GATE"
+run 'doctor healthy again' 0 policy doctor
+
+# A gate that gates everything, including things it must not.
+printf '#!/bin/sh\nprintf %s "{\\"hookSpecificOutput\\":{\\"hookEventName\\":\\"PreToolUse\\",\\"permissionDecision\\":\\"ask\\"}}"\n' > "$GATE"
+chmod 755 "$GATE"
+run 'doctor catches an over-gating gate' 1 policy doctor
+contains 'over-gating reported' 'ordinary commands are being gated'
+cp "$T/gate.bak" "$GATE"; chmod 755 "$GATE"
+
+# No gate at all.
+mv "$GATE" "$T/gate.gone"
+run 'doctor catches a missing gate' 1 policy doctor
+contains 'missing gate reported' 'no executable gate'
+mv "$T/gate.gone" "$GATE"; chmod 755 "$GATE"
+
+# Wired to some other gate entirely — the upgrade case.
+jq '.hooks.PreToolUse = [{matcher:"Bash",hooks:[{type:"command",command:"/elsewhere/permission-gate.sh"}]}]' \
+  "$SETTINGS" > "$SETTINGS.t" && mv "$SETTINGS.t" "$SETTINGS"
+run 'doctor catches wrong wiring' 1 policy doctor
+contains 'wrong wiring reported' 'no PreToolUse hook points at the gate'
+
 printf '%s\n' "pass=$pass fail=$fail"
 [ "$fail" -eq 0 ]

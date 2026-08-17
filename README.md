@@ -18,6 +18,7 @@ Runs the site. It walks into a project repository, sets it up to succeed, and co
 ```bash
 luma-foreman policy                 # what is allowed in this repository, and why
 luma-foreman policy allow curl      # ...and change it, effective on the next tool call
+luma-foreman policy doctor          # ...and confirm it is actually working, not just wired up
 ```
 
 Everything else prints "not built yet" and exits 2.
