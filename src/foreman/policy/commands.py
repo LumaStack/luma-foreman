@@ -191,7 +191,6 @@ def edit(scope_global: bool) -> int:
 
 
 def install_cmd() -> int:
-    home = store.home()
     verb = _install.install()
     gate = _install.gate_path()
     print(f"gate {verb}: {gate}\n")
@@ -207,11 +206,15 @@ def install_cmd() -> int:
     print(f"  {'OK  ' if state['deny_ok'] else 'TODO'} deny rule protecting the policy directory")
 
     if old := _install.legacy_install():
-        print(f"\n  note  a gate from the previous layout remains at\n        {old}")
-        print("        Configuration and program files are separate now: policy stays in")
-        print("        ~/.config, the gate moved to ~/.local/share. Delete the old file")
-        print("        once the hook above points at the new path AND Claude Code has")
-        print("        been restarted — not before, or the running session is unguarded.")
+        print("\n  note  directories from an earlier layout remain:")
+        for path in old:
+            print(f"          {path}")
+        print("        Directories are named for the application now, not nested under a")
+        print("        vendor. Any policy in the old location is NOT read any more —")
+        print("        copy it across if you had settings there. Delete the old")
+        print("        directories once the hook above points at the new path AND Claude")
+        print("        Code has restarted; not before, or the running session is")
+        print("        unguarded.")
 
     if state["hook_ok"] and state["deny_ok"]:
         print(f"\nNothing left to do. Run `{CMD}` to see the effective policy.")

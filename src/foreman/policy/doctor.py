@@ -90,9 +90,11 @@ def run(as_json: bool = False) -> int:
         else:
             report.bad("installed gate is out of date — run: luma-foreman policy install")
 
-    legacy = Path.home() / ".claude" / "permission-gate.sh"
-    if legacy.exists():
-        report.warn(f"a stale gate remains at {legacy} — delete it")
+    stale = Path.home() / ".claude" / "permission-gate.sh"
+    if stale.exists():
+        report.warn(f"a stale gate remains at {stale} — delete it")
+    for old in _install.legacy_install():
+        report.warn(f"a directory from an earlier layout remains at {old} — delete it")
 
     report.section("claude code wiring")
     # -- wiring --------------------------------------------------------------

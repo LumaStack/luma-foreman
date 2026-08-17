@@ -114,14 +114,9 @@ def install() -> str:
     return verb
 
 
-def legacy_install() -> Path | None:
-    """A gate left behind by the pre-XDG layout, or None.
-
-    Worth reporting rather than deleting: settings.json may still point at it,
-    and removing it before the wiring moves would leave the session unguarded.
-    """
-    old = store.legacy_gate()
-    return old if old.exists() else None
+def legacy_install() -> list[Path]:
+    """Directories left by earlier layouts. Reported, never deleted."""
+    return store.legacy_dirs()
 
 
 def settings_path() -> Path:
@@ -177,7 +172,7 @@ def wiring() -> dict[str, object]:
 def snippet() -> str:
     return f"""  {{
     "permissions": {{
-      "deny": ["Edit(~/.config/luma/**)", "Edit(~/.local/share/luma/**)"]
+      "deny": ["Edit(~/.config/luma-foreman/**)", "Edit(~/.local/share/luma-foreman/**)"]
     }},
     "hooks": {{
       "PreToolUse": [

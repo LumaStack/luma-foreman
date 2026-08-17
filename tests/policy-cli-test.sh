@@ -23,9 +23,9 @@ mkdir -p "$T/home/.claude" "$T/repo/.git" "$T/repo/sub"
 REPO=$(cd "$T/repo" && pwd -P)
 SLUG=$(printf '%s' "$REPO" | tr '/.' '--')
 export HOME=$T/home
-export LUMA_FOREMAN_HOME=$T/home/.config/luma/foreman
+export LUMA_FOREMAN_HOME=$T/home/.config/luma-foreman
 # The gate is program data, not configuration, and lives apart from policy.
-export LUMA_FOREMAN_DATA=$T/home/.local/share/luma/foreman
+export LUMA_FOREMAN_DATA=$T/home/.local/share/luma-foreman
 PROJECT_FILE=$LUMA_FOREMAN_HOME/projects/$SLUG.toml
 echo '{"permissions":{"allow":["Bash(ls *)"]}}' > "$T/home/.claude/settings.json"
 
@@ -103,6 +103,13 @@ contains 'idempotent install' 'already current'
 [ -x "$LUMA_FOREMAN_DATA/permission-gate.sh" ] \
   && ok || bad 'gate is not under the data directory'
 
+# Directories are named for the application, not nested under a vendor. XDG says
+# $XDG_CONFIG_HOME/<application>/, nearly every tool does that, and the charter
+# agrees: foreman must be worth installing where no organization exists, so a
+# path implying a suite is wrong.
+case $LUMA_FOREMAN_HOME in *-foreman) ok ;; *) bad 'config dir is not application-named' ;; esac
+case $LUMA_FOREMAN_DATA in *-foreman) ok ;; *) bad 'data dir is not application-named' ;; esac
+
 # The gate must not write bytecode into its own install directory — that is
 # inside the deny rule protecting it, and it goes stale on upgrade.
 jq -nc '{tool_name:"Bash",permission_mode:"default",cwd:"/tmp",tool_input:{command:"sudo ls"}}' \
@@ -123,7 +130,7 @@ contains 'stale hook not passed' 'TODO PreToolUse'
 # The correct path is accepted.
 jq --arg g "$LUMA_FOREMAN_DATA/permission-gate.sh" \
   '.hooks.PreToolUse = [{matcher:"Bash",hooks:[{type:"command",command:$g}]}]
-   | .permissions.deny = ["Edit(~/.config/luma/**)"]' \
+   | .permissions.deny = ["Edit(~/.config/luma-foreman/**)"]' \
   "$SETTINGS" > "$SETTINGS.t" && mv "$SETTINGS.t" "$SETTINGS"
 run 'wired hook'      0 policy install
 contains 'wired hook accepted' 'Nothing left to do'
@@ -131,9 +138,9 @@ contains 'wired hook accepted' 'Nothing left to do'
 # The same path spelled the other legitimate ways must also be accepted. A hook
 # command is a shell string, and "$HOME/..." is what you get if you wrote the
 # settings by hand rather than pasting the absolute path.
-for form in '"$HOME/.local/share/luma/foreman/permission-gate.sh"' \
-            '${HOME}/.local/share/luma/foreman/permission-gate.sh' \
-            '~/.local/share/luma/foreman/permission-gate.sh'; do
+for form in '"$HOME/.local/share/luma-foreman/permission-gate.sh"' \
+            '${HOME}/.local/share/luma-foreman/permission-gate.sh' \
+            '~/.local/share/luma-foreman/permission-gate.sh'; do
   jq --arg g "$form" '.hooks.PreToolUse = [{matcher:"Bash",hooks:[{type:"command",command:$g}]}]' \
     "$SETTINGS" > "$SETTINGS.t" && mv "$SETTINGS.t" "$SETTINGS"
   run "hook spelled $form" 0 policy install

@@ -27,14 +27,20 @@ def home() -> Path:
 
     XDG puts configuration in ~/.config and program-installed files in
     ~/.local/share, and the split matters here beyond tidiness: someone clearing
-    ~/.config/luma to reset their settings must not thereby delete the gate.
-    A missing hook is a non-blocking error in Claude Code, so the tool call
+    the config directory to reset their settings must not thereby delete the
+    gate. A missing hook is a non-blocking error in Claude Code, so the tool call
     proceeds — the gate would fail OPEN because a config reset looked safe.
+
+    The directory is named for the application, not nested under a vendor.
+    That is what XDG says ($XDG_CONFIG_HOME/<application>/) and what nearly
+    every tool does. It also matches the charter: foreman has to be worth
+    installing where no organization exists, and ~/.config/luma/foreman implies
+    a suite the user may never have.
     """
     if override := os.environ.get("LUMA_FOREMAN_HOME"):
         return Path(override)
     config = os.environ.get("XDG_CONFIG_HOME") or (Path.home() / ".config")
-    return Path(config) / "luma" / "foreman"
+    return Path(config) / "luma-foreman"
 
 
 def data_home() -> Path:
@@ -42,12 +48,19 @@ def data_home() -> Path:
     if override := os.environ.get("LUMA_FOREMAN_DATA"):
         return Path(override)
     data = os.environ.get("XDG_DATA_HOME") or (Path.home() / ".local" / "share")
-    return Path(data) / "luma" / "foreman"
+    return Path(data) / "luma-foreman"
 
 
-def legacy_gate() -> Path:
-    """Where the gate used to be installed, before the config/data split."""
-    return home() / "permission-gate.sh"
+def legacy_dirs() -> list[Path]:
+    """Directories left by earlier layouts, newest first.
+
+    Reported rather than deleted: settings.json may still point into one, and
+    removing it before the wiring moves would leave the running session
+    unguarded.
+    """
+    config = Path(os.environ.get("XDG_CONFIG_HOME") or (Path.home() / ".config"))
+    data = Path(os.environ.get("XDG_DATA_HOME") or (Path.home() / ".local" / "share"))
+    return [d for d in (data / "luma" / "foreman", config / "luma" / "foreman") if d.exists()]
 
 
 def _read(path: Path) -> dict[str, str]:
