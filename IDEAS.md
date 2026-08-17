@@ -33,3 +33,14 @@ Open: whether the format already has a record type that fits, or whether an inci
 - Install the standard tooling — linting, tests, continuous integration, independent review, a backlog.
 - Meta-skills: skills that generate a project's own best-practice skills, rather than copying a template.
 - Return periodically to confirm the latest learnings were actually applied.
+
+## Claud code modes
+
+I want to be able to edit how claude code hooks allow or disallow using a command that changes how the hooks code works.  Either by editing claude config or by having claude config run a command and i can change how the command works.
+
+- Full trust mode
+- Allow/disallow downloads
+- Allow/disallow ssh
+- Allow "trusted" ssh only
+- Allow/disallow curl
+- Allow harmless curl (non-executable files)
