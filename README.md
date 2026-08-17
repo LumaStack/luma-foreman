@@ -2,7 +2,7 @@
 
 Runs the site. It walks into a project repository, sets it up to succeed, and comes back periodically to check the work still holds.
 
-> **Status:** seed. Nothing here yet but the shape of the job.
+> **Status:** early. One capability is built and tested; the four jobs below are still mostly shape.
 
 ## The four jobs
 
@@ -10,6 +10,34 @@ Runs the site. It walks into a project repository, sets it up to succeed, and co
 - **Outfit.** Install the tooling every project is expected to carry — linting, tests, continuous integration, independent review, a backlog.
 - **Inspect.** Check a project against the baseline and report where it falls short. Findings, exit codes, runnable in continuous integration.
 - **Refit.** Return over time and confirm the latest learnings have actually been applied, not just published.
+
+## What works today
+
+**`luma-foreman policy`** — per-project control over what Claude Code is allowed to do, changed with a command instead of by editing a hook. Claude Code's own permission rules are global; this adds a per-project layer, so loosening a rule for one repository does not loosen it everywhere. See [docs/claude-permission-policy.md](docs/claude-permission-policy.md).
+
+```bash
+luma-foreman policy                 # what is allowed in this repository, and why
+luma-foreman policy allow curl      # ...and change it, effective on the next tool call
+```
+
+Everything else prints "not built yet" and exits 2.
+
+## Install
+
+Requires `sh`, `jq`, and `awk`. No build step.
+
+```bash
+git clone https://github.com/LumaStack/luma-foreman.git
+ln -s "$PWD/luma-foreman/bin/luma-foreman" ~/.local/bin/luma-foreman   # or add bin/ to PATH
+
+luma-foreman policy install
+```
+
+`policy install` copies the permission gate into `~/.config/luma/foreman/` and then **prints** the two changes you need to make to `~/.claude/settings.json`. It does not edit that file: foreman writes freely into the directory it owns and never silently edits config you own. Re-run it after every upgrade — it is idempotent and says when there is nothing to do.
+
+The only thing you have to change by hand is `~/.claude/settings.json`, and `policy install` shows you exactly what. Hook wiring needs a Claude Code restart to take effect; policy changes after that are live.
+
+Run the tests with `sh tests/run`. They are hermetic — `HOME` and `LUMA_FOREMAN_HOME` are redirected into temp directories, so running them never touches your configuration.
 
 It also carries **meta-skills**: skills whose job is to generate a project's own best-practice skills, so each repository ends up with tooling suited to it rather than a copied template.
 

@@ -86,7 +86,7 @@ Change what Claude Code's hooks allow or disallow with a command, per project, w
 - Allow/disallow curl
 - Allow harmless curl (non-executable files)
 
-**Settled by a working prototype**, currently living in the maintainer's dotfiles as `permission-gate.sh` plus a `luma-policy` command:
+**Built.** Shipped as `luma-foreman policy` — see [docs/claude-permission-policy.md](docs/claude-permission-policy.md). What it settled, kept here because the reasoning is worth more than the code:
 
 - The policy has to live in a file the hook reads on every call, not in `settings.json`. Claude Code snapshots hook *configuration* at session start, so a settings-based design needs a session restart per change; a file the hook re-reads takes effect on the next tool call.
 - Resolution is per key, most specific wins: project, then a global fallback, then built-in defaults. A project only names what it overrides.
@@ -94,6 +94,7 @@ Change what Claude Code's hooks allow or disallow with a command, per project, w
 - This is **workstation state, per project** — never committed. What an agent may do in a repository is the operator's call, not something every clone inherits.
 - The value vocabulary is Claude Code's own — `allow`, `ask`, `deny` — plus `always` for bypass-proof, and refinements like `trusted` for ssh and `safe` for fetches. Not `disallow`; nothing in this space uses that word.
 - Textual command matching is not a security boundary and must not be described as one. It catches your own slips and an agent's carelessness. Sandboxing is the boundary; this rides on top for ergonomics.
-- Whatever governs the agent has to be something the agent cannot edit, including the gate itself. The prototype protects the policy files and *not* the gate script, which is a live gap.
+- Whatever governs the agent has to be something the agent cannot edit, including the gate itself. Solved by putting the gate in the same directory as the policy, so one deny rule covers both. The prototype protected the rulebook and not the lock.
+- A tool that has to touch someone else's config writes freely into the directory it owns and never silently edits the directory the user owns. `policy install` copies the gate and *prints* the `settings.json` changes, following `pre-commit install`.
 
-Open: relocating it here from the dotfiles, and what that means for installation on a workstation that has no chezmoi. Also open: whether foreman additionally writes *committed* per-project Claude Code settings — the shared floor a team gets from a clone — with this machine-local layer as overrides on top. Those are two different capabilities that happen to touch the same file format.
+Open: whether foreman additionally writes *committed* per-project Claude Code settings — the shared floor a team gets from a clone — with this machine-local layer as overrides on top. Those are two different capabilities that happen to touch the same file format. Also open: distribution. Install is currently a clone plus a symlink, which is fine for one operator and not for an organization.

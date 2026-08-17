@@ -1,0 +1,20 @@
+#!/bin/sh
+# Run every test suite. Exits non-zero if any fail.
+#
+#   sh tests/run
+#
+# Every suite here is hermetic — HOME and LUMA_FOREMAN_HOME are redirected into
+# temp directories, so running this never touches your real configuration.
+set -u
+
+cd "$(dirname "$0")/.." || exit 2
+status=0
+
+for suite in tests/*-test.sh; do
+  printf '\n== %s\n' "$suite"
+  if sh "$suite"; then :; else status=1; fi
+done
+
+printf '\n'
+[ "$status" -eq 0 ] && printf 'all suites passed\n' || printf 'FAILURES\n'
+exit "$status"
