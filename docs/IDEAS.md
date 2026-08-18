@@ -98,7 +98,7 @@ Change what Claude Code's hooks allow or disallow with a command, per project, w
 - This is **workstation state, per project** — never committed. What an agent may do in a repository is the operator's call, not something every clone inherits.
 - The value vocabulary is Claude Code's own — `allow`, `ask`, `deny` — plus `always` for bypass-proof, and refinements like `trusted` for ssh and `safe` for fetches. Not `disallow`; nothing in this space uses that word.
 - Textual command matching is not a security boundary and must not be described as one. It catches your own slips and an agent's carelessness. Sandboxing is the boundary; this rides on top for ergonomics.
-- Whatever governs the agent has to be something the agent cannot edit, including the gate itself. Solved by putting the gate in the same directory as the policy, so one deny rule covers both. The prototype protected the rulebook and not the lock.
+- Whatever governs the agent has to be something the agent cannot edit, including the gate itself. Solved with deny rules covering both the policy and the installed gate. The prototype protected the rulebook and not the lock. They deliberately live in *different* directories — configuration in `~/.config`, program files in `~/.local/share` — so that clearing your config cannot delete the gate, which would fail it open.
 - A tool that has to touch someone else's config writes freely into the directory it owns and never silently edits the directory the user owns. `policy install` copies the gate and *prints* the `settings.json` changes, following `pre-commit install`.
 
 Open: whether foreman additionally writes *committed* per-project Claude Code settings — the shared floor a team gets from a clone — with this machine-local layer as overrides on top. Those are two different capabilities that happen to touch the same file format. Also open: distribution. Install is currently a clone plus a symlink, which is fine for one operator and not for an organization.
@@ -107,20 +107,52 @@ Open: whether foreman additionally writes *committed* per-project Claude Code se
 
 I want all skill logic to live under workflows/ and then add thin adapaters to make it work with various agent harnesses so they can trigger the skills.  A workflow can be a single skill file or a folder of files, scripts, templates, examples, and more.
 
-## Strategry selection
+## Strategy selection
 
-I want to have a catalog of strategies to apply to each project.  And for each project I can choose from the catalog (either via copy or maybe symlink, this mechanism needs to get fleshed out) to apply them to my given project.   The `luma-hq` project will help us define the strageties we can select from for our org.   
+I want to have a catalog of strategies to apply to each project.  And for each project I can choose from the catalog (either via copy or maybe symlink, this mechanism needs to get fleshed out) to apply them to my given project by using a command found in luma-foreman.   The `luma-hq` project will help us define the strategies we can select from for our org.  `luma-hq` will use its breadth of organization knowledge to develop the strategies and then it will promote them to luma-foreman where they become available for selection.  But strategies do not HAVE to come from luma-hq, they can start bluegrass style where a strategy is either unique to a project, or it is trialed in a project and then eventually gets circulated up and through hq.  It is a two way street, it is just that hq will have the context of all projects and foreman will have the context of a single project.   
 
 There will be three buckets of stategies:
-- Universal stategies, provided by luma organization for all other organizations to select from (not just for the luma organization)
-- Organization strategies, provided by your organization - specific to your organization, these will go under your own git repo and your own version of luma-hq will help you establish them
+- Universal strategies, provided by luma organization for all other organizations to select from (not just for the luma organization)
+- Organization strategies, provided by your organization — specific to your organization, these will go under your own git repo and your own version of luma-hq will help you establish them
 - Project strategies, provided by a given project and not shared enough to get promoted to organization or universal strategies
 
 Then each project will somehow select from these buckets what strategies get applied.  And we need to select in a way where as strategies change the project doesn't get it's strategy changed from underneath it.  For example if a universal strategy XYZ goes from v1.0.0 to v2.0.0 then the project should not automatically adopt v2.0.0 but it should be made aware that new stratgies are available.
 
 And either this project luma-foreman and/or luma-hq should be able to force new strategies down for critical stuff where projects are not allowed to adopt on their own schedule.  It's mandated and immediate.  
 
-A nice to have is when new strategies are published they should also publish some kind of date that let's projects know what kind of timeline they have to reasonabily adopt them before they "fall out of compliance".
+A nice to have is when new strategies are published they should also publish some kind of date that lets projects know what kind of timeline they have to reasonably adopt them before they "fall out of compliance".
+
+The same mechanism serves [Workflows](#workflows). A strategy is context and a workflow is skill content, but both are material published in a catalog, selected per project, and versioned — so they should share one distribution model rather than growing two.
+
+### Strategies are dependencies
+
+Nothing above is a new problem. A catalog, per-project selection, pinned versions, "do not change under me", "tell me what is available", "this one is mandatory", "here is your deadline" — that is package management, and every part of it is solved somewhere worth stealing from rather than inventing against.
+
+| wanted | prior art |
+| --- | --- |
+| the catalog | a registry |
+| what this project selected | a manifest — `package.json`, `Gemfile` |
+| do not change under me | a lockfile, plus a vendored copy |
+| tell me what is new | `npm outdated`, `bundle outdated` |
+| mandatory and immediate | a security advisory — `npm audit`, Dependabot |
+| adoption deadline | a deprecation window, a remediation SLA |
+| promotion upward | contributing a fork back upstream |
+
+It also lands on the four jobs without stretching. **Outfit** applies what a project selected. **Inspect** verifies that what is applied still matches what was selected. **Refit** is the outdated-and-overdue report, which is already what its charter line describes: return over time and confirm the latest learnings were actually applied, not just published.
+
+**Settled: vendor into the project, do not reference.** The open copy-or-symlink question is answered by the charter rather than by taste. Inspect must run in a fresh clone with no configuration and no organization access. If a project's strategies live by reference in an organization repository, a continuous integration run cannot verify compliance at all — it can only report the check as skipped, and the project's whole posture becomes unverifiable in the place it most needs verifying. Vendoring also buys the no-surprise property outright: a vendored copy cannot change underneath a project, because changing it is a commit.
+
+Open, in the order they block:
+
+**Is a strategy content, or content plus a check?** This decides everything downstream. If a strategy is only context and skill files, "applied" means the files match the vendored copy — a checksum, and Inspect stays trivial. If a strategy can also assert something about a project ("this repository uses conventional commits"), then strategies carry executable rules, the catalog becomes a plugin system, and Inspect needs the rule configuration format currently being deferred. Start content-only and let the first strategy that genuinely needs a check force the question.
+
+**Vendoring publishes an organization's strategies into every project that uses them.** A private strategy vendored into a repository that is later opened up is now public. That is the same class of leak the identity work was about, and it will happen the first time someone open-sources a project. Either organization strategies are public-safe by construction, or they carry a confidential marker and `outfit` refuses to vendor them into a repository with a public remote.
+
+**A mandate needs an escape hatch, or people route around the tool.** A mandatory strategy that breaks a project leaves someone choosing between fixing it immediately and deleting foreman, and they will delete foreman. The usual answer is a declared exception with an owner and an expiry, which Inspect reports as a finding rather than silently honouring — visible, time-boxed, and itself out of compliance.
+
+Also open: how two strategies that both want to write the same file compose, and whether a strategy identity survives promotion from project to organization to universal without becoming a second copy with a different name.
+
+**Watch the Authority limit.** "hq will have the context of all projects" is right, and it is exactly what the charter forbids foreman from having. Keep the promotion pipeline one-directional in terms of knowledge: foreman makes one project's strategy usage legible and exportable; hq is what looks across many projects and notices a pattern worth promoting. Foreman must never need to know what any other project selected.
 
 ## Permission modes
 
