@@ -374,40 +374,71 @@ A nice to have is when new strategies are published they should also publish som
 
 The same mechanism serves [Workflows](#workflows). A strategy is context and a workflow is skill content, but both are material published in a catalog, selected per project, and versioned — so they should share one distribution model rather than growing two.
 
-### How a bundle arrives: mandated or adopted
+### The vocabulary: reach and obligation
 
-Two independent axes, and conflating them is what makes this hard to write about.
+Two axes, and conflating them is what made this hard to write about. Earlier
+drafts had three; the third dissolved, for a reason worth keeping.
 
-**Scope** is where a bundle lives: universal, organization, or project — the
-three buckets above.
+**Reach** is which catalog a bundle came from — universal, organization, or
+project. It is **never declared**. A bundle in the universal catalog has
+universal reach because that is where it is, so promotion is a directory move
+with nothing to edit and no way for a bundle to misstate how far it travels.
 
-**Arrival** is how it reached a project:
+**Obligation** is how strongly the publishing catalog expects a project to adopt
+it. Declared per bundle in that catalog's `catalog.md`, never in the bundle —
+the same bundle is mandatory at one organization and merely available
+everywhere else, so it cannot be a property of the bundle itself.
 
-- **mandated** — handed down; the project cannot decline it and cannot drop it
-- **adopted** — the project decided it applies; it may later drop it
+- **mandatory** — must be adopted. With a `by` date it is a warning and a
+  countdown until then and a failure after; with no date, a failure immediately.
+- **recommended** — reported as a gap, never fails. A project may decline, and
+  ideally records why.
+- **optional** — a curated shortlist. Never reported as missing. This is what
+  separates "worth knowing about" from the rest of the catalog, which is
+  available regardless.
+- **deprecated** — reported if still adopted. The retirement path a catalog
+  needs and earlier drafts had no room for.
 
-|  | universal | organization | project |
-| --- | --- | --- | --- |
-| **mandated** | everyone, no opt-out | this organization, no opt-out | — |
-| **adopted** | picked off the shelf | picked off the shelf | written here |
+**Settled: this is the Luma Knowledge Format's own field ladder, reused
+deliberately.** §5 already defines `mandatory` / `recommended` / `optional` /
+`deprecated` for fields. This is the same question — how strongly is this
+expected — asked about a bundle instead of a field, so a parallel vocabulary
+would be two words for one idea.
 
-Nothing in the catalog is advisory. Both kinds bind identically once in place,
-and Inspect does not care how a bundle arrived — a project that adopted
-something and then drifted from it fails exactly as hard as one ignoring a
-mandate. The difference shows up only at the edges: what a project is allowed to
-stop doing, and who it has to argue with to stop.
+**The distinction that has to survive:** *obligation governs whether you must
+adopt; it does not govern how hard conformance is checked once you have.* A
+recommended bundle a project chose to adopt is checked exactly as strictly as a
+mandated one — drift is drift. What `recommended` buys is the freedom not to
+adopt it at all, and nothing else.
 
-"Optional" is the wrong word for the second kind and was the first word tried.
-It implies weaker enforcement, and there is none.
+That split is what keeps an earlier position intact. This entry previously said
+nothing in the catalog is advisory, on the grounds that a graded severity is the
+setting everyone quietly turns down to `warn` until failures stop happening. That
+danger is real, and it lives entirely in the second question. Grading the first
+one costs nothing, because a project that declined a recommendation is not
+failing — it simply has not adopted it.
 
-The empty cell is the interesting one. A project cannot meaningfully mandate
-something to itself — whatever it wrote, it can unwrite. Project scope is always
-adopted, which means *mandated* names precisely the tier that arrives from
-somewhere the project does not control. That is what earns it a separate word.
+**Optional is a rung, not a mistake.** An earlier draft rejected the word for
+implying weaker enforcement. It does imply that, and now that is correct: the
+enforcement being weakened is on *adoption*, not on conformance.
 
-**Mandates are what stop "adopt nothing" from being compliant.** Without them a
-project that opts into nothing passes every check trivially, and Inspect
-measures enthusiasm rather than conformance. The mandated tier is the floor that
+**Nothing else needs a field, because location is the metadata.** Three
+candidates were proposed and all three dissolved the same way. Reach is which
+catalog you found it in. Whether a bundle installs into an organization or a
+project is which directory of the catalog it sits in — `project/` and
+`organization/` — which makes adopting the wrong kind impossible rather than
+merely detectable. And who to ask for an exemption is whichever catalog declared
+the obligation. Every one of them was derivable from where the thing already
+was.
+
+A project's own bundles have no obligation, and that gap is meaningful. A
+project cannot mandate anything to itself — whatever it wrote, it can unwrite —
+so obligation names precisely what arrives from somewhere the project does not
+control.
+
+**Mandatory bundles are what stop "adopt nothing" from being compliant.**
+Without them a project that opts into nothing passes every check trivially, and
+Inspect measures enthusiasm rather than conformance. They are the floor that
 makes a green result mean something on a project that never opted into anything.
 
 ### Bundles are a distribution problem, and it is already solved elsewhere
