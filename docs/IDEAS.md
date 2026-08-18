@@ -471,6 +471,79 @@ Also open: how two strategies that both want to write the same file compose, and
 
 **Watch the Authority limit.** "hq will have the context of all projects" is right, and it is exactly what the charter forbids foreman from having. Keep the promotion pipeline one-directional in terms of knowledge: foreman makes one project's strategy usage legible and exportable; hq is what looks across many projects and notices a pattern worth promoting. Foreman must never need to know what any other project selected.
 
+### A catalog's content belongs in one subtree
+
+**Proposed, not settled.** A catalog repository holds two different things: the
+catalog itself — `catalog.md`, `project/`, `organization/` — and the project
+that maintains it, which is documentation, a changelog, contribution guidance,
+and continuous integration. Those should not share a root namespace.
+
+Today they do not collide, because a fresh catalog has only the two content
+directories. The collision arrives with the third thing. Once `docs/` exists, a
+reader has to know by convention which top-level entries are content, and adding
+a third content directory later — a `workstation/` seat, say — puts it beside
+`docs/` with nothing structural telling them apart.
+
+```
+luma-catalog/
+  catalog/
+    catalog.md
+    project/
+    organization/
+  docs/
+  README.md
+```
+
+Nesting makes the boundary mechanical rather than conventional: everything under
+`catalog/` is the catalog, everything outside maintains it. It is the move the
+format repository already made for its own bundle, and the reasoning transfers —
+the specification, the changelog and the project documentation maintain that
+bundle rather than being part of it.
+
+Two things this buys beyond tidiness. A sparse checkout can name exactly the
+content, which only works if there is one subtree to name. And it gives any
+program that consumes catalogs a single unambiguous answer to "where does the
+content start" — otherwise every such program needs its own rule about which
+root directories count, and they will disagree.
+
+**A catalog is not a bundle, and the layout should not imply it is.** A bundle
+carries a mandatory version; a catalog carries none. A bundle is copied
+wholesale; a catalog is read and picked from. A bundle contains documents and
+assets; a catalog contains bundles. Calling the subtree a bundle would owe an
+answer to whether an outer version bumps when an inner one does — a question
+with no good answer and no reason to have been asked. Same layout pattern,
+different kind of thing.
+
+**The cost curve is one-directional.** With no bundles and no consumers this is
+a two-path move. After bundles exist it invalidates every pinned path and every
+adopt command anyone has written down.
+
+### Browsing a catalog is an engine's job, not a catalog's
+
+A web interface for browsing bundles is wanted eventually. It must not live
+inside a catalog.
+
+An organization with a private catalog wants the same view of its own bundles.
+A browser that lives inside the universal catalog is welded to that catalog's
+content, so every organization wanting it has to fork — which is the thing the
+architecture spends its effort avoiding. **A browser has to point at *a*
+catalog, not be a feature of *the* catalog**, for the same reason foreman is
+separate from an hq: it has to run against content it does not contain.
+
+Whether that is its own repository or a foreman capability is open. Foreman is
+already what talks to catalogs at apply time, and `list what is available here`
+is close to `outfit` and `refit` in what it has to read, so a subcommand may
+earn it before a second program does.
+
+A secondary reason to keep it out regardless: an application gives the one
+repository that is meant to be pure content a dependency tree, a lockfile, a
+build, and a vulnerability feed. Every organization fetches content from that
+repository. Dependency alerts on a catalog are a category error.
+
+If the browser is a static site, the answer is the same with different
+mechanics — the generator is an engine and lives elsewhere; the output is a
+build artifact and is not committed to the content branch.
+
 ## Permission modes
 
 I want to be able to setup a mode in the config or via the command line or both.
