@@ -142,7 +142,10 @@ run 'github token in content' 1 "$d"
 has 'GitHub personal access token'
 lacks "$GHT"
 
-d=$(repo pkey 'dev@example.com' '-----BEGIN OPENSSH PRIVATE KEY-----')
+# Assembled, not written literally — see the note above. This exact line was
+# committed as a literal once and the scanner promptly reported its own repo.
+PK=$(printf -- '-----BEGIN %s PRIVATE KEY-----' OPENSSH)
+d=$(repo pkey 'dev@example.com' "$PK")
 run 'private key block' 1 "$d"
 has 'private key block'
 

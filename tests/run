@@ -15,6 +15,19 @@ for suite in tests/*-test.sh; do
   if sh "$suite"; then :; else status=1; fi
 done
 
+# Foreman must pass its own inspection. Twice now a fixture has been committed
+# as a literal — a home path, then a private key block — and the scanner
+# reported its own repository. The fix is never to exempt tests from scanning;
+# it is to not commit the literal. This makes forgetting that a test failure.
+printf '\n== luma-foreman inspect (self)\n'
+if ./bin/luma-foreman inspect >/dev/null 2>&1; then
+  printf 'clean\n'
+else
+  printf 'FAILED — foreman does not pass its own inspection:\n'
+  ./bin/luma-foreman inspect 2>&1 | sed 's/^/  /'
+  status=1
+fi
+
 printf '\n'
 [ "$status" -eq 0 ] && printf 'all suites passed\n' || printf 'FAILURES\n'
 exit "$status"
