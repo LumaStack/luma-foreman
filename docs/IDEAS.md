@@ -544,6 +544,45 @@ If the browser is a static site, the answer is the same with different
 mechanics — the generator is an engine and lives elsewhere; the output is a
 build artifact and is not committed to the content branch.
 
+### Manifest files may want to be YAML, not markdown
+
+**Unsettled, and worth revisiting deliberately rather than by drift.** Neither
+`bundle.md` nor `catalog.md` is obviously right, and `catalog.md` is the weaker
+of the two.
+
+The doubt is about files that are almost entirely frontmatter. A markdown
+document with a manifest at the top is the format's best property when the body
+carries something; it is a YAML file wearing a costume when the body does not.
+After the general prose moved into `_types/catalog.md` where it belonged,
+`catalog.md` is a short instance note over a manifest — close to the point where
+the extension stops being honest.
+
+**They may deserve different answers, and forcing symmetry is part of what makes
+this feel wrong.** A bundle is knowledge-adjacent, and its body has a real job:
+what this bundle does, when to reach for it, what it assumes. A catalog is pure
+configuration — an index with obligations, read by one tool, correct or not
+according to cross-field rules. Nothing says both belong in the same file
+format.
+
+What YAML would buy: a JSON Schema, which brings editor validation and
+completion that frontmatter never gets; no ambiguity about whether the body is
+normative; and one obvious parse. What markdown buys: one parser across every
+document foreman reads, a `type` that makes the file discoverable by the same
+tooling that reads bundles, and the self-describing property the whole format
+rests on.
+
+**The timing matters more than the answer.** `bundle.md` is a reserved file in
+the specification and `bundle` is a built-in type, so moving it is a breaking
+change — but the format is in the `0.0.z` tier it declares unstable, which is
+exactly the window such a change exists for. That window closes at `1.0`, and
+this is a cheap edit now and an expensive migration later. Same one-directional
+cost curve as nesting the catalog content.
+
+**What would settle it:** whether real bundles turn out to have bodies worth
+reading. If they do, `bundle.md` earns itself and only `catalog.yaml` moves. If
+they do not, both are manifests and the markdown wrapper is costing a schema for
+nothing.
+
 ## Permission modes
 
 I want to be able to setup a mode in the config or via the command line or both.
