@@ -105,9 +105,57 @@ Open: whether foreman additionally writes *committed* per-project Claude Code se
 
 ## Workflows
 
+A workflow is a [bundle](#bundles) type. The distribution, versioning and
+selection questions are answered there; this entry is about what a workflow
+contains.
+
 I want all skill logic to live under workflows/ and then add thin adapaters to make it work with various agent harnesses so they can trigger the skills.  A workflow can be a single skill file or a folder of files, scripts, templates, examples, and more.
 
-## Strategy selection
+## Bundles
+
+**Settled: they are called bundles.** A bundle is a versioned directory of
+material — files, scripts, templates, examples, documentation, context — plus
+whatever configuration it needs to describe itself. A zip, a directory, the
+packaging is incidental.
+
+Bundles are *typed*. Today the types are standards and workflows; tomorrow
+something else. A type decides what applying the bundle means, which is why the
+type system is the part to keep small.
+
+**Settled: bundles do not depend on other bundles, in the MVP.** This is the
+fork between a catalog and a package manager. Allowing dependencies buys version
+resolution, conflicts, diamonds and a solver — a year of work that has eaten
+better-funded projects. Every bundle is self-contained; if two need the same
+material, it is copied, or the project adopts both. Boring, and boring is
+correct here. Note that the word "bundle" was chosen partly because "package"
+imports the opposite expectation.
+
+**Wanted: what goes into a bundle should be unconstrained.** Files, scripts,
+templates, examples, documentation, context — whatever a type needs, in whatever
+shape it needs it.
+
+Two kinds of flexibility hide in that sentence and they cost very differently.
+
+*What a bundle contains* is free. Distribution is copying a directory,
+versioning is a checksum over it, and verifying that what was applied still
+matches what was adopted is the same checksum. None of that gets harder as the
+contents get richer, so there is no reason to constrain them.
+
+*What applying a bundle can do* is where to stay narrow. If a bundle ships an
+install script, then adopting one means executing code that arrived from up to
+three levels away, and the promotion chain — project to organization to luma to
+every organization — becomes a supply chain. Foreman spends its other half
+deciding what an agent is allowed to run; handing a catalog arbitrary execution
+would undo that from the other side.
+
+Proposed, not settled: contents unconstrained, placement declarative. A bundle
+declares where its material goes; it does not bring a program that puts it
+there. Same MVP scoping as the dependency decision, and reversible later if
+something genuinely needs it.
+
+The rest of this section was originally captured as "strategy selection". A
+strategy is now one type of bundle; the reasoning below applies to all of them.
+
 
 I want to have a catalog of strategies to apply to each project.  And for each project I can choose from the catalog (either via copy or maybe symlink, this mechanism needs to get fleshed out) to apply them to my given project by using a command found in luma-foreman.   The `luma-hq` project will help us define the strategies we can select from for our org.  `luma-hq` will use its breadth of organization knowledge to develop the strategies and then it will promote them to luma-foreman where they become available for selection.  But strategies do not HAVE to come from luma-hq, they can start bluegrass style where a strategy is either unique to a project, or it is trialed in a project and then eventually gets circulated up and through hq.  It is a two way street, it is just that hq will have the context of all projects and foreman will have the context of a single project.   
 
@@ -124,11 +172,11 @@ A nice to have is when new strategies are published they should also publish som
 
 The same mechanism serves [Workflows](#workflows). A strategy is context and a workflow is skill content, but both are material published in a catalog, selected per project, and versioned — so they should share one distribution model rather than growing two.
 
-### How a strategy arrives: mandated or adopted
+### How a bundle arrives: mandated or adopted
 
 Two independent axes, and conflating them is what makes this hard to write about.
 
-**Scope** is where a strategy lives: universal, organization, or project — the
+**Scope** is where a bundle lives: universal, organization, or project — the
 three buckets above.
 
 **Arrival** is how it reached a project:
@@ -142,7 +190,7 @@ three buckets above.
 | **adopted** | picked off the shelf | picked off the shelf | written here |
 
 Nothing in the catalog is advisory. Both kinds bind identically once in place,
-and Inspect does not care how a strategy arrived — a project that adopted
+and Inspect does not care how a bundle arrived — a project that adopted
 something and then drifted from it fails exactly as hard as one ignoring a
 mandate. The difference shows up only at the edges: what a project is allowed to
 stop doing, and who it has to argue with to stop.
@@ -160,7 +208,7 @@ project that opts into nothing passes every check trivially, and Inspect
 measures enthusiasm rather than conformance. The mandated tier is the floor that
 makes a green result mean something on a project that never opted into anything.
 
-### Strategies are dependencies
+### Bundles are a distribution problem, and it is already solved elsewhere
 
 Nothing above is a new problem. A catalog, per-project selection, pinned versions, "do not change under me", "tell me what is available", "this one is mandatory", "here is your deadline" — that is package management, and every part of it is solved somewhere worth stealing from rather than inventing against.
 
