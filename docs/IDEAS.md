@@ -113,14 +113,50 @@ I want all skill logic to live under workflows/ and then add thin adapaters to m
 
 ## Bundles
 
-**Settled: they are called bundles.** A bundle is a versioned directory of
-material — files, scripts, templates, examples, documentation, context — plus
-whatever configuration it needs to describe itself. A zip, a directory, the
-packaging is incidental.
+**Settled: a bundle is an LKF Knowledge Bundle.** Not a similar thing, the same
+thing. LKF already defines a Bundle as "a self-contained, hierarchical
+collection of knowledge documents — the unit of distribution", and foreman had
+independently arrived at a self-contained, typed unit of distribution. Two names
+for one idea was the only thing separating them.
 
-Bundles are *typed*. Today the types are standards and workflows; tomorrow
-something else. A type decides what applying the bundle means, which is why the
-type system is the part to keep small.
+This is stronger than a convenience. Foreman's thesis is that a standard is
+knowledge in executable form; if that holds, a script, a template and a document
+are the same substance at different degrees of executability, and one unit of
+distribution is what follows rather than a tidy coincidence. It also collapses
+three threads: hq curates bundles and foreman applies them — same artifacts,
+different verbs — and incident records, already settled as LKF, become a bundle
+type rather than a separate filing system.
+
+Foreman therefore defines no format of its own. A bundle *type* is an LKF Type
+Definition (§10.1) living in the bundle's reserved `_types/` directory,
+declaring its fields and their obligations — `version`, `published`, and
+whatever else a type needs. The manifest question is answered by a spec that
+already exists.
+
+**Settled: material is payload, not first-class (Model A).** The base object is
+a typed markdown file. Scripts, templates and binaries ride along as material
+the bundle carries; they carry no type and are not knowledge in their own right.
+
+**Settled: the material is called an attachment.** `payload` was preferred at
+first and is defensible, but it inverts the relationship it names — an HTTP or
+packet payload is the point and the envelope is overhead, whereas here the
+document is primary and the material rides along, which is Model A exactly.
+`sidecar` was rejected outright: Kubernetes owns it, and it means a companion
+*process*, which these files are not. `attachment` is the wiki-native term —
+Obsidian, Confluence and MediaWiki all use it — and it carries subordination
+correctly.
+
+**Required: documents must be able to reference attachments.** Material
+that cannot be pointed at is dead weight; a workflow whose document cannot say
+"run `scripts/setup.sh`" has not described a workflow.
+
+The alternative was making every file a first-class member, and it fails on
+contact: a shell script cannot carry YAML frontmatter and a PNG certainly
+cannot, so every non-markdown member would need a sidecar or a manifest. That
+trades away the format's best property — files that describe themselves — for
+uniformity nobody asked for. Assets can be promoted to first-class later if
+something genuinely needs a script to be versioned and linkable on its own;
+going the other way, once every file needs a sidecar, is much harder.
 
 **Settled: bundles do not depend on other bundles, in the MVP.** This is the
 fork between a catalog and a package manager. Allowing dependencies buys version
@@ -152,6 +188,123 @@ Proposed, not settled: contents unconstrained, placement declarative. A bundle
 declares where its material goes; it does not bring a program that puts it
 there. Same MVP scoping as the dependency decision, and reversible later if
 something genuinely needs it.
+
+### Format decisions for LKF
+
+LKF is ours to change, so these are decisions rather than requests. Foreman
+should not work around any of them locally.
+
+**Rename the base object from Concept to Document.** A `lab_result` is not a
+concept. Neither is a `task`, nor an incident timeline, nor a bundle's manifest.
+The spec has to stretch to cover them — "a tangible asset, an abstract idea, or
+anything in between" — which is the sound of an abstraction named after its
+first instance. Meanwhile the spec's own prose already says the right word when
+speaking plainly: a bundle is "a collection of knowledge **documents**".
+`concept` then becomes what it always was — one type, for genuinely conceptual
+entries like `wiki/concepts/diffusion-models` — extending the base through the
+`extends` mechanism §10.3 already provides. LKF is `v0.0.3` and declares the
+`0.0.z` tier unstable, so this is exactly the window such a change exists for.
+
+**A bundle holds non-document files, and they are called attachments.** The spec
+currently defines a bundle as markdown documents and rules on nothing else.
+Model A needs it to say yes.
+
+**A bundle describes itself.** Two separate things, easy to conflate:
+
+- `_types/bundle.md` — the Type Definition, declaring what a bundle document
+  carries. One per format.
+- a document at the bundle root with `type: bundle` — the instance, carrying
+  *this* bundle's values. One per bundle.
+
+Its fields:
+
+| field | obligation | why |
+| --- | --- | --- |
+| `type: bundle` | mandatory | it is the only hard requirement LKF has |
+| `version` | mandatory | the entire adopt-and-pin model is version-shaped — "do not change under me", "a newer one exists", "you are two behind", "this mandate is unmet" mean nothing without it. A bundle foreman cannot pin is one it cannot honestly say anything about |
+| `published` | recommended | wanted for adoption deadlines, but a bundle works without a date |
+| `description` | recommended | |
+
+`version` is mandatory on the asymmetry rather than on principle: going
+mandatory → recommended later breaks no existing bundle, while recommended →
+mandatory invalidates every bundle that skipped it. Require now, relax if it
+proves wrong. It also costs nothing to declare, since in LKF `mandatory` is
+published intent rather than a gate — foreman is what enforces it.
+
+**Specify attachments.** Naming them is the easy half; six things need answering
+before the concept is specified rather than gestured at.
+
+1. *What it is.* A file in a bundle that is not a document — no frontmatter, no
+   `type`, not subject to Type Definition validation. "Not a document" is the
+   whole definition and should be stated plainly.
+2. *Where it lives.* Anywhere in the bundle. A reserved `_attachments/` would
+   fight the natural `scripts/`, `templates/`, `examples/` layout a workflow
+   bundle wants.
+3. *Placement is deliberately unspecified.* An attachment may sit beside the
+   document that uses it, in a `scripts/` directory, in a shared folder —
+   wherever the author finds natural. Nothing mechanical needs to know: not
+   resolving a reference, not detecting dead attachments, not vendoring, not
+   applying. Ownership is a convention for humans, so specifying it buys
+   nothing and forecloses cases that genuinely differ — one document with three
+   scripts wants colocation, ten documents sharing one template obviously do
+   not. If a convention proves dominant, promote it later to a `recommended`,
+   which breaks no existing bundle.
+
+   The one real constraint is **self-containment**: an attachment must be
+   *inside* the bundle, and a reference must resolve to something that is
+   actually there. A path leading outside the directory breaks the property the
+   whole distribution model rests on — that you can tar it, ship it, and have
+   it still work.
+
+4. *Containment, reference and ownership are three questions, and only the
+   first two have answers.* The **bundle** contains attachments — it is the
+   directory and the unit of distribution, so they travel with it. **Documents
+   reference** them, and any document may reference any attachment; several may
+   reference the same one, or none may. **Nothing owns** an attachment in a
+   lifecycle sense: delete a document and its attachments do not vanish, they
+   merely stop being referenced. That is precisely why dead-attachment
+   detection is worth having — with no owner, unreferenced files accumulate
+   in silence and only a check will say so. Per-document folders
+   (`foo.md` + `foo.assets/`) were the alternative: tidier, and a rule nobody
+   follows.
+5. *ID.* §3 strips `.md` from a document's ID. An attachment's ID keeps its
+   extension, or `setup` is ambiguous between `setup.md` and `setup.sh`.
+6. *Referencing.* A wikilink with the extension required — `[[scripts/setup.sh]]`.
+   Extension-optional matching is where Obsidian generates confusion; requiring
+   it is the boring unambiguous choice. Making attachments part of the link
+   graph is what turns foreman's "every referenced attachment exists" into a
+   single uniform traversal rather than two mechanisms, and it gives
+   dead-attachment detection and rename safety for free.
+7. *Consumer obligations.* Tolerate a missing target, consistent with §3 on
+   unresolved links; preserve attachments when rewriting a bundle; never reject
+   a bundle for carrying them.
+
+An earlier draft of this entry claimed an attachment could not be a wikilink.
+That was wrong — Obsidian and MediaWiki both link assets — and it mistook the
+current spec's document-to-document definition of Link for a design constraint.
+
+### The seam: LKF never rejects, foreman must
+
+LKF is emphatic that consumers "MUST NOT reject a Concept for: missing
+recommended or optional fields, an unrecognized `type`, unknown extra keys, or
+unresolved links", and that a Type Definition publishes *intent* — validation is
+"never a conformance gate, and it never rejects by default".
+
+Foreman's whole job is to reject. So **conformant LKF will never mean valid
+foreman bundle**: a bundle missing its `version` is perfectly legal LKF and
+useless here. That enforcement lives in foreman, explicitly, and someone will
+eventually assume the format is doing work it openly refuses to do.
+
+This is also where the attachment rules land: LKF tolerates a dangling
+attachment reference, foreman must fail on one. A bundle referencing a script
+that is not there stays perfectly conformant and then breaks the moment it is
+applied, so "every referenced attachment exists" is a foreman check and a
+concrete one worth building early.
+
+One place the seam cuts the right way: §3 requires consumers to tolerate links
+whose target does not resolve. That is exactly the property that lets bundles
+reference each other without a resolver — so "no dependencies in the MVP" means
+no *resolution*, not no references.
 
 The rest of this section was originally captured as "strategy selection". A
 strategy is now one type of bundle; the reasoning below applies to all of them.
