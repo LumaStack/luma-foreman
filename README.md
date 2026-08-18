@@ -56,36 +56,31 @@ It also carries **meta-skills**: skills whose job is to generate a project's own
 
 The goal is projects that are homogeneous where homogeneity pays and optimal where it does not.
 
-## The constraint that defines this repository
+## The constraints that define this repository
 
-Three limits. They are easy to collapse into one another, and collapsing them is how this charter goes wrong — so they are named separately.
+**luma-foreman can always run on its own.**
 
-| | |
-| --- | --- |
-| **Dependency** | Foreman runs with no hq checkout, no network call, no organization secrets. |
-| **Authority** | Foreman enforces standards; it does not decide them, and it does not accumulate knowledge across projects in order to. |
-| **Existence** | hq is optional. Foreman has to be worth installing where no hq will ever exist. |
+luma-hq is optional. When one exists, foreman may use it and may be better for
+it. When one does not, nothing foreman does stops working.
 
-Dependency is the runtime limit and is elaborated below. Authority and Existence are about foreman's role, and are elaborated in [Relationship to luma-hq](#relationship-to-luma-hq).
+That is a guarantee, not a ban. Consulting hq is allowed and may well be worth
+doing; requiring it is not. Every capability gets the same question — does this
+still work with no hq? — and some things honestly cannot exist without one.
+"How does this project compare to the other forty?" is not answerable from one
+repository, and pretending otherwise would be a lie. What the guarantee protects
+is that the jobs foreman already does keep working.
 
-Note what none of the three say: that foreman may hold no state. That is a different question, answered in [Where state lives](#where-state-lives).
+**Foreman enforces standards; it does not decide them.**
 
-**Foreman works one repository at a time, and needs nothing from the organization to do it.**
+**Foreman does not accumulate knowledge across projects** — that is hq's job,
+and the moment answering a question requires knowing about your *other*
+repositories, the question belonged to hq.
 
-A check that needs to know what the organization learned last quarter in order to run is a broken check — the learning must be baked in as an executable rule before it ships here. That is why there is no [luma-hq](https://github.com/LumaStack/luma-hq) checkout and no call out to fetch standards.
-
-Foreman knows hq can exist, and a rule may name the decision it came from. What it never does is *depend* on one. That is what makes foreman usable in a repository belonging to someone with no access to the rest of the organization, and in an organization that has no rest.
-
-### What the constraint does not forbid
-
-It forbids organization context as an **input**. It does not forbid foreman from keeping state as it works.
-
-Foreman is boots on the ground: one operator, one workstation, many repositories, over and over. It has to record what this machine and this operator have decided, and those are local facts rather than organization knowledge. A foreman that cannot hold them only works for whoever's dotfiles it grew up in — which fails the same test the constraint exists to pass.
-
-Two rules keep that honest:
-
-- **Every capability has a correct default with no configuration present.** Configuration changes what foreman does for you. It never changes what the standard is.
-- **Configuration carries local facts, never standards.** "This workstation may ssh to build01" is a local fact. "Projects must not leak personally identifiable information" is a standard, and standards ship as code.
+But knowledge can travel both ways. Plenty of it starts in one project and
+outgrows it, and foreman should make promoting it upward easy — to an hq if
+there is one, which is what can circulate it back down to everyone else.
+Foreman is where knowledge can originate and always where it lands; hq is what
+carries it between projects.
 
 ## Where state lives
 

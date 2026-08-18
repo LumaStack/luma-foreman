@@ -124,6 +124,42 @@ A nice to have is when new strategies are published they should also publish som
 
 The same mechanism serves [Workflows](#workflows). A strategy is context and a workflow is skill content, but both are material published in a catalog, selected per project, and versioned — so they should share one distribution model rather than growing two.
 
+### How a strategy arrives: mandated or adopted
+
+Two independent axes, and conflating them is what makes this hard to write about.
+
+**Scope** is where a strategy lives: universal, organization, or project — the
+three buckets above.
+
+**Arrival** is how it reached a project:
+
+- **mandated** — handed down; the project cannot decline it and cannot drop it
+- **adopted** — the project decided it applies; it may later drop it
+
+|  | universal | organization | project |
+| --- | --- | --- | --- |
+| **mandated** | everyone, no opt-out | this organization, no opt-out | — |
+| **adopted** | picked off the shelf | picked off the shelf | written here |
+
+Nothing in the catalog is advisory. Both kinds bind identically once in place,
+and Inspect does not care how a strategy arrived — a project that adopted
+something and then drifted from it fails exactly as hard as one ignoring a
+mandate. The difference shows up only at the edges: what a project is allowed to
+stop doing, and who it has to argue with to stop.
+
+"Optional" is the wrong word for the second kind and was the first word tried.
+It implies weaker enforcement, and there is none.
+
+The empty cell is the interesting one. A project cannot meaningfully mandate
+something to itself — whatever it wrote, it can unwrite. Project scope is always
+adopted, which means *mandated* names precisely the tier that arrives from
+somewhere the project does not control. That is what earns it a separate word.
+
+**Mandates are what stop "adopt nothing" from being compliant.** Without them a
+project that opts into nothing passes every check trivially, and Inspect
+measures enthusiasm rather than conformance. The mandated tier is the floor that
+makes a green result mean something on a project that never opted into anything.
+
 ### Strategies are dependencies
 
 Nothing above is a new problem. A catalog, per-project selection, pinned versions, "do not change under me", "tell me what is available", "this one is mandatory", "here is your deadline" — that is package management, and every part of it is solved somewhere worth stealing from rather than inventing against.
