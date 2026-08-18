@@ -429,7 +429,7 @@ and who to ask for an exemption — whichever catalog declared the obligation.
 The third did not, and the failure sharpened the rule. Which level a bundle can
 be adopted at was briefly a directory, `project/` and `organization/`. But a
 bundle can apply at both, and **a path can only ever say one** — so bundles are
-flat and declare `applies_to`. A bundle's path is its identity for adoption, so
+flat and declare `consumers`. A bundle's path is its identity for adoption, so
 whatever is encoded there cannot change without breaking every pin and adopt
 command referring to it. **The path carries only what is single-valued and
 permanent**; everything else is a field. Settled in `luma-hq/DECISIONS.md`.
@@ -527,7 +527,7 @@ that a directory name almost always describes its contents and these held
 bundles rather than projects. That naming question died with the directories
 themselves — a bundle can apply at both levels, so the fact was never
 single-valued and never belonged in a path. Bundles are flat and declare
-`applies_to`. Settled in `luma-hq/DECISIONS.md`.
+`consumers`. Settled in `luma-hq/DECISIONS.md`.
 
 Worth keeping from the naming detour, since the question recurs for any scope
 directory: `by-` is wrong in directory names — it means *grouped by* or
