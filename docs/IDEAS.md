@@ -213,10 +213,34 @@ declares where its material goes; it does not bring a program that puts it
 there. Same MVP scoping as the dependency decision, and reversible later if
 something genuinely needs it.
 
-### Format decisions for LKF
+### Format decisions for LKF — shipped
 
-LKF is ours to change, so these are decisions rather than requests. Foreman
-should not work around any of them locally.
+These landed in `luma-knowledge-format` on `develop`, unreleased, destined for
+the next tag. Foreman can rely on them once that release is cut.
+
+- **`Concept` → `Document`.** `document` is the root type every type implicitly
+  extends; `concept` is now an ordinary built-in type for knowledge-base
+  entries. No file has to change — "Concept" was the spec's word for the object,
+  never a value anyone wrote.
+- **Assets and attachments.** Every file in a Bundle is a Document or an Asset.
+  An Attachment is an Asset a Document links to.
+- **Asset links.** `[[…]]` links a Document, `[…](…)` links anything else. A
+  link must point inside the Bundle; whether the target exists is separate, and
+  an unresolved link stays legal.
+- **`bundle` built-in type and `bundle.md`.** A Bundle describes itself at its
+  root with `type: bundle`, `version` mandatory (`semver`), `published`
+  recommended. `description` is inherited from the core fields as `optional` —
+  inheritance is add-only, so a type cannot restate a field to strengthen it.
+- **`semver` field type.** Full semver, no `v` prefix.
+- **Built-in types ship as files** in LKF's own `_types/`, making that repo a
+  Bundle.
+- **Redefining a built-in is `SHOULD NOT`,** not `MUST NOT`.
+
+Still open in LKF, tracked in its own `docs/ROADMAP.md` under *Next steps*: the
+`extends: source` errata, whether a Type Definition carries a `version`, and
+whether `concept` should ever carry fields of its own.
+
+The earlier decisions below stand as the reasoning behind those changes.
 
 **Rename the base object from Concept to Document.** A `lab_result` is not a
 concept. Neither is a `task`, nor an incident timeline, nor a bundle's manifest.
