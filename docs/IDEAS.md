@@ -518,6 +518,33 @@ different kind of thing.
 a two-path move. After bundles exist it invalidates every pinned path and every
 adopt command anyone has written down.
 
+**Open: whether the scope directories want prepositions.** `project/` and
+`organization/` are scope qualifiers, but nothing in the names says so — a
+directory name almost always describes its contents (`users/`, `posts/`), and
+these hold bundles rather than projects or organizations. The strongest evidence
+that this misleads is that it misled the person who chose it, within days, while
+looking straight at it.
+
+`for-projects/` and `for-organizations/` forecloses the wrong reading rather than
+relying on the reader to infer a qualifier, and the plural becomes correct once
+the preposition is there. The prior art is documentation information
+architecture — `for-developers/`, `for-teams/` — which is audience segmentation,
+and that is what these are.
+
+`by-project/` was considered and is worse than either. In directory naming `by-`
+means *grouped by* or *authored by*, so it promises one subdirectory per project.
+
+Against the change: singular scope directories have real precedent —
+`/etc/systemd/system/` and `.../user/` hold units rather than systems or users,
+sorted by the scope they apply at. That convention works because millions of
+people learned it once from ubiquitous documentation, which a days-old catalog
+format does not have.
+
+The cost is smaller than it looks and confined to one repository: these segments
+do not survive vendoring, since an adopted bundle lands under
+`.hq/standards/bundles/<namespace>/<name>/` with the scope segment dropped. Same
+one-directional curve as the subtree move above — cheap while no bundles exist.
+
 ### Browsing a catalog is an engine's job, not a catalog's
 
 A web interface for browsing bundles is wanted eventually. It must not live
