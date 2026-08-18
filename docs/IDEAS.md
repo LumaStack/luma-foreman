@@ -422,14 +422,17 @@ failing — it simply has not adopted it.
 implying weaker enforcement. It does imply that, and now that is correct: the
 enforcement being weakened is on *adoption*, not on conformance.
 
-**Nothing else needs a field, because location is the metadata.** Three
-candidates were proposed and all three dissolved the same way. Reach is which
-catalog you found it in. Whether a bundle installs into an organization or a
-project is which directory of the catalog it sits in — `project/` and
-`organization/` — which makes adopting the wrong kind impossible rather than
-merely detectable. And who to ask for an exemption is whichever catalog declared
-the obligation. Every one of them was derivable from where the thing already
-was.
+**Location carries the metadata, when it can.** Two of three proposed fields
+dissolved into where the thing already sits: which catalog a bundle came from,
+and who to ask for an exemption — whichever catalog declared the obligation.
+
+The third did not, and the failure sharpened the rule. Which level a bundle can
+be adopted at was briefly a directory, `project/` and `organization/`. But a
+bundle can apply at both, and **a path can only ever say one** — so bundles are
+flat and declare `applies_to`. A bundle's path is its identity for adoption, so
+whatever is encoded there cannot change without breaking every pin and adopt
+command referring to it. **The path carries only what is single-valued and
+permanent**; everything else is a field. Settled in `luma-hq/DECISIONS.md`.
 
 A project's own bundles have no obligation, and that gap is meaningful. A
 project cannot mandate anything to itself — whatever it wrote, it can unwrite —
@@ -474,9 +477,9 @@ Also open: how two strategies that both want to write the same file compose, and
 ### A catalog's content belongs in one subtree
 
 **Proposed, not settled.** A catalog repository holds two different things: the
-catalog itself — `catalog.md`, `project/`, `organization/` — and the project
-that maintains it, which is documentation, a changelog, contribution guidance,
-and continuous integration. Those should not share a root namespace.
+catalog itself — `catalog.md`, `_types/`, `bundles/` — and the project that
+maintains it, which is documentation, a changelog, contribution guidance, and
+continuous integration. Those should not share a root namespace.
 
 Today they do not collide, because a fresh catalog has only the two content
 directories. The collision arrives with the third thing. Once `docs/` exists, a
@@ -518,32 +521,21 @@ different kind of thing.
 a two-path move. After bundles exist it invalidates every pinned path and every
 adopt command anyone has written down.
 
-**Open: whether the scope directories want prepositions.** `project/` and
-`organization/` are scope qualifiers, but nothing in the names says so — a
-directory name almost always describes its contents (`users/`, `posts/`), and
-these hold bundles rather than projects or organizations. The strongest evidence
-that this misleads is that it misled the person who chose it, within days, while
-looking straight at it.
+**Closed: the scope directories are gone.** `project/` and `organization/` were
+briefly going to become `for-projects/` and `for-organizations/`, on the grounds
+that a directory name almost always describes its contents and these held
+bundles rather than projects. That naming question died with the directories
+themselves — a bundle can apply at both levels, so the fact was never
+single-valued and never belonged in a path. Bundles are flat and declare
+`applies_to`. Settled in `luma-hq/DECISIONS.md`.
 
-`for-projects/` and `for-organizations/` forecloses the wrong reading rather than
-relying on the reader to infer a qualifier, and the plural becomes correct once
-the preposition is there. The prior art is documentation information
-architecture — `for-developers/`, `for-teams/` — which is audience segmentation,
-and that is what these are.
-
-`by-project/` was considered and is worse than either. In directory naming `by-`
-means *grouped by* or *authored by*, so it promises one subdirectory per project.
-
-Against the change: singular scope directories have real precedent —
-`/etc/systemd/system/` and `.../user/` hold units rather than systems or users,
-sorted by the scope they apply at. That convention works because millions of
-people learned it once from ubiquitous documentation, which a days-old catalog
+Worth keeping from the naming detour, since the question recurs for any scope
+directory: `by-` is wrong in directory names — it means *grouped by* or
+*authored by*, so `by-project/` promises one subdirectory per project. And
+singular scope directories do have real precedent, `/etc/systemd/system/` and
+`.../user/` holding units rather than systems or users, but that convention
+works because it was learned once from ubiquitous documentation, which a new
 format does not have.
-
-The cost is smaller than it looks and confined to one repository: these segments
-do not survive vendoring, since an adopted bundle lands under
-`.hq/standards/bundles/<namespace>/<name>/` with the scope segment dropped. Same
-one-directional curve as the subtree move above — cheap while no bundles exist.
 
 ### Browsing a catalog is an engine's job, not a catalog's
 
