@@ -137,18 +137,35 @@ already exists.
 a typed markdown file. Scripts, templates and binaries ride along as material
 the bundle carries; they carry no type and are not knowledge in their own right.
 
-**Settled: the material is called an attachment.** `payload` was preferred at
-first and is defensible, but it inverts the relationship it names — an HTTP or
-packet payload is the point and the envelope is overhead, whereas here the
-document is primary and the material rides along, which is Model A exactly.
-`sidecar` was rejected outright: Kubernetes owns it, and it means a companion
-*process*, which these files are not. `attachment` is the wiki-native term —
-Obsidian, Confluence and MediaWiki all use it — and it carries subordination
-correctly.
+**Settled: they are just files.** A bundle contains **files**. A file with YAML
+frontmatter and a `type` is a **document**. A file that a document links to is
+an **attachment** — a relationship, not a category.
 
-**Required: documents must be able to reference attachments.** Material
-that cannot be pointed at is dead weight; a workflow whose document cannot say
-"run `scripts/setup.sh`" has not described a workflow.
+Two terms rather than three, and neither is invented. Naming the non-document
+files something — `asset`, `payload`, `sidecar` — was the instinct throughout,
+and every candidate had a flaw: `payload` inverts the relationship it names (an
+HTTP payload is the point, the envelope is overhead; here the document is
+primary), `sidecar` belongs to Kubernetes and means a companion *process*, and
+`asset` was fine but unnecessary. `attachment` as the *category* was wrong for a
+subtler reason worth keeping: it comes from paper correspondence and legal
+filing, where an attachment belongs to one letter or one filing, so as a
+category it smuggles in the document-level ownership this design rejects. As a
+relationship it is exactly right.
+
+The reason no word is needed is that the rules partition into *all files* and
+*documents specifically* — the complement almost never has to be named. It also
+matches the format's own first principle, that the files themselves are the
+whole system; a second word for a file works against that.
+
+Naming the relationship still pays. It gives the two checks their names: a
+document linking to something that is not there is a **missing attachment**
+(broken, fails on apply), and a file nothing links to is **nobody's attachment**
+(cruft). Only `file` and `document` need to be normative; `attachment` is
+derived vocabulary, worth defining so tools do not invent conflicting meanings.
+
+**Required: documents must be able to link to files.** Material that cannot be
+pointed at is dead weight; a workflow whose document cannot say "run
+`scripts/setup.sh`" has not described a workflow.
 
 The alternative was making every file a first-class member, and it fails on
 contact: a shell script cannot carry YAML frontmatter and a PNG certainly
@@ -205,7 +222,7 @@ entries like `wiki/concepts/diffusion-models` — extending the base through the
 `extends` mechanism §10.3 already provides. LKF is `v0.0.3` and declares the
 `0.0.z` tier unstable, so this is exactly the window such a change exists for.
 
-**A bundle holds non-document files, and they are called attachments.** The spec
+**A bundle holds non-document files.** The spec
 currently defines a bundle as markdown documents and rules on nothing else.
 Model A needs it to say yes.
 
@@ -231,57 +248,57 @@ mandatory invalidates every bundle that skipped it. Require now, relax if it
 proves wrong. It also costs nothing to declare, since in LKF `mandatory` is
 published intent rather than a gate — foreman is what enforces it.
 
-**Specify attachments.** Naming them is the easy half; six things need answering
+**Specify non-document files.** Naming them is the easy half; six things need answering
 before the concept is specified rather than gestured at.
 
 1. *What it is.* A file in a bundle that is not a document — no frontmatter, no
    `type`, not subject to Type Definition validation. "Not a document" is the
    whole definition and should be stated plainly.
-2. *Where it lives.* Anywhere in the bundle. A reserved `_attachments/` would
-   fight the natural `scripts/`, `templates/`, `examples/` layout a workflow
-   bundle wants.
-3. *Placement is deliberately unspecified.* An attachment may sit beside the
+2. *Where it lives.* Anywhere in the bundle. A reserved `_files/` would fight
+   the natural `scripts/`, `templates/`, `examples/` layout a workflow bundle
+   wants.
+3. *Placement is deliberately unspecified.* A file may sit beside the
    document that uses it, in a `scripts/` directory, in a shared folder —
    wherever the author finds natural. Nothing mechanical needs to know: not
-   resolving a reference, not detecting dead attachments, not vendoring, not
+   resolving a reference, not detecting dead files, not vendoring, not
    applying. Ownership is a convention for humans, so specifying it buys
    nothing and forecloses cases that genuinely differ — one document with three
    scripts wants colocation, ten documents sharing one template obviously do
    not. If a convention proves dominant, promote it later to a `recommended`,
    which breaks no existing bundle.
 
-   The one real constraint is **self-containment**: an attachment must be
-   *inside* the bundle, and a reference must resolve to something that is
-   actually there. A path leading outside the directory breaks the property the
+   The one real constraint is **self-containment**: a linked file must be
+   *inside* the bundle, and a link must resolve to something that is actually there. A path leading outside the directory breaks the property the
    whole distribution model rests on — that you can tar it, ship it, and have
    it still work.
 
 4. *Containment, reference and ownership are three questions, and only the
-   first two have answers.* The **bundle** contains attachments — it is the
+   first two have answers.* The **bundle** contains files — it is the
    directory and the unit of distribution, so they travel with it. **Documents
-   reference** them, and any document may reference any attachment; several may
-   reference the same one, or none may. **Nothing owns** an attachment in a
-   lifecycle sense: delete a document and its attachments do not vanish, they
-   merely stop being referenced. That is precisely why dead-attachment
-   detection is worth having — with no owner, unreferenced files accumulate
+   reference** them, and any document may link any file; several may link the
+   same one, or none may. **Nothing owns** a file in a lifecycle sense: delete a
+   document and the files it linked do not vanish, they merely stop being
+   anybody's attachment. That is precisely why dead-file detection is worth
+   having — with no owner, unreferenced files accumulate
    in silence and only a check will say so. Per-document folders
    (`foo.md` + `foo.assets/`) were the alternative: tidier, and a rule nobody
    follows.
-5. *ID.* §3 strips `.md` from a document's ID. An attachment's ID keeps its
+5. *ID.* §3 strips `.md` from a document's ID. A non-document file's ID keeps its
    extension, or `setup` is ambiguous between `setup.md` and `setup.sh`.
-6. *Referencing.* A wikilink with the extension required — `[[scripts/setup.sh]]`.
-   Extension-optional matching is where Obsidian generates confusion; requiring
-   it is the boring unambiguous choice. Making attachments part of the link
-   graph is what turns foreman's "every referenced attachment exists" into a
-   single uniform traversal rather than two mechanisms, and it gives
-   dead-attachment detection and rename safety for free.
+6. *Referencing.* LKF's own roadmap already carries the candidate rule, and it
+   is better than the wikilink scheme first proposed here: `[[…]]` links
+   documents, `[…](…)` links everything else. No new syntax, no change to the ID
+   rules, no extension-ambiguity to resolve, and the distinction is visible at a
+   glance. Foreman parsing two link forms is trivial and is not the format's
+   problem.
 7. *Consumer obligations.* Tolerate a missing target, consistent with §3 on
-   unresolved links; preserve attachments when rewriting a bundle; never reject
-   a bundle for carrying them.
+   unresolved links; preserve non-document files when rewriting a bundle; never reject a
+   bundle for carrying them.
 
-An earlier draft of this entry claimed an attachment could not be a wikilink.
-That was wrong — Obsidian and MediaWiki both link assets — and it mistook the
-current spec's document-to-document definition of Link for a design constraint.
+An earlier draft of this entry argued for wikilinking non-document files. That was wrong
+twice over: it mistook the spec's document-to-document definition of Link for a
+design constraint, and it charged foreman's convenience — one uniform traversal
+— to the format's spec surface.
 
 ### The seam: LKF never rejects, foreman must
 
@@ -295,11 +312,12 @@ foreman bundle**: a bundle missing its `version` is perfectly legal LKF and
 useless here. That enforcement lives in foreman, explicitly, and someone will
 eventually assume the format is doing work it openly refuses to do.
 
-This is also where the attachment rules land: LKF tolerates a dangling
-attachment reference, foreman must fail on one. A bundle referencing a script
-that is not there stays perfectly conformant and then breaks the moment it is
-applied, so "every referenced attachment exists" is a foreman check and a
-concrete one worth building early.
+This is also where the file rules land: LKF tolerates a dangling link, foreman
+must fail on one. A bundle referencing a script that is not there stays
+perfectly conformant and then breaks the moment it is applied. That gives
+foreman two checks with different severities — a **missing attachment** is
+broken and fails on apply; a file that is **nobody's attachment** is merely
+cruft.
 
 One place the seam cuts the right way: §3 requires consumers to tolerate links
 whose target does not resolve. That is exactly the property that lets bundles
