@@ -9,9 +9,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 
 ## [Unreleased]
 
+### Changed
+- **Machine-local directories nest under the organization: `~/.config/luma/luma-foreman/`**, and likewise under `~/.local/share/` and `~/.cache/`. The second segment is the repository name exactly, so a directory maps to a repository with nothing to translate.
+  This reverses an earlier decision that rested on two claims which did not survive checking. The XDG specification does **not** mandate a flat `<application>/` — it says `$XDG_CONFIG_HOME/subdir/` and leaves depth to the application, so both shapes conform. And *"a path reading `luma/foreman` implies a suite the user may never install"* was true when foreman stood alone; there is now a catalog, a headquarters, a format, and shared configuration anticipated in the same document.
+  What decides it is that a rule covering every tool must be writable once. The deny rules are now `Edit(~/.config/luma/**)` and `Edit(~/.local/share/luma/**)` — **one entry per directory, no wildcard, and no edit when a second tool arrives.** The organization directory is what matches, so repository names are free: a tool called `atlas` is covered by the same rule. The flat layout needed one entry per application or a `luma-*` wildcard, and that wildcard held only while every tool happened to be named `luma-something`.
+  It matters because this rule **fails open**: a pattern matching nothing produces no error, and the first sign would be an agent editing the policy that governs it.
+  *Migration:* the previous `~/.config/luma-foreman/` and `~/.local/share/luma-foreman/` are reported by `policy doctor` as legacy directories and are **not** deleted — `settings.json` may still point into one, and removing it before the wiring moves would leave a session unguarded. Re-run `policy install` and update `settings.json`, then remove the old directories by hand.
+
 ### Fixed
-- **`policy install` printed a deny rule that did not match what it installs.** The help text told users to add `Edit(~/.config/luma/**)` while the snippet emitted `Edit(~/.config/luma-foreman/**)` — the vendor-nested path was superseded by the XDG rule that names the directory after the application. A deny rule that matches nothing **fails open** and reports nothing, so the first sign would have been an agent editing the policy that governs it.
-- **The deny rules now also carry a `luma-*` wildcard** — `Edit(~/.config/luma-*/**)` and `Edit(~/.local/share/luma-*/**)` — so a future luma application is covered without anybody widening the rule by hand. Both the exact and wildcard forms are listed on purpose: whether Claude Code globs a `*` inside a path segment can only be verified against the running product, and this is a rule where being wrong is silent.
+- **`policy install` printed a deny rule that did not match what it installs.** The help text told users to add `Edit(~/.config/luma/**)` while the snippet emitted `Edit(~/.config/luma-foreman/**)`. Fixed by the move above, which makes both correct.
+- **`policy doctor` told you to delete a legacy directory before the wiring had moved**, contradicting the migration rule in `docs/standards.md` — the old location may still be referenced by `settings.json`, and removing it first leaves the session unguarded. It now gives the order: install, apply the printed settings changes, then delete.
 
 
 Everything so far. Foreman has not cut a release; `main` is the current state.

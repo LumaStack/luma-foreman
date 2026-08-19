@@ -94,7 +94,11 @@ def run(as_json: bool = False) -> int:
     if stale.exists():
         report.warn(f"a stale gate remains at {stale} — delete it")
     for old in _install.legacy_install():
-        report.warn(f"a directory from an earlier layout remains at {old} — delete it")
+        report.warn(
+            f"a directory from an earlier layout remains at {old} — run "
+            "`luma-foreman policy install`, apply the settings.json changes it prints, "
+            "then delete it"
+        )
 
     report.section("claude code wiring")
     # -- wiring --------------------------------------------------------------

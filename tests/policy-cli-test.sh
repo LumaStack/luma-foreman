@@ -23,9 +23,9 @@ mkdir -p "$T/home/.claude" "$T/repo/.git" "$T/repo/sub"
 REPO=$(cd "$T/repo" && pwd -P)
 SLUG=$(printf '%s' "$REPO" | tr '/.' '--')
 export HOME=$T/home
-export LUMA_FOREMAN_HOME=$T/home/.config/luma-foreman
+export LUMA_FOREMAN_HOME=$T/home/.config/luma/luma-foreman
 # The gate is program data, not configuration, and lives apart from policy.
-export LUMA_FOREMAN_DATA=$T/home/.local/share/luma-foreman
+export LUMA_FOREMAN_DATA=$T/home/.local/share/luma/luma-foreman
 PROJECT_FILE=$LUMA_FOREMAN_HOME/projects/$SLUG.toml
 echo '{"permissions":{"allow":["Bash(ls *)"]}}' > "$T/home/.claude/settings.json"
 
@@ -130,7 +130,7 @@ contains 'stale hook not passed' 'TODO PreToolUse'
 # The correct path is accepted.
 jq --arg g "$LUMA_FOREMAN_DATA/permission-gate.sh" \
   '.hooks.PreToolUse = [{matcher:"Bash",hooks:[{type:"command",command:$g}]}]
-   | .permissions.deny = ["Edit(~/.config/luma-foreman/**)"]' \
+   | .permissions.deny = ["Edit(~/.config/luma/**)"]' \
   "$SETTINGS" > "$SETTINGS.t" && mv "$SETTINGS.t" "$SETTINGS"
 run 'wired hook'      0 policy install
 contains 'wired hook accepted' 'Nothing left to do'
@@ -138,9 +138,9 @@ contains 'wired hook accepted' 'Nothing left to do'
 # The same path spelled the other legitimate ways must also be accepted. A hook
 # command is a shell string, and "$HOME/..." is what you get if you wrote the
 # settings by hand rather than pasting the absolute path.
-for form in '"$HOME/.local/share/luma-foreman/permission-gate.sh"' \
-            '${HOME}/.local/share/luma-foreman/permission-gate.sh' \
-            '~/.local/share/luma-foreman/permission-gate.sh'; do
+for form in '"$HOME/.local/share/luma/luma-foreman/permission-gate.sh"' \
+            '${HOME}/.local/share/luma/luma-foreman/permission-gate.sh' \
+            '~/.local/share/luma/luma-foreman/permission-gate.sh'; do
   jq --arg g "$form" '.hooks.PreToolUse = [{matcher:"Bash",hooks:[{type:"command",command:$g}]}]' \
     "$SETTINGS" > "$SETTINGS.t" && mv "$SETTINGS.t" "$SETTINGS"
   run "hook spelled $form" 0 policy install

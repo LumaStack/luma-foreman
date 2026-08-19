@@ -172,24 +172,18 @@ def wiring() -> dict[str, object]:
 def snippet() -> str:
     """The settings.json changes a user has to make themselves.
 
-    Both an exact path and a `luma-*` wildcard are listed for each directory,
-    and the redundancy is deliberate. The wildcard covers whatever luma
-    application arrives next without anybody remembering to widen this; the
-    exact path is the fallback if Claude Code does not glob a `*` inside a path
-    segment the way gitignore does.
+    One deny rule per directory, covering every luma tool at once. That is what
+    nesting under the vendor buys: no wildcard to rely on, nothing to widen when
+    a second tool arrives, and no dependence on tools being named `luma-*`.
 
-    **This rule fails open.** A pattern that matches nothing produces no error
-    and no warning — the deny rule is simply absent, and the first sign is an
-    agent editing the policy that governs it. A permission rule can only be
-    verified against the running product, so belt and braces is the correct
-    posture rather than a lack of confidence.
+    It matters because this rule fails open. A pattern matching nothing produces
+    no error and no warning — the deny rule is simply absent, and the first sign
+    is an agent editing the policy that governs it. A rule that needs no glob
+    support cannot fail that way.
     """
     return f"""  {{
     "permissions": {{
-      "deny": [
-        "Edit(~/.config/luma-foreman/**)", "Edit(~/.local/share/luma-foreman/**)",
-        "Edit(~/.config/luma-*/**)", "Edit(~/.local/share/luma-*/**)"
-      ]
+      "deny": ["Edit(~/.config/luma/**)", "Edit(~/.local/share/luma/**)"]
     }},
     "hooks": {{
       "PreToolUse": [
