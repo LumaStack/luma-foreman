@@ -4,7 +4,7 @@ This will be a short lived file.
 
 ## Where things stand
 
-Ten bundles exist in `luma-catalog`, the format is at `v0.0.9`, and
+Eleven bundles exist in `luma-catalog`, the format is at `v0.0.9`, and
 `luma-hq/DECISIONS.md` carries twenty-one settled decisions. **Nothing has
 adopted anything** — no repository has a `.luma/` directory, so every layout
 decision, the vendoring path, `adopted.toml` and the skill projection are
@@ -25,6 +25,11 @@ The rehoming questions this file opened with are mostly settled.
   what a path may carry.
 - **Bundle conventions** → the `bundle-manager` bundle. Layout, promotion, the
   audit checklist, and the overlap stance.
+- **Where files go on a machine** → the `luma-config` and `luma-layout` bundles.
+  `.luma/` and its tiers, what is committed against what belongs to the operator,
+  and the precedence chain. Machine-local paths are `<org>/<repo>` —
+  `~/.config/luma/luma-foreman/` — so one deny rule covers every tool whatever
+  it is called.
 - **Structural checks** → `foreman inspect --rule bundles`.
 - **Format questions** → `luma-knowledge-format/docs/ROADMAP.md`.
 
