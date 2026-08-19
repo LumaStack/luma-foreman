@@ -209,8 +209,10 @@ def install_cmd() -> int:
         print("\n  note  directories from an earlier layout remain:")
         for path in old:
             print(f"          {path}")
-        print("        Directories are named for the application now, not nested under a")
-        print("        vendor. Any policy in the old location is NOT read any more —")
+        print("        Directories nest under the organization now —")
+        print("        ~/.config/luma/luma-foreman/ rather than ~/.config/luma-foreman/,")
+        print("        so one rule covers every luma tool. Any policy in the old")
+        print("        location is NOT read any more —")
         print("        copy it across if you had settings there. Delete the old")
         print("        directories once the hook above points at the new path AND Claude")
         print("        Code has restarted; not before, or the running session is")
