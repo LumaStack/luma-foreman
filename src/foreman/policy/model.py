@@ -67,7 +67,7 @@ KEYS: tuple[Key, ...] = (
         "Writes to the policy files, and to the gate that reads them. Also covers the "
         "writing subcommands of this command.",
         "Keeps a session from editing the rules that govern it. Paired with\n"
-        "Edit(~/.config/luma/**) in settings.json permissions.deny, which covers the\n"
+        "Edit(~/.config/luma-foreman/**) in settings.json permissions.deny, which covers\n"
         "file tools. Reads stay ungated on purpose — being able to see the policy is\n"
         "what makes a refusal legible. Lowering this below \"always\" means an agent\n"
         "can hand itself any permission it likes."),

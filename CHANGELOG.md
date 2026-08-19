@@ -9,6 +9,11 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 
 ## [Unreleased]
 
+### Fixed
+- **`policy install` printed a deny rule that did not match what it installs.** The help text told users to add `Edit(~/.config/luma/**)` while the snippet emitted `Edit(~/.config/luma-foreman/**)` — the vendor-nested path was superseded by the XDG rule that names the directory after the application. A deny rule that matches nothing **fails open** and reports nothing, so the first sign would have been an agent editing the policy that governs it.
+- **The deny rules now also carry a `luma-*` wildcard** — `Edit(~/.config/luma-*/**)` and `Edit(~/.local/share/luma-*/**)` — so a future luma application is covered without anybody widening the rule by hand. Both the exact and wildcard forms are listed on purpose: whether Claude Code globs a `*` inside a path segment can only be verified against the running product, and this is a rule where being wrong is silent.
+
+
 Everything so far. Foreman has not cut a release; `main` is the current state.
 
 ### Added

@@ -180,7 +180,11 @@ Two things stop a session editing the policy that governs it:
 
 - `Edit(~/.config/luma-foreman/**)` and `Edit(~/.local/share/luma-foreman/**)` in
   `permissions.deny` — absolute, and covering the file tools for both the policy
-  and the gate.
+  and the gate. A `luma-*` wildcard form of each is listed alongside, so a
+  future luma application is covered without anybody remembering to widen the
+  rule. **Both forms are given deliberately:** this rule fails open, a pattern
+  matching nothing produces no error, and whether Claude Code globs a `*` inside
+  a path segment can only be verified against the running product.
 - The `policy_write` key, `always` by default — catches Bash writes to those
   paths and the CLI's own writing subcommands, in every mode including bypass.
 
