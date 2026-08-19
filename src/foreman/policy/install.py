@@ -170,9 +170,20 @@ def wiring() -> dict[str, object]:
 
 
 def snippet() -> str:
+    """The settings.json changes a user has to make themselves.
+
+    One deny rule per directory, covering every luma tool at once. That is what
+    nesting under the vendor buys: no wildcard to rely on, nothing to widen when
+    a second tool arrives, and no dependence on tools being named `luma-*`.
+
+    It matters because this rule fails open. A pattern matching nothing produces
+    no error and no warning — the deny rule is simply absent, and the first sign
+    is an agent editing the policy that governs it. A rule that needs no glob
+    support cannot fail that way.
+    """
     return f"""  {{
     "permissions": {{
-      "deny": ["Edit(~/.config/luma-foreman/**)", "Edit(~/.local/share/luma-foreman/**)"]
+      "deny": ["Edit(~/.config/luma/**)", "Edit(~/.local/share/luma/**)"]
     }},
     "hooks": {{
       "PreToolUse": [

@@ -50,7 +50,7 @@ CLI_WRITE = re.compile(
     r"(?:set|unset|reset|edit|allow|ask|deny|install)(?:\s|$)"
 )
 POLICY_PATH = re.compile(
-    r"config/luma-foreman|share/luma-foreman|\.config/luma/|share/luma/"
+    r"config/luma/|share/luma/|config/luma-foreman|share/luma-foreman"
     r"|LUMA_FOREMAN_HOME|LUMA_FOREMAN_DATA|permission-gate"
 )
 WRITE_OP = re.compile(r">|>>|tee|sed\s+-i|\bcp\b|\bmv\b|\brm\b|install|truncate|chmod|chown|\bln\b")
