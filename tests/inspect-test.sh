@@ -261,6 +261,26 @@ d=$(bundle bnest); mkdir -p "$d/b/inner"
 printf -- '---\ntype: bundle\nversion: 0.2.0\n---\nx\n' > "$d/b/inner/bundle.md"
 run 'nested bundle audited once' 0 "$d"
 
+# Bundles are found by asking git, not by walking the filesystem. A gitignored
+# worktree holds a whole second checkout, and reporting another agent's
+# in-progress work as this repository's problem is worse than useless.
+d=$(bundle bwt)
+git -C "$d" add -A >/dev/null 2>&1
+GIT_AUTHOR_NAME=T GIT_AUTHOR_EMAIL=d@e.com GIT_COMMITTER_NAME=T GIT_COMMITTER_EMAIL=d@e.com \
+  git -C "$d" commit -q -m base 2>/dev/null
+printf '.wt/\n' > "$d/.gitignore"
+git -C "$d" worktree add -q "$d/.wt/task" -b task 2>/dev/null
+printf -- '---\ntype: bundle\n---\nno version\n' > "$d/.wt/task/b/bundle.md"
+run 'gitignored worktree is not scanned' 0 "$d"
+lacks 'declares no version'
+
+# ...but an untracked bundle in the working tree still is. Not yet committed is
+# not the same as not this repository's.
+mkdir -p "$d/fresh"
+printf -- '---\ntype: bundle\n---\nno version\n' > "$d/fresh/bundle.md"
+run 'untracked bundle is still audited' 1 "$d"
+has 'declares no version'
+
 run 'bundles rule alone' 0 --rule bundles "$clean"
 has 'no bundles found'
 

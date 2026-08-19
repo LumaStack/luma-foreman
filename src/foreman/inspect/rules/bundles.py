@@ -21,6 +21,7 @@ real YAML is a check that belongs somewhere else.
 from __future__ import annotations
 
 import re
+import subprocess
 from pathlib import Path
 
 from ..finding import Finding, Result, Skipped
@@ -195,10 +196,42 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
     return findings, seen
 
 
+def _manifests(repo: Path) -> list[Path] | None:
+    """Bundle manifests git can see. None if git cannot answer.
+
+    A plain filesystem walk finds far too much. A gitignored worktree under
+    `.claude/worktrees/` holds a whole second checkout, so every bundle appears
+    twice and an agent auditing its own repository is shown findings from
+    another agent's uncommitted work. `node_modules` and build output are the
+    same shape of problem, arriving from a different direction.
+
+    Asking git rather than the filesystem also keeps this rule honest with the
+    other two, which are already git-scoped: what is not tracked or trackable is
+    not this repository's to report on.
+    """
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(repo), "ls-files", "--cached", "--others",
+             "--exclude-standard", "-z", "--", "*bundle.md", "bundle.md"],
+            capture_output=True, text=True, timeout=120,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if out.returncode != 0:
+        return None
+    return sorted({repo / rel for rel in out.stdout.split("\0") if rel})
+
+
 def check(repo: Path) -> Result:
-    manifests = sorted(
-        p for p in repo.rglob("bundle.md") if ".git" not in p.parts and p.is_file()
-    )
+    listed = _manifests(repo)
+    if listed is None:
+        return Result(
+            skipped=[Skipped(RULE, "could not list files — not a git repository, or git failed",
+                             "Bundles are found by asking git, so that gitignored worktrees and "
+                             "dependency directories are not scanned as though they were part of "
+                             "this repository.")]
+        )
+    manifests = [p for p in listed if p.is_file()]
     if not manifests:
         return Result(
             skipped=[Skipped(RULE, "no bundles found — nothing named bundle.md",
