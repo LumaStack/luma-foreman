@@ -33,6 +33,12 @@ Everything so far. Foreman has not cut a release; `main` is the current state.
     are not compiled in — foreman enforces standards it does not decide.
   - Skips with a reason when no bundle is present, since a skipped check is
     never a pass.
+  - **Bundles are found by asking git, not by walking the filesystem.** A
+    gitignored worktree under `.claude/worktrees/` holds a whole second
+    checkout, so a walk reports every bundle twice and shows an agent findings
+    from another agent's uncommitted work. `node_modules` and build output are
+    the same problem arriving differently. Untracked-but-not-ignored bundles are
+    still audited — not yet committed is not the same as not this repository's.
 
 - **`luma-foreman policy`** — per-project control over what Claude Code may do,
   changed by command rather than by editing a hook. Claude Code's own permission
