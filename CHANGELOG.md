@@ -4,7 +4,8 @@ Notable changes to luma-foreman, newest first. Behaviour-affecting changes only;
 wording, refactors and test-only edits are omitted. Commit messages carry the
 full rationale — this file is for seeing what changed at a glance.
 
-Format follows [Keep a Changelog](https://keepachangelog.com).
+Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
+[semantic versioning](https://semver.org).
 
 ## [Unreleased]
 
@@ -59,6 +60,17 @@ Everything so far. Foreman has not cut a release; `main` is the current state.
     that normally hold them. Findings never contain the secret.
   - A check that cannot run is reported as **skipped**, never as a pass.
 
+- **`tests/run` runs `inspect` against this repository** and fails if it finds
+  anything. A tool that enforces a standard and does not meet it is not
+  credible.
+
+### Changed
+
+- **The permission gate was ported from shell to Python**, with the existing
+  test suite as the acceptance criterion — an interface contract survives a
+  language rewrite where an implementation test does not. Foreman is Python
+  3.11+ with no dependencies beyond the standard library and git.
+
 ### Fixed
 
 - The gate **fails closed**. An earlier shell implementation parsed its input
@@ -73,12 +85,3 @@ Everything so far. Foreman has not cut a release; `main` is the current state.
 - Configuration and program files are separate, per XDG. Clearing
   `~/.config/luma-foreman` no longer deletes the gate — which would have failed
   it open, since a missing hook is a non-blocking error in Claude Code.
-
-### Notes
-
-- Written in Python 3.11+; no dependencies beyond the standard library and git.
-  The permission gate was ported from shell, with the existing test suite as the
-  acceptance criterion.
-- `tests/run` runs `inspect` against this repository and fails if it finds
-  anything. A tool that enforces a standard and does not meet it is not
-  credible.
