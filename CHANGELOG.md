@@ -12,6 +12,27 @@ Everything so far. Foreman has not cut a release; `main` is the current state.
 
 ### Added
 
+- **A `bundles` rule for `inspect`** — structural checks on Knowledge Bundles.
+  A bundle with a dangling link, an unquoted frontmatter wikilink, or a template
+  carrying live frontmatter is *still conformant*: the format tolerates all
+  three by design and never rejects, so the bundle publishes cleanly and every
+  adopter copies the defect. This closes the gap between legal and correct on
+  the side that rejects.
+  - Catches a missing `version`, frontmatter without a `type`, an `entry_point`
+    resolving to nothing, unresolved wikilinks, links escaping the bundle,
+    missing attachments, and assets nothing links to.
+  - The **unquoted frontmatter wikilink** is the one worth having: `[[…]]` is
+    YAML flow-sequence syntax, so unquoted it parses as a nested array rather
+    than a string. No parser complains, and the link silently never resolves.
+  - Fenced blocks and inline code are stripped before checking links, because
+    documents explaining wikilink syntax are full of illustrative ones. A
+    checker that cries wolf gets switched off, which protects nothing.
+  - **Structural checks only.** Directory conventions, workflow naming and
+    version discipline are an organization's opinions, arrive by adoption, and
+    are not compiled in — foreman enforces standards it does not decide.
+  - Skips with a reason when no bundle is present, since a skipped check is
+    never a pass.
+
 - **`luma-foreman policy`** — per-project control over what Claude Code may do,
   changed by command rather than by editing a hook. Claude Code's own permission
   rules are global; this adds a per-project layer, so loosening a rule for one

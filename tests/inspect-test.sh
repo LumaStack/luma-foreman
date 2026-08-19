@@ -182,6 +182,88 @@ has 'history was not scanned'
 
 run 'secrets rule alone'  0 --rule secrets "$clean"
 
+# --- bundles ---------------------------------------------------------------------
+# A bundle whose defects are all legal under the format: it publishes cleanly,
+# every adopter copies it, and nothing else notices. That gap is what this rule
+# is for.
+
+# bundle <name> — a repo containing one minimal, valid bundle
+bundle() {
+  d=$T/$1; mkdir -p "$d/b" && git -C "$d" init -q 2>/dev/null
+  printf -- '---\ntype: bundle\nversion: 0.1.0\n---\nfine\n' > "$d/b/bundle.md"
+  printf '%s' "$d"
+}
+
+d=$(bundle bok)
+run 'valid bundle is quiet' 0 "$d"
+lacks 'bundles'
+
+# No bundles at all is a skip, never a pass.
+run 'no bundles is a skip' 0 "$clean"
+has 'no bundles found'
+
+d=$(bundle bver)
+printf -- '---\ntype: bundle\n---\nno version\n' > "$d/b/bundle.md"
+run 'missing version' 1 "$d"
+has 'declares no version'
+
+# The silent one. [[..]] is YAML flow-sequence syntax, so unquoted it parses as
+# a nested array and the link never resolves — with no parser complaining.
+d=$(bundle btrap)
+printf -- '---\ntype: workflow\nparent: [[somewhere]]\n---\nbody\n' > "$d/b/w.md"
+run 'unquoted frontmatter wikilink' 1 "$d"
+has 'unquoted wikilink'
+lacks 'resolve to nothing'      # reported once, as the trap — not twice
+
+# ...and quoted is correct, so it must stay quiet when the target exists.
+d=$(bundle bquoted)
+printf -- '---\ntype: workflow\n---\nbody\n' > "$d/b/target.md"
+printf -- '---\ntype: workflow\nparent: "[[target]]"\n---\nbody\n' > "$d/b/w.md"
+run 'quoted wikilink that resolves' 0 "$d"
+lacks 'bundles'
+
+d=$(bundle btype)
+printf -- '---\ntitle: no type\n---\nbody\n' > "$d/b/w.md"
+run 'frontmatter without a type' 1 "$d"
+has 'no type'
+
+d=$(bundle bentry)
+printf -- '---\ntype: bundle\nversion: 0.1.0\nentry_point: workflows/nope\n---\nx\n' > "$d/b/bundle.md"
+run 'entry_point resolves to nothing' 1 "$d"
+has 'entry_point points at nothing'
+
+# Self-containment: a bundle must be copyable and still work.
+d=$(bundle bescape); mkdir -p "$d/elsewhere"; printf 'x\n' > "$d/elsewhere/x.md"
+printf -- '---\ntype: bundle\nversion: 0.1.0\n---\n[out](../elsewhere/x.md)\n' > "$d/b/bundle.md"
+run 'link escaping the bundle' 1 "$d"
+has 'point outside the Bundle'
+
+d=$(bundle bmiss)
+printf -- '---\ntype: bundle\nversion: 0.1.0\n---\n[gone](templates/absent.md)\n' > "$d/b/bundle.md"
+run 'missing attachment' 1 "$d"
+has 'missing attachment'
+
+d=$(bundle borphan); printf 'nobody links me\n' > "$d/b/stray.txt"
+run 'orphaned asset is low, not high' 1 "$d"
+has 'nothing links to'
+
+# The load-bearing negative: documents that explain syntax are full of
+# illustrative links. Reporting those is how a checker gets switched off.
+d=$(bundle bcode)
+{ printf -- '---\ntype: workflow\n---\n'
+  printf 'Inline `[[not-real]]` and a fence:\n\n```yaml\nparent: [[also-not-real]]\n```\n'
+} > "$d/b/w.md"
+run 'illustrative syntax in code is ignored' 0 "$d"
+lacks 'bundles'
+
+# A bundle inside a bundle is audited once, by itself.
+d=$(bundle bnest); mkdir -p "$d/b/inner"
+printf -- '---\ntype: bundle\nversion: 0.2.0\n---\nx\n' > "$d/b/inner/bundle.md"
+run 'nested bundle audited once' 0 "$d"
+
+run 'bundles rule alone' 0 --rule bundles "$clean"
+has 'no bundles found'
+
 # --- argument handling ---------------------------------------------------------------
 run 'unknown rule'      2 --rule nonsense "$clean"
 has 'unknown rule'
