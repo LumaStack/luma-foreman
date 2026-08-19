@@ -31,16 +31,27 @@ def home() -> Path:
     gate. A missing hook is a non-blocking error in Claude Code, so the tool call
     proceeds — the gate would fail OPEN because a config reset looked safe.
 
-    The directory is named for the application, not nested under a vendor.
-    That is what XDG says ($XDG_CONFIG_HOME/<application>/) and what nearly
-    every tool does. It also matches the charter: foreman has to be worth
-    installing where no organization exists, and ~/.config/luma/foreman implies
-    a suite the user may never have.
+    Nested under the vendor: ~/.config/luma/luma-foreman/.
+
+    The app segment is the repository name in full, prefix included, so a
+    directory maps to a repository by inspection with nothing to translate.
+
+    The specification does not choose for us — it says $XDG_CONFIG_HOME/subdir/
+    and leaves naming and depth to the application. Flat is the common shape
+    among single-tool vendors (gh, git, nvim) for the obvious reason that they
+    have nothing to nest under. JetBrains ships multiple tools and nests, across
+    config, data and cache alike.
+
+    What decides it is that a rule covering every tool has to be writable once.
+    Flat needs one entry per application or a `luma-*` wildcard, and the wildcard
+    holds only while every tool is named `luma-something` — a convention nobody
+    has committed to, and one product-named tool breaks it with no single rule
+    left to write. Nesting is indifferent to what things are called.
     """
     if override := os.environ.get("LUMA_FOREMAN_HOME"):
         return Path(override)
     config = os.environ.get("XDG_CONFIG_HOME") or (Path.home() / ".config")
-    return Path(config) / "luma-foreman"
+    return Path(config) / "luma" / "luma-foreman"
 
 
 def data_home() -> Path:
@@ -48,7 +59,7 @@ def data_home() -> Path:
     if override := os.environ.get("LUMA_FOREMAN_DATA"):
         return Path(override)
     data = os.environ.get("XDG_DATA_HOME") or (Path.home() / ".local" / "share")
-    return Path(data) / "luma-foreman"
+    return Path(data) / "luma" / "luma-foreman"
 
 
 def legacy_dirs() -> list[Path]:
@@ -60,7 +71,11 @@ def legacy_dirs() -> list[Path]:
     """
     config = Path(os.environ.get("XDG_CONFIG_HOME") or (Path.home() / ".config"))
     data = Path(os.environ.get("XDG_DATA_HOME") or (Path.home() / ".local" / "share"))
-    return [d for d in (data / "luma" / "foreman", config / "luma" / "foreman") if d.exists()]
+    return [
+        d for d in (data / "luma-foreman", config / "luma-foreman",
+                   data / "luma" / "foreman", config / "luma" / "foreman")
+        if d.exists()
+    ]
 
 
 def _read(path: Path) -> dict[str, str]:
