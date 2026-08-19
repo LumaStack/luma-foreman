@@ -209,9 +209,21 @@ deciding what an agent is allowed to run; handing a catalog arbitrary execution
 would undo that from the other side.
 
 Proposed, not settled: contents unconstrained, placement declarative. A bundle
-declares where its material goes; it does not bring a program that puts it
-there. Same MVP scoping as the dependency decision, and reversible later if
-something genuinely needs it.
+declares where its material goes; nothing runs to put it there. Same MVP
+scoping as the dependency decision, and reversible later if something genuinely
+needs it.
+
+**To be unmistakable, because this has already been misread once: bundles carry
+executables freely.** A workflow that ships `scripts/check.sh` is ordinary and
+often required — that is what projects into a harness skill, and a workflow
+whose scripts could not travel with it would project into a skill that does not
+work.
+
+The constraint is on **adoption**, not on contents. `foreman adopt` copies files
+and runs nothing. A script in a bundle executes when a person or an agent
+deliberately invokes it, having seen what it is — which is an ordinary script,
+not a supply chain. What would make it one is code executing as a side effect of
+fetching, before anyone has looked.
 
 ### Format decisions for LKF — shipped
 
