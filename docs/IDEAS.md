@@ -244,6 +244,88 @@ has content a migration's assumptions do not hold for. Refusing to migrate a
 drifted bundle is probably right, and it makes drift block an upgrade, which
 some adopter will resent at exactly the wrong moment.
 
+### Routers
+
+**Loose, and worth pursuing.** A `router` is a Document whose content is
+*decision logic* — not knowledge, but the rules for reaching knowledge. Where to
+go next, when to load what, which bundle answers a given question, whose
+catalog to consult for more.
+
+#### What is actually missing
+
+**`preload` is unconditional.** A Document is `mandatory`, `recommended` or
+`optional` always, decided once by its author. There is no way to say
+*mandatory when auditing*, *irrelevant unless this is a release*, or *load the
+release policy only if somebody is cutting one*.
+
+That is the gap in one sentence, and everything else a router might do is
+adjacent to it:
+
+- **Progressive disclosure with conditions.** `preload` and links between them
+  give eager and lazy loading. Neither gives *conditional*.
+- **Which bundle answers this.** A project with eleven adopted bundles has no
+  index from question to bundle. An agent either loads everything or guesses.
+- **When to reach outside.** Into another corpus, another catalog, another
+  organization's published knowledge. The catalog `upstream` chain does a
+  narrow version of this for bundles and nothing does it for knowledge.
+
+#### It would earn a type easily
+
+By §10.4's test, this is the strongest dispatch case yet seen: a consumer does
+not merely read a router, it **evaluates** one — reads conditions, tests them,
+and decides what to load as a result. Nothing else in a Bundle is executed that
+way.
+
+Whether it should be *built in* is open and unmeasurable, since none exist. But
+unlike bundle migrations, this one has a genuine claim on the format rather than
+on the tooling: `preload` is already a core field, so conditional loading is
+territory the format has entered rather than declined.
+
+#### The central design question
+
+**Is a router prose an agent follows, or data a tool evaluates?**
+
+*Prose* is a workflow with a different name, and it inherits every good property
+of one: no syntax to design, no expressiveness ceiling, and an agent can reason
+about a condition nobody anticipated. Its cost is that nothing mechanical can
+use it — no tool can pre-compute a context budget or verify a router is total.
+
+*Data* is a condition language, and **that is where policy systems die.** The
+catalog's tag rules already say so: any-of matching, no booleans, and a
+composite condition becomes a named tag somebody has to claim. A router that
+grows operators one reasonable step at a time ends up a small programming
+language nobody can predict.
+
+The middle worth exploring: **data for the conditions the tag vocabulary can
+already express, prose for everything else.** A router row keys on the same tags
+a project already declares, and anything beyond that is a paragraph rather than
+a new operator.
+
+#### Open, and worth settling before building
+
+**Whose router is it?** A bundle routing within itself, a catalog routing to
+bundles, and a project routing over what it has adopted are three different
+scopes. They plausibly chain — which is itself routing, and a chain that can
+loop.
+
+**Does it reintroduce dependencies?** A router that says *for this, use bundle
+X* is a bundle reference. That must stay a mention rather than a requirement,
+or it becomes resolution wearing a new name. A router pointing at a bundle
+nobody adopted should degrade to silence, not to an error.
+
+**What does it overlap?** `preload`, `entry_point`, `tags` and a catalog's
+`requires` each do a slice of this today. A router should absorb or defer to
+each explicitly rather than quietly duplicating them — two mechanisms answering
+one question is how they drift into disagreeing.
+
+**Can it be verified?** A router with a gap routes somebody nowhere, silently.
+Whether totality is checkable depends entirely on the prose-or-data answer
+above, which is another reason that question comes first.
+
+**Guide or mandate?** The obligation ladder already exists and could apply — a
+route can be a suggestion or a rule. Worth reusing rather than inventing a
+second vocabulary for the same idea.
+
 ### Browsing a catalog is an engine's job, not a catalog's
 
 A web interface for browsing bundles is wanted eventually. It must not live
