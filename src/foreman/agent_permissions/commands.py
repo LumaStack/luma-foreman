@@ -1,4 +1,4 @@
-"""The `luma-foreman policy` subcommands."""
+"""The `luma-foreman agent-permissions` subcommands."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from . import install as _install
 from . import model, store
 from .doctor import run as doctor_run
 
-CMD = "luma-foreman policy"
+CMD = "luma-foreman agent-permissions"
 
 
 def _err(message: str) -> int:

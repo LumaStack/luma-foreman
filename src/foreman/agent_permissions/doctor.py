@@ -81,14 +81,14 @@ def run(as_json: bool = False) -> int:
     if os.access(gate, os.X_OK):
         report.ok(f"gate installed at {gate}")
     else:
-        report.bad(f"no executable gate at {gate} — run: luma-foreman policy install")
+        report.bad(f"no executable gate at {gate} — run: luma-foreman agent-permissions install")
 
     if gate.exists():
         state = _install.status()
         if state == "already current":
             report.ok("installed gate matches this version")
         else:
-            report.bad("installed gate is out of date — run: luma-foreman policy install")
+            report.bad("installed gate is out of date — run: luma-foreman agent-permissions install")
 
     stale = Path.home() / ".claude" / "permission-gate.sh"
     if stale.exists():
@@ -96,7 +96,7 @@ def run(as_json: bool = False) -> int:
     for old in _install.legacy_install():
         report.warn(
             f"a directory from an earlier layout remains at {old} — run "
-            "`luma-foreman policy install`, apply the settings.json changes it prints, "
+            "`luma-foreman agent-permissions install`, apply the settings.json changes it prints, "
             "then delete it"
         )
 
@@ -108,7 +108,7 @@ def run(as_json: bool = False) -> int:
         if wiring["hook_ok"]:
             report.ok("PreToolUse hook points at the installed gate")
         else:
-            report.bad("no PreToolUse hook points at the gate — run: luma-foreman policy install")
+            report.bad("no PreToolUse hook points at the gate — run: luma-foreman agent-permissions install")
         if wiring["deny_ok"]:
             report.ok("deny rule protects the policy directory")
         else:
@@ -156,7 +156,7 @@ def run(as_json: bool = False) -> int:
                 report.ok("deny blocks outright, and policy applies with no restart")
             else:
                 report.bad("a deny rule did not take effect")
-            if d("luma-foreman policy reset curl") == "ask":
+            if d("luma-foreman agent-permissions reset curl") == "ask":
                 report.ok("a deny rule does not block its own undo")
             else:
                 report.bad("a deny rule blocks the command that would lift it")

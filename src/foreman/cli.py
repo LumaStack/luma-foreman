@@ -9,39 +9,39 @@ from __future__ import annotations
 import sys
 
 from .inspect import registry, report
-from .policy import commands
+from .agent_permissions import commands
 
 USAGE = """usage: luma-foreman <job> [args]
 
 Jobs:
-  policy      what an agent is allowed to do in this repository
-  bootstrap   stand a new project up with the structure it should have had
-  outfit      install the tooling every project is expected to carry
-  inspect     check a project against the baseline and report shortfalls
-  refit       confirm the latest learnings were actually applied
+  agent-permissions   what an agent is allowed to do in this repository
+  bootstrap           stand a new project up with the structure it should have had
+  outfit              install the tooling every project is expected to carry
+  inspect             check a project against the baseline and report shortfalls
+  refit               confirm the latest learnings were actually applied
 
 Run `luma-foreman <job> --help` for a job's own options."""
 
-POLICY_USAGE = """Read and write the per-project permission policy that the permission gate
+POLICY_USAGE = """Read and write the per-project agent permissions that the permission gate
 consults on every Bash tool call. Changes take effect on the NEXT tool call — no
 session restart, because the hook re-reads these files each time it runs.
 
-  luma-foreman policy                      the effective policy for this project
-  luma-foreman policy list                 the same thing, spelled the way git/npm/gh spell it
-  luma-foreman policy keys [<key>]         what you can set, and what each key gates
+  luma-foreman agent-permissions                    the effective permissions here
+  luma-foreman agent-permissions list               the same thing, spelled the way git/npm/gh spell it
+  luma-foreman agent-permissions keys [<key>]       what you can set, and what each key gates
 
-  luma-foreman policy allow <key>          shorthand for: set <key> allow
-  luma-foreman policy ask <key>            shorthand for: set <key> ask
-  luma-foreman policy deny <key>           shorthand for: set <key> deny
-  luma-foreman policy set <key> <value>    the general form — reaches safe, trusted, always
-  luma-foreman policy reset [<key>]        drop one override, or every override in this scope
+  luma-foreman agent-permissions allow <key>        shorthand for: set <key> allow
+  luma-foreman agent-permissions ask <key>          shorthand for: set <key> ask
+  luma-foreman agent-permissions deny <key>         shorthand for: set <key> deny
+  luma-foreman agent-permissions set <key> <value>  the general form — reaches safe, trusted, always
+  luma-foreman agent-permissions reset [<key>]      drop one override, or every override in this scope
 
-  luma-foreman policy projects             every project that has a config
-  luma-foreman policy path                 print the config file path
-  luma-foreman policy edit                 open it in $EDITOR
-  luma-foreman policy install              install or update the gate, and report what
-                                           Claude Code's settings.json still needs
-  luma-foreman policy doctor               check it is actually working, not just wired up
+  luma-foreman agent-permissions projects           every project that has a config
+  luma-foreman agent-permissions path               print the config file path
+  luma-foreman agent-permissions edit               open it in $EDITOR
+  luma-foreman agent-permissions install            install or update the gate, and report
+                                                    what settings.json still needs
+  luma-foreman agent-permissions doctor             check it is actually working, not just wired up
 
 Add -g/--global to any write to target the global fallback instead of this
 project. Reads always show the merged result. Add --json to `policy`, `keys`
@@ -72,19 +72,19 @@ def _policy(argv: list[str]) -> int:
         return commands.show(scope_global, as_json)
     if verb == "keys":
         if len(rest) > 1:
-            return commands._err("usage: luma-foreman policy keys [<key>]")
+            return commands._err("usage: luma-foreman agent-permissions keys [<key>]")
         return commands.keys(rest[0] if rest else None, as_json)
     if verb in ("allow", "ask", "deny"):
         if len(rest) != 1:
-            return commands._err(f"usage: luma-foreman policy {verb} [-g] <key>")
+            return commands._err(f"usage: luma-foreman agent-permissions {verb} [-g] <key>")
         return commands.shorthand(verb, rest[0], scope_global)
     if verb == "set":
         if len(rest) != 2:
-            return commands._err("usage: luma-foreman policy set [-g] <key> <value>")
+            return commands._err("usage: luma-foreman agent-permissions set [-g] <key> <value>")
         return commands.set_value(rest[0], rest[1], scope_global)
     if verb in ("reset", "unset"):
         if len(rest) > 1:
-            return commands._err("usage: luma-foreman policy reset [-g] [<key>]")
+            return commands._err("usage: luma-foreman agent-permissions reset [-g] [<key>]")
         return commands.reset(rest[0] if rest else None, scope_global)
     if verb == "projects":
         return commands.projects()
@@ -99,7 +99,7 @@ def _policy(argv: list[str]) -> int:
     if verb == "help":
         print(POLICY_USAGE)
         return 0
-    return commands._err(f"unknown command: {verb} (try luma-foreman policy --help)")
+    return commands._err(f"unknown command: {verb} (try luma-foreman agent-permissions --help)")
 
 
 INSPECT_USAGE = """Check a project against the baseline and report where it falls short.
@@ -153,7 +153,7 @@ def main(argv: list[str] | None = None) -> int:
     if job in ("help", "-h", "--help"):
         print(USAGE)
         return 0
-    if job == "policy":
+    if job == "agent-permissions":
         return _policy(argv[1:])
     if job == "inspect":
         return _inspect(argv[1:])

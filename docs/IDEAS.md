@@ -94,7 +94,7 @@ Change what Claude Code's hooks allow or disallow with a command, per project, w
 - Allow/disallow curl
 - Allow harmless curl (non-executable files)
 
-**Built.** Shipped as `luma-foreman policy` — see [docs/claude-permission-policy.md](docs/claude-permission-policy.md). What it settled, kept here because the reasoning is worth more than the code:
+**Built.** Shipped as `luma-foreman agent-permissions` — see [docs/claude-agent-permissions.md](docs/claude-agent-permissions.md). What it settled, kept here because the reasoning is worth more than the code:
 
 - The policy has to live in a file the hook reads on every call, not in `settings.json`. Claude Code snapshots hook *configuration* at session start, so a settings-based design needs a session restart per change; a file the hook re-reads takes effect on the next tool call.
 - Resolution is per key, most specific wins: project, then a global fallback, then built-in defaults. A project only names what it overrides.
