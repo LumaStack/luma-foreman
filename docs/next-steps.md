@@ -4,7 +4,7 @@ This will be a short lived file.
 
 ## Where things stand
 
-Eleven bundles exist in `luma-catalog`, the format is at `v0.0.9`, and
+Twelve bundles exist in `luma-catalog`, the format is at `v0.0.9`, and
 `luma-hq/DECISIONS.md` carries twenty-one settled decisions. **Nothing has
 adopted anything** — no repository has a `.luma/` directory, so every layout
 decision, the vendoring path, `adopted.toml` and the skill projection are
@@ -25,6 +25,13 @@ The rehoming questions this file opened with are mostly settled.
   what a path may carry.
 - **Bundle conventions** → the `bundle-manager` bundle. Layout, promotion, the
   audit checklist, and the overlap stance.
+- **What foreman is for** → `docs/scope.md`. The four jobs in the README were
+  each defined by knowing something the catalog now knows; that file is the
+  replacement being assembled, annotated with what each item costs.
+- **Capturing ideas** → the `backlog-ideas` bundle. One file per idea rather
+  than a growing `IDEAS.md`, with a tending practice and a migration workflow.
+  Explicitly provisional: it may be replaced by the backlog tool, absorbed into
+  it, or survive beside it.
 - **Where files go on a machine** → the `luma-config` and `luma-layout` bundles.
   `.luma/` and its tiers, what is committed against what belongs to the operator,
   and the precedence chain. Machine-local paths are `<org>/<repo>` —
@@ -73,9 +80,13 @@ sit down and write, not a capability needing design.
   itself part of the open question above.
 - **Working-style preferences** — how an agent should behave here, as adoptable
   content rather than as `CLAUDE.md` prose nobody versions.
+- **Prose conventions** — spelling, terminology, house style. There is now
+  concrete evidence this is wanted: the catalog carried 67 `-ize` spellings
+  against 6 `-ise` ones, and nothing anywhere declared which was correct. The
+  convention existed only as weight of usage, which is how the six got in.
 
 ## Foreman capabilities still stubbed
 
-`bootstrap`, `outfit` and `refit` exit 2. `outfit` is the one that matters
+`agent-permissions` and `inspect` work. `bootstrap`, `outfit` and `refit` exit 2. `outfit` is the one that matters
 first, since it is what turns an adopted bundle into something a harness can
 use — and the projection design in `IDEAS.md` has been reasoned but never run.
