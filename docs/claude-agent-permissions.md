@@ -11,7 +11,7 @@ loosening a rule for one repository does not loosen it everywhere.
 ## Install
 
 ```bash
-luma-foreman policy install
+luma-foreman agent-permissions install
 ```
 
 That installs the gate into `~/.local/share/luma/luma-foreman/`, then prints the changes
@@ -92,7 +92,7 @@ Resolved on every call, per key, most specific wins:
 
 ```
 ~/.config/luma/luma-foreman/projects/<slug>.toml   the project the session is in
-~/.config/luma/luma-foreman/policy.toml            global fallback
+~/.config/luma/luma-foreman/permissions.toml       global fallback
 built-in defaults in the gate                 shipped
 ```
 
@@ -111,26 +111,26 @@ under `$XDG_CONFIG_HOME`; the gate is program data foreman installs and
 overwrites, and lives under `$XDG_DATA_HOME`:
 
 ```
-~/.config/luma/luma-foreman/         policy.toml, projects/*.toml   (yours)
+~/.config/luma/luma-foreman/         permissions.toml, projects/*.toml  (yours)
 ~/.local/share/luma/luma-foreman/    the gate and its modules       (foreman's)
 ```
 
 `$LUMA_FOREMAN_HOME` overrides the first, `$LUMA_FOREMAN_DATA` the second.
 
 ```bash
-luma-foreman policy                    # effective policy here, and where each value came from
-luma-foreman policy keys               # every key, what it gates, what it accepts
-luma-foreman policy keys curl          # the long version for one key, including its limits
+luma-foreman agent-permissions                    # effective policy here, and where each value came from
+luma-foreman agent-permissions keys               # every key, what it gates, what it accepts
+luma-foreman agent-permissions keys curl          # the long version for one key, including its limits
 
-luma-foreman policy allow curl         # shorthand for the three common values
-luma-foreman policy ask curl
-luma-foreman policy deny curl
-luma-foreman policy set curl safe      # general form — reaches safe, trusted, always
-luma-foreman policy set -g sudo ask    # global fallback
-luma-foreman policy reset curl         # drop one override
-luma-foreman policy reset              # drop every override in this scope
+luma-foreman agent-permissions allow curl         # shorthand for the three common values
+luma-foreman agent-permissions ask curl
+luma-foreman agent-permissions deny curl
+luma-foreman agent-permissions set curl safe      # general form — reaches safe, trusted, always
+luma-foreman agent-permissions set -g sudo ask    # global fallback
+luma-foreman agent-permissions reset curl         # drop one override
+luma-foreman agent-permissions reset              # drop every override in this scope
 
-luma-foreman policy projects           # every project that has a config
+luma-foreman agent-permissions projects           # every project that has a config
 ```
 
 The config format is a documented subset of TOML: top-level `key = "value"`
@@ -171,7 +171,7 @@ adversary. For an actual boundary use Claude Code's
 and network limits on Bash and its children — with this on top for ergonomics.
 
 Related: the hook matches textually, so it over-prompts on string literals like
-`echo "rm -rf /"`, and on `luma-foreman policy keys curl` because the word
+`echo "rm -rf /"`, and on `luma-foreman agent-permissions keys curl` because the word
 `curl` is in there. That is intentional; it fails safe toward prompting.
 
 ## Keeping the agent out of its own rulebook
@@ -198,7 +198,7 @@ settings would otherwise delete the gate, and a missing hook is a *non-blocking*
 error in Claude Code — the tool call proceeds. A config reset would silently fail
 the gate open.
 
-Reads stay ungated: `luma-foreman policy` and `cat`ting the files are fine, and
+Reads stay ungated: `luma-foreman agent-permissions` and `cat`ting the files are fine, and
 being able to see the policy is what makes a refusal legible.
 
 ## Two ways a Claude Code rule silently does nothing
@@ -240,10 +240,10 @@ forking a `grep` per key.
 ## Verify
 
 ```bash
-luma-foreman policy doctor         # is it actually working on this machine
+luma-foreman agent-permissions doctor         # is it actually working on this machine
 sh tests/run                       # hermetic: never touches your real config
 jq . ~/.claude/settings.json       # still valid JSON
-luma-foreman policy                # what the hook thinks the policy is here
+luma-foreman agent-permissions                # what the hook thinks the policy is here
 ```
 
 `doctor` is the one to reach for first. `install` answers "is it wired up";
@@ -270,5 +270,5 @@ echo '{"tool_name":"Bash","cwd":"'"$PWD"'","tool_input":{"command":"sudo reboot"
 
 A gate that stops firing after a policy edit is almost always one of: the value
 is `allow` when you meant `ask`, `trust = "full"` is set on the project, or you
-are looking at a different project than the hook is. `luma-foreman policy` prints
+are looking at a different project than the hook is. `luma-foreman agent-permissions` prints
 the resolved project path and the source of every value — check it first.

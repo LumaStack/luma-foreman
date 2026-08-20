@@ -79,12 +79,12 @@ evidence.*
 
 ### Already built, and unrelated to all of it
 
-- **`policy`** — the per-repository permission gate. Working. It shares no
-  machinery with anything above and would function identically if bundles had
-  never existed. **The name has to change; see below.**
+- **`agent-permissions`** — the per-repository permission gate. Working. It
+  shares no machinery with anything above and would function identically if
+  bundles had never existed. *Renamed from `policy`; see below.*
 - **`inspect`** — identity, secrets, and bundle structure. Working.
 
-## `luma-foreman policy` has to be renamed
+## `luma-foreman policy` was renamed to `agent-permissions`
 
 `policy` became an LKF built-in type at `v0.0.9` — *a course of action adopted*,
 kept as standing context. The command means something else entirely: which tool
@@ -106,15 +106,17 @@ uses throughout, but it names the **mechanism** rather than the thing: you set
 permissions, and the gate enforces them. That distinction is worth keeping, and
 it means the installed hook stays `permission-gate.sh` either way.
 
-**The cost is real and worth paying now rather than later.** This is the one
+**Done 2026-08-19.** The cost was real and paid deliberately. This is the one
 command that ships and works. The rename touches the CLI, the docs, the test
 suites, and — easy to miss — the `CLI_WRITE` and `CLI_INVOCATION` patterns in
-`policy/match.py`, which recognise a `luma-foreman policy` invocation in order
+`agent_permissions/match.py`, which recognise a `luma-foreman policy` invocation in order
 to gate it. **A regex that no longer matches the command's name fails open**,
 silently, which is the failure this whole subsystem exists to prevent.
 
-Every day it waits, the collision gets more expensive and the muscle memory
-deeper.
+The gating tests were written **before** the rename so they failed first —
+eight of them did, proving the pattern would have silently stopped matching. A
+`policy.toml` left by the old name is still read when `permissions.toml` is
+absent, because a permission file that quietly stops being read fails open too.
 
 ## What each of these costs
 

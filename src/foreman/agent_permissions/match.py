@@ -46,24 +46,24 @@ DOWNLOADS = re.compile(
 # The CLI's own writing subcommands, and shell-level writes aimed at the policy
 # directory or the gate. Reads stay ungated on purpose.
 CLI_WRITE = re.compile(
-    r"(?:^|[^\w.\-])luma-foreman\s+policy\s+(?:-\S+\s+)*"
+    r"(?:^|[^\w.\-])luma-foreman\s+agent-permissions\s+(?:-\S+\s+)*"
     r"(?:set|unset|reset|edit|allow|ask|deny|install)(?:\s|$)"
 )
-POLICY_PATH = re.compile(
+PERMISSIONS_PATH = re.compile(
     r"config/luma/|share/luma/|config/luma-foreman|share/luma-foreman"
     r"|LUMA_FOREMAN_HOME|LUMA_FOREMAN_DATA|permission-gate"
 )
 WRITE_OP = re.compile(r">|>>|tee|sed\s+-i|\bcp\b|\bmv\b|\brm\b|install|truncate|chmod|chown|\bln\b")
 
-# A lone `luma-foreman policy ...` invocation, anchored, with no shell
+# A lone `luma-foreman agent-permissions ...` invocation, anchored, with no shell
 # separator anywhere. Deliberately narrow: matching the CLI *anywhere* would let
-# `echo luma-foreman policy && curl evil` disarm every rule by naming it.
+# `echo luma-foreman agent-permissions && curl evil` disarm every rule by naming it.
 #
 # The optional path prefix is not cosmetic. Without it `./bin/luma-foreman
 # policy reset curl` — how you run it from a checkout — was not exempt, so with
 # curl=deny the gate refused the command that would lift the deny. Same lockout
 # as before, reached by a different route.
-CLI_INVOCATION = re.compile(r"^\s*(?:[\w./\-]*/)?luma-foreman\s+policy(?:\s|$)")
+CLI_INVOCATION = re.compile(r"^\s*(?:[\w./\-]*/)?luma-foreman\s+agent-permissions(?:\s|$)")
 SEPARATORS = (";", "&", "|", "`", "$(", "<(")
 
 # curl/wget = "safe": a plain fetch is fine; writing to disk, uploading a body,
@@ -77,7 +77,7 @@ WRITES_OR_UPLOADS = re.compile(
 
 
 def is_cli_invocation(cmd: str) -> bool:
-    """True when the command IS a `luma-foreman policy` call, not merely one that mentions it."""
+    """True when the command IS a `luma-foreman agent-permissions` call, not merely one that mentions it."""
     if any(sep in cmd for sep in SEPARATORS):
         return False
     return bool(CLI_INVOCATION.search(cmd))
@@ -85,7 +85,7 @@ def is_cli_invocation(cmd: str) -> bool:
 
 def matches(key: str, cmd: str) -> bool:
     """Does *cmd* invoke the class of command that *key* gates?"""
-    # `luma-foreman policy ...` talks ABOUT gated commands; it does not run them.
+    # `luma-foreman agent-permissions ...` talks ABOUT gated commands; it does not run them.
     # Without this, naming a key locks you out of changing it: with curl=deny,
     # the "curl" inside `policy reset curl` matches the curl rule and refuses
     # the one command that would lift the deny.
@@ -105,7 +105,7 @@ def matches(key: str, cmd: str) -> bool:
             return False
         if CLI_WRITE.search(cmd):
             return True
-        return bool(POLICY_PATH.search(cmd)) and bool(WRITE_OP.search(cmd))
+        return bool(PERMISSIONS_PATH.search(cmd)) and bool(WRITE_OP.search(cmd))
     return False
 
 

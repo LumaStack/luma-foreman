@@ -9,6 +9,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 
 ## [Unreleased]
 
+### Fixed
+- **`agent-permissions install` left retired gate modules on disk.** It wrote the current payload and never removed files that had dropped out of it, and `status()` could not notice because it only compares files it knows about — so it reported *already current* while a stale copy sat beside the real one. That is not untidiness: every file under `gate/foreman/` is a working piece of a gate, so an abandoned `gate.py` is **an older set of matching rules, still present and still runnable.** The rename below left exactly that on a real machine. Pruning is scoped to `gate/foreman/` and to `.py`, because it deletes files and must only touch a directory foreman entirely owns.
+
+### Changed
+- **`luma-foreman policy` is now `luma-foreman agent-permissions`.** `policy` became a built-in type in the knowledge format — *a course of action adopted, kept as standing context* — and the command means something else entirely: which tool calls an agent may make in this repository. Two meanings of one word in one ecosystem, close enough that *"where is the policy?"* had two correct answers.
+  `agent-permissions` rather than `permissions` because *permissions* is among the most overloaded words in computing — file modes, repository access, OAuth scopes — and because it leaves `agent` free for a command group.
+  **The gating patterns were the dangerous part.** `CLI_WRITE` and `CLI_INVOCATION` recognise an invocation of this command *in order to gate it*, so a pattern that no longer matched its own name would have failed **open** and reported nothing. Tests for the new name were written before the rename and eight of them failed first, proving it.
+  Also renamed: the module to `foreman/agent_permissions/`, the tests, and `docs/claude-agent-permissions.md`. `permission-gate.sh` keeps its name — the gate is the mechanism, permissions are the thing.
+  *Migration:* the global file is now `permissions.toml`. An existing `policy.toml` is still read when the new name is absent, because a permission file that silently stops being read fails open too. Writes go to the new name, so the first change migrates it.
+
+
 ### Changed
 - **Machine-local directories nest under the organization: `~/.config/luma/luma-foreman/`**, and likewise under `~/.local/share/` and `~/.cache/`. The second segment is the repository name exactly, so a directory maps to a repository with nothing to translate.
   This reverses an earlier decision that rested on two claims which did not survive checking. The XDG specification does **not** mandate a flat `<application>/` — it says `$XDG_CONFIG_HOME/subdir/` and leaves depth to the application, so both shapes conform. And *"a path reading `luma/foreman` implies a suite the user may never install"* was true when foreman stood alone; there is now a catalog, a headquarters, a format, and shared configuration anticipated in the same document.

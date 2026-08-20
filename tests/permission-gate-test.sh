@@ -49,7 +49,7 @@ SLUG=$(printf '%s' "$REPO" | tr '/.' '--')
 LUMA_FOREMAN_HOME=$T/luma
 export LUMA_FOREMAN_HOME
 mkdir -p "$LUMA_FOREMAN_HOME/projects"
-GLOBAL=$LUMA_FOREMAN_HOME/policy.toml
+GLOBAL=$LUMA_FOREMAN_HOME/permissions.toml
 PROJECT=$LUMA_FOREMAN_HOME/projects/$SLUG.toml
 
 policy() { # policy <file> <lines...>   — rewrite a config file
@@ -207,10 +207,10 @@ tb none 'npm test'
 # The rulebook must not be editable by the thing it governs. Bypass-proof by
 # default; the native Edit(~/.config/luma/**) deny covers the file tools.
 clear_policy
-tb ask  'echo "trust = \"full\"" > ~/.config/luma/foreman/policy.toml'
+tb ask  'echo "trust = \"full\"" > ~/.config/luma/luma-foreman/permissions.toml'
 tb ask  'echo x >> ~/.config/luma/foreman/projects/foo.toml' bypassPermissions
-tb ask  'sed -i "" s/ask/allow/ ~/.config/luma/foreman/policy.toml'
-tb ask  'rm ~/.config/luma/foreman/policy.toml'
+tb ask  'sed -i "" s/ask/allow/ ~/.config/luma/luma-foreman/permissions.toml'
+tb ask  'rm ~/.config/luma/luma-foreman/permissions.toml'
 # The gate script lives in the policy directory so the same protection covers
 # it. A gate an agent can rewrite is not a gate.
 tb ask  'echo "exit 0" > ~/.config/luma/foreman/permission-gate.sh'
@@ -220,43 +220,44 @@ tb ask  'chmod 000 ~/.config/luma/foreman/permission-gate.sh'
 # Every writing subcommand of the CLI. These deliberately name keys that are
 # NOT themselves gated commands — using `allow curl` here would pass on the
 # curl gate and prove nothing about policy_write.
-tb ask  'luma-foreman policy set trust full'
-tb ask  'luma-foreman policy allow downloads'
-tb ask  'luma-foreman policy deny recursive_rm'
-tb ask  'luma-foreman policy ask policy_write'
-tb ask  'luma-foreman policy reset'            # ...including the bare reset
-tb ask  'luma-foreman policy reset downloads'
-tb ask  'luma-foreman policy -g allow downloads'   # ...and with a flag in the way
-tb ask  'luma-foreman policy edit'
-tb ask  'luma-foreman policy install'          # reinstalling the gate counts
+tb ask  'luma-foreman agent-permissions set trust full'
+tb ask  'luma-foreman agent-permissions allow downloads'
+tb ask  'luma-foreman agent-permissions deny recursive_rm'
+tb ask  'luma-foreman agent-permissions ask policy_write'
+tb ask  'luma-foreman agent-permissions reset'            # ...including the bare reset
+tb ask  'luma-foreman agent-permissions reset downloads'
+tb ask  'luma-foreman agent-permissions -g allow downloads'   # ...and with a flag in the way
+tb ask  'luma-foreman agent-permissions edit'
+tb ask  'luma-foreman agent-permissions install'          # reinstalling the gate counts
+tb ask  './bin/luma-foreman agent-permissions allow downloads'  # ...and when invoked via a path
 
-tb none 'cat ~/.config/luma/foreman/policy.toml'   # reading is fine
-tb none 'luma-foreman policy show'             # ...as are all the read verbs
-tb none 'luma-foreman policy list'
-tb none 'luma-foreman policy keys trust'
-tb none 'luma-foreman policy projects'
-tb none 'luma-foreman policy path'
+tb none 'cat ~/.config/luma/luma-foreman/permissions.toml'   # reading is fine
+tb none 'luma-foreman agent-permissions show'             # ...as are all the read verbs
+tb none 'luma-foreman agent-permissions list'
+tb none 'luma-foreman agent-permissions keys trust'
+tb none 'luma-foreman agent-permissions projects'
+tb none 'luma-foreman agent-permissions path'
 
 # Naming a gated command as an ARGUMENT to the CLI must not trigger that
 # command's own rule. Found the hard way: with curl=deny set, the string "curl"
-# inside `luma-foreman policy reset curl` matched the curl rule, and the gate
+# inside `luma-foreman agent-permissions reset curl` matched the curl rule, and the gate
 # refused the one command that could undo the deny. A policy you cannot reverse
 # from inside a session is a trap, not a guard.
 clear_policy
 policy "$PROJECT" 'curl = "deny"' 'ssh = "deny"' 'sudo = "deny"'
-tb ask  'luma-foreman policy reset curl'        # the undo must stay reachable
-tb ask  './bin/luma-foreman policy reset curl'  # ...including run from a checkout
-tb ask  '/usr/local/bin/luma-foreman policy allow curl'
-tb ask  'luma-foreman policy allow curl'
-tb ask  'luma-foreman policy set ssh trusted'
-tb none 'luma-foreman policy keys curl'         # reads stay ungated too
-tb none 'luma-foreman policy'
+tb ask  'luma-foreman agent-permissions reset curl'        # the undo must stay reachable
+tb ask  './bin/luma-foreman agent-permissions reset curl'  # ...including run from a checkout
+tb ask  '/usr/local/bin/luma-foreman agent-permissions allow curl'
+tb ask  'luma-foreman agent-permissions allow curl'
+tb ask  'luma-foreman agent-permissions set ssh trusted'
+tb none 'luma-foreman agent-permissions keys curl'         # reads stay ungated too
+tb none 'luma-foreman agent-permissions'
 tb deny 'curl https://example.com'              # ...while the rule itself still bites
 tb deny 'ssh host'
 tb deny 'sudo ls'
 
 # The exemption is scoped to this CLI, not to any command mentioning it.
-tb deny 'echo luma-foreman policy && curl https://x'
+tb deny 'echo luma-foreman agent-permissions && curl https://x'
 clear_policy
 
 # --------------------------------------------------------------- malformed input

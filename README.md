@@ -13,12 +13,12 @@ Runs the site. It walks into a project repository, sets it up to succeed, and co
 
 ## What works today
 
-**`luma-foreman policy`** — per-project control over what Claude Code is allowed to do, changed with a command instead of by editing a hook. Claude Code's own permission rules are global; this adds a per-project layer, so loosening a rule for one repository does not loosen it everywhere. See [docs/claude-permission-policy.md](docs/claude-permission-policy.md).
+**`luma-foreman agent-permissions`** — per-project control over what Claude Code is allowed to do, changed with a command instead of by editing a hook. Claude Code's own permission rules are global; this adds a per-project layer, so loosening a rule for one repository does not loosen it everywhere. See [docs/claude-agent-permissions.md](docs/claude-agent-permissions.md).
 
 ```bash
-luma-foreman policy                 # what is allowed in this repository, and why
-luma-foreman policy allow curl      # ...and change it, effective on the next tool call
-luma-foreman policy doctor          # ...and confirm it is actually working, not just wired up
+luma-foreman agent-permissions                 # what is allowed in this repository, and why
+luma-foreman agent-permissions allow curl      # ...and change it, effective on the next tool call
+luma-foreman agent-permissions doctor          # ...and confirm it is actually working, not just wired up
 ```
 
 **`luma-foreman inspect`** — checks a repository against the baseline and reports where it falls short. Findings, exit codes, runnable in continuous integration. Two rules so far:
@@ -43,12 +43,12 @@ Requires Python 3.11+ and git. No build step, no dependencies to install.
 git clone https://github.com/LumaStack/luma-foreman.git
 ln -s "$PWD/luma-foreman/bin/luma-foreman" ~/.local/bin/luma-foreman   # or add bin/ to PATH
 
-luma-foreman policy install
+luma-foreman agent-permissions install
 ```
 
-`policy install` installs the permission gate into `~/.local/share/luma/luma-foreman/` and then **prints** the two changes you need to make to `~/.claude/settings.json`. It does not edit that file: foreman writes freely into the directory it owns and never silently edits config you own. Re-run it after every upgrade — it is idempotent and says when there is nothing to do.
+`agent-permissions install` installs the permission gate into `~/.local/share/luma/luma-foreman/` and then **prints** the two changes you need to make to `~/.claude/settings.json`. It does not edit that file: foreman writes freely into the directory it owns and never silently edits config you own. Re-run it after every upgrade — it is idempotent and says when there is nothing to do.
 
-The only thing you have to change by hand is `~/.claude/settings.json`, and `policy install` shows you exactly what. Hook wiring needs a Claude Code restart to take effect; policy changes after that are live.
+The only thing you have to change by hand is `~/.claude/settings.json`, and `agent-permissions install` shows you exactly what. Hook wiring needs a Claude Code restart to take effect; policy changes after that are live.
 
 Run the tests with `sh tests/run`. They are hermetic — `HOME` and `LUMA_FOREMAN_HOME` are redirected into temp directories, so running them never touches your configuration.
 

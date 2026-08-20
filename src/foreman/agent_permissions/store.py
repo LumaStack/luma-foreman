@@ -3,7 +3,7 @@
 Per key, most specific wins:
 
     <home>/projects/<slug>.toml   the project the session is in
-    <home>/policy.toml            global fallback
+    <home>/permissions.toml       global fallback
     the built-in defaults         shipped
 
 Nothing is stored inside the project being governed, so none of it can be
@@ -111,11 +111,28 @@ class Resolved:
         return self.values[key]
 
 
+def _global_file(base: Path) -> Path:
+    """The global fallback, preferring the current name over the old one.
+
+    Renamed from `policy.toml` when the command became `agent-permissions`. The
+    old file is read when the new one is absent, because the alternative is
+    somebody's global settings silently ceasing to apply — a permission file
+    that stops being read fails OPEN, and nothing announces it.
+
+    Writes always go to the new name, so the first change migrates it.
+    """
+    current = base / "permissions.toml"
+    if current.exists():
+        return current
+    legacy = base / "policy.toml"
+    return legacy if legacy.exists() else current
+
+
 def resolve_for(cwd: str | os.PathLike[str], root: Path | None = None) -> Resolved:
     base = root or home()
     project_dir, project_slug = resolve(cwd)
     project_file = base / "projects" / f"{project_slug}.toml"
-    global_file = base / "policy.toml"
+    global_file = _global_file(base)
 
     values = model.defaults()
     sources = {k: "default" for k in values}
@@ -137,7 +154,7 @@ def write_key(path: Path, key: str, value: str, project_dir: Path | None) -> Non
             "# Claude Code permission policy.",
             "# Read by the permission gate on every Bash tool call.",
             *([f"# Project: {project_dir}"] if project_dir else []),
-            "# Edit with `luma-foreman policy`, not by hand from an agent session.",
+            "# Edit with `luma-foreman agent-permissions`, not by hand from an agent session.",
             "",
         ]
 
