@@ -21,7 +21,7 @@ The rehoming questions this file opened with are mostly settled.
 
 - **Catalog and bundle design** → `luma-hq/DECISIONS.md`. The reach and
   obligation axes, starters, tags, most-restrictive-wins, catalogs not
-  inheriting, the `.luma/` store, and the single-valued-and-permanent rule for
+  inheriting, `.luma/` itself, and the single-valued-and-permanent rule for
   what a path may carry.
 - **Bundle conventions** → the `bundle-manager` bundle. Layout, promotion, the
   audit checklist, and the overlap stance.
