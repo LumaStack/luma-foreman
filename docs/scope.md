@@ -81,8 +81,40 @@ evidence.*
 
 - **`policy`** — the per-repository permission gate. Working. It shares no
   machinery with anything above and would function identically if bundles had
-  never existed.
+  never existed. **The name has to change; see below.**
 - **`inspect`** — identity, secrets, and bundle structure. Working.
+
+## `luma-foreman policy` has to be renamed
+
+`policy` became an LKF built-in type at `v0.0.9` — *a course of action adopted*,
+kept as standing context. The command means something else entirely: which tool
+calls an agent may make in this repository.
+
+Two meanings of one word in one ecosystem, and they are close enough to be
+mistaken for each other. *"Where is the policy?"* now has two correct answers —
+`.luma/bundles/*/policy/` and `luma-foreman policy path` — and an agent asked to
+"check the policy" cannot tell which is meant.
+
+This is the same tax already refused twice: `standard` meaning one thing at the
+organization level and another inside a bundle, and `store` meaning too many
+things to survive as a noun.
+
+**Candidates.** `permissions` is what Claude Code itself calls this — the
+settings key is `permissions.deny` — and it reads naturally: `luma-foreman
+permissions allow curl`. `gate` is shorter and already the word the codebase
+uses throughout, but it names the **mechanism** rather than the thing: you set
+permissions, and the gate enforces them. That distinction is worth keeping, and
+it means the installed hook stays `permission-gate.sh` either way.
+
+**The cost is real and worth paying now rather than later.** This is the one
+command that ships and works. The rename touches the CLI, the docs, the test
+suites, and — easy to miss — the `CLI_WRITE` and `CLI_INVOCATION` patterns in
+`policy/match.py`, which recognise a `luma-foreman policy` invocation in order
+to gate it. **A regex that no longer matches the command's name fails open**,
+silently, which is the failure this whole subsystem exists to prevent.
+
+Every day it waits, the collision gets more expensive and the muscle memory
+deeper.
 
 ## What each of these costs
 
