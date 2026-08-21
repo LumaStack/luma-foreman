@@ -6,7 +6,7 @@ These are working rules that accumulated as machine-local agent memory while bui
 
 ## What has to be settled before these move out of `examples/`
 
-- **Where they belong.** Some are organization-level facts about how work is done and arguably belong in `luma-hq`; some are repository-level rules that `luma-foreman` should install and check. They are not currently separated.
+- **Where they belong.** Some are organization-level facts about how work is done and arguably belong in `luma-leader`; some are repository-level rules that `luma-foreman` should install and check. They are not currently separated.
 - **How they get loaded.** A committed file is durable but inert. Machine-local memory was live but fragile. Neither is the answer on its own, and the trade is the actual open question.
 - **What scope each one has.** "Applies to every repository" and "applies to `luma-backlog` only" are both present below, and the distinction is currently written in prose rather than expressed in a way anything can act on.
 

@@ -5,7 +5,7 @@ This will be a short lived file.
 ## Where things stand
 
 Twelve bundles exist in `luma-catalog`, the format is at `v0.0.9`, and
-`luma-hq/DECISIONS.md` carries twenty-one settled decisions. **Nothing has
+`luma-leader/DECISIONS.md` carries twenty-one settled decisions. **Nothing has
 adopted anything** — no repository has a `.luma/` directory, so every layout
 decision, the vendoring path, `adopted.toml` and the skill projection are
 reasoned and untested.
@@ -19,7 +19,7 @@ would surface without anybody remembering to look.
 
 The rehoming questions this file opened with are mostly settled.
 
-- **Catalog and bundle design** → `luma-hq/DECISIONS.md`. The reach and
+- **Catalog and bundle design** → `luma-leader/DECISIONS.md`. The reach and
   obligation axes, starters, tags, most-restrictive-wins, catalogs not
   inheriting, `.luma/` itself, and the single-valued-and-permanent rule for
   what a path may carry.

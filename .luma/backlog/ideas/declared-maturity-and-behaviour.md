@@ -25,7 +25,7 @@ should accept it at the repo level as well so it's flexible.
 
 ## Notes
 
-Migrated from `luma-hq/IDEAS.md` on 2026-08-21. `created.at` is a day-level
+Migrated from `luma-leader/IDEAS.md` on 2026-08-21. `created.at` is a day-level
 estimate.
 
 **Added at migration — the document-level half already exists.** The knowledge

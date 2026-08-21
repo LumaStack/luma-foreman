@@ -110,7 +110,7 @@ Open: whether foreman additionally writes *committed* per-project Claude Code se
 ## Bundles
 
 **Settled, and recorded elsewhere.** The bundle model is no longer an idea: the
-decisions live in `luma-hq/DECISIONS.md`, the conventions in the catalog's
+decisions live in `luma-leader/DECISIONS.md`, the conventions in the catalog's
 `bundle-manager` bundle, and the structural checks in `inspect`'s `bundles`
 rule. What used to be here — the vocabulary, the seam against the format, the
 distribution model, the catalog layout, workflows as a bundle type — is deleted
@@ -121,10 +121,10 @@ Where to look now:
 
 | question | where it lives |
 | --- | --- |
-| what a bundle is, and why it is a Knowledge Bundle | `luma-hq/DECISIONS.md` |
+| what a bundle is, and why it is a Knowledge Bundle | `luma-leader/DECISIONS.md` |
 | documents, assets, attachments | the format's `SPEC.md` §2, §8 |
 | `consumers`, `entry_point`, `preload` | the format's `SPEC.md` §5.2, §11.1 |
-| obligation, starters, tags, catalog inheritance | `luma-hq/DECISIONS.md` |
+| obligation, starters, tags, catalog inheritance | `luma-leader/DECISIONS.md` |
 | where a bundle goes, and how it is promoted | `luma/bundle-manager` |
 | how a bundle is laid out | `luma/bundle-manager` |
 | what makes one structurally wrong | `foreman inspect --rule bundles` |

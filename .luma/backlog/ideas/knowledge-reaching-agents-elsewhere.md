@@ -17,16 +17,16 @@ and this trade is unresolved — it is the same question parked in
 
 ## Notes
 
-Migrated from `luma-hq/IDEAS.md` on 2026-08-20. **`created.at` is a day-level
+Migrated from `luma-leader/IDEAS.md` on 2026-08-20. **`created.at` is a day-level
 estimate** — it is the date that file was first committed, and the repository's
 history was discarded before the migration, so nothing more precise is
 recoverable. The time is a placeholder, not an observation.
 
-**Moved here rather than kept in `luma-hq`.** The question is how knowledge
+**Moved here rather than kept in `luma-leader`.** The question is how knowledge
 reaches an agent working *elsewhere*, and elsewhere is by definition where hq is
 not. An hq can argue the trade; only the tool that runs where the agent is can
 answer it. It was retitled on the move: *Open:* is status rather than title, and
-*here* meant `luma-hq`.
+*here* meant `luma-leader`.
 
 **The same question is stated in `docs/examples/README.md`**, as prose rather
 than an idea. This file is the canonical version; that paragraph keeps its

@@ -25,7 +25,7 @@ afterwards.
 
 **The obvious implementation breaks a standing boundary.** The hook has to know
 the internal repository's name in order to match against it, and that name lives
-in `~/.config/luma/luma-hq/config.toml`. Foreman's own rule is a test: *if a check
+in `~/.config/luma/luma-leader/config.toml`. Foreman's own rule is a test: *if a check
 ever needs organization context in order to run, the boundary has been broken.*
 
 Three ways out, none free:

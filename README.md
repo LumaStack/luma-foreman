@@ -62,7 +62,7 @@ The goal is projects that are homogeneous where homogeneity pays and optimal whe
 
 **luma-foreman can always run on its own.**
 
-luma-hq is optional. When one exists, foreman may use it and may be better for
+luma-leader is optional. When one exists, foreman may use it and may be better for
 it. When one does not, nothing foreman does stops working.
 
 That is a guarantee, not a ban. Consulting hq is allowed and may well be worth
@@ -101,13 +101,13 @@ The last row is the awkward one, and it earns its place: some per-project decisi
 
 **Bootstrap**, **Outfit** and **Refit** are workstation operations. They change a repository, they expect an operator, and they may use workstation state to do it. Requiring them to run in continuous integration was never the point and would buy nothing.
 
-## Relationship to luma-hq
+## Relationship to luma-leader
 
 Two of the three limits live here: **Existence** first, then **Authority**.
 
 **hq is optional.** Many organizations will never have one, so foreman has to be worth installing on its own. What ships here is a complete and defensible standard, not a stub waiting for orders.
 
-Where an hq does exist, the division is: luma-hq is where a standard is argued, decided, and justified, and where the organization's view across every project lives. luma-foreman is where a standard becomes executable and gets enforced, one repository at a time. Changes flow one way: hq settles, foreman ships.
+Where an hq does exist, the division is: luma-leader is where a standard is argued, decided, and justified, and where the organization's view across every project lives. luma-foreman is where a standard becomes executable and gets enforced, one repository at a time. Changes flow one way: hq settles, foreman ships.
 
 Foreman does not do hq's job. It does not argue standards, and it does not accumulate knowledge across projects in order to decide something — the moment answering a question requires knowing about your *other* repositories, that question belonged to hq.
 
