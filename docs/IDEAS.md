@@ -2,6 +2,54 @@
 
 Wanted capabilities, captured so they survive. Nothing here is designed, ordered, or committed to — this is a holding pen, like `docs/examples/`. Expect it to be replaced by `.luma/backlog/` once the repository is ready for it.
 
+## Migrated — 2026-08-21
+
+Moved to one file per idea, following `luma/backlog-ideas`. **All 19 reviewable
+ideas decided**, from the 18 agreed at the start plus one split. Every entry
+below carries a marker saying where it went or why it was dropped.
+
+Fifteen files were written or amended across four repositories. Every one has
+been verified to exist and to carry `type`, `title`, `created`, `scope` and
+`horizon`.
+
+**Migrated**
+
+| # | Title | Landed | Modifications | Metadata |
+|---|---|---|---|---|
+| 2 | History | `luma-foreman` · scan-history-not-just-the-working-tree.md | retitled · notes added | someday · project |
+| 3 | Drive an incident, and store it as markdown | `luma-foreman` · drive-an-incident.md | notes added | someday · project |
+| 5 | Install the standard tooling | `luma-catalog` · bundles-for-linting-tests-ci-and-review.md | retitled · notes added | later · project |
+| 6 | Meta-skills | `luma-catalog` · meta-skills-that-generate-project-practice.md | retitled · notes added | someday · project |
+| 7 | Return periodically to confirm learnings applied | `luma-leader` · tools-that-run-on-a-schedule.md | absorbed into tools-that-run-on-a-schedule.md | *target's* |
+| 9 | New repo survey | `luma-foreman` · new-repository-survey.md | retitled · notes added | later · project |
+| 10 | Define how to resolve common terms or requests | `luma-catalog` · declared-vocabulary-for-requests.md | retitled · notes added | later · project |
+| 11 | Committed per-project Claude Code settings | `luma-foreman` · committed-permission-floor.md | retitled · notes added | later · project |
+| 12 | Distribution | `luma-foreman` · distribution-beyond-clone-and-symlink.md | retitled · notes added | later · project |
+| 14 | Bundle migrations | `luma-catalog` · bundle-migrations.md | notes added | later · project |
+| 15 | Routers | `luma-foreman` · routers.md | retitled · notes added | someday · project |
+| 16 | Browsing a catalog is an engine's job | `luma-foreman` · browsing-a-catalog-is-an-engines-job.md | notes added | someday · project |
+| 17a | Manifest files may want to be YAML | `luma-knowledge-format` · bundle-manifest-as-yaml.md | split 1 of 2 · retitled | later · project |
+| 17b | Manifest files may want to be YAML | `luma-catalog` · catalog-manifest-as-yaml.md | split 2 of 2 · retitled | later · project |
+| 18 | Permission modes | `luma-foreman` · named-permission-profiles.md | retitled · notes added | later · project |
+| — | A personal skill selection that is not committed | `luma-foreman` · personal-skill-selection-not-committed.md | new capture | later · project |
+
+**Pruned**
+
+| # | Title | Why |
+|---|---|---|
+| 1 | An identity list for the case shape cannot reach | `inspect`'s `identity` rule already lists well-formed author addresses once a repository has more than three. The residual gap is that threshold, and the honest-reporting half is a guard on a feature that does not exist |
+| 4 | Bootstrap a new project | `bootstrap` is a stub command in the README, its scope recorded in `docs/scope.md` and its ordering in `docs/next-steps.md`. The structural knowledge moved to the `luma-layout` bundle |
+| 8 | Git worktee workflows | Already happened — the `luma/git-worktrees` bundle, published 2026-08-18: a policy and four workflows |
+| 13 | The package-management prior art | Not an idea. Every mechanism in its table is a settled decision in `luma-leader/docs/DECISIONS.md`, and the one row that is not recorded is one that decision rejects |
+
+`luma-foreman` 9 · `luma-catalog` 5 · `luma-knowledge-format` 1 ·
+`luma-leader` 1 absorbed · pruned 4
+
+**Eight entries were retitled**, in every case because the original named a
+mechanism that turned out to be already scoped, and the gap underneath it was the
+part worth keeping. Three of the four prunes were *already happened* rather than
+*not wanted*.
+
 ## Keep sensitive data out of git
 
 **Built and shipped.** The policy and the workflows are the `luma/git-secrets`
@@ -24,9 +72,17 @@ worse than no check. Hashes committed to the project is one way out; the other
 is for the check to report honestly that it ran without a list rather than
 reporting clean.
 
+> *Pruned, not migrated. `inspect`'s `identity` rule already lists well-formed
+> author addresses as evidence once a repository has more than three of them, so
+> the gap is narrower than this entry claims — it is the threshold, not the
+> absence of a list. The honest-reporting half is a guard on a feature that does
+> not exist and is not independently buildable.*
+
 **History.** A secret committed and deleted a month later is still published,
 and that is where most real leaks live. Nothing here scans it, and the bundle
 says so rather than letting a clean working tree imply an answer it cannot give.
+
+> *Migrated to `.luma/backlog/ideas/scan-history-not-just-the-working-tree.md`.*
 
 
 ## Drive an incident, and store it as markdown
@@ -39,13 +95,25 @@ Likely delivered as a skill foreman installs into a project, rather than somethi
 
 Open: whether the format already has a record type that fits, or whether an incident needs a new one — a timeline that accumulates during an event is a different shape from a record written once. If it needs one, that is a format request, not a reason to contort around the gap. Also open: where the records live, and whether driving and recording are one capability or two, since recording a timeline is useful even when nobody is being walked through the response.
 
+> *Migrated to `.luma/backlog/ideas/drive-an-incident.md`.*
+
 ## Other capabilities named but not yet captured properly
 
 - Bootstrap a new project with the structure it should have had from the first commit.
+  > *Pruned, not migrated. `bootstrap` is a stub command in the README; its scope is
+  > recorded in `docs/scope.md` and its ordering in `docs/next-steps.md`, and the
+  > structural knowledge moved to the `luma-layout` bundle.*
 - Install the standard tooling — linting, tests, continuous integration, independent review, a backlog.
+  > *Migrated to `luma-catalog`, `.luma/backlog/ideas/bundles-for-linting-tests-ci-and-review.md`,
+  > retitled — the mechanism is scoped here, but four of the five named bundles do not exist.*
 - Meta-skills: skills that generate a project's own best-practice skills, rather than copying a template.
+  > *Migrated to `luma-catalog`, `.luma/backlog/ideas/meta-skills-that-generate-project-practice.md`.*
 - Return periodically to confirm the latest learnings were actually applied.
+  > *Pruned as scheduling. The one new part — `refit` as a recurring consumer — was
+  > absorbed into `luma-leader`, `.luma/backlog/ideas/tools-that-run-on-a-schedule.md`.*
 - Git worktee workflows
+  > *Pruned — already happened. Shipped as the `luma/git-worktrees` bundle
+  > (published 2026-08-18): a policy and four workflows.*
 
 ## New repo survey
 
@@ -73,6 +141,8 @@ When setting up a new repo, capture infromation that will drive how it gets used
 - what are your example names, addresses, etc so identifiable info doesn't leak in
 - when is editing decisions not allowed (e.g. on the first day, it should be ok to edit a decision instead of taking on tech debt)
 
+> *Migrated to `.luma/backlog/ideas/new-repository-survey.md`.*
+
 ## Define how to resolve common terms or requests
 
 What does it mean when i say:
@@ -82,6 +152,10 @@ What does it mean when i say:
 - Where did we leave off
 - What do you know to be true
 - Checkpoint
+
+> *Migrated to `luma-catalog`, `.luma/backlog/ideas/declared-vocabulary-for-requests.md`,
+> retitled — three of the five phrases already resolve to `session-manager` workflows, so
+> the want is a binding layer rather than five capabilities.*
 
 ## Claude Code modes
 
@@ -107,10 +181,15 @@ Change what Claude Code's hooks allow or disallow with a command, per project, w
 
 Open: whether foreman additionally writes *committed* per-project Claude Code settings — the shared floor a team gets from a clone — with this machine-local layer as overrides on top. Those are two different capabilities that happen to touch the same file format. Also open: distribution. Install is currently a clone plus a symlink, which is fine for one operator and not for an organization.
 
+> *Both opens migrated — `.luma/backlog/ideas/committed-permission-floor.md` and
+> `.luma/backlog/ideas/distribution-beyond-clone-and-symlink.md`. The rest of this
+> heading is settled reasoning about shipped work, recorded in
+> [docs/claude-agent-permissions.md](claude-agent-permissions.md).*
+
 ## Bundles
 
 **Settled, and recorded elsewhere.** The bundle model is no longer an idea: the
-decisions live in `luma-leader/DECISIONS.md`, the conventions in the catalog's
+decisions live in `luma-leader/docs/DECISIONS.md`, the conventions in the catalog's
 `bundle-manager` bundle, and the structural checks in `inspect`'s `bundles`
 rule. What used to be here — the vocabulary, the seam against the format, the
 distribution model, the catalog layout, workflows as a bundle type — is deleted
@@ -121,10 +200,10 @@ Where to look now:
 
 | question | where it lives |
 | --- | --- |
-| what a bundle is, and why it is a Knowledge Bundle | `luma-leader/DECISIONS.md` |
+| what a bundle is, and why it is a Knowledge Bundle | `luma-leader/docs/DECISIONS.md` |
 | documents, assets, attachments | the format's `SPEC.md` §2, §8 |
 | `consumers`, `entry_point`, `preload` | the format's `SPEC.md` §5.2, §11.1 |
-| obligation, starters, tags, catalog inheritance | `luma-leader/DECISIONS.md` |
+| obligation, starters, tags, catalog inheritance | `luma-leader/docs/DECISIONS.md` |
 | where a bundle goes, and how it is promoted | `luma/bundle-manager` |
 | how a bundle is laid out | `luma/bundle-manager` |
 | what makes one structurally wrong | `foreman inspect --rule bundles` |
@@ -149,6 +228,18 @@ The one place the borrowing stops is **resolution**. Bundles have no
 dependencies, so there is no solver, no version negotiation, and no lockfile
 beyond the vendored copy itself — which is why the thing is a catalog and not a
 registry.
+
+> *Pruned, not migrated. This heading holds no unfiled want. Its own justification —
+> "nothing else records it" — was true when written and is not now: every mechanism
+> in the prior-art table is a settled decision in `luma-leader/docs/DECISIONS.md` (the
+> registry naming at §"The catalog is a catalog, not a registry", manifest and
+> vendoring, the vendored directory as lockfile, upstream and mandate drift, the
+> obligation ladder's `by:` deadline, and promotion as copy-then-adopt). The one row
+> that is not recorded — promotion as contributing a fork upstream — is not recorded
+> because the decision rejects it: "no subtree, no submodule, no git surgery". The
+> attributions to npm, Gemfile and Dependabot were deliberately not carried across;
+> the sentence that matters, "the catalog is the registry-shaped thing, minus
+> resolution", is already in that decision.*
 
 
 ### Bundle migrations
@@ -244,6 +335,8 @@ has content a migration's assumptions do not hold for. Refusing to migrate a
 drifted bundle is probably right, and it makes drift block an upgrade, which
 some adopter will resent at exactly the wrong moment.
 
+> *Migrated to `luma-catalog`, `.luma/backlog/ideas/bundle-migrations.md`.*
+
 ### Routers
 
 **Loose, and worth pursuing.** A `router` is a Document whose content is
@@ -322,6 +415,10 @@ one question is how they drift into disagreeing.
 Whether totality is checkable depends entirely on the prose-or-data answer
 above, which is another reason that question comes first.
 
+> *Migrated to `.luma/backlog/ideas/routers.md`. Filed here rather than in the
+> knowledge format, against this entry's own argument; the disagreement is recorded
+> in the file.*
+
 **Guide or mandate?** The obligation ladder already exists and could apply — a
 route can be a suggestion or a rule. Worth reusing rather than inventing a
 second vocabulary for the same idea.
@@ -351,6 +448,8 @@ repository. Dependency alerts on a catalog are a category error.
 If the browser is a static site, the answer is the same with different
 mechanics — the generator is an engine and lives elsewhere; the output is a
 build artifact and is not committed to the content branch.
+
+> *Migrated to `.luma/backlog/ideas/browsing-a-catalog-is-an-engines-job.md`.*
 
 ### Manifest files may want to be YAML, not markdown
 
@@ -391,8 +490,17 @@ reading. If they do, `bundle.md` earns itself and only `catalog.yaml` moves. If
 they do not, both are manifests and the markdown wrapper is costing a schema for
 nothing.
 
+> *Split at migration into two ideas, because only one has a deadline —
+> `luma-knowledge-format`, `.luma/backlog/ideas/bundle-manifest-as-yaml.md` (a
+> breaking spec change, window closes at `1.0`) and `luma-catalog`,
+> `.luma/backlog/ideas/catalog-manifest-as-yaml.md` (defined nowhere in the
+> specification, decidable unilaterally).*
+
 ## Permission modes
 
 I want to be able to setup a mode in the config or via the command line or both.
 
 It will make it so when I say I want to be in "foobar" mode it auto applies all my permissions to the way I set them.  The simpliest way is the setting sits as a mapping in the config.  The nice to have would be taking a snapshot of my current settings, name it, and then the current settings get added to config as a new mapping set.
+
+> *Migrated to `.luma/backlog/ideas/named-permission-profiles.md`, retitled —
+> `mode` already means two other things in this tool.*
