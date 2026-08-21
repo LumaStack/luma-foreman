@@ -1,6 +1,8 @@
 # luma-foreman
 
-Runs the site. It walks into a project repository, sets it up to succeed, and comes back periodically to check the work still holds.
+Every repository set up right, and kept that way.
+
+It walks into a project repository, sets it up to succeed, and comes back periodically to check the work still holds.
 
 > **Status:** early. Two of the four jobs have working code; the rest is still shape.
 
