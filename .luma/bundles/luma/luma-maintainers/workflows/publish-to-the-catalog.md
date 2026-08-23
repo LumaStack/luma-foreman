@@ -81,7 +81,7 @@ could: a bundle both mandated and deprecated, or a starter pinning a version the
 same catalog's own mandate forbids — which would make every new project born
 failing.
 
-**Nothing checks this today.** It is the job of the catalog tool, which does not
+**Nothing checks this today.** It is `curator`'s job and `curator` does not
 exist, so for now it is read by a person.
 
 ## 6. Merge, then let adopters find it

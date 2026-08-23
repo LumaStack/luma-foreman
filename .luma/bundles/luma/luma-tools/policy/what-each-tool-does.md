@@ -13,7 +13,7 @@ preload: mandatory
 | activity | who does it | tool |
 | --- | --- | --- |
 | **adopt knowledge into a project, and keep it working** | everyone | **`foreman`** |
-| **tend a catalog you publish** | the few who publish one | **the catalog tool** — unbuilt |
+| **tend a catalog you publish** | the few who publish one | **`curator`** — named, unbuilt |
 | **build the tools themselves** | their maintainers | ordinary development; no luma tool |
 
 **Most people only ever need the first row.** A catalog is an endgame rather
@@ -27,7 +27,7 @@ adopters never publish anything.
 | **`luma-foreman`** | adopts bundles into a repository and projects them at agents | **working** |
 | **`luma-clarify`** | resolves ambiguity in written requirements | working |
 | **`luma-backlog`** | keeps a project's intended work | working |
-| *the catalog tool* | validates a catalog and refuses what it cannot hold | **unbuilt, unnamed** |
+| **`luma-curator`** | validates a catalog and refuses what it cannot hold | **named, unbuilt** |
 | **`luma-leader`** | not a tool. A place an organization keeps what outlives one project | n/a |
 
 **`luma-leader` and `luma-foreman` are role metaphors and the rest are not**,
@@ -43,7 +43,7 @@ questions about what you may change.
 
 | | | may you fork it |
 | --- | --- | --- |
-| **engines** | `foreman`, `clarify`, `backlog`, the catalog tool | **no.** Upgrade them; do not diverge |
+| **engines** | `foreman`, `clarify`, `backlog`, `curator` | **no.** Upgrade them; do not diverge |
 | **content** | catalogs, bundles, your headquarters, your projects | **yes. All of it is yours** |
 
 **An adopted bundle is content and is still not yours to edit in place.** It is
