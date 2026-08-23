@@ -6,12 +6,12 @@ It walks into a project repository, sets it up to succeed, and comes back period
 
 > **Status:** early. Adoption, projection and inspection work end to end; `bootstrap` and `refit` are still shape.
 
-## The jobs
+## The foreman jobs
 
-- **Adopt.** Take a bundle of knowledge from a catalog and make it part of this repository — copied in, committed, and recorded.
-- **Outfit.** Project what was adopted into what the agent working here actually reads, so nobody has to say where to look.
-- **Inspect.** Check a project against the baseline and report where it falls short. Findings, exit codes, runnable in continuous integration.
-- **Bootstrap.** Stand a new project up with the structure it should have had from the first commit.
+- **Bootstrap.** Stand a new project up with the structure it should have had as soon as possible.
+- **Adopt.** Adopt a bundle of knowledge from a catalog and make it available in this repository.
+- **Outfit.** Wire up what was adopted so agents use it correctly, so nobody has to say where to look.
+- **Inspect.** Check a project against the baseline and report where it falls short.
 - **Refit.** Return over time and confirm the latest learnings have actually been applied, not just published.
 
 ## Knowledge in, agent out
