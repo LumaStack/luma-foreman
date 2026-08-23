@@ -1,5 +1,5 @@
 ---
-type: project
+type: luma/project
 title: luma-foreman
 disclosure_level: public
 description: The command-line tool that runs inside a project repository — agent permissions, inspect rules, and eventually adoption. Open it for anything foreman does to a repository, not for what a standard says.
