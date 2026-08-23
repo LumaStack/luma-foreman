@@ -13,9 +13,8 @@ may call itself `1.0.0` — those are an organization's opinions, they arrive by
 adoption rather than by being compiled in, and a tool that hardcoded them would
 be deciding standards rather than enforcing them.
 
-The frontmatter parser is deliberately a small subset: top-level `key: value`
-and enough of the block syntax to catch the nested-array trap. Anything needing
-real YAML is a check that belongs somewhere else.
+The frontmatter parser is deliberately a small subset, and lives in
+``foreman.lkf`` because ``adopt`` reads the same thing.
 """
 
 from __future__ import annotations
@@ -24,17 +23,12 @@ import re
 import subprocess
 from pathlib import Path
 
+from ... import lkf
 from ..finding import Finding, Result, Skipped
 
 RULE = "bundles"
 
-# `[[…]]` is YAML flow-sequence syntax, so an unquoted wikilink in frontmatter
-# parses as a nested array rather than a string — silently, with no parser
-# complaining. The document stays valid and the link never resolves. This is the
-# single most likely defect in a hand-written bundle.
-TRAP = re.compile(r"^([A-Za-z_][\w-]*)\s*:\s*\[\[", re.M)
-
-KEY = re.compile(r"^([A-Za-z_][\w-]*)\s*:\s*(.*?)\s*$", re.M)
+TRAP = lkf.TRAP
 WIKILINK = re.compile(r"\[\[([^\]|#]+)(?:[|#][^\]]*)?\]\]")
 MDLINK = re.compile(r"\]\(([^)]+)\)")
 
@@ -46,18 +40,8 @@ FENCE = re.compile(r"^```.*?^```", re.M | re.S)
 INLINE = re.compile(r"`[^`\n]*`")
 
 
-def _split(text: str) -> tuple[str | None, str]:
-    """Frontmatter block and body. Frontmatter must open on the first line."""
-    if not text.startswith("---\n"):
-        return None, text
-    end = text.find("\n---", 3)
-    if end == -1:
-        return None, text
-    return text[4:end], text[end + 4 :]
-
-
-def _keys(front: str) -> dict[str, str]:
-    return {m.group(1): m.group(2) for m in KEY.finditer(front)}
+_split = lkf.split
+_keys = lkf.keys
 
 
 def _prose(text: str) -> str:
@@ -69,7 +53,18 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
     findings: list[Finding] = []
     label = root.relative_to(repo).as_posix() or "."
 
+    # A vendored bundle is somebody else's, and every remedy below says "fix
+    # it" — which is the one thing you must not do to an adopted copy, because
+    # the next adopt discards the fix and upstream never hears about the defect.
+    # Reporting it is still right: you are the one carrying it.
+    vendored = label.startswith(".luma/bundles/")
+
     def bad(sev: str, summary: str, evidence: list[str], remedy: str) -> None:
+        if vendored:
+            remedy += (
+                "  This is an adopted copy — fix it upstream and re-adopt, "
+                "never here."
+            )
         findings.append(
             Finding(
                 rule=RULE,

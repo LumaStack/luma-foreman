@@ -77,12 +77,18 @@ evidence.*
 - **Alert people when things do not work.**
 - Provide ways the system can **learn and improve**.
 
-### Already built, and unrelated to all of it
+### Already built
 
-- **`agent-permissions`** — the per-repository permission gate. Working. It
-  shares no machinery with anything above and would function identically if
-  bundles had never existed. *Renamed from `policy`; see below.*
-- **`inspect`** — identity, secrets, and bundle structure. Working.
+- **`adopt`** — vendoring a bundle into `.luma/bundles/`, with version, origin,
+  catalog commit and checksum in `adopted.toml`. **2026-08-23.**
+- **`outfit`** — the projection: a thin skill per workflow, and an index of
+  everything adopted in a managed block in `CLAUDE.md`. **2026-08-23.**
+- **`inspect`** — identity, secrets, bundle structure, and adoption drift.
+  Working.
+- **`agent-permissions`** — the per-repository permission gate. Working, and
+  unrelated to all of the above: it shares no machinery with any of it and would
+  function identically if bundles had never existed. *Renamed from `policy`; see
+  below.*
 
 ## `luma-foreman policy` was renamed to `agent-permissions`
 
@@ -122,16 +128,33 @@ absent, because a permission file that quietly stops being read fails open too.
 
 Honest annotations, so the list is not read as a plan.
 
-**Buildable now, nothing external needed.** Adoption and vendoring. Checksum
+**Buildable now, nothing external needed.** ~~Adoption and vendoring. Checksum
 drift. Projecting a workflow to `SKILL.md`. Projecting policy into whatever a
-harness reads. Selecting *at projection time* which subset of adopted content is
-written out — including by symlink.
+harness reads.~~ **All four done, 2026-08-23.** What remains on this line is
+selecting *at projection time* which subset of adopted content is written out —
+including by symlink — which is unbuilt because nothing yet decides the subset.
 
 **Needs cooperation that does not exist.** Loading and unloading **mid-session**.
 Agent Skills' progressive disclosure loads every skill's name and description at
 startup and the body on description match; there is no hook for *conditions
 changed, drop these*. Projection-time selection gets most of the value; runtime
 swapping does not currently have a mechanism in any harness.
+
+**Needs a decision, and adoption is what will settle it.**
+
+- *Do the standards used to build luma tooling live outside luma tooling?*
+  Foreman now adopts `luma/decision-records` and records its own decisions
+  through a bundle it took from the catalog. If its release process, its
+  versioning rules and its prose conventions go the same way, foreman is a
+  consumer of the catalog it was built to serve. **Elegant, or a permanent
+  headache for whoever maintains both ends?** Nobody knows yet, and the way to
+  find out is to keep adopting until it either stops being convenient or does
+  not.
+- *Will anything ship natively in foreman, or is everything fetched?* The same
+  question from the other side, and it decides whether logging is a bundle.
+
+*Both were carried in `docs/next-steps.md` until that document was consumed.
+They are unanswered, not abandoned.*
 
 **Needs a decision before it can be built.**
 

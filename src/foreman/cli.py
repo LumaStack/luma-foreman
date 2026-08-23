@@ -15,9 +15,10 @@ USAGE = """usage: luma-foreman <job> [args]
 
 Jobs:
   agent-permissions   what an agent is allowed to do in this repository
-  bootstrap           stand a new project up with the structure it should have had
-  outfit              install the tooling every project is expected to carry
+  adopt               take a bundle from a catalog into this project
+  outfit              project what this project adopted into what a harness reads
   inspect             check a project against the baseline and report shortfalls
+  bootstrap           stand a new project up with the structure it should have had
   refit               confirm the latest learnings were actually applied
 
 Run `luma-foreman <job> --help` for a job's own options."""
@@ -47,7 +48,7 @@ Add -g/--global to any write to target the global fallback instead of this
 project. Reads always show the merged result. Add --json to `policy`, `keys`
 and `doctor` for machine-readable output."""
 
-UNBUILT = ("bootstrap", "outfit", "refit")
+UNBUILT = ("bootstrap", "refit")
 
 
 def _policy(argv: list[str]) -> int:
@@ -157,8 +158,19 @@ def main(argv: list[str] | None = None) -> int:
         return _policy(argv[1:])
     if job == "inspect":
         return _inspect(argv[1:])
+    if job == "adopt":
+        from . import adopt
+
+        return adopt.main(argv[1:])
+    if job == "outfit":
+        from . import outfit
+
+        return outfit.main(argv[1:])
     if job in UNBUILT:
-        print(f"luma-foreman: {job} is not built yet — see docs/IDEAS.md", file=sys.stderr)
+        print(
+            f"luma-foreman: {job} is not built yet — see .luma/backlog/ideas/",
+            file=sys.stderr,
+        )
         return 2
     print(f"luma-foreman: unknown job: {job}", file=sys.stderr)
     print(USAGE, file=sys.stderr)

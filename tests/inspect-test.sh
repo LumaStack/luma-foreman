@@ -196,7 +196,7 @@ bundle() {
 
 d=$(bundle bok)
 run 'valid bundle is quiet' 0 "$d"
-lacks 'bundles'
+lacks 'rule=bundles'
 
 # No bundles at all is a skip, never a pass.
 run 'no bundles is a skip' 0 "$clean"
@@ -220,7 +220,7 @@ d=$(bundle bquoted)
 printf -- '---\ntype: workflow\n---\nbody\n' > "$d/b/target.md"
 printf -- '---\ntype: workflow\nparent: "[[target]]"\n---\nbody\n' > "$d/b/w.md"
 run 'quoted wikilink that resolves' 0 "$d"
-lacks 'bundles'
+lacks 'rule=bundles'
 
 d=$(bundle btype)
 printf -- '---\ntitle: no type\n---\nbody\n' > "$d/b/w.md"
@@ -254,7 +254,7 @@ d=$(bundle bcode)
   printf 'Inline `[[not-real]]` and a fence:\n\n```yaml\nparent: [[also-not-real]]\n```\n'
 } > "$d/b/w.md"
 run 'illustrative syntax in code is ignored' 0 "$d"
-lacks 'bundles'
+lacks 'rule=bundles'
 
 # A bundle inside a bundle is audited once, by itself.
 d=$(bundle bnest); mkdir -p "$d/b/inner"

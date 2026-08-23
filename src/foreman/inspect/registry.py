@@ -1,10 +1,10 @@
 """The rules Inspect knows about.
 
-A dict, not a configuration format. Two rules in, nothing yet wants configuring:
-both are shape-based, both run everywhere, and neither has a knob worth exposing.
-The moment one needs per-project tuning is the moment to design a schema — and
-not before, because a schema drawn around today's two rules would be wrong in
-ways nobody can see yet.
+A dict, not a configuration format. Nothing yet wants configuring: every rule is
+shape-based, every rule runs everywhere, and none has a knob worth exposing. The
+moment one needs per-project tuning is the moment to design a schema — and not
+before, because a schema drawn around today's rules would be wrong in ways
+nobody can see yet.
 """
 
 from __future__ import annotations
@@ -12,12 +12,13 @@ from __future__ import annotations
 from pathlib import Path
 
 from .finding import Result
-from .rules import bundles, identity, secrets
+from .rules import adoption, bundles, identity, secrets
 
 RULES = {
     identity.RULE: identity.check,
     secrets.RULE: secrets.check,
     bundles.RULE: bundles.check,
+    adoption.RULE: adoption.check,
 }
 
 
