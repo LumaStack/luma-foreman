@@ -9,3 +9,15 @@ version  = "0.2.0"
 source   = "https://github.com/LumaStack/luma-catalog.git"
 commit   = "4652c81f5cd83a26c9698d07868894c93828033a"
 checksum = "sha256:b9404156acd3bd2ecad984c2cf49362d012e44bce903bd17fefa7d29a9a79d58"
+
+["luma/luma-maintainers"]
+version  = "0.1.0"
+source   = "https://github.com/LumaStack/luma-catalog.git"
+commit   = "bb0806c98e5996b58f4901ed9d59c9cd2303a294"
+checksum = "sha256:b01dd5f3c71d814414bff0d3b82b49b4881957e86f1ff3e4b2a2ada1d2baf707"
+
+["luma/luma-tools"]
+version  = "0.1.0"
+source   = "https://github.com/LumaStack/luma-catalog.git"
+commit   = "bb0806c98e5996b58f4901ed9d59c9cd2303a294"
+checksum = "sha256:8b09b4efa63de692bc28765c6fd2be810ad1487355c8401b6b7239705d341756"
