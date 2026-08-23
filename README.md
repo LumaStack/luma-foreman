@@ -4,14 +4,33 @@ Every repository set up right, and kept that way.
 
 It walks into a project repository, sets it up to succeed, and comes back periodically to check the work still holds.
 
-> **Status:** early. Two of the four jobs have working code; the rest is still shape.
+> **Status:** early. Adoption, projection and inspection work end to end; `bootstrap` and `refit` are still shape.
 
-## The four jobs
+## The foreman jobs
 
-- **Bootstrap.** Stand a new project up with the structure it should have had from the first commit.
-- **Outfit.** Install the tooling every project is expected to carry — linting, tests, continuous integration, independent review, a backlog.
-- **Inspect.** Check a project against the baseline and report where it falls short. Findings, exit codes, runnable in continuous integration.
+- **Bootstrap.** Stand a new project up with the structure it should have had as soon as possible.
+- **Adopt.** Adopt a bundle of knowledge from a catalog and make it available in this repository.
+- **Outfit.** Wire up what was adopted so agents use it correctly, so nobody has to say where to look.
+- **Inspect.** Check a project against the baseline and report where it falls short.
 - **Refit.** Return over time and confirm the latest learnings have actually been applied, not just published.
+
+## Knowledge in, agent out
+
+The loop foreman exists for. A catalog publishes bundles, a project adopts the ones it wants, and the projection puts them where an agent will meet them without being told to look.
+
+```bash
+luma-foreman adopt --list --from https://github.com/LumaStack/luma-catalog
+luma-foreman adopt luma/decision-records --from https://github.com/LumaStack/luma-catalog
+luma-foreman outfit
+```
+
+**`adopt` is a directory copy with a receipt.** The bundle lands in `.luma/bundles/<org>/<name>/` and `adopted.toml` records the version, where it came from, the catalog commit, and a checksum of exactly what landed. Nothing resolves and nothing is fetched later — bundles depend on nothing, which is what keeps this a copy rather than an install. The copy is committed, so a fresh clone with no network reproduces the project exactly.
+
+An edited copy is never silently overwritten, and a bundle with no version cannot be adopted at all.
+
+**`outfit` writes thin adapters, never copies.** Each workflow becomes a Claude Code skill that points at the real document under `.luma/` and names the standing context that document assumes. A managed block in `CLAUDE.md` indexes everything adopted, with `preload: mandatory` documents hoisted into a *read these first* section — load the index, never the content.
+
+Everything it writes is generated and disposable: commit it or gitignore it, but regenerate rather than edit. Only the region between the `luma:begin` and `luma:end` markers in `CLAUDE.md` is touched, so a hand-written file keeps the rest.
 
 ## What works today
 
@@ -23,19 +42,22 @@ luma-foreman agent-permissions allow curl      # ...and change it, effective on 
 luma-foreman agent-permissions doctor          # ...and confirm it is actually working, not just wired up
 ```
 
-**`luma-foreman inspect`** — checks a repository against the baseline and reports where it falls short. Findings, exit codes, runnable in continuous integration. Two rules so far:
+**`luma-foreman inspect`** — checks a repository against the baseline and reports where it falls short. Findings, exit codes, runnable in continuous integration. Four rules so far:
 
 - **identity** — personal information published through git: machine-derived author identities, malformed addresses, home directory paths in tracked content.
 - **secrets** — provider-issued credentials in tracked content, and files that normally hold them. Findings never contain the secret itself, because findings end up in continuous integration logs.
+- **bundles** — bundles broken in ways nothing else notices: a dangling link, an unquoted wikilink in frontmatter, a template carrying live frontmatter. All three are conformant, so the bundle publishes cleanly and the defect travels.
+- **adoption** — an adopted bundle that is no longer what was adopted: edited in place, missing from disk, or adopted and projected nowhere. The last one reads green from every angle while the project quietly carries rules no agent has seen.
 
 ```bash
 luma-foreman inspect                # 0 nothing found, 1 findings, 2 could not run
 luma-foreman inspect --json         # for continuous integration
+luma-foreman inspect --rule adoption
 ```
 
 Every check works in a bare clone with no configuration, and a check that *cannot* run is reported as skipped rather than passed — an inspection that reads clean while silently skipping half its checks is worse than no inspection.
 
-`bootstrap`, `outfit` and `refit` print "not built yet" and exit 2.
+`bootstrap` and `refit` print "not built yet" and exit 2.
 
 ## Install
 

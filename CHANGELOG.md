@@ -9,6 +9,24 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 
 ## [Unreleased]
 
+### Added
+- **`luma-foreman adopt` — a bundle from a catalog becomes part of this project.** It copies into `.luma/bundles/<org>/<name>/` and writes `adopted.toml` with the version, the catalog's origin, the commit it came from and a checksum of exactly what landed. Nothing is resolved and nothing is fetched later: bundles depend on nothing, which is what keeps adoption a directory copy rather than an install.
+  **The copy is committed, and that is the difference from a package cache.** A fresh clone with no network reproduces the project, because the knowledge is in the repository rather than in a cache directory a teammate does not have.
+  `--from` takes a local checkout or a git URL; a URL is cloned into `~/.cache/luma/catalogs/`, which is genuinely cache — deleting it loses nothing, since everything adopted from it is already committed. With no `--from`, `[catalog] source` in `.luma/config/foreman.toml` is used.
+  **Two refusals rather than an overwrite.** A vendored copy that has been edited locally is never silently replaced — that is somebody's work, and the message says where the change should go instead. A bundle with no version cannot be adopted at all, because nothing about it could be honestly reported afterwards.
+
+- **`luma-foreman outfit` — adopted knowledge reaches an agent without anybody pointing at it.** Two projections: one Claude Code skill per `workflow`, and one managed block in `CLAUDE.md` indexing everything adopted.
+  **Thin adapters, never copies.** A generated skill carries the harness-specific frontmatter, a pointer to the real document under `.luma/`, and the standing context that document assumes. It deliberately does not carry the workflow body — a copy is a second source of truth, and it would charge every session for content meant to load only when the work matched.
+  **The index is the part that closes the gap.** `preload: mandatory` documents are hoisted into a *read these first* section; everything else is one line saying what it is. Make existence cheap and content expensive.
+  Only the region between the `luma:begin` and `luma:end` markers in `CLAUDE.md` is touched, so a hand-written file keeps everything else. `--check` reports staleness and writes nothing, for continuous integration.
+
+- **`inspect` gained an `adoption` rule** covering the three ways an adopted bundle stops being what was adopted: **edited** in place, **missing** from disk, and **unprojected** — present, checksummed, reported clean, and never shown to an agent. The third is the one nothing else would surface, because it looks correct from every angle.
+  It cannot say whether a newer version exists: that needs the catalog, and `inspect` runs in a bare clone with no network.
+
+### Changed
+- **`bundles` findings against a vendored copy say to fix it upstream.** Every remedy in that rule assumed you own the bundle, which is the one thing you must not do to an adopted one — the next `adopt` discards the fix and upstream never hears that anybody wanted it. Reporting the defect is still right; you are the one carrying it.
+- **The frontmatter subset parser moved to `foreman/lkf.py`.** `adopt` needed the same reader `inspect` had, and a tool growing its own second parser is a known failure being reproduced locally rather than a new one.
+
 ### Fixed
 - **`agent-permissions install` left retired gate modules on disk.** It wrote the current payload and never removed files that had dropped out of it, and `status()` could not notice because it only compares files it knows about — so it reported *already current* while a stale copy sat beside the real one. That is not untidiness: every file under `gate/foreman/` is a working piece of a gate, so an abandoned `gate.py` is **an older set of matching rules, still present and still runnable.** The rename below left exactly that on a real machine. Pruning is scoped to `gate/foreman/` and to `.py`, because it deletes files and must only touch a directory foreman entirely owns.
 

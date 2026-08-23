@@ -348,3 +348,7 @@ settled over one long conversation; no workflow declares an `invokes:` block, no
 reads one, and the four levels have met no real case except the one that produced
 them. **The first workflow to declare an invocation is the test**, and it will
 probably find something this could not.
+
+**This is the caller's half only.** [[bundle-routines]] raises the other one —
+whether a bundle exposes several named callables rather than the single
+`entry_point` the `bundle:` target assumes here.

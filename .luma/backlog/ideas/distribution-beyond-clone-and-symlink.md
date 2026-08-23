@@ -36,7 +36,7 @@ every option below it.
 **The release half already has knowledge behind it.** The `luma/github-release`
 bundle is published; what is missing is foreman using it.
 
-**Related, and recorded elsewhere.** `docs/next-steps.md` asks whether foreman's
-own release process should live in a bundle it has to adopt — "elegant or an
-ever-present headache for maintainers". Adjacent question, already captured
-there, not duplicated here.
+**Related, and recorded elsewhere.** `docs/scope.md` asks whether foreman's own
+release process should live in a bundle it has to adopt — elegant, or a
+permanent headache for whoever maintains both ends. Adjacent question, already
+captured there, not duplicated here.
