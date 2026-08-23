@@ -1,6 +1,6 @@
 # luma-foreman
 
-Every repository set up right, and kept that way.
+> Every repository set up right, and kept that way.
 
 It walks into a project repository, sets it up to succeed, and comes back periodically to check the work still holds.
 
