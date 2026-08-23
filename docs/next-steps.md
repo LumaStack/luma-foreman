@@ -1,92 +1,88 @@
 # Next steps
 
-This will be a short lived file.
+**This file is consumable.** It says what to do next, it is worked through, and
+then it is deleted. Anything in it that outlives the work belongs somewhere
+durable *before* it is deleted — a decision, an idea, a bundle — not here.
 
-## Where things stand
+Rewritten 2026-08-23. Everything previously here is either done, moved, or below.
 
-Twelve bundles exist in `luma-catalog`, the format is at `v0.0.9`, and
-`luma-leader/docs/DECISIONS.md` carries twenty-one settled decisions. **Nothing has
-adopted anything** — no repository has a `.luma/` directory, so every layout
-decision, the vendoring path, `adopted.toml` and the skill projection are
-reasoned and untested.
+---
 
-That is the largest open item, and two things this week made the case for it:
-three repositories did not have the merge settings their own bundle prescribes,
-and merged branches piled up unnoticed. Both are what adoption plus `inspect`
-would surface without anybody remembering to look.
+## The goal
 
-## Answered, and where the answer lives
+**Bundles load into a project's context automatically, and workflows can be
+invoked, without anybody telling an agent where to look.**
 
-The rehoming questions this file opened with are mostly settled.
+Today the knowledge exists and nothing consumes it. A person points an agent at
+`luma-catalog` by hand every time. That is the gap, and closing it is worth more
+than any further design.
 
-- **Catalog and bundle design** → `luma-leader/docs/DECISIONS.md`. The reach and
-  obligation axes, starters, tags, most-restrictive-wins, catalogs not
-  inheriting, `.luma/` itself, and the single-valued-and-permanent rule for
-  what a path may carry.
-- **Bundle conventions** → the `bundle-manager` bundle. Layout, promotion, the
-  audit checklist, and the overlap stance.
-- **What foreman is for** → `docs/scope.md`. The four jobs in the README were
-  each defined by knowing something the catalog now knows; that file is the
-  replacement being assembled, annotated with what each item costs.
-- **Capturing ideas** → the `backlog-ideas` bundle. One file per idea rather
-  than a growing `IDEAS.md`, with a tending practice and a migration workflow.
-  Explicitly provisional: it may be replaced by the backlog tool, absorbed into
-  it, or survive beside it.
-- **Where files go on a machine** → the `luma-config` and `luma-layout` bundles.
-  `.luma/` and its tiers, what is committed against what belongs to the operator,
-  and the precedence chain. Machine-local paths are `<org>/<repo>` —
-  `~/.config/luma/luma-foreman/` — so one deny rule covers every tool whatever
-  it is called.
-- **Structural checks** → `foreman inspect --rule bundles`.
-- **Format questions** → `luma-knowledge-format/docs/ROADMAP.md`.
+**Race toward wired-up.** Some of the building blocks were implemented naively,
+incompletely, or wrong. Finding out which is the point — none of it has been run
+end to end, so every part of the design is a guess until a project loads a bundle
+and an agent uses it.
 
-## Still open, in roughly the order they matter
+## What is already standing
 
-**Adopt something.** `luma-foreman` adopting `luma/git-secrets` would exercise
-the whole path — vendor into `.luma/bundles/`, write `adopted.toml`, and find
-out what the layout gets wrong in a repository that already has opinions about
-its own files. Nothing else will teach as much per hour.
+- **15 bundles** in the catalog, all `0.x`, none adopted anywhere.
+- **The format is at `v0.0.11`**, with vendoring, provenance and namespaced
+  shared types settled this week.
+- **`foreman inspect` and `agent-permissions` work.** `bootstrap`, `outfit` and
+  `refit` exit 2.
+- **Four repositories have `.luma/`** — a project descriptor and a backlog each.
+  **None has `.luma/bundles/`**, and no `adopted.toml` exists anywhere.
 
-**Do the standards used to build luma tooling live outside luma tooling?** The
-question this file opened with, and the one still genuinely unanswered. If
-`luma-foreman`'s own release process lives in a bundle it has to adopt, is that
-elegant or an ever-present headache for maintainers? Adoption is what settles
-it — the answer is currently a guess either way.
+## The path, in order
 
-**Will anything ship natively in foreman or hq, or is everything fetched?** Same
-question from the other side. Unanswered.
+**1. `adopt`.** Copy a bundle from a catalog into `.luma/bundles/<org>/<name>/`,
+write `adopted.toml` with source, version, commit and checksum. No resolution and
+no dependency graph — bundles depend on nothing, which is what makes this a
+directory copy rather than a package manager.
 
-**How `Rejected` gets expressed.** Recorded in
-`decision-records/_types/decision.md` with three options and no choice. Waiting
-on whether another document type needs the same distinction.
+**2. Adopt one bundle into foreman itself**, and find out what the layout gets
+wrong in a repository that already has opinions about its own files.
+`luma/decision-records` is the suggestion: pure knowledge, no executable content,
+so *did adoption work* has an unambiguous answer — and foreman records its
+decisions nowhere today, so the bundle has a job the moment it lands.
 
-**Whether `concept` survives.** On the format's roadmap, waiting on a durable
-knowledge base — the thing it was written for and which nobody has built.
+**3. `outfit` — the projection.** This is the one that matters, because it turns
+an adopted bundle into something a harness can actually use. **Thin adapters**:
+a workflow becomes a Claude Code skill, and later a Codex equivalent, with the
+adapter carrying the harness-specific shape and nothing else. `.claude/` is
+generated and disposable — the source is `.luma/`.
 
-## Wanted, not built
+**4. Loading.** What lands in context without being asked for. `preload` is
+declarative and nothing reads it. Start by honouring `preload: mandatory` and
+report the rest.
 
-Captured here rather than in `IDEAS.md` because each is a bundle somebody could
-sit down and write, not a capability needing design.
+**5. Drift.** `inspect` compares the vendored copy against the checksum in
+`adopted.toml`. This is what makes adoption mean something rather than being a
+one-time copy.
 
-- **Incident response** — the `IDEAS.md` entry has the reasoning; it needs a
-  bundle. Records go under `.luma/records/`, so it is `incident-records`.
-- **`log-records`** — named in passing when the `*-records` family was decided,
-  never written.
-- **Testing strategy** — including where a project states what *done* means,
-  which `project-documentation` currently points at and nothing owns.
-- **Prose conventions** — spelling, terminology, house style. Would apply to
-  every bundle including the ones already written.
-- **Logging** — whether it is a bundle or something foreman does natively is
-  itself part of the open question above.
-- **Working-style preferences** — how an agent should behave here, as adoptable
-  content rather than as `CLAUDE.md` prose nobody versions.
-- **Prose conventions** — spelling, terminology, house style. There is now
-  concrete evidence this is wanted: the catalog carried 67 `-ize` spellings
-  against 6 `-ise` ones, and nothing anywhere declared which was correct. The
-  convention existed only as weight of usage, which is how the six got in.
+## What is deliberately not on the path
 
-## Foreman capabilities still stubbed
+- **Bundle dependencies.** Drafted, unadopted, and nothing depends on anything.
+- **Conditional or situational loading.** Two backlog ideas cover it. Do the
+  unconditional version first and find out whether the budget actually hurts.
+- **A cataloger.** Designed in `luma-leader/docs/cataloger.md`, and publication
+  is not an event yet, so there is nothing to gate.
+- **Anything requiring a released artifact.** Foreman installs by clone and
+  symlink and has no tags. That is a real problem and it blocks nothing here.
 
-`agent-permissions` and `inspect` work. `bootstrap`, `outfit` and `refit` exit 2. `outfit` is the one that matters
-first, since it is what turns an adopted bundle into something a harness can
-use — and the projection design in `IDEAS.md` has been reasoned but never run.
+## Open questions this work will answer or sharpen
+
+**Do the standards used to build luma tooling live outside luma tooling?** If
+foreman's own release process lives in a bundle it has to adopt — is that elegant
+or a permanent headache for maintainers? **Adoption is what settles it**, and
+step 2 is the first real evidence.
+
+**Will anything ship natively in foreman, or is everything fetched?** The same
+question from the other side. It decides whether logging is a bundle.
+
+**Does the projection design survive contact?** It has been reasoned and never
+run. Step 3 is where it either works or teaches something.
+
+## Before deleting this file
+
+Check that nothing here has become durable and homeless. The last rewrite found
+five items that would have been lost — they are now in `.luma/backlog/ideas/`.
