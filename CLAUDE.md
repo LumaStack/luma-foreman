@@ -23,7 +23,7 @@ In `.luma/bundles/luma/decision-records/`:
 - `workflows/prune-archived-decisions.md` (workflow) — Permanently remove decision records that have been archived longer than the retention period. Only reaches `archived/`, never a live decision. Rarely the right call.
 - `workflows/record-decision.md` (workflow) **[read first]** — Find or establish where this project keeps decisions, then write one. Use when a position is settled, when an irreversible change is proposed, or when asked where decisions live.
 
-### `luma/luma-maintainers` 0.3.0
+### `luma/luma-maintainers` 0.4.0
 
 Working on the luma tools themselves — the repositories and the boundary each defends, publishing to the universal catalog, and changing a type without making every tool upgrade at once.
 
