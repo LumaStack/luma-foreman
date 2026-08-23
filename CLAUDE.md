@@ -23,7 +23,7 @@ In `.luma/bundles/luma/decision-records/`:
 - `workflows/prune-archived-decisions.md` (workflow) — Permanently remove decision records that have been archived longer than the retention period. Only reaches `archived/`, never a live decision. Rarely the right call.
 - `workflows/record-decision.md` (workflow) **[read first]** — Find or establish where this project keeps decisions, then write one. Use when a position is settled, when an irreversible change is proposed, or when asked where decisions live.
 
-### `luma/luma-maintainers` 0.1.0
+### `luma/luma-maintainers` 0.2.0
 
 Working on the luma tools themselves — the repositories and the boundary each defends, publishing to the universal catalog, and changing a type without making every tool upgrade at once.
 
@@ -33,7 +33,7 @@ In `.luma/bundles/luma/luma-maintainers/`:
 - `workflows/change-a-shared-type.md` (workflow) — Alter a shared type without making every tool upgrade at once. Use before touching anything in luma/luma-types, or any type a second consumer already reads.
 - `workflows/publish-to-the-catalog.md` (workflow) — Add or change a bundle in luma-catalog and get the version honest. Use when promoting something out of a project, or changing anything already published.
 
-### `luma/luma-tools` 0.1.0
+### `luma/luma-tools` 0.2.0
 
 Using the luma tools — which one does what, getting them onto a machine, and the adopt-then-project loop that puts knowledge in front of an agent.
 

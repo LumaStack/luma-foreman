@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.1.0
+version: 0.2.0
 published: 2026-08-23
 consumers: [organization]
 entry_point: policy/the-estate
@@ -63,6 +63,11 @@ no sensible project-level reading of *how the luma estate is maintained* —
 adopting it into a project would be adopting somebody else's internals.
 
 ## Version
+
+`0.2.0` — the tool that checks a catalog is **`curator`**, named on 2026-08-23
+by firing a re-open trigger while renaming was still free. Same reasoning as
+`luma/luma-tools` `0.2.0`: naming a thing the previous version called unnamed
+changes what a reader writes.
 
 `0.1.0`. Extracted from one estate's practice on the day adoption first worked,
 which is real practice and not much of it.

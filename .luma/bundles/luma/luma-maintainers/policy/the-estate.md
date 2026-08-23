@@ -23,7 +23,7 @@ day and expensive later.
 ## Projects split on runtime location, not on subject matter
 
 **That is the rule, and it is why the split looks odd from the outside.**
-`foreman` and a catalog tool both concern bundles and belong in different
+`foreman` and `curator` both concern bundles and belong in different
 repositories, because one runs where bundles are *adopted* and the other where
 they are *published* — different repositories, different people, different
 release cadences.

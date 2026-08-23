@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.1.0
+version: 0.2.0
 published: 2026-08-23
 consumers: [project, organization]
 entry_point: workflows/adopt-knowledge
@@ -55,9 +55,15 @@ most embarrassing.
 
 ## Version
 
+`0.2.0` — the catalog tool has a name: **`curator`**. It still does not exist.
+
+Minor rather than patch because a reader who correctly understood `0.1.0` would
+now say something different: the table said *unnamed*, so there was nothing to
+call it. Naming it changes what somebody writes and asks for.
+
 `0.1.0`. Written the day adoption and projection first worked end to end, from
 one estate's practice with no outside adopter. Two things in it are known to be
-provisional: **the catalog tool has no name and does not exist**, so the table
-in [[what-each-tool-does]] has a hole in it on purpose rather than by omission;
-and **no tool has a release or a tag**, so installation tracks `main` and
-nothing can be pinned.
+provisional: **`curator` is named and does not exist**, so the table in
+[[what-each-tool-does]] lists a tool nobody can install yet — deliberately, so
+that the gap is visible rather than absent; and **no tool has a release or a
+tag**, so installation tracks `main` and nothing can be pinned.

@@ -11,13 +11,13 @@ commit   = "4652c81f5cd83a26c9698d07868894c93828033a"
 checksum = "sha256:b9404156acd3bd2ecad984c2cf49362d012e44bce903bd17fefa7d29a9a79d58"
 
 ["luma/luma-maintainers"]
-version  = "0.1.0"
+version  = "0.2.0"
 source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "bb0806c98e5996b58f4901ed9d59c9cd2303a294"
-checksum = "sha256:b01dd5f3c71d814414bff0d3b82b49b4881957e86f1ff3e4b2a2ada1d2baf707"
+commit   = "b8ae6249f1c518b8fa6fbce1a0b5bfc767c2c282"
+checksum = "sha256:f8e18cdc24c2a292838e81b276c4353907f25b53ea7d5d6c4d2f879f83fe362e"
 
 ["luma/luma-tools"]
-version  = "0.1.0"
+version  = "0.2.0"
 source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "bb0806c98e5996b58f4901ed9d59c9cd2303a294"
-checksum = "sha256:8b09b4efa63de692bc28765c6fd2be810ad1487355c8401b6b7239705d341756"
+commit   = "b8ae6249f1c518b8fa6fbce1a0b5bfc767c2c282"
+checksum = "sha256:becdd88f6df63f2802f14124c0c7c9f5274bc2f3f7bb46c6065427802b858b5a"
