@@ -11,10 +11,10 @@ commit   = "4652c81f5cd83a26c9698d07868894c93828033a"
 checksum = "sha256:b9404156acd3bd2ecad984c2cf49362d012e44bce903bd17fefa7d29a9a79d58"
 
 ["luma/luma-maintainers"]
-version  = "0.4.0"
-source   = "https://github.com/LumaStack/luma-catalog"
-commit   = "d6d16f7d4c72014d3efd5bcee71ded37e14bdfa5"
-checksum = "sha256:d582a640d091c93fcb466a73f960c51710cf7871ebcf737b626dd73e99c41f6a"
+version  = "0.5.0"
+source   = "https://github.com/LumaStack/luma-catalog.git"
+commit   = "5f64cbd6f0541b9050b4f23aab73a9306bd01116"
+checksum = "sha256:b8b0e77417d3ea2941ffcc838aeb26a7ebd7d6525bd8cc7936c6b7f8e99ddf79"
 
 ["luma/luma-tools"]
 version  = "0.3.1"

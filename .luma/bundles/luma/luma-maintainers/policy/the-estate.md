@@ -79,6 +79,25 @@ force on a given date* is possible only because archived decisions keep their
 dates and their reasoning — a property that was not designed for measurement and
 turns out to enable it.
 
+## A repository does not vendor its own bundles into itself
+
+**Reference within a repository; vendor across them.** A catalog already
+*contains* the bundles it publishes, so adopting them puts two byte-identical
+trees in one repository with nothing keeping them in step — and the drift check
+cannot help, because it catches an *edited* copy rather than an *outdated* one.
+
+**The cost is real and is accepted.** An agent working in a catalog gets no
+generated index and no skills, because `outfit` projects what a project
+*adopted* and a catalog adopted nothing. It has to be pointed at
+`catalog/bundles/` by hand.
+
+**Projecting what a repository publishes is the missing feature**, and it is not
+as simple as it looks: this catalog publishes seventeen bundles and works by
+about three, so projecting all of them would be a worse problem than the
+duplication it replaced. What is missing is the adopter's own selection — the
+same question `preload_default` answers for adopted bundles — and inventing it
+in passing would be worse than the gap.
+
 ## You are also an ordinary user
 
 **A maintainer runs the tools the same way anybody does**, and the moment a tool
