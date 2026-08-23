@@ -1,5 +1,5 @@
 ---
-type: idea
+type: luma/idea
 title: Routers — conditional decision logic for what gets loaded
 created: { by: human:benlinton, at: 2026-08-19T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]

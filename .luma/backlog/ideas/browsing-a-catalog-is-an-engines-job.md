@@ -1,5 +1,5 @@
 ---
-type: idea
+type: luma/idea
 title: Browsing a catalog is an engine's job, not a catalog's
 created: { by: human:benlinton, at: 2026-08-18T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]

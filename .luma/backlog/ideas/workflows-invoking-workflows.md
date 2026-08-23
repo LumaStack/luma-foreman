@@ -1,5 +1,5 @@
 ---
-type: idea
+type: luma/idea
 title: A shared language for workflows invoking other workflows
 created: { by: human:benlinton, at: 2026-08-21T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]

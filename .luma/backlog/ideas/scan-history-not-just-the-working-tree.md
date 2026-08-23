@@ -1,5 +1,5 @@
 ---
-type: idea
+type: luma/idea
 title: Scan git history, not just the working tree
 created: { by: human:benlinton, at: 2026-08-09T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]
