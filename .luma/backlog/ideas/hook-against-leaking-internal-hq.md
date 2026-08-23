@@ -1,5 +1,5 @@
 ---
-type: idea
+type: luma/idea
 title: A hook that stops the internal headquarters leaking into public repositories
 created: { by: human:benlinton, at: 2026-08-21T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]

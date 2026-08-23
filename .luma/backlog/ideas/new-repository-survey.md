@@ -1,5 +1,5 @@
 ---
-type: idea
+type: luma/idea
 title: A survey of a new repository, capturing what drives how it gets used
 created: { by: human:benlinton, at: 2026-08-17T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]

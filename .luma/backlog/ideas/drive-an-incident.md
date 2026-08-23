@@ -1,5 +1,5 @@
 ---
-type: idea
+type: luma/idea
 title: Drive an incident, and store it as markdown
 created: { by: human:benlinton, at: 2026-08-09T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]
