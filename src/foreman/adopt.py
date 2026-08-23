@@ -278,7 +278,15 @@ def run(
     )
     adoption.write(project_root, entries)
 
-    verb = f"upgraded {upgrade} -> {version}" if upgrade else f"adopted {version}"
+    # `--force` at the same version is a re-adoption, not an upgrade. Saying
+    # "upgraded 0.3.1 -> 0.3.1" reports something that did not happen, and
+    # output nobody can trust is worse than output nobody reads.
+    if upgrade == version:
+        verb = f"re-adopted {version}"
+    elif upgrade:
+        verb = f"upgraded {upgrade} -> {version}"
+    else:
+        verb = f"adopted {version}"
     print(f"{bundle_id}: {verb}")
     print(f"  from     {catalog.source}")
     print(f"  commit   {catalog.commit or '(not a git checkout)'}")
