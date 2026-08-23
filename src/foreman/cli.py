@@ -18,6 +18,7 @@ Jobs:
   adopt               take a bundle from a catalog into this project
   outfit              project what this project adopted into what a harness reads
   inspect             check a project against the baseline and report shortfalls
+  outdated            which adopted bundles have a newer version published
   bootstrap           stand a new project up with the structure it should have had
   refit               confirm the latest learnings were actually applied
 
@@ -166,6 +167,10 @@ def main(argv: list[str] | None = None) -> int:
         from . import outfit
 
         return outfit.main(argv[1:])
+    if job == "outdated":
+        from . import outdated
+
+        return outdated.main(argv[1:])
     if job in UNBUILT:
         print(
             f"luma-foreman: {job} is not built yet — see .luma/backlog/ideas/",
