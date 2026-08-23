@@ -299,5 +299,48 @@ has 'name the namespace'
 adopt 'explicit namespace works' 0 someone/thing --from "$BARE"
 exists "$PROJECT/.luma/bundles/someone/thing/bundle.md"
 
+# --- outdated -------------------------------------------------------------------
+
+outdated() {
+  label=$1 want=$2; shift 2
+  LAST=$(cd "$PROJECT" && "$CLI" outdated "$@" 2>&1); got=$?
+  [ "$got" -eq "$want" ] && ok || bad "$label (exit $got, wanted $want): $LAST"
+}
+
+# Everything adopted is at the version the catalog publishes.
+outdated 'all current' 0
+has 'current'
+lacks '->'
+
+# The catalog moves on. Nothing tells the project — that is the whole point.
+python3 - "$CATALOG/catalog/bundles/gadgets/bundle.md" <<'PYEOF'
+import sys, pathlib
+p = pathlib.Path(sys.argv[1]); p.write_text(p.read_text().replace("version: 0.1.0", "version: 0.4.0"))
+PYEOF
+git -C "$CATALOG" add -A >/dev/null 2>&1
+GIT_AUTHOR_NAME=T GIT_AUTHOR_EMAIL=t@example.com GIT_COMMITTER_NAME=T GIT_COMMITTER_EMAIL=t@example.com \
+  git -C "$CATALOG" commit -qm bump >/dev/null 2>&1
+
+outdated 'behind is exit 1' 1
+has 'acme/gadgets'
+has '0.1.0'
+has '0.4.0'
+has 'are behind'
+has 'Read what changed'
+
+outdated 'json' 1 --json
+has '"behind": true'
+has '"available": "0.4.0"'
+
+# A bundle the catalog stopped publishing is news, not breakage: the copy still
+# works, and nothing will ever mention it again.
+rm -rf "$CATALOG/catalog/bundles/gadgets"
+git -C "$CATALOG" add -A >/dev/null 2>&1
+GIT_AUTHOR_NAME=T GIT_AUTHOR_EMAIL=t@example.com GIT_COMMITTER_NAME=T GIT_COMMITTER_EMAIL=t@example.com \
+  git -C "$CATALOG" commit -qm retire >/dev/null 2>&1
+outdated 'retired upstream is not behind' 0
+has 'no longer published here'
+has 'could not be answered'
+
 printf '\n%d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ] || exit 1
