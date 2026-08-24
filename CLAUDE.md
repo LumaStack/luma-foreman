@@ -11,7 +11,7 @@ Everything below is vendored under `.luma/bundles/` and is part of this reposito
 - `.luma/bundles/luma/luma-tools/policy/what-each-tool-does.md` — The tools, the one job each performs, and when to use them. Read before installing or invoking any of them.
 - `.luma/bundles/luma/luma-tools/workflows/adopt-knowledge.md` — Take bundles from a catalog into a repository and make an agent aware of them. Use when setting a project up, when adding a capability, or when an agent keeps needing to be told where to look.
 
-### `luma/decision-records` 0.2.0
+### `luma/decision-records` 0.2.1
 
 Decisions recorded with their reasoning, deferred alternatives, and re-open triggers. Spent decisions are archived rather than deleted.
 
@@ -23,7 +23,7 @@ In `.luma/bundles/luma/decision-records/`:
 - `workflows/prune-archived-decisions.md` (workflow) — Permanently remove decision records that have been archived longer than the retention period. Only reaches `archived/`, never a live decision. Rarely the right call.
 - `workflows/record-decision.md` (workflow) **[read first]** — Find or establish where this project keeps decisions, then write one. Use when a position is settled, when an irreversible change is proposed, or when asked where decisions live.
 
-### `luma/luma-maintainers` 0.5.0
+### `luma/luma-maintainers` 0.5.1
 
 Working on the luma tools themselves — the repositories and the boundary each defends, publishing to the universal catalog, and changing a type without making every tool upgrade at once.
 
