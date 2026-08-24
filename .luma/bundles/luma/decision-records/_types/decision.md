@@ -128,7 +128,7 @@ implies it. Keeping the value means the four cases are readable from one field
 without cross-checking another, and a `superseded` with no `superseded_by` is a
 cheap consistency check rather than a silent hole.
 
-### Two things that look like values and are not
+### What looks like a value and is not
 
 **A record that rotted is corrected, not archived.** Dead links, renamed
 terminology, an example that stopped being true — the *decision* still holds and

@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.2.0
+version: 0.2.1
 published: 2026-08-22
 consumers: [project, organization]
 entry_point: workflows/record-decision
@@ -122,6 +122,12 @@ against the possibility. That is the field working as intended rather than an
 omission.
 
 ## Version
+
+`0.2.1` — a heading no longer says how many things are beneath it. Wording only.
+
+Patch: no normative sentence moved and a reader who correctly understood
+`0.2.0` behaves identically. See `writing-style` in `luma/project-documentation`
+for the rule and the failure it prevents.
 
 `0.2.0` — archiving as a real mechanism, and the two workflows around it. New
 content; existing use is unaffected except that an archived record now wants three

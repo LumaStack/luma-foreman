@@ -5,16 +5,16 @@
 # passing silently, which is the one failure it exists to prevent.
 
 ["luma/decision-records"]
-version  = "0.2.0"
+version  = "0.2.1"
 source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "4652c81f5cd83a26c9698d07868894c93828033a"
-checksum = "sha256:b9404156acd3bd2ecad984c2cf49362d012e44bce903bd17fefa7d29a9a79d58"
+commit   = "3b897ef2e9b78da46c2550ce900d3b1e5403d682"
+checksum = "sha256:0c7dbb2eb5243735e796ea430c6a20eaf2ce78fe1c3857c609eb39f5deeead0d"
 
 ["luma/luma-maintainers"]
-version  = "0.5.0"
+version  = "0.5.1"
 source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "5f64cbd6f0541b9050b4f23aab73a9306bd01116"
-checksum = "sha256:b8b0e77417d3ea2941ffcc838aeb26a7ebd7d6525bd8cc7936c6b7f8e99ddf79"
+commit   = "3b897ef2e9b78da46c2550ce900d3b1e5403d682"
+checksum = "sha256:65c49c44ef54d3847b228d4351980e80407b24e69c37ef903073ea0c03ad9a09"
 
 ["luma/luma-tools"]
 version  = "0.3.1"

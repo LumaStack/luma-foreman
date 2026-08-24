@@ -103,4 +103,4 @@ in passing would be worse than the gap.
 **A maintainer runs the tools the same way anybody does**, and the moment a tool
 grows a path that only works here, the separation has failed. The test is
 mechanical: **an engine should contain no knowledge of `luma` specifically.** If
-one does, it is deciding standards rather than enforcing them.
+one does, it is deciding policies rather than enforcing them.
