@@ -159,7 +159,7 @@ def discover(project_root: Path) -> list[Bundle]:
         return []
 
     out: list[Bundle] = []
-    for manifest in sorted(root.glob("*/*/bundle.md")):
+    for manifest in sorted(root.glob("*/*/BUNDLE.md")):
         home = manifest.parent
         bundle_id = home.relative_to(root).as_posix()
         keys = lkf.read(manifest) or {}
@@ -171,6 +171,12 @@ def discover(project_root: Path) -> list[Bundle]:
         # declaration, just where a file sits.
         owned: dict[Path, Path] = {}
         for path in sorted(home.rglob("*.md")):
+            # The bundle's own manifest owns the bundle directory by exactly
+            # this rule — and must not hide it. A bundle's members are its
+            # content, which is the thing being projected; subordination
+            # applies *within* a bundle, never at its root.
+            if path.parent == home:
+                continue
             if _owns_directory(path):
                 owned[path.parent] = path
 
@@ -185,7 +191,7 @@ def discover(project_root: Path) -> list[Bundle]:
         docs: list[Doc] = []
         for path in sorted(home.rglob("*.md")):
             rel = path.relative_to(home)
-            if rel.parts[0] in SKIP or rel.as_posix() == "bundle.md":
+            if rel.parts[0] in SKIP or rel.as_posix() == "BUNDLE.md":
                 continue
             if owner_of(path) is not None:
                 continue  # subordinate: it arrives with its owner or not at all

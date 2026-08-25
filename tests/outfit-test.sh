@@ -57,7 +57,7 @@ mkdir -p "$B/policy" "$B/concepts" "$B/_types" \
          "$B/workflows/run-the-thing/steps" "$PROJECT/.claude"
 (cd "$PROJECT" && git init -q . 2>/dev/null) || true
 
-cat > "$B/bundle.md" <<'EOF'
+cat > "$B/BUNDLE.md" <<'EOF'
 ---
 type: bundle
 version: 0.1.0

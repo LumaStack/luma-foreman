@@ -190,7 +190,7 @@ run 'secrets rule alone'  0 --rule secrets "$clean"
 # bundle <name> — a repo containing one minimal, valid bundle
 bundle() {
   d=$T/$1; mkdir -p "$d/b" && git -C "$d" init -q 2>/dev/null
-  printf -- '---\ntype: bundle\nversion: 0.1.0\n---\nfine\n' > "$d/b/bundle.md"
+  printf -- '---\ntype: bundle\nversion: 0.1.0\n---\nfine\n' > "$d/b/BUNDLE.md"
   printf '%s' "$d"
 }
 
@@ -203,7 +203,7 @@ run 'no bundles is a skip' 0 "$clean"
 has 'no bundles found'
 
 d=$(bundle bver)
-printf -- '---\ntype: bundle\n---\nno version\n' > "$d/b/bundle.md"
+printf -- '---\ntype: bundle\n---\nno version\n' > "$d/b/BUNDLE.md"
 run 'missing version' 1 "$d"
 has 'declares no version'
 
@@ -228,18 +228,18 @@ run 'frontmatter without a type' 1 "$d"
 has 'no type'
 
 d=$(bundle bentry)
-printf -- '---\ntype: bundle\nversion: 0.1.0\nentry_point: workflows/nope\n---\nx\n' > "$d/b/bundle.md"
+printf -- '---\ntype: bundle\nversion: 0.1.0\nentry_point: workflows/nope\n---\nx\n' > "$d/b/BUNDLE.md"
 run 'entry_point resolves to nothing' 1 "$d"
 has 'entry_point points at nothing'
 
 # Self-containment: a bundle must be copyable and still work.
 d=$(bundle bescape); mkdir -p "$d/elsewhere"; printf 'x\n' > "$d/elsewhere/x.md"
-printf -- '---\ntype: bundle\nversion: 0.1.0\n---\n[out](../elsewhere/x.md)\n' > "$d/b/bundle.md"
+printf -- '---\ntype: bundle\nversion: 0.1.0\n---\n[out](../elsewhere/x.md)\n' > "$d/b/BUNDLE.md"
 run 'link escaping the bundle' 1 "$d"
 has 'point outside the Bundle'
 
 d=$(bundle bmiss)
-printf -- '---\ntype: bundle\nversion: 0.1.0\n---\n[gone](templates/absent.md)\n' > "$d/b/bundle.md"
+printf -- '---\ntype: bundle\nversion: 0.1.0\n---\n[gone](templates/absent.md)\n' > "$d/b/BUNDLE.md"
 run 'missing attachment' 1 "$d"
 has 'missing attachment'
 
@@ -258,7 +258,7 @@ lacks 'rule=bundles'
 
 # A bundle inside a bundle is audited once, by itself.
 d=$(bundle bnest); mkdir -p "$d/b/inner"
-printf -- '---\ntype: bundle\nversion: 0.2.0\n---\nx\n' > "$d/b/inner/bundle.md"
+printf -- '---\ntype: bundle\nversion: 0.2.0\n---\nx\n' > "$d/b/inner/BUNDLE.md"
 run 'nested bundle audited once' 0 "$d"
 
 # Bundles are found by asking git, not by walking the filesystem. A gitignored
@@ -270,14 +270,14 @@ GIT_AUTHOR_NAME=T GIT_AUTHOR_EMAIL=d@e.com GIT_COMMITTER_NAME=T GIT_COMMITTER_EM
   git -C "$d" commit -q -m base 2>/dev/null
 printf '.wt/\n' > "$d/.gitignore"
 git -C "$d" worktree add -q "$d/.wt/task" -b task 2>/dev/null
-printf -- '---\ntype: bundle\n---\nno version\n' > "$d/.wt/task/b/bundle.md"
+printf -- '---\ntype: bundle\n---\nno version\n' > "$d/.wt/task/b/BUNDLE.md"
 run 'gitignored worktree is not scanned' 0 "$d"
 lacks 'declares no version'
 
 # ...but an untracked bundle in the working tree still is. Not yet committed is
 # not the same as not this repository's.
 mkdir -p "$d/fresh"
-printf -- '---\ntype: bundle\n---\nno version\n' > "$d/fresh/bundle.md"
+printf -- '---\ntype: bundle\n---\nno version\n' > "$d/fresh/BUNDLE.md"
 run 'untracked bundle is still audited' 1 "$d"
 has 'declares no version'
 

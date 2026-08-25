@@ -63,7 +63,7 @@ def _newest(source: str, name: str, cache: dict) -> tuple[str | None, str]:
         # Retired upstream, renamed, or moved to another catalog. The project
         # still holds a working copy — this is news rather than breakage.
         return None, "no longer published here"
-    version = lkf.unquote((lkf.read(home / "bundle.md") or {}).get("version", ""))
+    version = lkf.unquote((lkf.read(home / "BUNDLE.md") or {}).get("version", ""))
     return (version, "") if version else (None, "published without a version")
 
 

@@ -105,12 +105,12 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
         docs[rel[:-3]] = keys
         trapped.extend(f"{rel}: {m.group(1)}" for m in TRAP.finditer(front))
 
-    manifest = docs.get("bundle")
+    manifest = docs.get("BUNDLE")
     if manifest is None:
         return findings, seen
 
     if not manifest.get("version"):
-        bad("high", "bundle.md declares no version", ["bundle.md"],
+        bad("high", "BUNDLE.md declares no version", ["BUNDLE.md"],
             "A Bundle without a version cannot be pinned, compared, or reported as "
             "outdated — a consumer can say nothing honest about it.")
 
@@ -127,7 +127,7 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
 
     entry = manifest.get("entry_point")
     if entry and entry not in docs:
-        bad("high", f"entry_point points at nothing: {entry}", [f"bundle.md: {entry}"],
+        bad("high", f"entry_point points at nothing: {entry}", [f"BUNDLE.md: {entry}"],
             "entry_point carries a full Document ID — the path within the Bundle, "
             "without the .md suffix.")
 
@@ -207,7 +207,7 @@ def _manifests(repo: Path) -> list[Path] | None:
     try:
         out = subprocess.run(
             ["git", "-C", str(repo), "ls-files", "--cached", "--others",
-             "--exclude-standard", "-z", "--", "*bundle.md", "bundle.md"],
+             "--exclude-standard", "-z", "--", "*BUNDLE.md", "BUNDLE.md"],
             capture_output=True, text=True, timeout=120,
         )
     except (OSError, subprocess.SubprocessError):
@@ -229,7 +229,7 @@ def check(repo: Path) -> Result:
     manifests = [p for p in listed if p.is_file()]
     if not manifests:
         return Result(
-            skipped=[Skipped(RULE, "no bundles found — nothing named bundle.md",
+            skipped=[Skipped(RULE, "no bundles found — nothing named BUNDLE.md",
                              "Run inside a repository that publishes or vendors Bundles.")]
         )
 

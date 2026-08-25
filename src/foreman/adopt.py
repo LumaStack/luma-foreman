@@ -76,7 +76,7 @@ class Catalog:
     namespace: str | None
 
     def bundle(self, name: str) -> Path | None:
-        manifest = self.root / "bundles" / name / "bundle.md"
+        manifest = self.root / "bundles" / name / "BUNDLE.md"
         return manifest.parent if manifest.is_file() else None
 
     def names(self) -> list[str]:
@@ -84,7 +84,7 @@ class Catalog:
         if not directory.is_dir():
             return []
         return sorted(
-            p.name for p in directory.iterdir() if (p / "bundle.md").is_file()
+            p.name for p in directory.iterdir() if (p / "BUNDLE.md").is_file()
         )
 
 
@@ -131,14 +131,14 @@ def _configured(project_root: Path) -> str | None:
 
 
 def _root(start: Path) -> Path | None:
-    """A catalog's content directory — where ``catalog.md`` sits.
+    """A catalog's content directory — where ``CATALOG.md`` sits.
 
     Checked one level down as well, because a catalog repository conventionally
     keeps its content under ``catalog/`` and pointing ``--from`` at the
     repository is what anybody would do.
     """
     for candidate in (start, start / "catalog"):
-        if (candidate / "catalog.md").is_file():
+        if (candidate / "CATALOG.md").is_file():
             return candidate
     return None
 
@@ -161,13 +161,13 @@ def find(source: str) -> Catalog | str:
     root = _root(checkout)
     if root is None:
         return (
-            f"not a catalog: {checkout} — nothing named catalog.md here or in "
+            f"not a catalog: {checkout} — nothing named CATALOG.md here or in "
             f"catalog/"
         )
 
     commit = _git(root, "rev-parse", "HEAD") or ""
     status = _git(root, "status", "--porcelain")
-    manifest = lkf.read(root / "catalog.md") or {}
+    manifest = lkf.read(root / "CATALOG.md") or {}
     namespace = manifest.get("namespace")
     return Catalog(
         root=root,
@@ -241,7 +241,7 @@ def run(
         offered = ", ".join(catalog.names()) or "nothing"
         return _err(f"no bundle named {name} in this catalog (it offers: {offered})")
 
-    manifest = lkf.read(src / "bundle.md") or {}
+    manifest = lkf.read(src / "BUNDLE.md") or {}
     version = lkf.unquote(manifest.get("version", ""))
     if not version:
         return _err(
@@ -325,7 +325,7 @@ def listing(source: str) -> int:
     prefix = f"{catalog.namespace}/" if catalog.namespace else ""
     width = max(len(n) for n in names) + len(prefix)
     for name in names:
-        manifest = lkf.read(catalog.root / "bundles" / name / "bundle.md") or {}
+        manifest = lkf.read(catalog.root / "bundles" / name / "BUNDLE.md") or {}
         version = lkf.unquote(manifest.get("version", "?"))
         description = manifest.get("description", "")
         print(f"  {prefix + name:<{width}}  {version:<8}  {description}")
