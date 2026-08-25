@@ -102,7 +102,12 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
         if "type" not in keys:
             untyped.append(rel)
             continue
-        docs[rel[:-3]] = keys
+        # A directory whose top-level all-caps Document owns it *is* that
+        # Document, so its ID is the directory. `WORKFLOW.md` is a local detail
+        # nothing references — entry points and links name the directory.
+        stem = rel.rsplit("/", 1)[-1][:-3]
+        owns = stem.isupper() and stem != "README" and "/" in rel
+        docs[rel.rsplit("/", 1)[0] if owns else rel[:-3]] = keys
         trapped.extend(f"{rel}: {m.group(1)}" for m in TRAP.finditer(front))
 
     manifest = docs.get("BUNDLE")
