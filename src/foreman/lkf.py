@@ -69,3 +69,41 @@ def unquote(value: str) -> str:
     if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
         return value[1:-1]
     return value
+
+
+APPLIES = re.compile(r"^applies_to\s*:\s*$", re.M)
+ITEM = re.compile(r"^\s*-\s*([A-Za-z_][\w-]*)\s*:\s*(.+?)\s*$")
+
+
+def applies_to(path: Path) -> tuple[str, ...]:
+    """A Document's triggers, as ``kind:value`` strings in declared order.
+
+    ``applies_to`` is the one field here that is not a flat scalar — it is a
+    list of single-key mappings — so the general reader flattens it into
+    nonsense and its entries leak out as top-level keys. This reads it directly
+    rather than growing the subset parser into a YAML implementation.
+
+    Triggers combine with **OR**: any one matching is enough. There is no
+    grammar and no nesting, which is what keeps this eleven lines rather than a
+    parser with precedence rules.
+    """
+    try:
+        text = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        return ()
+    front, _ = split(text)
+    if front is None:
+        return ()
+    start = APPLIES.search(front)
+    if start is None:
+        return ()
+
+    out: list[str] = []
+    for line in front[start.end() :].splitlines():
+        if line.strip() == "":
+            continue
+        item = ITEM.match(line)
+        if item is None:
+            break  # the list ended; the next top-level key has begun
+        out.append(f"{item.group(1)}:{unquote(item.group(2))}")
+    return tuple(out)
