@@ -57,7 +57,7 @@ mkdir -p "$CATALOG/catalog/bundles/widgets/workflows" \
          "$CATALOG/catalog/bundles/widgets/policy" \
          "$CATALOG/catalog/bundles/widgets/_types"
 
-cat > "$CATALOG/catalog/catalog.md" <<'EOF'
+cat > "$CATALOG/catalog/CATALOG.md" <<'EOF'
 ---
 type: luma/catalog
 namespace: acme
@@ -65,7 +65,7 @@ description: A catalog with one bundle in it.
 ---
 EOF
 
-cat > "$CATALOG/catalog/bundles/widgets/bundle.md" <<'EOF'
+cat > "$CATALOG/catalog/bundles/widgets/BUNDLE.md" <<'EOF'
 ---
 type: bundle
 version: 0.1.0
@@ -126,7 +126,7 @@ has 'Everything about widgets'
 
 adopt 'adopt' 0 acme/widgets --from "$CATALOG"
 has 'adopted 0.1.0'
-exists "$VENDORED/bundle.md"
+exists "$VENDORED/BUNDLE.md"
 exists "$VENDORED/workflows/make-a-widget.md"
 exists "$MANIFEST"
 grepped 'version  = "0.1.0"' "$MANIFEST"
@@ -251,7 +251,7 @@ exists "$PROJECT/.claude/skills/make-a-widget/SKILL.md"
 # With a different bundle adopted, the orphaned generated skill goes and the
 # hand-written one stays.
 mkdir -p "$CATALOG/catalog/bundles/gadgets/workflows"
-cat > "$CATALOG/catalog/bundles/gadgets/bundle.md" <<'EOF'
+cat > "$CATALOG/catalog/bundles/gadgets/BUNDLE.md" <<'EOF'
 ---
 type: bundle
 version: 0.1.0
@@ -274,7 +274,7 @@ exists "$PROJECT/.claude/skills/make-a-gadget/SKILL.md"
 # --- a bundle with no version cannot be adopted ---------------------------------
 
 mkdir -p "$CATALOG/catalog/bundles/unversioned"
-cat > "$CATALOG/catalog/bundles/unversioned/bundle.md" <<'EOF'
+cat > "$CATALOG/catalog/bundles/unversioned/BUNDLE.md" <<'EOF'
 ---
 type: bundle
 description: Nothing can pin this.
@@ -287,13 +287,13 @@ has 'declares no version'
 
 BARE=$T/bare
 mkdir -p "$BARE/bundles/thing"
-cat > "$BARE/catalog.md" <<'EOF'
+cat > "$BARE/CATALOG.md" <<'EOF'
 ---
 type: luma/catalog
 description: Declares no namespace.
 ---
 EOF
-cat > "$BARE/bundles/thing/bundle.md" <<'EOF'
+cat > "$BARE/bundles/thing/BUNDLE.md" <<'EOF'
 ---
 type: bundle
 version: 0.1.0
@@ -303,7 +303,7 @@ EOF
 adopt 'bare name needs a namespace' 2 thing --from "$BARE"
 has 'name the namespace'
 adopt 'explicit namespace works' 0 someone/thing --from "$BARE"
-exists "$PROJECT/.luma/bundles/someone/thing/bundle.md"
+exists "$PROJECT/.luma/bundles/someone/thing/BUNDLE.md"
 
 # --- outdated -------------------------------------------------------------------
 
@@ -319,7 +319,7 @@ has 'current'
 lacks '->'
 
 # The catalog moves on. Nothing tells the project — that is the whole point.
-python3 - "$CATALOG/catalog/bundles/gadgets/bundle.md" <<'PYEOF'
+python3 - "$CATALOG/catalog/bundles/gadgets/BUNDLE.md" <<'PYEOF'
 import sys, pathlib
 p = pathlib.Path(sys.argv[1]); p.write_text(p.read_text().replace("version: 0.1.0", "version: 0.4.0"))
 PYEOF
