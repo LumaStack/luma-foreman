@@ -27,7 +27,12 @@ ROOT=$(cd "$(dirname "$0")/.." && pwd -P)
 CLI=${LUMA_FOREMAN_CLI:-$ROOT/bin/luma-foreman}
 export PYTHONDONTWRITEBYTECODE=1
 
+# Hermetic: the operator's own harness wiring must not decide what these cases
+# see. Pointing CLAUDE_CONFIG_DIR at an empty directory means the gate reads as
+# not installed here, whatever is true of this machine.
+
 T=$(mktemp -d /tmp/outfit.XXXXXX) || exit 2
+export CLAUDE_CONFIG_DIR=$T/no-harness
 trap 'rm -rf "$T"' EXIT INT TERM
 
 pass=0 fail=0
@@ -220,6 +225,49 @@ grepped 'Use when the thing needs running' "$SKILLS/run-the-thing/SKILL.md"
 # reach.
 ungrep 'Step one, step two' "$SKILLS/run-the-thing/SKILL.md"
 grepped '.luma/bundles/acme/rules/workflows/run-the-thing' "$SKILLS/run-the-thing/SKILL.md"
+
+# --- the routing table ----------------------------------------------------------
+#
+# Every Document with a trigger gets a row: when it fires and what happens. The
+# gate reads the rows that block; a router will read the rest. Compiling it once
+# is what keeps those two from drifting — and the gate cannot walk the bundles
+# itself, because it runs before every tool call against a budget in
+# milliseconds.
+
+ROUTING=$PROJECT/.luma/bundles/routing.toml
+exists "$ROUTING"
+grepped 'policy/stylesheets' "$ROUTING"
+grepped 'path:\*\*/\*.css' "$ROUTING"
+grepped 'command:git commit' "$ROUTING"
+
+# A Document with no trigger has nothing to route, so it earns no row.
+ungrep 'house-rules' "$ROUTING"
+
+# Subordinate documents are invisible here too — they arrive with their owner.
+ungrep '01-first' "$ROUTING"
+
+# --- blocking is compiled, and reported when nothing can honour it --------------
+#
+# Declaring `block` where no gate is installed is a rule that reads as enforced
+# and is not. Saying so is the difference between a guardrail and a label.
+
+cat > "$B/policy/no-force-push.md" <<'EOF'
+---
+type: policy
+title: Never force-push a shared branch
+description: Force-pushing a shared branch destroys other people's work.
+compliance: mandatory
+on_violation: block
+applies_to:
+  - command: git push --force
+---
+Do not force-push.
+EOF
+
+outfit 'compiles a blocking rule' 0
+grepped 'no-force-push' "$ROUTING"
+grepped 'on_violation = "block"' "$ROUTING"
+case $LAST in *"nothing here enforces"*) ok ;; *) bad "expected outfit to say blocking is unenforced here: $LAST" ;; esac
 
 # --- `preload` is reported, never honoured --------------------------------------
 #

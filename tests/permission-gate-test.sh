@@ -78,6 +78,55 @@ tb() { # tb <expect> <command> [mode] [cwd]
     | "$HOOK" 2>/dev/null | jq -r '.hookSpecificOutput.permissionDecision // empty' 2>/dev/null)"
 }
 
+# --------------------------------------------------------- bundle enforcement --
+# A rule a Bundle declares `on_violation: block` is refused before the
+# permission policy is consulted at all, and cannot be turned off by it. Nothing
+# in `agent-permissions` reads or writes the table it comes from — that is what
+# "cannot be turned off" means, and it is the whole reason this is a separate
+# question rather than another permission key.
+
+routing() { mkdir -p "$REPO/.luma/bundles"; cat > "$REPO/.luma/bundles/routing.toml"; }
+no_routing() { rm -f "$REPO/.luma/bundles/routing.toml"; }
+
+routing <<'EOF'
+[[rule]]
+bundle = "luma/git-secrets"
+document = "policy/never-commit-credentials"
+title = "Never commit a credential"
+path = ".luma/bundles/luma/git-secrets/policy/never-commit-credentials.md"
+compliance = "mandatory"
+on_violation = "block"
+applies_to = ["command:git commit"]
+EOF
+
+tb deny 'git commit -m "x"'
+tb deny 'git commit -m "x"' bypassPermissions      # absolute, like deny
+
+# The trigger is a command shape, not a substring: a longer word is a different
+# command and must not be caught by it.
+tb none 'git commitmsg --help'
+
+# An unrelated command is not this table's business.
+tb none 'git status'
+
+# A row that does not block is a routing entry and nothing more — the gate reads
+# the table, but only acts on the rows with teeth.
+routing <<'EOF'
+[[rule]]
+bundle = "acme/style"
+document = "policy/css"
+title = "CSS rules"
+path = ".luma/bundles/acme/style/policy/css.md"
+compliance = "recommended"
+on_violation = "allow"
+applies_to = ["command:git commit"]
+EOF
+tb none 'git commit -m "x"'
+
+# No table at all is the normal case for a project that has adopted nothing.
+no_routing
+tb none 'git commit -m "x"'
+
 # ---------------------------------------------------------------- file tools --
 # A path that really is in temp gets no opinion, so the allow rule applies.
 tf none Read  "$T/real"

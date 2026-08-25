@@ -18,7 +18,9 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
+import tomllib
 from pathlib import Path
 
 from . import match, store
@@ -73,7 +75,87 @@ def _file_tool_decision(path: str) -> tuple[str, str] | None:
     return ASK, "Temp-looking path resolves outside /tmp"
 
 
+# --------------------------------------------------------------------------
+# Bundle enforcement — a separate question, deliberately kept apart.
+#
+# This shares nothing with the permission policy below: a different input, a
+# different owner, a different meaning. **Permissions are the operator's, and
+# they are settable. This is the project's, and it is not.** Nothing in
+# `agent-permissions` reads or writes `routing.toml`, there is no key for it and
+# no flag, and that is what "cannot be turned off" means in practice.
+#
+# It is consulted *first* and its answer is final, because a rule a Bundle
+# declares as blocking is not a preference that a preference can outrank.
+#
+# The only ways out are to stop adopting the Bundle or to fork it into your own
+# namespace — both visible in `adopted.toml`, where editing the vendored copy
+# instead is drift that `inspect` reports.
+
+
+def _project_root(start: str) -> Path | None:
+    """The nearest ancestor holding `.luma/`, or None."""
+    here = Path(start or os.getcwd()).resolve()
+    for candidate in (here, *here.parents):
+        if (candidate / ".luma").is_dir():
+            return candidate
+    return None
+
+
+def _command_fires(shape: str, cmd: str) -> bool:
+    """Does *cmd* invoke the command *shape* names?
+
+    A shape is a literal invocation — `git commit`, `git push --force` — and
+    matching is on word boundaries. `git commitmsg` is a different command and
+    must not be caught by a rule about committing, which is the difference
+    between a guardrail and a nuisance.
+    """
+    if not shape:
+        return False
+    pattern = r"(?<![\w-])" + r"\s+".join(re.escape(w) for w in shape.split()) + r"(?![\w-])"
+    return re.search(pattern, cmd) is not None
+
+
+def _refused_by_bundle(cmd: str, cwd: str) -> tuple[str, str] | None:
+    """A rule this project adopted that refuses *cmd*, if there is one.
+
+    Reads the compiled table rather than the Bundles themselves. This runs
+    before **every** tool call, and walking `.luma/bundles/` to parse
+    frontmatter each time would cost more than the whole gate does.
+    """
+    root = _project_root(cwd)
+    if root is None:
+        return None
+    table = root / ".luma" / "bundles" / "routing.toml"
+    try:
+        with table.open("rb") as fh:
+            data = tomllib.load(fh)
+    except (OSError, tomllib.TOMLDecodeError):
+        return None
+
+    for rule in data.get("rule", []):
+        if rule.get("on_violation") != "block":
+            continue
+        for trigger in rule.get("applies_to", []):
+            kind, _, shape = str(trigger).partition(":")
+            if kind == "command" and _command_fires(shape, cmd):
+                title = rule.get("title") or rule.get("document", "an adopted rule")
+                where = rule.get("path", "")
+                return DENY, (
+                    f"Refused by {title} — a rule this project adopted, which "
+                    f"blocks this. Read {where} for what to do instead. This "
+                    f"cannot be overridden by permissions; it changes when the "
+                    f"bundle does."
+                )
+    return None
+
+
 def _bash_decision(cmd: str, mode: str, cwd: str) -> tuple[str, str] | None:
+    # First, and final. See above: this is the project's rule, not the
+    # operator's preference, so no permission value and no mode outranks it.
+    refused = _refused_by_bundle(cmd, cwd)
+    if refused:
+        return refused
+
     pol = store.resolve_for(cwd or os.getcwd())
 
     # Pass 1 — "always" and "deny" run above the bypass short-circuit, so they
