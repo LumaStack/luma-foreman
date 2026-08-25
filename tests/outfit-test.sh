@@ -115,7 +115,7 @@ Rationale.
 EOF
 
 # a workflow that owns a directory, and the steps it owns.
-cat > "$B/workflows/run-the-thing/run-the-thing.md" <<'EOF'
+cat > "$B/workflows/run-the-thing/WORKFLOW.md" <<'EOF'
 ---
 type: workflow
 title: Run the thing
@@ -198,10 +198,18 @@ absent "$SKILLS/02-second"
 
 # --- the workflow itself, and the name its directory gives it -------------------
 #
-# The owner of a directory is the file whose name matches it — no reserved word,
-# nothing renamed anywhere else. The directory is the identity, so the document
-# is `workflows/run-the-thing` and the filename is a local detail nothing
-# references; it is visible only to somebody already standing in the directory.
+# The owner of a document directory is the all-caps markdown file in it. The
+# casing is the signal rather than any particular word, so a policy with
+# diagrams gets POLICY.md and somebody's own type gets its own — nothing is
+# centrally reserved, which matters because the type vocabulary is open.
+#
+# Borrowed from SKILL.md deliberately: anyone who has seen one reads this
+# correctly with nothing to learn. A workflow is a skill that travels across
+# harnesses and carries more, so it cannot take the name — but it can take the
+# shape.
+#
+# The directory remains the identity. The document is `workflows/run-the-thing`,
+# and WORKFLOW.md is visible only to somebody already standing in the directory.
 
 exists "$SKILLS/run-the-thing/SKILL.md"
 grepped 'name: run-the-thing' "$SKILLS/run-the-thing/SKILL.md"
