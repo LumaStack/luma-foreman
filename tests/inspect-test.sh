@@ -207,6 +207,67 @@ printf -- '---\ntype: bundle\n---\nno version\n' > "$d/b/BUNDLE.md"
 run 'missing version' 1 "$d"
 has 'declares no version'
 
+# --- a reserved name in the wrong case ------------------------------------------
+#
+# `bundle.md` is not a broken BUNDLE.md — it is an ordinary Document, and the
+# tools ignore it completely. That is the casing rule working as designed, and
+# it is also exactly why it needs surfacing: the bundle simply is not there, and
+# nothing else says so. Somebody who meant lowercase is free to keep it.
+
+d=$T/wrongcase; mkdir -p "$d/b" && git -C "$d" init -q 2>/dev/null
+printf -- '---\ntype: bundle\nversion: 0.1.0\n---\nfine\n' > "$d/b/BUNDLE.md"
+mkdir -p "$d/c"
+printf -- '---\ntype: bundle\nversion: 0.1.0\n---\nx\n' > "$d/c/bundle.md"
+run 'reserved name in the wrong case' 1 "$d"
+has 'wrong case'
+has 'c/bundle.md'
+
+# Not every lowercase match is a mistake, and the rule itself says which. A
+# template is a pattern for making a bundle, and a Type Definition describes
+# what one is — neither is the thing its directory is, so both are correct.
+d=$(bundle casefine)
+mkdir -p "$d/b/templates" "$d/b/_types"
+printf -- '---\ntype: bundle\nversion: 0.1.0\n---\n[t](templates/bundle.md)\n' > "$d/b/BUNDLE.md"
+printf -- 'copy this\n' > "$d/b/templates/bundle.md"
+printf -- '---\ntype: type_definition\ndefines: catalog\n---\nx\n' > "$d/b/_types/catalog.md"
+run 'templates and _types keep their casing' 0 "$d"
+lacks 'wrong case'
+
+# --- triggers that can never fire -----------------------------------------------
+#
+# A misspelled trigger kind is the worst shape of defect this format produces: it
+# parses, it publishes, every adopter copies it, and the rule it guards simply
+# never fires. Nothing distinguishes that from a rule whose moment has not come.
+
+d=$(bundle trigkind)
+printf -- '---\ntype: policy\ntitle: T\ncompliance: mandatory\napplies_to:\n  - patth: "src/**"\n---\nx\n' > "$d/b/p.md"
+run 'unknown trigger kind' 1 "$d"
+has 'not a trigger'
+has 'patth'
+
+# `moment` is a closed vocabulary for the same reason: a name nobody fires is
+# indistinguishable from a moment that has not arrived.
+d=$(bundle trigmoment)
+printf -- '---\ntype: policy\ntitle: T\ncompliance: mandatory\napplies_to:\n  - moment: before-lunch\n---\nx\n' > "$d/b/p.md"
+run 'unknown moment' 1 "$d"
+has 'before-lunch'
+
+d=$(bundle trigok)
+printf -- '---\ntype: policy\ntitle: T\ncompliance: mandatory\napplies_to:\n  - moment: before-commit\n  - path: "**/*.css"\n  - command: git commit\n  - topic: doing the thing\n---\nx\n' > "$d/b/p.md"
+run 'well-formed triggers are quiet' 0 "$d"
+lacks 'rule=bundles'
+
+# --- mandatory with nowhere to fire ---------------------------------------------
+#
+# Legal, and the most expensive thing a bundle can do: it loads into every
+# session of every adopter, forever. Worth saying out loud rather than leaving
+# somebody to discover it in a context budget.
+
+d=$(bundle alwayson)
+printf -- '---\ntype: policy\ntitle: T\ncompliance: mandatory\n---\nx\n' > "$d/b/p.md"
+run 'mandatory with no trigger is surfaced' 1 "$d"
+has 'every session'
+
 # The silent one. [[..]] is YAML flow-sequence syntax, so unquoted it parses as
 # a nested array and the link never resolves — with no parser complaining.
 d=$(bundle btrap)

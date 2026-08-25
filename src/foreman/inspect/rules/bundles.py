@@ -26,6 +26,22 @@ from pathlib import Path
 from ... import lkf
 from ..finding import Finding, Result, Skipped
 
+# The closed vocabularies `applies_to` draws on. Closed is the point: anything
+# outside them is a typo that would otherwise publish silently.
+TRIGGER_KINDS = ("always", "path", "tool", "command", "moment", "topic")
+MOMENTS = ("session-start", "session-end", "before-commit", "before-push",
+           "before-merge", "before-release")
+
+# Reserved names, keyed by their lowercase spelling so a miscased file can be
+# recognised and named.
+RESERVED_BY_LOWER = {"bundle.md": "BUNDLE.md", "catalog.md": "CATALOG.md",
+                     "log.md": "LOG.md", "project.md": "PROJECT.md"}
+
+# Where a lowercase match is correct rather than a mistake, and the rule is what
+# says so: a template is a pattern for making a bundle and a Type Definition
+# describes what one is. Neither is the thing its directory is.
+EXEMPT_DIRS = ("templates", "_types")
+
 RULE = "bundles"
 
 TRAP = lkf.TRAP
@@ -109,6 +125,48 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
         owns = stem.isupper() and stem != "README" and "/" in rel
         docs[rel.rsplit("/", 1)[0] if owns else rel[:-3]] = keys
         trapped.extend(f"{rel}: {m.group(1)}" for m in TRAP.finditer(front))
+
+    # --- triggers that can never fire ---------------------------------------------
+    #
+    # A misspelled trigger kind is the worst shape this format produces: it
+    # parses, it publishes, every adopter copies it, and the rule it guards
+    # never fires. Nothing distinguishes that from a rule whose moment has not
+    # come, which is the failure the whole applicability design exists to end.
+    unknown_kind: list[str] = []
+    unknown_moment: list[str] = []
+    always_on: list[str] = []
+    for doc_id, keys in docs.items():
+        if doc_id == "BUNDLE":
+            continue
+        triggers = lkf.applies_to(root / f"{doc_id}.md") or lkf.applies_to(
+            root / doc_id / f"{doc_id.rsplit('/', 1)[-1].upper()}.md")
+        for trigger in triggers:
+            kind, _, value = trigger.partition(":")
+            if kind not in TRIGGER_KINDS:
+                unknown_kind.append(f"{doc_id}: {kind}")
+            elif kind == "moment" and value not in MOMENTS:
+                unknown_moment.append(f"{doc_id}: {value}")
+        if not triggers and lkf.unquote(keys.get("compliance", "")).strip() == "mandatory":
+            always_on.append(doc_id)
+
+    if unknown_kind:
+        bad("high", f"{len(unknown_kind)} trigger(s) name something that is not a trigger",
+            unknown_kind,
+            "applies_to takes a closed vocabulary — " + ", ".join(sorted(TRIGGER_KINDS)) +
+            ". Anything else parses, publishes, and never fires, which is "
+            "indistinguishable from a rule whose moment has not come.")
+    if unknown_moment:
+        bad("high", f"{len(unknown_moment)} moment(s) are not moments anybody fires",
+            unknown_moment,
+            "moment is a closed vocabulary — " + ", ".join(sorted(MOMENTS)) +
+            ". A name nothing fires is a rule that never arrives.")
+    if always_on:
+        bad("low", f"{len(always_on)} mandatory document(s) load in every session",
+            always_on,
+            "compliance: mandatory with no applies_to is the one path to being "
+            "loaded unconditionally, and it costs every adopter in every session "
+            "forever. Legal, and worth being sure of: if the rule governs a "
+            "particular activity, say so and it arrives when that activity does.")
 
     manifest = docs.get("BUNDLE")
     if manifest is None:
@@ -222,6 +280,42 @@ def _manifests(repo: Path) -> list[Path] | None:
     return sorted({repo / rel for rel in out.stdout.split("\0") if rel})
 
 
+def _miscased(repo: Path) -> list[str]:
+    """Reserved names spelled in a case no tool will match.
+
+    `bundle.md` is not a broken `BUNDLE.md` — it is an ordinary Document, and
+    every tool ignores it. That is the casing rule working, and exactly why this
+    needs saying: **the bundle is simply not there, and nothing else reports an
+    absence.** A directory holding only a lowercase manifest is invisible to the
+    rest of this rule, which is why the check cannot live inside the per-bundle
+    audit — it has to run before anything decides where the bundles are.
+    """
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(repo), "ls-files", "--cached", "--others",
+             "--exclude-standard", "-z", "--", *(f"*{n}" for n in RESERVED_BY_LOWER),
+             *RESERVED_BY_LOWER],
+            capture_output=True, text=True, timeout=120,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return []
+    if out.returncode != 0:
+        return []
+    found = []
+    for rel in out.stdout.split("\0"):
+        if not rel:
+            continue
+        name = rel.rsplit("/", 1)[-1]
+        if name == RESERVED_BY_LOWER.get(name.lower()):
+            continue  # already correct
+        if name.lower() not in RESERVED_BY_LOWER:
+            continue
+        if any(part in EXEMPT_DIRS for part in rel.split("/")[:-1]):
+            continue
+        found.append(f"{rel} -> {RESERVED_BY_LOWER[name.lower()]}")
+    return sorted(found)
+
+
 def check(repo: Path) -> Result:
     listed = _manifests(repo)
     if listed is None:
@@ -231,14 +325,35 @@ def check(repo: Path) -> Result:
                              "dependency directories are not scanned as though they were part of "
                              "this repository.")]
         )
+    miscased = _miscased(repo)
+    extra = []
+    if miscased:
+        extra.append(Finding(
+            rule=RULE, severity="medium", surface="working-tree",
+            summary=f"{len(miscased)} reserved name(s) in the wrong case",
+            evidence=tuple(miscased[:10]),
+            remedy="ALL CAPS names a file that speaks for the thing containing it, so "
+                   "these read as ordinary Documents and every tool skips them. Nothing "
+                   "reports the absence, which is the whole reason this is worth saying. "
+                   "Rename in two steps on a case-insensitive filesystem, and check "
+                   "git ls-files afterwards — git records a case-only rename in neither "
+                   "the index nor the working tree reliably, and the two can disagree. "
+                   "If the lowercase name was deliberate, nothing is wrong and this is "
+                   "only a notice.",
+        ))
+
     manifests = [p for p in listed if p.is_file()]
     if not manifests:
+        # A miscased manifest is the likeliest reason there are none: the
+        # directory looks like a Bundle to a person and like nothing to a tool.
+        if extra:
+            return Result(ran=[RULE], findings=list(extra))
         return Result(
             skipped=[Skipped(RULE, "no bundles found — nothing named BUNDLE.md",
                              "Run inside a repository that publishes or vendors Bundles.")]
         )
 
-    result = Result(ran=[RULE])
+    result = Result(ran=[RULE], findings=list(extra))
     nested = {m.parent for m in manifests}
     for manifest in manifests:
         root = manifest.parent
