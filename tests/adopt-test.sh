@@ -194,9 +194,15 @@ grepped '.luma/bundles/acme/widgets/workflows/make-a-widget.md' \
 grep -q 'Steps go here' "$PROJECT/.claude/skills/make-a-widget/SKILL.md" \
   && bad 'the adapter copied the workflow body' || ok
 
-# preload: mandatory is hoisted; a Type Definition is not reading material.
-grepped 'Read these before working here' "$PROJECT/CLAUDE.md"
-grepped 'widget-rules' "$PROJECT/CLAUDE.md"
+# `preload` is read only so it can be reported. Honouring it would let a
+# half-migrated bundle behave correctly and stall there forever, so this bundle
+# — which still declares it — reaches the index as nothing at all.
+case $LAST in *preload*) ok ;; *) bad "expected the legacy preload reported: $LAST" ;; esac
+grep -q 'widget-rules' "$PROJECT/CLAUDE.md" \
+  && bad 'preload must not be honoured' || ok
+
+# A Type Definition is not reading material: it is consulted when writing a
+# Document of its type, which is a job the workflow already sends you to.
 grep -q '_types/widget' "$PROJECT/CLAUDE.md" \
   && bad '_types should not be indexed' || ok
 

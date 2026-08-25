@@ -62,6 +62,31 @@ SKIP = ("_types",)
 
 SLUG = re.compile(r"[^a-z0-9-]+")
 
+# What this build can actually do at the moment a rule is broken. The vocabulary
+# is larger — `audit`, `warn`, `require_reason`, `require_approval` all mean
+# something — and none of the rest is implemented. A declaration this cannot
+# honour is refused rather than quietly downgraded to the nearest thing that
+# works, because a rule that silently becomes weaker than it says is the exact
+# failure the whole design exists to remove.
+SUPPORTED_ON_VIOLATION = ("allow", "block")
+
+# `README.md` is deliberately not an owner, whatever it contains. It carries
+# universal permission semantics — everybody believes they may edit it freely —
+# so a system that depends on its structure has a fuse in it, lit by the next
+# person who tidies up.
+NEVER_OWNS = ("README",)
+
+
+def _owns_directory(path: Path) -> bool:
+    """Is this the all-caps Document that its directory *is*?
+
+    The casing is the signal rather than any particular word, so a workflow gets
+    `WORKFLOW.md` and somebody's own type gets its own — nothing is centrally
+    reserved, which the open type vocabulary requires.
+    """
+    stem = path.stem
+    return stem.isupper() and stem not in NEVER_OWNS
+
 
 @dataclass(frozen=True)
 class Doc:
@@ -73,11 +98,28 @@ class Doc:
     type: str
     title: str
     description: str
-    preload: str
+    compliance: str
+    on_violation: str
+    applies_to: tuple[str, ...]
+    legacy_preload: str = ""
 
     @property
     def slug(self) -> str:
         return SLUG.sub("-", self.doc_id.rsplit("/", 1)[-1].lower()).strip("-")
+
+    @property
+    def klass(self) -> str:
+        """Where this lands: standing, advertised, or on-demand.
+
+        Derived, never declared. **There is exactly one path to standing** —
+        `mandatory` with no trigger anyone could state — so the expensive
+        outcome is something an author falls into rather than selects, and it
+        shows up as a gap in what was said rather than as a decision somebody
+        made.
+        """
+        if self.applies_to:
+            return "advertised"
+        return "standing" if self.compliance == "mandatory" else "on-demand"
 
 
 @dataclass(frozen=True)
@@ -93,9 +135,12 @@ class Bundle:
     def of_type(self, kind: str) -> list[Doc]:
         return [d for d in self.docs if d.type == kind]
 
+    def of_class(self, klass: str) -> list[Doc]:
+        return [d for d in self.docs if d.klass == klass]
+
     def standing(self) -> list[Doc]:
-        """Documents this bundle expects to be loaded before work starts."""
-        return [d for d in self.docs if d.preload in ("mandatory", "recommended")]
+        """Documents whose bodies have to be present before work starts."""
+        return self.of_class("standing")
 
 
 def _text(keys: dict[str, str], name: str) -> str:
@@ -119,23 +164,53 @@ def discover(project_root: Path) -> list[Bundle]:
         bundle_id = home.relative_to(root).as_posix()
         keys = lkf.read(manifest) or {}
 
+        # A directory that *is* a Document owns everything beneath it. Its
+        # subordinates — a tutorial's steps, a template beside the workflow that
+        # copies it — are reachable only through the owner and never announced
+        # separately. That is the whole of subordination: no field, no
+        # declaration, just where a file sits.
+        owned: dict[Path, Path] = {}
+        for path in sorted(home.rglob("*.md")):
+            if _owns_directory(path):
+                owned[path.parent] = path
+
+        def owner_of(path: Path) -> Path | None:
+            for parent in path.parents:
+                if parent in owned and owned[parent] != path:
+                    return owned[parent]
+                if parent == home:
+                    break
+            return None
+
         docs: list[Doc] = []
         for path in sorted(home.rglob("*.md")):
             rel = path.relative_to(home)
             if rel.parts[0] in SKIP or rel.as_posix() == "bundle.md":
                 continue
+            if owner_of(path) is not None:
+                continue  # subordinate: it arrives with its owner or not at all
             front = lkf.read(path)
             if front is None or "type" not in front:
                 continue  # an Asset — a template, an example. Not addressable.
+
+            # The directory is the identity. `WORKFLOW.md` is a local detail
+            # nothing references, visible only to somebody already standing in
+            # the directory — so the ID, the skill name and every link shorten
+            # to the directory that holds it.
+            doc_id = rel.parent.as_posix() if _owns_directory(path) else rel.as_posix()[:-3]
+
             docs.append(
                 Doc(
                     bundle=bundle_id,
-                    doc_id=rel.as_posix()[:-3],
+                    doc_id=doc_id,
                     path=path,
                     type=_text(front, "type"),
                     title=_text(front, "title"),
                     description=_text(front, "description"),
-                    preload=_text(front, "preload") or "optional",
+                    compliance=_text(front, "compliance") or "optional",
+                    on_violation=_text(front, "on_violation") or "allow",
+                    applies_to=lkf.applies_to(path),
+                    legacy_preload=_text(front, "preload"),
                 )
             )
 
@@ -237,32 +312,36 @@ def _names(bundles: list[Bundle]) -> tuple[dict[str, Doc], list[str]]:
 
 
 def _index(bundles: list[Bundle], project_root: Path) -> str:
+    """The standing surface: what is delivered, and what merely exists.
+
+    Three classes, and the difference between the first two is the whole point.
+    A **standing** Document is *imported* — its body arrives, because that is
+    what `mandatory` with no statable trigger claims and a list of paths under a
+    heading is only a recommendation. An **advertised** Document contributes one
+    line: enough that nothing can be missed out of ignorance, not enough to cost
+    anything. An **on-demand** Document contributes nothing at all.
+    """
     lines = [
         BEGIN,
         "",
         "## Knowledge this project has adopted",
         "",
         "Everything below is vendored under `.luma/bundles/` and is part of this "
-        "repository. **This list is the index, not the content** — open a "
-        "document when the work matches its line, and do not load the rest.",
+        "repository.",
         "",
     ]
 
-    # Hoisted rather than left bold inside each bundle's list. Across several
-    # bundles the mandatory ones would otherwise be scattered through the block,
-    # and the one thing a reader must not have to assemble for themselves is the
-    # list of what they were required to read.
-    required = [d for b in bundles for d in b.docs if d.preload == "mandatory"]
-    if required:
+    standing = [d for b in bundles for d in b.of_class("standing")]
+    if standing:
         lines += [
-            "**Read these before working here.** Their bundles declare them "
-            "`preload: mandatory`, which is the strongest claim a bundle can "
-            "make on a reader's attention.",
+            "**These are in force here and are loaded with this file.** Each one "
+            "is `compliance: mandatory` with no condition narrowing when it "
+            "applies, so it governs everything done in this repository.",
             "",
         ]
-        for doc in required:
+        for doc in standing:
             rel = doc.path.relative_to(project_root).as_posix()
-            lines.append(f"- `{rel}` — {doc.description or doc.title or ''}".rstrip())
+            lines.append(f"@{rel}")
         lines.append("")
 
     for bundle in bundles:
@@ -273,14 +352,24 @@ def _index(bundles: list[Bundle], project_root: Path) -> str:
         lines += [heading, ""]
         if bundle.description:
             lines += [bundle.description, ""]
-        lines += [f"In `{home}/`:", ""]
 
-        for doc in sorted(bundle.docs, key=lambda d: (d.type, d.doc_id)):
+        shown = bundle.of_class("advertised")
+        if not shown:
+            lines += [f"Nothing here applies conditionally. In `{home}/`.", ""]
+            continue
+
+        lines += [
+            f"In `{home}/` — **open one when the work matches its line**, and "
+            "not before:",
+            "",
+        ]
+        for doc in sorted(shown, key=lambda d: (d.type, d.doc_id)):
             note = doc.description or doc.title or ""
-            flag = " **[read first]**" if doc.preload == "mandatory" else ""
-            lines.append(
-                f"- `{doc.doc_id}.md` ({doc.type}){flag} — {note}".rstrip(" —")
-            )
+            when = ", ".join(doc.applies_to)
+            teeth = " **[blocked]**" if doc.on_violation == "block" else ""
+            lines.append(f"- `{doc.doc_id}` ({doc.type}){teeth} — {note}".rstrip(" —"))
+            if when:
+                lines.append(f"  - applies to: {when}")
         lines.append("")
 
     lines += [
@@ -313,6 +402,56 @@ def _splice(existing: str, block: str) -> str:
 # the command
 
 
+def _refusals(bundles: list[Bundle]) -> list[str]:
+    """Declarations this build cannot honour. Each one stops the run.
+
+    The alternative is silently doing the nearest thing that works — a rule
+    asking to be blocked becoming a line of prose — which is a rule that is
+    weaker than it says and nobody finding out.
+    """
+    out = []
+    for bundle in bundles:
+        for doc in bundle.docs:
+            if doc.on_violation not in SUPPORTED_ON_VIOLATION:
+                out.append(
+                    f"{bundle.bundle_id} {doc.doc_id}: on_violation "
+                    f"'{doc.on_violation}' is not implemented"
+                )
+    return out
+
+
+def _notices(bundles: list[Bundle], project_root: Path) -> list[str]:
+    """Things worth saying that are not worth stopping for."""
+    out = []
+    for bundle in bundles:
+        for doc in bundle.docs:
+            # `preload` is read only so it can be reported. Honouring it would
+            # let a half-migrated bundle behave correctly and stall there
+            # forever, which is the one outcome a migration cannot survive.
+            if doc.legacy_preload:
+                out.append(
+                    f"{bundle.bundle_id} {doc.doc_id}: still declares "
+                    f"preload — replace with compliance and applies_to"
+                )
+            # A glob matching nothing never fires, and silence is
+            # indistinguishable from a rule that has simply not come up. Saying
+            # so is the difference between *does not apply* and *will never be
+            # seen*.
+            for trigger in doc.applies_to:
+                kind, _, value = trigger.partition(":")
+                if kind != "path" or not value:
+                    continue
+                try:
+                    if next(project_root.glob(value), None) is None:
+                        out.append(
+                            f"{bundle.bundle_id} {doc.doc_id}: nothing in this "
+                            f"project matches '{value}' — the rule can never fire"
+                        )
+                except (ValueError, OSError):
+                    continue
+    return out
+
+
 def run(project_root: Path, check: bool) -> int:
     bundles = discover(project_root)
     if not bundles:
@@ -321,6 +460,13 @@ def run(project_root: Path, check: bool) -> int:
             "  luma-foreman adopt --list --from <catalog>",
             file=sys.stderr,
         )
+        return 2
+
+    refused = _refusals(bundles)
+    if refused:
+        print("cannot project — declarations this build cannot honour:", file=sys.stderr)
+        for line in refused:
+            print(f"  {line}", file=sys.stderr)
         return 2
 
     planned: dict[Path, str] = {}
@@ -359,11 +505,16 @@ def run(project_root: Path, check: bool) -> int:
         shutil.rmtree(path)
 
     workflows = sum(len(b.of_type("workflow")) for b in bundles)
-    mandatory = sum(1 for b in bundles for d in b.docs if d.preload == "mandatory")
+    counts = {k: sum(len(b.of_class(k)) for b in bundles)
+              for k in ("standing", "advertised", "on-demand")}
     print(f"{len(bundles)} bundle(s) projected")
-    print(f"  skills   {workflows} workflow(s) -> .claude/skills/")
-    print(f"  index    {sum(len(b.docs) for b in bundles)} document(s) -> CLAUDE.md")
-    print(f"           {mandatory} marked read-before-working")
+    print(f"  skills     {workflows} workflow(s) -> .claude/skills/")
+    print(f"  standing   {counts['standing']} loaded with CLAUDE.md")
+    print(f"  advertised {counts['advertised']} named, opened when they match")
+    print(f"  on-demand  {counts['on-demand']} reachable, not announced")
+
+    for line in _notices(bundles, project_root):
+        print(f"  notice   {line}")
     if stale:
         print(f"  removed  {len(stale)} skill(s) for bundles no longer here")
     if collided:
