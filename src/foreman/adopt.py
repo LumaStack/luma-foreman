@@ -34,6 +34,11 @@ To see what a catalog publishes: luma-foreman catalog show <name>
 
   --from <catalog>   a path to a catalog checkout, or a git URL. Defaults to
                      [catalog] source in .luma/config/luma-foreman.toml
+
+A bundle is addressed <namespace>/<name>, and the namespace is the catalog's.
+It derives from where the catalog lives — github.com/LumaStack/luma-catalog
+becomes lumastack/luma-catalog — unless CATALOG.md declares one, which wins.
+A fork therefore gets its own namespace without anybody arranging it.
   --to <project>     the project to adopt into (default: this repository)
 
 The bundle lands in .luma/bundles/<org>/<name>/ and is committed with the rest
@@ -152,6 +157,42 @@ def _root(start: Path) -> Path | None:
     return None
 
 
+def derive_namespace(source: str) -> str | None:
+    """A catalog's namespace from where it lives, or None if nowhere says.
+
+    **The last two path segments, `.git` stripped, lowercased.**
+    `https://github.com/LumaStack/luma-catalog.git` becomes
+    `lumastack/luma-catalog`. No hosting is assumed: any URL with a path
+    derives, a LAN git server included, and a local checkout resolves through
+    its origin so `--from ../luma-catalog` gives the same answer as the URL it
+    was cloned from.
+
+    **A fork gets its own namespace without anybody thinking about it**, which
+    is the point — it lives somewhere else, so it is named something else. Only
+    a catalog declaring one explicitly can be impersonated by a fork, and that
+    catalog chose to be nameable.
+
+    Returns None for a plain directory with no remote. Nothing can guess a name
+    for that, so it has to declare one.
+    """
+    text = source.strip().rstrip("/")
+    if not text:
+        return None
+
+    if "://" in text:                       # scheme://host/path...
+        path = text.split("://", 1)[1].split("/")[1:]
+    elif ":" in text and not text[1:3] == ":\\":   # scp-style git@host:org/repo
+        path = text.split(":", 1)[1].split("/")
+    else:
+        return None                         # a bare local path says nothing
+
+    segments = [s for s in path if s]
+    if not segments:
+        return None
+    segments[-1] = segments[-1].removesuffix(".git")
+    return "/".join(segments[-2:]).lower() or None
+
+
 def find(source: str) -> Catalog | str:
     """Resolve *source* to a Catalog, or return a message saying why not."""
     if URL.match(source):
@@ -177,13 +218,16 @@ def find(source: str) -> Catalog | str:
     commit = _git(root, "rev-parse", "HEAD") or ""
     status = _git(root, "status", "--porcelain")
     manifest = lkf.read(root / "CATALOG.md") or {}
-    namespace = manifest.get("namespace")
+    declared = manifest.get("namespace")
+    # Declared always wins; derived is the default so that the common case
+    # needs no configuration and a fork cannot inherit somebody else's name.
+    namespace = lkf.unquote(declared) if declared else derive_namespace(origin)
     return Catalog(
         root=root,
         source=origin,
         commit=commit,
         dirty=bool(status),
-        namespace=lkf.unquote(namespace) if namespace else None,
+        namespace=namespace or None,
     )
 
 
@@ -214,19 +258,32 @@ def _resolve_id(catalog: Catalog, requested: str) -> tuple[str, str] | str:
     catalog's rather than the bundle's** — the same bundle promoted into
     another organization's catalog is that organization's to name.
     """
-    if "/" in requested:
-        namespace, name = requested.split("/", 1)
-        if catalog.namespace and namespace != catalog.namespace:
-            return (
-                f"this catalog publishes {catalog.namespace}/, not {namespace}/ "
-                f"— did you mean {catalog.namespace}/{name}?"
-            )
-        return f"{namespace}/{name}", name
+    # Matched against the catalog's own namespace rather than split on the
+    # first slash, because a namespace may be any number of segments —
+    # `lumastack/luma-catalog/widgets` is one bundle, not a nested one.
     if catalog.namespace:
+        prefix = f"{catalog.namespace}/"
+        if requested.startswith(prefix):
+            name = requested[len(prefix):]
+            return f"{catalog.namespace}/{name}", name
+        if "/" in requested:
+            name = requested.rsplit("/", 1)[-1]
+            return (
+                f"this catalog publishes {catalog.namespace}/, not "
+                f"{requested.rsplit('/', 1)[0]}/ — did you mean "
+                f"{catalog.namespace}/{name}?"
+            )
         return f"{catalog.namespace}/{requested}", requested
+
+    # No namespace declared and none derivable — a plain directory with no
+    # remote. The caller may still name it: pointing at a local catalog and
+    # saying what to call its bundles is the whole reason this path exists.
+    if "/" in requested:
+        return requested, requested.rsplit("/", 1)[-1]
     return (
-        f"name the namespace: {requested} is ambiguous, and this catalog "
-        f"declares none of its own. Try <namespace>/{requested}."
+        f"name the namespace: {requested} is ambiguous. This catalog declares "
+        f"none, and none can be derived from a path with no remote. Try "
+        f"<namespace>/{requested}, or add `namespace:` to its CATALOG.md."
     )
 
 

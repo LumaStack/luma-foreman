@@ -450,6 +450,53 @@ EOF
 get 'unversioned refused' 2 acme/unversioned --from "$CATALOG"
 has 'declares no version'
 
+# --- a namespace derives from where the catalog lives ---------------------------
+#
+# Declaring one is allowed and always wins. Not declaring is the common case,
+# and it is what makes a fork safe: the fork lives somewhere else, so it is
+# named something else without anybody thinking about it.
+
+derived() {          # derived <dir> <origin> <bundle-description>
+  mkdir -p "$1/catalog/bundles/widgets"
+  printf -- '---\ntype: luma/catalog\ndescription: d\n---\nc\n' > "$1/catalog/CATALOG.md"
+  printf -- '---\ntype: bundle\nversion: 1.0.0\ndescription: %s\n---\nb\n' "$3" \
+    > "$1/catalog/bundles/widgets/BUNDLE.md"
+  git -C "$1" init -q && git -C "$1" remote add origin "$2"
+}
+
+derived "$T/up"   "https://github.com/LumaStack/luma-catalog.git" upstream
+derived "$T/fk"   "git@github.com:acme/luma-catalog.git"          fork
+
+DERIV=$T/deriv; mkdir -p "$DERIV"; git -C "$DERIV" init -q
+LAST=$(cd "$DERIV" && "$CLI" get widgets --from "$T/up" 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "derived namespace (exit $got): $LAST"
+case $LAST in *"lumastack/luma-catalog/widgets"*) ok ;; *) bad "not derived: $LAST" ;; esac
+
+# The fork is a different namespace, so both live in one project at once —
+# which is the collision the source alone could not prevent.
+LAST=$(cd "$DERIV" && "$CLI" get widgets --from "$T/fk" 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "fork alongside upstream (exit $got): $LAST"
+case $LAST in *"acme/luma-catalog/widgets"*) ok ;; *) bad "fork not distinct: $LAST" ;; esac
+[ -f "$DERIV/.luma/bundles/lumastack/luma-catalog/widgets/BUNDLE.md" ] \
+  && ok || bad 'upstream not vendored under its own namespace'
+[ -f "$DERIV/.luma/bundles/acme/luma-catalog/widgets/BUNDLE.md" ] \
+  && ok || bad 'fork not vendored under its own namespace'
+
+# A multi-segment namespace addresses as one bundle, not a nested one.
+LAST=$(cd "$DERIV" && "$CLI" get lumastack/luma-catalog/widgets --from "$T/up" 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "full id (exit $got): $LAST"
+LAST=$(cd "$DERIV" && "$CLI" bundle show lumastack/luma-catalog/widgets 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "bundle show on a full id (exit $got): $LAST"
+
+# A declaration beats derivation.
+derived "$T/dec" "https://github.com/LumaStack/luma-catalog.git" declared
+printf -- '---\ntype: luma/catalog\nnamespace: chosen\ndescription: d\n---\nc\n' \
+  > "$T/dec/catalog/CATALOG.md"
+DEC=$T/decp; mkdir -p "$DEC"; git -C "$DEC" init -q
+LAST=$(cd "$DEC" && "$CLI" get widgets --from "$T/dec" 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "declared namespace (exit $got): $LAST"
+case $LAST in *"chosen/widgets"*) ok ;; *) bad "declaration did not win: $LAST" ;; esac
+
 # --- a catalog with no namespace ------------------------------------------------
 
 BARE=$T/bare

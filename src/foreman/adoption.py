@@ -43,13 +43,16 @@ class Adopted:
     commit: str
     checksum: str
 
+    # Split from the right: a namespace may have any number of segments, and
+    # the bundle name is always the last one. `lumastack/luma-catalog/widgets`
+    # is namespace `lumastack/luma-catalog`, name `widgets`.
     @property
     def namespace(self) -> str:
-        return self.bundle.split("/", 1)[0]
+        return self.bundle.rsplit("/", 1)[0]
 
     @property
     def name(self) -> str:
-        return self.bundle.split("/", 1)[-1]
+        return self.bundle.rsplit("/", 1)[-1]
 
 
 def luma_dir(project: Path) -> Path:
