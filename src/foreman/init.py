@@ -75,9 +75,9 @@ TODO — what works, what does not, and what somebody should not rely on yet.
 CONFIG_HEADER = """\
 # How luma-foreman behaves in this project. Committed, and shared by everyone.
 #
-# Kept minimal by design. Embrace missing keys which follow tool defaults and
-# play well with upgrades; anything set in this file could result in migration
-# friction later.
+# Kept minimal by design. What you leave out follows the tool and improves with
+# it; what you set here is frozen, and every frozen value is one more thing to
+# reconcile at upgrade.
 """
 
 CONFIG_BLANK = CONFIG_HEADER + """
