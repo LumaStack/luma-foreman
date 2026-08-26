@@ -93,7 +93,7 @@ estimate from git history.
 
 **The central design question has been partly answered elsewhere since this was
 written.** `docs/scope.md` lists routing under *needs a decision before it can be
-built*, and adds a conditional this entry does not have: *"If `outfit` must
+built*, and adds a conditional this entry does not have: *"If `apply` must
 evaluate a router to decide what to write, it has to be **data** — a tool cannot
 follow prose."* That reframes *prose or data?* as *who evaluates it?*, which is
 the more tractable question and probably where a design should start.

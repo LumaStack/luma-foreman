@@ -10,11 +10,11 @@ lifecycle_status: draft
 
 # Projected through an index, `preload` levels differ only in emphasis
 
-**A finding from building `outfit`, not a proposal.** The first thing to read
-`preload` found that the three levels it can distinguish do not survive
-projection into a harness.
+**A finding from building `apply`, not a proposal.** The first thing to read
+`preload` found that the three levels it can distinguish do not survive being
+written into a harness.
 
-## What `outfit` does with the field today
+## What `apply` does with the field today
 
 | declared | what reaches an agent |
 | --- | --- |
@@ -29,7 +29,7 @@ the implementation — it is what the mechanism can express.
 ## Why inlining was rejected, which is the substance of it
 
 The obvious stronger reading is that `mandatory` should mean *the content is in
-context*, so `outfit` should paste the document into `CLAUDE.md` rather than
+context*, so `apply` should paste the document into `CLAUDE.md` rather than
 linking it. Three things argue against it, and the first is the one that
 matters:
 

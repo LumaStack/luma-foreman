@@ -28,16 +28,17 @@ idea must not weaken it.
 So a personal selection needs the machine-local tier, the way `agent-permissions`
 policy already lives under `~/.config/luma/luma-foreman/` keyed by repository
 root. What is undecided is how a machine-local selection and a committed one
-compose at projection time.
+compose at write time.
 
 ## Notes
 
 Captured 2026-08-21, during the migration of `docs/IDEAS.md`.
 
-**The projection half is already scoped and is not what this idea is for.**
+**The writing-out half is already scoped and is not what this idea is for.**
 `docs/scope.md` lists *"load and unload skills — possibly by symlink, possibly
-another mechanism"*, and costs *"selecting at projection time which subset of
-adopted content is written out — including by symlink"* as **buildable now**.
+another mechanism"*, and *"select at write time which subset of adopted content
+is written — including by symlink"*, which it calls unbuilt because nothing yet
+decides the subset.
 This file is titled on the part that has no home.
 
 **Mid-session swapping is blocked, and not by us.** `docs/scope.md` records that
