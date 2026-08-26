@@ -60,7 +60,8 @@ done
 # --- dispatcher -----------------------------------------------------------------
 run 'help'            0 help;            contains 'help' 'Commands:'
 run 'unknown command' 1 not-a-command
-run 'unbuilt command' 2 bootstrap   # inspect is built now; bootstrap is not
+run 'unbuilt command' 2 init        # inspect is built now; init is not
+run 'refit is gone'   1 refit       # removed by ADR-0004, not merely unbuilt
 run 'permissions default'  0 agent-permissions;          contains 'permissions default' 'KEY'
 
 # --- reads work before anything is configured ------------------------------------
