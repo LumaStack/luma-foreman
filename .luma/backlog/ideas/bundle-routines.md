@@ -161,3 +161,83 @@ instead of a runtime rename**, which is the clearest single argument for it.
 [[routers]] — the same problem approached as evaluation rather than as naming.
 [[conditional-preload]] — in `luma-leader`; a routine may be the cheap version
 of it.
+
+---
+
+## Entry point variants, raised 2026-08-25 — captured, not chosen
+
+**Dropped for now and deliberately kept.** Raised while asking whether
+`entry_point` is a good design at all. None of these is decided and some may be
+bad; they are here because forgetting them is the only outcome that is certainly
+wrong.
+
+### The reading that started it
+
+**Entry point in the Docker sense: the thing that kicks off.** Not *where a
+reader starts* — **what runs**. `ENTRYPOINT` is a process, not a signpost, and a
+bundle's could be **the router of the bundle**: engage the bundle, and one thing
+in it decides where you go next.
+
+That is a third meaning, distinct from both the field we have and from routines.
+
+### The variants, as raised
+
+- **`entry_point` in `BUNDLE.md`** — the field as it exists, possibly given the
+  running sense rather than the reading one.
+- **`ENTRYPOINT.md`** — a reserved file at the bundle root. **Presence is the
+  declaration**: no field to set, no default to remember, and a bundle without
+  one behaves exactly as today. Convention over configuration.
+- **Rename `routines` to `entrypoints`** — one word for the callable surface
+  instead of two concepts that keep being confused for each other.
+- **`ENTRYPOINT` as the *default* routine** — the one called when a caller names
+  the bundle and nothing else. Routines stay plural; one of them is reachable
+  without being named.
+
+Spelling, if a file wins: **`ENTRYPOINT.md`** over `ENTRY_POINT.md`, because
+every other reserved name is a single token — `BUNDLE`, `CATALOG`, `LOG`,
+`PROJECT`, `WORKFLOW` — and Docker spells it as one word.
+
+### Settled 2026-08-25: routines are frontmatter
+
+**Agreed.** The callable surface lives in `BUNDLE.md`'s frontmatter, beside
+`compliance` and `applies_to` and everything else the tools consume:
+
+```yaml
+routines:
+  - name: record
+    description: Write a decision record where this project keeps them.
+    pulls: [policy/decision-guidelines, workflows/record-decision]
+```
+
+Six routines is about twenty lines. Not light, but **a contract is data**, and
+the loud failure this idea insists on — *that name does not exist* — needs a
+machine, which needs the surface machine-readable.
+
+**So `ENTRYPOINT.md` is not needed.** The case for a file rested on prose needing
+room to breathe; once each routine carries a `description` and its depth lives in
+the documents it `pulls`, there is nothing left for the file to hold. The
+variants above stay recorded in case that stops being true.
+
+### And the rest, concluded but not settled
+
+**`entry_point` as it stands probably does not survive**, and not because
+routines replace it. **`BUNDLE.md` is already the reading entrance** — you open a
+bundle, you read its manifest, and the manifest tells you where to go. A field
+naming one document is a second answer to a question the manifest already
+answers, and it is checked by two tools and consumed by none.
+
+**The test that produced that answer** is worth keeping with the idea, since it
+decides the rest of it: *data is what something checks; prose is what a person
+or agent needs to understand — and an agent should prefer the mechanical answer
+to the question the data answers.* By that test the callable surface is data. By
+the same test, the *why* of each routine stays prose, in the documents it names.
+
+### The thing to check before choosing
+
+**Write out four real routines and see whether they fit.**
+`decision-records` — `#record`, `#find`, `#migrate`, `#prune` — is the obvious
+candidate. If they fit in twenty lines of frontmatter without straining, the
+manifest wins and no reserved name is needed. If a routine turns out to want
+conditions, ordering or arguments, it has outgrown a manifest entry and the file
+comes back.
+
