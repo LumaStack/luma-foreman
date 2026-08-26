@@ -1,7 +1,7 @@
 ---
 type: bundle
-version: 0.9.0
-published: 2026-08-25
+version: 0.10.1
+published: 2026-08-26
 consumers: [organization]
 entry_point: policy/the-estate
 description: Working on the luma tools themselves — the repositories and the boundary each defends, publishing to the universal catalog, and changing a type without making every tool upgrade at once.
@@ -63,6 +63,24 @@ no sensible project-level reading of *how the luma estate is maintained* —
 adopting it into a project would be adopting somebody else's internals.
 
 ## Version
+
+`0.10.1` — **`adopt` is now `get` and `outfit` is now `apply`**, where
+`the-estate` and `publish-to-the-catalog` mention them in passing.
+
+Patch: neither sentence tells anybody to run anything. The `## Version` history
+below is left as written — it records what was true at the time.
+
+`0.10.0` — **`the-estate` cited a field that never existed.** It described the
+adopter's missing selection as *the same question `preload_default` answers for
+adopted bundles*. `preload_default` is not in the specification and never was: it
+is an unbuilt idea from a `luma-leader` design draft, cited in a published policy
+as though it had shipped. The gap is now described directly rather than by
+reference to a mechanism a reader cannot go and read.
+
+**And the bundle count was stale** — seventeen, where the catalog publishes
+nineteen.
+
+Minor. Two factual corrections; no rule changed.
 
 `0.9.0` — **`applies_to` is now `matches`.** The old name obliged an author to
 write a false sentence: `applies_to: everything` claims a rule governs

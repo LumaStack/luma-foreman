@@ -10,7 +10,7 @@ and a reason to follow it — never a copy of the document. A copy would be a
 second source of truth that drifts from the first, and it would charge every
 session for content that was supposed to load only when the work matched.
 
-Two projections, because a harness has two ways in:
+Two outputs, because a harness has two ways in:
 
 | | |
 | --- | --- |
@@ -95,7 +95,7 @@ def _owns_directory(path: Path) -> bool:
 
 @dataclass(frozen=True)
 class Doc:
-    """A Document inside a vendored bundle, as the projection needs it."""
+    """A Document inside a vendored bundle, as writing it out needs it."""
 
     bundle: str
     doc_id: str
@@ -163,7 +163,7 @@ def _text(keys: dict[str, str], name: str) -> str:
 def discover(project_root: Path) -> list[Bundle]:
     """Every bundle in `.luma/bundles/`, adopted or written here.
 
-    Both are projected. What a project wrote for itself is as much a part of how
+    Both are written out. What a project wrote for itself is as much a part of how
     it works as what it took from a catalog, and an agent has no reason to care
     which is which — that distinction matters to drift checking, not to loading.
     """
@@ -186,7 +186,7 @@ def discover(project_root: Path) -> list[Bundle]:
         for path in sorted(home.rglob("*.md")):
             # The bundle's own manifest owns the bundle directory by exactly
             # this rule — and must not hide it. A bundle's members are its
-            # content, which is the thing being projected; subordination
+            # content, which is the thing being written out; subordination
             # applies *within* a bundle, never at its root.
             if path.parent == home:
                 continue
@@ -634,7 +634,7 @@ def run(project_root: Path, check: bool, explain: bool = False) -> int:
     workflows = sum(len(b.of_type("workflow")) for b in bundles)
     counts = {k: sum(len(b.of_class(k)) for b in bundles)
               for k in ("always-on", "advertised", "on-demand")}
-    print(f"{len(bundles)} bundle(s) projected")
+    print(f"{len(bundles)} bundle(s) written out")
     print(f"  skills     {workflows} workflow(s) -> .claude/skills/")
     print(f"  always-on  {counts['always-on']} loaded with CLAUDE.md")
     print(f"  advertised {counts['advertised']} named, opened when they match")

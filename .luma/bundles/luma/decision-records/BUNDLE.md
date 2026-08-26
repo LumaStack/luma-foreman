@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.7.0
+version: 0.8.0
 published: 2026-08-25
 consumers: [project, organization]
 entry_point: workflows/record-decision
@@ -85,43 +85,64 @@ stops meaning anything in particular.
 
 ## Loading
 
-Only [[record-decision]] is `preload: mandatory` — a consumer that cannot load
-it should fail rather than proceed without it, because everything else here is a
-contract it refers to.
+**Nothing here is loaded before work starts.** No document in this bundle
+declares `matches: always`, which since the default reversed is the only route to
+being in front of a reader up front — so everything here is either surfaced by a
+trigger or waits to be asked for.
 
-**[[decision-guidelines]] is `recommended`.** It is the craft rather than the
-mechanism: what makes a record survive, and what you may edit once it is settled.
-A consumer that cannot load it can still write a well-formed record, so failing
-the session would be too strong — but it should say it proceeded without it,
-because the record it produces will be formally correct and probably worse.
+**[[record-decision]] is the contract the rest refers to**, and it declares no
+`matches` at all: it is named as a skill, and its body arrives when somebody
+invokes it. That is the right outcome for a procedure nobody runs by accident,
+but it is a weaker guarantee than this section used to claim — and one argument
+below depends on the difference.
 
-**The other three workflows are `optional` on purpose**, for two different
-reasons.
+**[[decision-guidelines]] is the only document here that declares a trigger**,
+on the topic of recording a decision or deciding whether one is worth recording.
+It is the craft rather than the mechanism: what makes a record survive, and what
+you may edit once it is settled. It surfaces when that topic comes up, which is
+when it is worth reading and not before.
 
-[[migrate-decisions]] and [[prune-archived-decisions]] are jobs somebody starts
-deliberately, once or rarely, and neither has anything to say to an agent that is
-not doing them. Loading a migration procedure into every session because the
-project might one day run one is the cost `preload` exists to avoid.
+**[[migrate-decisions]] and [[prune-archived-decisions]] declare nothing, on
+purpose.** Both are jobs somebody starts deliberately, once or rarely, and
+neither has anything to say to an agent that is not doing them. Putting a
+migration procedure in front of every session because the project might one day
+run one is the cost the reversed default exists to avoid.
 
-**[[find-decision]] is `optional` for a subtler reason, and it is the case worth
-understanding.** It fires reactively — nobody sets out to run it — so the
-straightforward move is to preload it. The cheaper one is to preload a *pointer*:
-[[record-decision]] is already `mandatory`, and it opens by naming the three
-triggers that should cause this one to be loaded.
+**[[find-decision]] declares nothing either, for a subtler reason, and it is the
+case worth understanding.** It fires reactively — nobody sets out to run it — so
+the straightforward move would be to surface it always. The cheaper one is a
+*pointer*: [[record-decision]] opens by naming the three triggers that should
+cause this one to be reached.
 
-**That is progressive disclosure working, and it has one failure mode.** It holds
-only while the trigger is in context. An agent that does not know a search
-procedure exists does not go looking for one — it hits a dead link, concludes
-nothing was ever decided, and re-decides it. **So the pointer is load-bearing in a
-way the procedure is not**, and anything that trims [[record-decision]] should
-leave those three lines alone.
+**That is progressive disclosure working, and its failure mode is now wider than
+it was.** It holds only while the pointer is in context — and the pointer lives
+in a document that is itself only named, not loaded. An agent that does not know
+a search procedure exists does not go looking for one: it hits a dead link,
+concludes nothing was ever decided, and re-decides it. **So the pointer is
+load-bearing in a way the procedure is not.** Anything that trims
+[[record-decision]] should leave those three lines alone — and if this bundle
+ever earns a `matches: always` document, this is the argument that would earn it.
 
-The Type Definitions carry no `preload` at all, which means `optional`: they are
-read when something needs to know what a field means, not held in context
-against the possibility. That is the field working as intended rather than an
-omission.
+The Type Definitions declare no `matches` either, which is the same outcome for a
+different reason: they are read when something needs to know what a field means,
+not held in context against the possibility.
 
 ## Version
+
+`0.8.0` — **the Loading section described a field the format removed.** It
+called `record-decision` `preload: mandatory`, graded `decision-guidelines`
+`recommended`, and filed three workflows as `optional` — two releases after
+`preload` was released, and one after `compliance` was invented and withdrawn.
+
+**One claim was false rather than merely stale.** Nothing in this bundle is
+loaded before work starts: `record-decision` declares no `matches` at all and is
+reached as a skill. The progressive-disclosure argument for `find-decision`
+rested on its pointer living in a document that was already loaded, and that
+premise is gone. The argument still holds and is weaker, so it now says so —
+along with the note that if this bundle ever earns a `matches: always` document,
+this is the argument that would earn it.
+
+Minor. No document's frontmatter changed; the description of it did.
 
 `0.7.0` — **`applies_to` is now `matches`.** The old name obliged an author to
 write a false sentence: `applies_to: everything` claims a rule governs

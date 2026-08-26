@@ -3,9 +3,9 @@
 **Publication notifies nobody.** A bundle becomes available by being committed
 to a catalog's `main`; nothing tells the projects that already took it. An
 adopter finds out by asking, and until now the only way to ask was to re-run
-`adopt` on every bundle and read what it said.
+`get` on every bundle and read what it said.
 
-**This is a separate job rather than a flag on `inspect`, and the reason is the
+**This is a separate command rather than a flag on `inspect`, and the reason is the
 network.** `inspect` works in a bare clone with no configuration and reports a
 check it could not run as skipped rather than passed — that guarantee is worth
 more than the convenience of folding this into it. Answering *is there a newer
@@ -32,7 +32,7 @@ USAGE = """Report which adopted bundles have a newer version published.
   luma-foreman outdated --to <dir>   a project other than this repository
 
 Reaches the catalog each bundle was adopted from, so it needs a network. This
-is the one job here that does — `inspect` deliberately does not, which is why
+is the one command here that does — `inspect` deliberately does not, which is why
 this is not part of it.
 
 Exit codes: 0 everything current, 1 something is behind, 2 could not run."""
@@ -135,20 +135,21 @@ def main(argv: list[str]) -> int:
         return 1 if behind else 0
 
     width = max(len(r.bundle) for r in rows)
+    held = max(len(r.held) for r in rows)
     for row in rows:
         if row.behind:
-            print(f"  {row.bundle:<{width}}  {row.held}  ->  {row.available}")
+            print(f"  {row.bundle:<{width}}  {row.held:<{held}}  ->  {row.available}")
         elif row.available is None:
-            print(f"  {row.bundle:<{width}}  {row.held}      ? {row.note}")
+            print(f"  {row.bundle:<{width}}  {row.held:<{held}}      ? {row.note}")
         else:
-            print(f"  {row.bundle:<{width}}  {row.held}      current")
+            print(f"  {row.bundle:<{width}}  {row.held:<{held}}      current")
 
     print()
     if behind:
         print(f"{len(behind)} of {len(rows)} adopted bundle(s) are behind.")
         print()
         print("  luma-foreman get <bundle>     take the newer version")
-        print("  luma-foreman apply             then reproject")
+        print("  luma-foreman apply            then rewrite what agents read")
         print()
         print(
             "**Read what changed before taking it.** For prose a two-character\n"

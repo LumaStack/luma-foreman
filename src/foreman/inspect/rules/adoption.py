@@ -10,9 +10,9 @@ Three states, and the third is the one nothing else would ever surface:
 | --- | --- |
 | **edited** | somebody changed the vendored copy. Their change dies at the next adopt, and upstream never hears about it |
 | **missing** | the record says a bundle is here and it is not. Every link into it is broken |
-| **unprojected** | the bundle is present, unedited, and **no agent has ever seen it** — adopted, and routed nowhere |
+| **unapplied** | the bundle is present, unedited, and **no agent has ever seen it** — taken, and routed nowhere |
 
-*Unprojected* looks correct from every angle: the directory is there, the
+*Unapplied* looks correct from every angle: the directory is there, the
 checksum matches, the report is green. The project is carrying rules nobody
 reads.
 
@@ -96,12 +96,12 @@ def check(repo: Path) -> Result:
     # Being present and unedited says nothing about whether anything reads it.
     # This is the state that reports green while a project quietly carries rules
     # no agent has ever been shown.
-    unprojected = [b for b in present if not _projected(repo, b)]
-    if unprojected:
+    unapplied = [b for b in present if not _applied(repo, b)]
+    if unapplied:
         bad(
             "medium",
-            f"{len(unprojected)} bundle(s) are adopted but reach no agent",
-            sorted(unprojected),
+            f"{len(unapplied)} bundle(s) are adopted but reach no agent",
+            sorted(unapplied),
             "Run `luma-foreman apply`. A bundle nothing projects is present, "
             "checksummed, reported clean, and never loaded — which looks "
             "identical to working.",
@@ -119,13 +119,13 @@ def check(repo: Path) -> Result:
     return result
 
 
-def _projected(repo: Path, bundle_id: str) -> bool:
+def _applied(repo: Path, bundle_id: str) -> bool:
     """Does the generated index mention this bundle at all?
 
-    Deliberately weak. Whether the projection is *current* is what
+    Deliberately weak. Whether what was written is *current* is what
     `luma-foreman apply --check` answers, and duplicating that here would be a
     second implementation of the same comparison. This answers the cruder and
-    more damaging question: has this bundle ever been projected.
+    more damaging question: has this bundle ever been applied.
     """
     claude = repo / "CLAUDE.md"
     if not claude.is_file():

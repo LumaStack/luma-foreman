@@ -16,7 +16,7 @@ USAGE = """usage: luma-foreman <command> [args]
 Commands:
   agent-permissions   what an agent is allowed to do in this repository
   get                 take a bundle from a catalog into this project
-  apply               project what this project adopted into what a harness reads
+  apply               write what this project adopted into what a harness reads
   inspect             check a project against the baseline and report shortfalls
   outdated            which adopted bundles have a newer version published
   init                stand a new project up with the structure it should have had

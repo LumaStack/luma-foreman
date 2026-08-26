@@ -75,9 +75,9 @@ refuses all four by design, and the README already names the conflict — *"whic
 is what keeps this a copy rather than an install."* The nearest real analogue in
 any ecosystem is `go get`, which is called `get`.
 
-**`apply` names the contract that `outfit` left implicit.** Projection is
+**`apply` names the contract that `outfit` left implicit.** Applying is
 idempotent, re-runnable, and produces derived output that is safe to delete —
-which is [[ADR-0001-projection-writes-adapters-not-copies]]. `apply` is the
+which is [[ADR-0001-apply-writes-adapters-not-copies]]. `apply` is the
 terraform and kubectl reading of exactly that: make derived state match declared
 state. It also survives being run repeatedly, which matters because `--check`
 runs in continuous integration.
@@ -134,16 +134,16 @@ without applying*, and this operation applies — it lands the copy and the copy
 gets committed. Re-open if a two-step retrieve-then-land flow ever exists, which
 would give `fetch` something true to name.
 
-**`setup` for projection.** Deferred: it collides with `init`, and it names a
-one-time act. Projection runs after every `get` and in CI. Re-open never on
+**`setup` for what `apply` does.** Deferred: it collides with `init`, and it
+names a one-time act. `apply` runs after every `get` and in CI. Re-open never on
 these grounds; the objection is structural.
 
 **`mount`, `bind`, `link`, `attach`, `connect`.** Deferred as a family. Each
-implies a live relationship maintained over time, and the projection is
+implies a live relationship maintained over time, and what `apply` writes is
 generated files — edit `.luma/` and the output is silently stale until re-run.
-Re-open if projection ever becomes live rather than generated.
+Re-open if the output ever becomes live rather than generated.
 
-**`reapply` for the projection re-run.** Deferred permanently in
+**`reapply` for re-running `apply`.** Deferred permanently in
 [[ADR-0004-refit-is-removed-not-renamed]]: `apply` is idempotent, so `reapply`
 names something `apply` already does.
 
@@ -190,7 +190,7 @@ checkout — which is the normal case when developing a catalog.
 ## Standing consequences
 
 **The generated header is source, not content.** `Regenerate with luma-foreman
-outfit` is emitted by the projection code, so it changes in `outfit.py` and then
+outfit` is emitted by the code behind `apply`, so it changes in `outfit.py` and then
 by regeneration — never by editing `.claude/skills/`.
 
 **Renaming a command is now a two-repository change.** Any bundle that documents
