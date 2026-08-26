@@ -50,6 +50,18 @@ inspect() {
   [ "$got" -eq "$want" ] && ok || bad "$label (exit $got, wanted $want): $LAST"
 }
 
+bundle() {
+  label=$1 want=$2; shift 2
+  LAST=$(cd "$PROJECT" && "$CLI" bundle "$@" 2>&1); got=$?
+  [ "$got" -eq "$want" ] && ok || bad "$label (exit $got, wanted $want): $LAST"
+}
+
+catalog() {
+  label=$1 want=$2; shift 2
+  LAST=$(cd "$PROJECT" && "$CLI" catalog "$@" 2>&1); got=$?
+  [ "$got" -eq "$want" ] && ok || bad "$label (exit $got, wanted $want): $LAST"
+}
+
 # --- a catalog and a project ----------------------------------------------------
 
 CATALOG=$T/catalog
@@ -115,9 +127,13 @@ git -C "$PROJECT" init -q
 VENDORED=$PROJECT/.luma/bundles/acme/widgets
 MANIFEST=$PROJECT/.luma/bundles/adopted.toml
 
-# --- listing --------------------------------------------------------------------
+# --- listing a catalog ----------------------------------------------------------
+# `get --list` is retired: browsing a catalog was never an adoption operation.
 
-get 'list' 0 --list --from "$CATALOG"
+get 'get --list is retired' 2 --list --from "$CATALOG"
+has 'catalog show'
+
+catalog 'catalog show by path' 0 show "$CATALOG"
 has 'acme/widgets'
 has '0.1.0'
 has 'Everything about widgets'
@@ -239,6 +255,45 @@ apply 'block from an older wording' 0
   && ok || bad 'a reworded marker orphaned the old block'
 grepped 'Hand-written and mine' "$PROJECT/CLAUDE.md"
 
+# --- reading the inventory ------------------------------------------------------
+# These read committed state only. Every one must hold with no network, which
+# is what separates them from `bundle outdated`.
+
+bundle 'bundle list' 0 list
+has 'acme/widgets'
+has '0.1.0'
+
+bundle 'bundle show' 0 show acme/widgets
+has 'Everything about widgets'
+has 'source'
+has 'commit'
+bundle 'bundle show resolves a bare name' 0 show widgets
+has 'acme/widgets'
+bundle 'bundle show refuses an unknown name' 2 show acme/nothing
+has 'not adopted'
+
+catalog 'catalog list' 0 list
+has "$CATALOG"
+has '1 catalog(s)'
+
+# A short name is derived from the source, and resolves back to it.
+catalog 'catalog show by short name' 0 show "$(basename "$CATALOG")"
+has 'acme/widgets'
+
+catalog 'unknown verb refused' 2 nonsense
+bundle  'unknown verb refused' 2 nonsense
+
+# An edited copy is reported by `list` without needing a network, and the exit
+# code says so — this is the offline half of what `inspect --rule adoption`
+# turns into a finding.
+printf 'edited\n' >> "$VENDORED/policy/rules.md"
+bundle 'bundle list flags an edit' 1 list
+has 'edited here'
+bundle 'bundle show flags an edit' 1 show acme/widgets
+has 'edited'
+get 'restore the copy' 0 acme/widgets --force --from "$CATALOG"
+bundle 'clean again' 0 list
+
 # --- a skill for a bundle that left ---------------------------------------------
 
 mkdir -p "$PROJECT/.claude/skills/hand-written"
@@ -321,7 +376,7 @@ exists "$PROJECT/.luma/bundles/someone/thing/BUNDLE.md"
 
 outdated() {
   label=$1 want=$2; shift 2
-  LAST=$(cd "$PROJECT" && "$CLI" outdated "$@" 2>&1); got=$?
+  LAST=$(cd "$PROJECT" && "$CLI" bundle outdated "$@" 2>&1); got=$?
   [ "$got" -eq "$want" ] && ok || bad "$label (exit $got, wanted $want): $LAST"
 }
 

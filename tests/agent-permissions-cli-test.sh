@@ -68,6 +68,11 @@ run 'adopt renamed'     1 adopt;     contains 'adopt renamed'     'renamed to: g
 run 'outfit renamed'    1 outfit;    contains 'outfit renamed'    'renamed to: apply'
 run 'bootstrap renamed' 1 bootstrap; contains 'bootstrap renamed' 'renamed to: init'
 run 'refit is gone'     1 refit;     contains 'refit is gone'     'removed, with no replacement'
+run 'outdated moved'    1 outdated;  contains 'outdated moved'    'renamed to: bundle outdated'
+
+# The two read-only nouns. Both default to `list` with no verb.
+run 'bundle help'       0 bundle --help;   contains 'bundle help'  'bundle show <name>'
+run 'catalog help'      0 catalog --help;  contains 'catalog help' 'catalog show <name>'
 
 run 'permissions default'  0 agent-permissions;          contains 'permissions default' 'KEY'
 

@@ -10,17 +10,23 @@ It walks into a project repository, sets it up to succeed, and comes back period
 
 - **Init.** Stand a new project up with the structure it should have had as soon as possible.
 - **Get.** Take a bundle of knowledge from a catalog and make it available in this repository.
-- **Apply.** Project what was adopted so agents use it correctly, so nobody has to say where to look.
+- **Apply.** Write what was taken into what a harness reads, so nobody has to say where to look.
 - **Inspect.** Check a project against the baseline and report where it falls short.
+
+And two nouns that only report:
+
+- **Bundle.** `list` what this project holds, `show` one of them, `outdated` which have moved on.
+- **Catalog.** `list` where knowledge comes from, `show` what one publishes.
 
 ## Knowledge in, agent out
 
 The loop foreman exists for. A catalog publishes bundles, a project takes the ones it wants, and `apply` puts them where an agent will meet them without being told to look.
 
 ```bash
-luma-foreman get --list --from https://github.com/LumaStack/luma-catalog
+luma-foreman catalog show https://github.com/LumaStack/luma-catalog
 luma-foreman get luma/decision-records --from https://github.com/LumaStack/luma-catalog
 luma-foreman apply
+luma-foreman bundle list
 ```
 
 **`get` is a directory copy with a receipt.** The bundle lands in `.luma/bundles/<org>/<name>/` and `adopted.toml` records the version, where it came from, the catalog commit, and a checksum of exactly what landed. Nothing resolves and nothing is fetched later — bundles depend on nothing, which is what keeps this a copy rather than an install. The copy is committed, so a fresh clone with no network reproduces the project exactly.

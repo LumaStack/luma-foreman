@@ -27,9 +27,10 @@ from . import adoption, lkf, project
 
 USAGE = """Take a bundle from a catalog into this project, and record what you took.
 
-  luma-foreman get <bundle>            adopt one — e.g. luma/decision-records
-  luma-foreman get --list              what the catalog offers
+  luma-foreman get <bundle>            take one — e.g. luma/decision-records
   luma-foreman get <bundle> --force    overwrite a copy that was edited here
+
+To see what a catalog publishes: luma-foreman catalog show <name>
 
   --from <catalog>   a path to a catalog checkout, or a git URL. Defaults to
                      [catalog] source in .luma/config/foreman.toml
@@ -344,7 +345,6 @@ def main(argv: list[str]) -> int:
     source: str | None = None
     target: Path | None = None
     force = False
-    as_list = False
     requested: list[str] = []
 
     rest = list(argv)
@@ -354,8 +354,13 @@ def main(argv: list[str]) -> int:
             print(USAGE)
             return 0
         if arg == "--list":
-            as_list = True
-        elif arg == "--force":
+            # Browsing a catalog was never an adoption operation; it lived here
+            # because this was the command that could already reach one.
+            return _err(
+                "--list is gone — browsing a catalog is `luma-foreman catalog "
+                "show <name>`"
+            )
+        if arg == "--force":
             force = True
         elif arg == "--from":
             if not rest:
@@ -382,8 +387,8 @@ def main(argv: list[str]) -> int:
             "in .luma/config/foreman.toml"
         )
 
-    if as_list:
-        return listing(source)
     if len(requested) != 1:
-        return _err("name exactly one bundle (or --list to see what there is)")
+        return _err(
+            "name exactly one bundle (`luma-foreman catalog show <name>` lists them)"
+        )
     return run(requested[0], source, project_root, force)

@@ -97,6 +97,25 @@ def checksum(root: Path) -> str:
     return f"sha256:{outer.hexdigest()}"
 
 
+def state(project: Path, entry: Adopted) -> str:
+    """``ok``, ``edited`` or ``missing`` — what this copy is right now.
+
+    One implementation because two commands ask: `inspect --rule adoption`
+    turns it into findings, and `bundle list` prints it in a column. They
+    disagreeing about what *edited* means is the failure this prevents.
+
+    Answered from committed state alone, so it holds in a bare clone. Whether a
+    *newer* version exists is a different question and needs the network —
+    that is `bundle outdated`.
+    """
+    home = vendored(project, entry.bundle)
+    if not home.is_dir():
+        return "missing"
+    if entry.checksum and checksum(home) != entry.checksum:
+        return "edited"
+    return "ok"
+
+
 def read(project: Path) -> dict[str, Adopted]:
     """Every adopted bundle, keyed by ID. Empty when nothing has been adopted.
 

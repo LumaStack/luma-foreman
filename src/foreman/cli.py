@@ -18,8 +18,10 @@ Commands:
   get                 take a bundle from a catalog into this project
   apply               write what this project adopted into what a harness reads
   inspect             check a project against the baseline and report shortfalls
-  outdated            which adopted bundles have a newer version published
   init                stand a new project up with the structure it should have had
+
+  bundle              what this project holds — list, show, outdated
+  catalog             where it came from — list, show
 
 Run `luma-foreman <command> --help` for a command's own options."""
 
@@ -58,6 +60,7 @@ RENAMED = {
     "adopt": "get",
     "outfit": "apply",
     "bootstrap": "init",
+    "outdated": "bundle outdated",
     "refit": None,
 }
 
@@ -177,10 +180,14 @@ def main(argv: list[str] | None = None) -> int:
         from . import outfit
 
         return outfit.main(argv[1:])
-    if command == "outdated":
-        from . import outdated
+    if command == "bundle":
+        from . import bundle
 
-        return outdated.main(argv[1:])
+        return bundle.main(argv[1:])
+    if command == "catalog":
+        from . import catalog
+
+        return catalog.main(argv[1:])
     if command in UNBUILT:
         print(
             f"luma-foreman: {command} is not built yet — see .luma/backlog/ideas/",
