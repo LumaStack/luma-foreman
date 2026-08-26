@@ -27,7 +27,7 @@ adopters never publish anything.
 
 | | one job | state |
 | --- | --- | --- |
-| **`luma-foreman`** | adopts bundles into a repository and projects them at agents | **working** |
+| **`luma-foreman`** | takes bundles into a repository and writes them where agents read | **working** |
 | **`luma-clarify`** | resolves ambiguity in written requirements | working |
 | **`luma-backlog`** | keeps a project's intended work | working |
 | **`luma-catalog-curator`** | checks a catalog for what only a catalog can see, and reports what it costs | **working** |

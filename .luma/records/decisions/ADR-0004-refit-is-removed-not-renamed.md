@@ -16,7 +16,7 @@ split across three commands, and the split is load-bearing.
 
 ## Problem
 
-`refit` has never been implemented — it prints *not built yet* and exits 2. It
+`refit` was never implemented — it printed *not built yet* and exited 2. It
 survived as a name because it paired with `outfit`: a foreman outfits a crew and
 refits it later.
 
@@ -33,7 +33,7 @@ question anyone asks is what the difference is. There is no answer.
 
 | | answers | needs network |
 | --- | --- | --- |
-| `outdated` | has a newer version been published? | yes |
+| `bundle outdated` | has a newer version been published? | yes |
 | `inspect --rule adoption` | is the copy still what was adopted, and was it applied? | no |
 | `apply --check` | is what was written stale against the bundles? | no |
 
@@ -46,8 +46,8 @@ other names. This is not a capability being dropped — it is a name that outliv
 the argument for it by several months.
 
 **The offline/online split is deliberate and a composite would cross it.**
-`outdated` exists as its own command rather than a flag on `inspect` precisely
-because it needs a network, and `inspect` must survive a bare clone with no
+`bundle outdated` exists as its own command rather than a flag on `inspect`
+precisely because it needs a network, and `inspect` must survive a bare clone with no
 configuration. A single command answering all three questions either requires a
 network — breaking that guarantee — or degrades silently when it has none. The
 project already names the second outcome as the worse one: *an inspection that

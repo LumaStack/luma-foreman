@@ -1,10 +1,10 @@
 ---
 type: bundle
-version: 0.9.0
+version: 0.9.1
 published: 2026-08-26
 consumers: [project, organization]
 entry_point: workflows/adopt-knowledge
-description: Using the luma tools — which one does what, getting them onto a machine, and the adopt-then-project loop that puts knowledge in front of an agent.
+description: Using the luma tools — which one does what, getting them onto a machine, and the get-then-apply loop that puts knowledge in front of an agent.
 ---
 
 # Luma tools
@@ -26,14 +26,15 @@ repository that builds a tool adopts both, everywhere else adopts only this.
 
 **Workflows**
 
-- [[adopt-knowledge]] — the loop that matters: adopt, project, verify.
+- [[adopt-knowledge]] — the loop that matters: get, apply, verify.
 - [[install-the-tools]] — getting an engine onto a machine and wired up.
 
 ## Loading
 
 Two documents are `mandatory` and that is one more than usual. [[adopt-knowledge]]
-earns it because **the failure it prevents is silent**: a project that adopts and
-never projects looks correct from every angle and reaches no agent at all. An
+earns it because **the failure it prevents is silent**: a project that takes a
+bundle and never applies it looks correct from every angle and reaches no agent
+at all. An
 adopter who never reads that workflow finds out months later, or not at all.
 
 [[install-the-tools]] is `optional` deliberately, though it is the first thing
@@ -54,6 +55,18 @@ which is the same gap adoption exists to close, left open in the one place it is
 most embarrassing.
 
 ## Version
+
+`0.9.1` — **the description named two commands that no longer exist.** It
+called this the *adopt-then-project loop*; both words were renamed in 0.9.0 and
+the description was missed. It is now the *get-then-apply loop*.
+
+That line is the one an adopter reads first — it is what `catalog show` prints
+and what a browser would index — so it was the worst remaining place for it.
+*Projected* is also gone from `adopt-knowledge`, where foreman now reports the
+same state as `unapplied`.
+
+Patch: no instruction changed. Every command in this bundle already said `get`
+and `apply`.
 
 `0.9.0` — **the foreman commands were renamed.** `adopt` is now `get` and
 `outfit` is now `apply`. Every command in this bundle is written the new way.

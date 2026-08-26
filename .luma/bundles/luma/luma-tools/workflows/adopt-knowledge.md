@@ -50,7 +50,7 @@ luma-foreman apply
 agent.** `apply` writes a skill per workflow and an index of everything adopted
 into `CLAUDE.md`.
 
-**A bundle adopted and never projected is the failure that reads green from
+**A bundle taken and never applied is the failure that reads green from
 every angle** — the directory is there, the checksum matches, the report is
 clean, and no agent has ever seen it. `inspect` reports it; running `apply`
 prevents it.
