@@ -1,12 +1,12 @@
 ---
 type: decision
-title: Projection writes adapters, never copies of a document
+title: Apply writes adapters, never copies of a document
 decided: 2026-08-23
 lifecycle_status: provisional
 reopen_trigger: A harness appears that cannot follow a file path from a skill body, or measurement shows the extra read costs more than the duplication would.
 ---
 
-# ADR-0001: Projection writes adapters, never copies of a document
+# ADR-0001: Apply writes adapters, never copies of a document
 
 ## Summary
 
@@ -105,7 +105,7 @@ now with a number against it.
 
 ## Follow-up
 
-`preload` levels currently differ only in emphasis once projected this way —
+`preload` levels currently differ only in emphasis once written this way —
 recorded in `.luma/backlog/ideas/preload-levels-collapse-into-emphasis.md`.
 
 **Reporting this number at adopt time** is the cheap version of the same

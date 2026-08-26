@@ -5,19 +5,19 @@
 # passing silently, which is the one failure it exists to prevent.
 
 ["luma/decision-records"]
-version  = "0.7.0"
+version  = "0.8.0"
 source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "ba68146d2e43eb2ee81d2997a6bd1dbddced9843"
-checksum = "sha256:c986f312d3edfc3feb5c1240f57e0bebb53613a835da85686b8b04eace235e1a"
+commit   = "1279c02226798a7d44a02da3add37ae7d933dda4"
+checksum = "sha256:688c4c72ccf78b3ff1a27df5175b6aacb531cd0841f9e136f361d644901fdf2c"
 
 ["luma/luma-maintainers"]
-version  = "0.9.0"
+version  = "0.10.1"
 source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "ba68146d2e43eb2ee81d2997a6bd1dbddced9843"
-checksum = "sha256:e15429bdcd5b06577508fdee1fb8998846b7485b406ad3f48eceec0cb87838d2"
+commit   = "1279c02226798a7d44a02da3add37ae7d933dda4"
+checksum = "sha256:9f70e41ce2654a5b7dbd590caaeb35f427ccd97490fe6a027204c45590d3be1a"
 
 ["luma/luma-tools"]
-version  = "0.7.0"
+version  = "0.9.0"
 source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "ba68146d2e43eb2ee81d2997a6bd1dbddced9843"
-checksum = "sha256:f07da0e1e02af5911a3611f425f658568f59b25adc3d92b2531f579ff089e66c"
+commit   = "1279c02226798a7d44a02da3add37ae7d933dda4"
+checksum = "sha256:aede4d3761284ba1d2969dd625bc4adda7d072a94c20c969964036ad6bb4e9eb"

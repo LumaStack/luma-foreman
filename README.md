@@ -4,7 +4,7 @@
 
 It walks into a project repository, sets it up to succeed, and comes back periodically to check the work still holds.
 
-> **Status:** early. Adoption, projection and inspection work end to end; `init` is still shape.
+> **Status:** early. Getting, applying and inspecting work end to end; `init` is still shape.
 
 ## The foreman commands
 
@@ -15,7 +15,7 @@ It walks into a project repository, sets it up to succeed, and comes back period
 
 ## Knowledge in, agent out
 
-The loop foreman exists for. A catalog publishes bundles, a project adopts the ones it wants, and the projection puts them where an agent will meet them without being told to look.
+The loop foreman exists for. A catalog publishes bundles, a project takes the ones it wants, and `apply` puts them where an agent will meet them without being told to look.
 
 ```bash
 luma-foreman get --list --from https://github.com/LumaStack/luma-catalog
@@ -46,7 +46,7 @@ luma-foreman agent-permissions doctor          # ...and confirm it is actually w
 - **identity** — personal information published through git: machine-derived author identities, malformed addresses, home directory paths in tracked content.
 - **secrets** — provider-issued credentials in tracked content, and files that normally hold them. Findings never contain the secret itself, because findings end up in continuous integration logs.
 - **bundles** — bundles broken in ways nothing else notices: a dangling link, an unquoted wikilink in frontmatter, a template carrying live frontmatter. All three are conformant, so the bundle publishes cleanly and the defect travels.
-- **adoption** — an adopted bundle that is no longer what was adopted: edited in place, missing from disk, or adopted and projected nowhere. The last one reads green from every angle while the project quietly carries rules no agent has seen.
+- **adoption** — an adopted bundle that is no longer what was adopted: edited in place, missing from disk, or adopted and never written anywhere an agent reads. The last one reads green from every angle while the project quietly carries rules no agent has seen.
 
 ```bash
 luma-foreman inspect                # 0 nothing found, 1 findings, 2 could not run

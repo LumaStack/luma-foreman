@@ -34,8 +34,8 @@ question anyone asks is what the difference is. There is no answer.
 | | answers | needs network |
 | --- | --- | --- |
 | `outdated` | has a newer version been published? | yes |
-| `inspect --rule adoption` | is the copy still what was adopted, and is it projected? | no |
-| `apply --check` | is the projection stale against the bundles? | no |
+| `inspect --rule adoption` | is the copy still what was adopted, and was it applied? | no |
+| `apply --check` | is what was written stale against the bundles? | no |
 
 ## Why
 
@@ -67,7 +67,7 @@ command that has only ever exited 2.
 
 **`reapply`.** Deferred, and hard to see re-opening: it would require `apply` to
 stop being idempotent, which is
-[[ADR-0001-projection-writes-adapters-not-copies]] reversed.
+[[ADR-0001-apply-writes-adapters-not-copies]] reversed.
 
 **A composite `status`.** Deferred, and the likeliest to return. Re-open when
 running three commands is genuinely the friction rather than a theoretical one.

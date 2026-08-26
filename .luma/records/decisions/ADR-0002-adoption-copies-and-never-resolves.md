@@ -53,7 +53,7 @@ being handed to somebody on a plane.
 **The checksum is what makes adoption mean anything.** Without it this is a copy
 with a comment attached, and a locally edited bundle is indistinguishable from
 an untouched one. With it, the three failure states are all detectable — edited,
-missing, and projected nowhere.
+missing, and never written anywhere an agent reads.
 
 **Refusing to overwrite an edit is not politeness.** The edit is somebody's work
 and the next `adopt` is where it would silently disappear, along with any chance

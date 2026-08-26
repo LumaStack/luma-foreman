@@ -1,7 +1,7 @@
 ---
 type: bundle
-version: 0.7.0
-published: 2026-08-25
+version: 0.9.0
+published: 2026-08-26
 consumers: [project, organization]
 entry_point: workflows/adopt-knowledge
 description: Using the luma tools — which one does what, getting them onto a machine, and the adopt-then-project loop that puts knowledge in front of an agent.
@@ -54,6 +54,27 @@ which is the same gap adoption exists to close, left open in the one place it is
 most embarrassing.
 
 ## Version
+
+`0.9.0` — **the foreman commands were renamed.** `adopt` is now `get` and
+`outfit` is now `apply`. Every command in this bundle is written the new way.
+
+**The old names are a hard error, not an alias.** `luma-foreman adopt` prints
+`unknown command: adopt (renamed to: get)` and exits 1. Aliasing them would have
+let this bundle keep working while still being wrong, which is exactly the
+pressure that gets text like this corrected.
+
+Breaking, which below 1.0 the minor position carries: following this text needs
+`luma-foreman` at or past the rename. An older engine rejects every command
+here, and the error names the replacement rather than leaving you guessing.
+
+`0.8.0` — **what to do when a generated file conflicts.** Two branches that
+both adopted something will both have rewritten `CLAUDE.md`, the skills and
+`routing.toml`. Resolving that by hand produces a file that is wrong in a way
+nothing reports, and the next `outfit` discards it — so the answer is always to
+re-run the tool rather than to merge its output.
+
+Minor: an adopter following the old text was not told what to do at the one
+moment it matters.
 
 `0.7.0` — **`applies_to` is now `matches`.** The old name obliged an author to
 write a false sentence: `applies_to: everything` claims a rule governs
