@@ -180,9 +180,9 @@ has 'has been edited here'
 grepped 'local edit' "$VENDORED/policy/widget-rules.md"
 
 get 'force overwrites' 0 acme/widgets --force --from "$CATALOG"
-# --force at the same version is a re-adoption. Reporting it as an upgrade
+# --force at the same version re-copies. Reporting it as an upgrade
 # would claim a version change that did not happen.
-has 're-adopted'
+has 'took 0.1.0 again'
 lacks '-> '
 grep -q 'local edit' "$VENDORED/policy/widget-rules.md" \
   && bad 'force should have discarded the edit' || ok

@@ -110,7 +110,7 @@ That is not a new principle. It is the existing rule that *unimplemented is not
 absent* — written there about tools meeting a `luma-invoke:` they cannot act
 on — applied one layer over.
 
-### The best version of "loudly" is at adopt time, not run time
+### The best version of "loudly" is at `get` time, not run time
 
 Everything is vendored. When both bundles sit in `.luma/bundles/`, **every
 declared call can be checked against every declared routine without running

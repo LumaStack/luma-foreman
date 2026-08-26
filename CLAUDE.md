@@ -39,6 +39,6 @@ In `.luma/bundles/luma/luma-tools/` — **open one when the work matches its lin
 - `workflows/adopt-knowledge` (workflow) — Take bundles from a catalog into a repository and make an agent aware of them. Use when setting a project up, when adding a capability, or when an agent keeps needing to be told where to look.
 - `workflows/install-the-tools` (workflow) — Get foreman onto a machine and wired into a harness. Use on a new workstation, after an upgrade, or when a permission gate is not firing.
 
-Workflows here are also installed as skills, so they can be invoked by name. Everything under `.luma/bundles/` is a copy — change it upstream and re-adopt, never in place.
+Workflows here are also installed as skills, so they can be invoked by name. Everything under `.luma/bundles/` is a copy — change it upstream and take it again, never in place.
 
 <!-- luma:end -->

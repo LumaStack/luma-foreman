@@ -8,7 +8,7 @@ Three states, and the third is the one nothing else would ever surface:
 
 | | |
 | --- | --- |
-| **edited** | somebody changed the vendored copy. Their change dies at the next adopt, and upstream never hears about it |
+| **edited** | somebody changed the vendored copy. Their change dies at the next `get`, and upstream never hears about it |
 | **missing** | the record says a bundle is here and it is not. Every link into it is broken |
 | **unapplied** | the bundle is present, unedited, and **no agent has ever seen it** — taken, and routed nowhere |
 
@@ -86,7 +86,7 @@ def check(repo: Path) -> Result:
             "high",
             f"{len(edited)} adopted bundle(s) have been edited in place",
             edited,
-            "An adopted bundle is a copy — the next adopt overwrites it and the "
+            "An adopted bundle is a copy — the next `get` overwrites it and the "
             "change is gone, and upstream never learns anybody wanted it. Move "
             "the change into your own namespace, or propose it to the catalog "
             "the bundle came from.",

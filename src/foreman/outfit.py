@@ -407,7 +407,7 @@ def _index(bundles: list[Bundle], project_root: Path) -> str:
     lines += [
         "Workflows here are also installed as skills, so they can be invoked by "
         "name. Everything under `.luma/bundles/` is a copy — change it upstream "
-        "and re-adopt, never in place.",
+        "and take it again, never in place.",
         "",
         END,
     ]

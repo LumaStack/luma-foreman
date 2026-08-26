@@ -3,7 +3,7 @@ type: decision
 title: Adoption copies a directory and never resolves anything
 decided: 2026-08-23
 lifecycle_status: provisional
-reopen_trigger: Bundle dependencies are adopted as a design, at which point something has to decide what a bundle's declared needs mean at adopt time.
+reopen_trigger: Bundle dependencies are adopted as a design, at which point something has to decide what a bundle's declared needs mean at `get` time.
 ---
 
 # ADR-0002: Adoption copies a directory and never resolves anything
@@ -56,7 +56,7 @@ an untouched one. With it, the three failure states are all detectable — edite
 missing, and never written anywhere an agent reads.
 
 **Refusing to overwrite an edit is not politeness.** The edit is somebody's work
-and the next `adopt` is where it would silently disappear, along with any chance
+and the next `get` is where it would silently disappear, along with any chance
 of it reaching upstream.
 
 ## Alternatives
