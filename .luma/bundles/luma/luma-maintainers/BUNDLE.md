@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.10.1
+version: 0.10.2
 published: 2026-08-26
 consumers: [organization]
 entry_point: policy/the-estate
@@ -63,6 +63,13 @@ no sensible project-level reading of *how the luma estate is maintained* —
 adopting it into a project would be adopting somebody else's internals.
 
 ## Version
+
+`0.10.2` — **`the-estate` described foreman as "adoption, projection,
+inspection."** Two of those three are no longer words the tool uses. It now
+says *getting, applying, inspecting*, which are the commands.
+
+Patch: one cell of one table. The `## Version` history below still says
+*projection* and is left alone — it records what was true when written.
 
 `0.10.1` — **`adopt` is now `get` and `outfit` is now `apply`**, where
 `the-estate` and `publish-to-the-catalog` mention them in passing.

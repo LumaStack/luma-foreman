@@ -17,7 +17,7 @@ day and expensive later.
 | **`luma-knowledge-format`** | the specification | documents, bundles, types. **Nothing about distribution** |
 | **`luma-catalog`** | the universal catalog | published bundles. **No executable code** |
 | **`luma-leader`** | the organization's headquarters | decisions, design drafts, cross-project reasoning |
-| **`luma-foreman`** | the project-side engine | adoption, projection, inspection |
+| **`luma-foreman`** | the project-side engine | getting, applying, inspecting |
 | **`luma-clarify`** | ambiguity in written requirements | its own domain entirely |
 | **`luma-backlog`** | intended work | its own domain entirely |
 

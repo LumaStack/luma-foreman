@@ -4,7 +4,7 @@
 
 Everything below is vendored under `.luma/bundles/` and is part of this repository.
 
-### `luma/decision-records` 0.8.0
+### `luma/decision-records` 0.9.0
 
 Decisions recorded with their reasoning, deferred alternatives, and re-open triggers. Spent decisions are archived rather than deleted.
 
@@ -17,7 +17,7 @@ In `.luma/bundles/luma/decision-records/` — **open one when the work matches i
 - `workflows/prune-archived-decisions` (workflow) — Permanently remove decision records that have been archived longer than the retention period. Only reaches `archived/`, never a live decision. Rarely the right call.
 - `workflows/record-decision` (workflow) — Find or establish where this project keeps decisions, then write one. Use when a position is settled, when an irreversible change is proposed, or when asked where decisions live.
 
-### `luma/luma-maintainers` 0.10.1
+### `luma/luma-maintainers` 0.10.2
 
 Working on the luma tools themselves — the repositories and the boundary each defends, publishing to the universal catalog, and changing a type without making every tool upgrade at once.
 

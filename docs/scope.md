@@ -1,68 +1,68 @@
 # What foreman does
 
-**Working document.** The README's *four jobs* — bootstrap, outfit, inspect,
-refit — were written before the catalog existed, and each was defined by
-*knowing* something the catalog now knows. This is the replacement being
-assembled. It is a list, not a design.
+**The catalog holds the knowledge; foreman holds the mechanics.** Moving
+knowledge to where it is needed, writing it where an agent will meet it, and
+verifying it stayed true. Everything a bundle *knows* — the layout a project
+should have, what tooling to install, what the baseline is — belongs to the
+catalog, and foreman is what carries it and checks it landed.
 
-## Why the four jobs went stale
+This is a working document. It says what is built, what is not, and what each
+unbuilt thing would cost.
 
-| the job assumed | now lives in |
+## What works
+
+| | |
 | --- | --- |
-| bootstrap knows the structure a project should have | `luma-layout` |
-| outfit knows what tooling to install | `git-workflow`, `github-release`, `git-secrets` |
-| inspect knows the baseline | every policy bundle |
-| refit knows the latest learnings | `audit-records`, `versioning` |
+| `init` | `.luma/PROJECT.md` and `records/`, and nothing that has no contents yet |
+| `get` | vendoring a bundle into `.luma/bundles/`, with version, origin, catalog commit and checksum in `adopted.toml` |
+| `apply` | a thin skill per workflow, and an index of everything adopted in a managed block in `CLAUDE.md` |
+| `inspect` | identity, secrets, bundle structure, adoption drift |
+| `bundle`, `catalog` | reading the inventory and where it came from |
+| `agent-permissions` | the per-repository permission gate |
 
-The catalog took the **knowledge**. What is left for foreman is the
-**mechanics** — moving knowledge to where it is needed, and verifying it stayed
-true.
+**`agent-permissions` is unrelated to all of the above.** It shares no machinery
+with adoption and would function identically if bundles had never existed. It is
+in the same binary because it is the same operator working on the same
+repository, not because the two are one system.
 
-## The list
+## What is not built
 
 ### Distribution
 
-- Move knowledge to where it is needed.
-- Verify it stayed true.
 - **Resolve dependencies** between bundles.
 - Share workflows, scripts and assets — not only skills, and **knowledge that is
   not a skill at all**.
 - Be **independent of Claude Code**. Work for most agentic AI.
 
-*No verb for adoption appears anywhere in the original four jobs. Fetching a
-bundle, vendoring it, and recording its version and checksum is the connective
-tissue for most of this list.*
+### Writing it out
 
-### Projection
-
-- **Load and unload skills** — possibly by symlink, possibly another mechanism.
+- Select *at write time* which subset of adopted content is written — including
+  by symlink. Unbuilt because nothing yet decides the subset.
+- **Load and unload skills.**
 - Hook universal workflows into each agent **via that agent's own adapter
   pattern**, so they trigger natively rather than through a shim.
-- **Map mandated policy into `CLAUDE.md`, `AGENTS.md` or whatever a harness
-  reads, so policy cannot go unread or ignored.**
 - **Load and unload hooks.**
 - Adopt frontmatter that lets tooling enforce governance.
 
 ### Routing
 
-- Resolve what gets loaded into context **based on a scenario or situation** —
-  something like real-time symlinks.
+- Resolve what gets loaded into context **based on a scenario or situation**.
 - Resolve **progressive disclosure routing**, and pull knowledge from external
   sources at the right time.
 - Help with **token optimization and token management strategies**.
 
 *Routing is the mechanism; token management is the objective. It is also the
-only item on this list with a hard success metric — you can count tokens, where
-"is this project in compliance" needs a judgement. That makes it the easiest
-thing here to know you got right, and worth building against a measured baseline
-rather than an intuition.*
+only item here with a hard success metric — you can count tokens, where "is this
+project in compliance" needs a judgement. That makes it the easiest thing to
+know you got right, and worth building against a measured baseline rather than
+an intuition.*
 
 *Three things already point at it and were not framed this way. `preload:
 mandatory` is a context budget decision wearing an obligation's clothes.
-Selecting what to project is the largest available saving. And the compact-plus-
-full split — every rule with a one-clause reason, the full argument deferred —
-was deferred for want of evidence that context was tight. Measurement is that
-evidence.*
+Selecting what to write out is the largest available saving. And the
+compact-plus-full split — every rule with a one-clause reason, the full argument
+deferred — was deferred for want of evidence that context was tight.
+Measurement is that evidence.*
 
 ### Verification
 
@@ -75,98 +75,42 @@ evidence.*
 ### Feedback
 
 - **Alert people when things do not work.**
-- Provide ways the system can **learn and improve**.
-
-### Already built
-
-- **`adopt`** — vendoring a bundle into `.luma/bundles/`, with version, origin,
-  catalog commit and checksum in `adopted.toml`. **2026-08-23.**
-- **`outfit`** — the projection: a thin skill per workflow, and an index of
-  everything adopted in a managed block in `CLAUDE.md`. **2026-08-23.**
-- **`inspect`** — identity, secrets, bundle structure, and adoption drift.
-  Working.
-- **`agent-permissions`** — the per-repository permission gate. Working, and
-  unrelated to all of the above: it shares no machinery with any of it and would
-  function identically if bundles had never existed. *Renamed from `policy`; see
-  below.*
-
-## `luma-foreman policy` was renamed to `agent-permissions`
-
-`policy` became an LKF built-in type at `v0.0.9` — *a course of action adopted*,
-kept as standing context. The command means something else entirely: which tool
-calls an agent may make in this repository.
-
-Two meanings of one word in one ecosystem, and they are close enough to be
-mistaken for each other. *"Where is the policy?"* now has two correct answers —
-`.luma/bundles/*/policy/` and `luma-foreman policy path` — and an agent asked to
-"check the policy" cannot tell which is meant.
-
-This is the same tax already refused twice: `standard` meaning one thing at the
-organization level and another inside a bundle, and `store` meaning too many
-things to survive as a noun.
-
-**Candidates.** `permissions` is what Claude Code itself calls this — the
-settings key is `permissions.deny` — and it reads naturally: `luma-foreman
-permissions allow curl`. `gate` is shorter and already the word the codebase
-uses throughout, but it names the **mechanism** rather than the thing: you set
-permissions, and the gate enforces them. That distinction is worth keeping, and
-it means the installed hook stays `permission-gate.sh` either way.
-
-**Done 2026-08-19.** The cost was real and paid deliberately. This is the one
-command that ships and works. The rename touches the CLI, the docs, the test
-suites, and — easy to miss — the `CLI_WRITE` and `CLI_INVOCATION` patterns in
-`agent_permissions/match.py`, which recognise a `luma-foreman policy` invocation in order
-to gate it. **A regex that no longer matches the command's name fails open**,
-silently, which is the failure this whole subsystem exists to prevent.
-
-The gating tests were written **before** the rename so they failed first —
-eight of them did, proving the pattern would have silently stopped matching. A
-`policy.toml` left by the old name is still read when `permissions.toml` is
-absent, because a permission file that quietly stops being read fails open too.
+- Provide ways the system can **learn and improve.**
 
 ## What each of these costs
 
 Honest annotations, so the list is not read as a plan.
 
-**Buildable now, nothing external needed.** ~~Adoption and vendoring. Checksum
-drift. Projecting a workflow to `SKILL.md`. Projecting policy into whatever a
-harness reads.~~ **All four done, 2026-08-23.** What remains on this line is
-selecting *at projection time* which subset of adopted content is written out —
-including by symlink — which is unbuilt because nothing yet decides the subset.
-
-**Needs cooperation that does not exist.** Loading and unloading **mid-session**.
-Agent Skills' progressive disclosure loads every skill's name and description at
-startup and the body on description match; there is no hook for *conditions
-changed, drop these*. Projection-time selection gets most of the value; runtime
-swapping does not currently have a mechanism in any harness.
+**Needs cooperation that does not exist.** Loading and unloading
+**mid-session**. Agent Skills' progressive disclosure loads every skill's name
+and description at startup and the body on description match; there is no hook
+for *conditions changed, drop these*. Selecting at write time gets most of the
+value; runtime swapping has no mechanism in any harness.
 
 **Needs a decision, and adoption is what will settle it.**
 
 - *Do the standards used to build luma tooling live outside luma tooling?*
-  Foreman now adopts `luma/decision-records` and records its own decisions
-  through a bundle it took from the catalog. If its release process, its
-  versioning rules and its prose conventions go the same way, foreman is a
-  consumer of the catalog it was built to serve. **Elegant, or a permanent
-  headache for whoever maintains both ends?** Nobody knows yet, and the way to
-  find out is to keep adopting until it either stops being convenient or does
-  not.
+  Foreman adopts `luma/decision-records` and records its own decisions through a
+  bundle it took from the catalog. If its release process, its versioning rules
+  and its prose conventions go the same way, foreman is a consumer of the
+  catalog it was built to serve. **Elegant, or a permanent headache for whoever
+  maintains both ends?** Nobody knows yet, and the way to find out is to keep
+  adopting until it either stops being convenient or does not.
 - *Will anything ship natively in foreman, or is everything fetched?* The same
   question from the other side, and it decides whether logging is a bundle.
 
-*Both were carried in `docs/next-steps.md` until that document was consumed.
-They are unanswered, not abandoned.*
-
 **Needs a decision before it can be built.**
 
-- *Routing:* prose an agent follows, or data a tool evaluates. If `outfit` must
+- *Routing:* prose an agent follows, or data a tool evaluates. If `apply` must
   evaluate a router to decide what to write, it has to be **data** — a tool
   cannot follow prose — which means designing the condition language there are
   good reasons to be wary of.
-- *Dependencies:* this **reverses a settled decision**. For content, resolution
-  is more dangerous than for code: two versions of a library conflict and
-  something crashes, two versions of a policy conflict and nothing happens.
-  Declare and **detect**, rather than solve, keeps real dependencies without a
-  solver — and keeps conflicts visible instead of silently reconciled.
+- *Dependencies:* this **reverses a settled decision** — ADR-0002, *adoption
+  copies a directory and never resolves anything*. For content, resolution is
+  more dangerous than for code: two versions of a library conflict and something
+  crashes, two versions of a policy conflict and nothing happens. Declare and
+  **detect**, rather than solve, keeps real dependencies without a solver — and
+  keeps conflicts visible instead of silently reconciled.
 - *Zero dependencies:* the README promises no build step and nothing to install.
   Semver range resolution is not worth hand-rolling. That promise probably
   cannot survive dependency resolution.
@@ -181,22 +125,27 @@ They are unanswered, not abandoned.*
   writing configuration it invented, which puts it back to knowing things. They
   may be bundles carrying config that adoption copies.
 
-## A failure that selection creates
+## A regex that stops matching a command name fails open
 
-Once foreman chooses what to project, **what is adopted and what is in context
-diverge deliberately**. That is a third drift state beside *edited locally* and
-*outdated*, and the one that looks fine from every angle: the bundle is present,
-the checksum matches, and no agent has ever seen it.
+`agent_permissions/match.py` carries `CLI_WRITE` and `CLI_INVOCATION`, which
+recognise a `luma-foreman agent-permissions` invocation **in order to gate it**.
+Rename or restructure that command and the patterns stop matching — silently,
+and in the permissive direction. The subsystem exists to prevent exactly that.
 
-`inspect` should be able to answer *what did I adopt that is routed to nothing*,
-or a project quietly carries rules nobody reads.
+**Write the gating test before the change, so it fails first.** Anything that
+reads a command's own name to decide whether to gate it is in this category, and
+the failure never announces itself.
+
+The same shape applies to the config file: a `policy.toml` left by an older name
+is still read when `permissions.toml` is absent, because a permission file that
+quietly stops being read fails open too.
 
 ## What the ecosystem already solved
 
 Worth knowing before building any of it.
 
 - **`SKILL.md` is an open standard** read by 40+ agents. Skill distribution is
-  solved; do not compete on it. One projection to the standard, not adapters per
+  solved; do not compete on it. One output to the standard, not adapters per
   harness — adapters are only needed for **hooks**, which have no standard.
 - **Claude Code plugins** are a real package manager: semver, plugin-to-plugin
   dependencies with ranges, git sources pinned to tags resolved to SHAs, frozen
