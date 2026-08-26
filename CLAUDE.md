@@ -28,9 +28,9 @@ In `.luma/bundles/luma/luma-maintainers/` — **open one when the work matches i
 - `workflows/change-a-shared-type` (workflow) — Alter a shared type without making every tool upgrade at once. Use before touching anything in luma/luma-types, or any type a second consumer already reads.
 - `workflows/publish-to-the-catalog` (workflow) — Add or change a bundle in luma-catalog and get the version honest. Use when promoting something out of a project, or changing anything already published.
 
-### `luma/luma-tools` 0.9.0
+### `luma/luma-tools` 0.9.1
 
-Using the luma tools — which one does what, getting them onto a machine, and the adopt-then-project loop that puts knowledge in front of an agent.
+Using the luma tools — which one does what, getting them onto a machine, and the get-then-apply loop that puts knowledge in front of an agent.
 
 In `.luma/bundles/luma/luma-tools/` — **open one when the work matches its line**, and not before:
 

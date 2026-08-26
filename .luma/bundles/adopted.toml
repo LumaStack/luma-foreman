@@ -17,7 +17,7 @@ commit   = "1279c02226798a7d44a02da3add37ae7d933dda4"
 checksum = "sha256:9f70e41ce2654a5b7dbd590caaeb35f427ccd97490fe6a027204c45590d3be1a"
 
 ["luma/luma-tools"]
-version  = "0.9.0"
+version  = "0.9.1"
 source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "1279c02226798a7d44a02da3add37ae7d933dda4"
-checksum = "sha256:aede4d3761284ba1d2969dd625bc4adda7d072a94c20c969964036ad6bb4e9eb"
+commit   = "ea7c1b064daf63881a60ab5bf0218de90ccd4e44"
+checksum = "sha256:ad1819b12391c3acba963ef20845cdaf5b66d2a896cfcd1943b836fccd5790f2"
