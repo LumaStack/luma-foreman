@@ -1,7 +1,7 @@
 ---
 type: bundle
-version: 0.8.0
-published: 2026-08-25
+version: 0.9.0
+published: 2026-08-26
 consumers: [project, organization]
 entry_point: workflows/record-decision
 description: Decisions recorded with their reasoning, deferred alternatives, and re-open triggers. Spent decisions are archived rather than deleted.
@@ -128,6 +128,42 @@ different reason: they are read when something needs to know what a field means,
 not held in context against the possibility.
 
 ## Version
+
+`0.9.0` — **nothing promotes itself.** `decision-guidelines` said to record
+something *"as a `draft`, or as `provisional` the moment you start acting on
+it"* — two options, no gate, and the second fired by itself. A record now stays
+`draft` until its owner promotes it, and using one never promotes it.
+
+**The automatic trigger had no owner.** *Starting to act on it* has no moment
+and no author, so nothing about it could be disagreed with. Every other
+transition on the ladder is somebody's choice.
+
+**It also contradicted what `provisional` means** — *decided and in force, but
+on trial*. If reaching the trial required promoting first, a draft could never
+be tried, and the rung collapsed into *not written up properly yet*.
+
+**Promotion now means reading the record again.** A record written before the
+work describes an intention; by the time it is in force the thing exists and can
+be compared against it. Correct what drifted in the same commit, because
+promoting a record that misdescribes what it governs is worse than leaving it in
+`draft`.
+
+**And the notice survives the trigger.** A draft that has gone into use probably
+should be promoted — say so, twice if it lingers, and change nothing. A
+time-based nudge is legitimate where a time-based permission is not.
+
+*And citing a draft is now discouraged rather than merely described.* The old
+text said of `draft` that *nothing is citing it*, as an observation. It is a
+rule now: the position under that number can still move, freely and in place,
+with no supersession and nothing in the history to show it did. What makes
+rewriting a draft safe is that nothing is **binding** — which is the same reason
+nothing should be pointing at it yet. Where something does, that is a promotion
+request: promote the record, or drop the citation, but do not leave a live
+citation against a position still free to move.
+
+Breaking, which below 1.0 the minor position carries: an author who followed the
+old text and set `provisional` on starting work was doing the right thing and is
+now doing the wrong one.
 
 `0.8.0` — **the Loading section described a field the format removed.** It
 called `record-decision` `preload: mandatory`, graded `decision-guidelines`

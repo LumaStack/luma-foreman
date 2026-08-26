@@ -39,11 +39,11 @@ question anyone asks is what the difference is. There is no answer.
 
 ## Why
 
-**`docs/scope.md` already retired it.** It is row four of *Why the four jobs went
-stale*: refit was defined by *knowing the latest learnings*, and the catalog took
-that knowledge. What remained was mechanics, and the mechanics got built under
-other names. This is not a capability being dropped — it is a name that outlived
-the argument for it by several months.
+**Its knowledge moved to the catalog, and only the name stayed.** `refit` was
+defined by *knowing the latest learnings* — and knowing things is what the
+catalog took. What remained was mechanics, and the mechanics got built under
+other names. This is not a capability being dropped; it is a name that outlived
+the argument for it.
 
 **The offline/online split is deliberate and a composite would cross it.**
 `bundle outdated` exists as its own command rather than a flag on `inspect`
