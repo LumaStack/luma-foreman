@@ -147,8 +147,8 @@ def main(argv: list[str]) -> int:
     if behind:
         print(f"{len(behind)} of {len(rows)} adopted bundle(s) are behind.")
         print()
-        print("  luma-foreman adopt <bundle>     take the newer version")
-        print("  luma-foreman outfit             then reproject")
+        print("  luma-foreman get <bundle>     take the newer version")
+        print("  luma-foreman apply             then reproject")
         print()
         print(
             "**Read what changed before taking it.** For prose a two-character\n"

@@ -3,7 +3,7 @@ name: adopt-knowledge
 description: Take bundles from a catalog into a repository and make an agent aware of them. Use when setting a project up, when adding a capability, or when an agent keeps needing to be told where to look.
 ---
 
-<!-- luma-foreman:generated from luma/luma-tools workflows/adopt-knowledge. Regenerate with `luma-foreman outfit`; edits are lost. -->
+<!-- luma-foreman:generated from luma/luma-tools workflows/adopt-knowledge. Regenerate with `luma-foreman apply`; edits are lost. -->
 
 # Adopt knowledge into a project
 

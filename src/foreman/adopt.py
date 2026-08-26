@@ -27,9 +27,9 @@ from . import adoption, lkf, project
 
 USAGE = """Take a bundle from a catalog into this project, and record what you took.
 
-  luma-foreman adopt <bundle>            adopt one — e.g. luma/decision-records
-  luma-foreman adopt --list              what the catalog offers
-  luma-foreman adopt <bundle> --force    overwrite a copy that exists or was edited
+  luma-foreman get <bundle>            adopt one — e.g. luma/decision-records
+  luma-foreman get --list              what the catalog offers
+  luma-foreman get <bundle> --force    overwrite a copy that was edited here
 
   --from <catalog>   a path to a catalog checkout, or a git URL. Defaults to
                      [catalog] source in .luma/config/foreman.toml
@@ -45,7 +45,7 @@ URL = re.compile(r"^(https?://|git@|ssh://|git://)")
 
 
 def _err(message: str) -> int:
-    print(f"luma-foreman adopt: {message}", file=sys.stderr)
+    print(f"luma-foreman get: {message}", file=sys.stderr)
     return 2
 
 
@@ -303,12 +303,12 @@ def run(
         )
     print()
     print("  Commit the copy — an adopted bundle lives in the repository.")
-    print("  Then: luma-foreman outfit")
+    print("  Then: luma-foreman apply")
     return 0
 
 
 def _refuse(summary: str, remedy: str) -> int:
-    print(f"luma-foreman adopt: {summary}", file=sys.stderr)
+    print(f"luma-foreman get: {summary}", file=sys.stderr)
     print(f"  {remedy}", file=sys.stderr)
     return 1
 
@@ -334,7 +334,7 @@ def listing(source: str) -> int:
         print()
         print(
             "  This catalog declares no namespace, so a bundle here has no full\n"
-            "  name. Adopt with an explicit one: luma-foreman adopt <namespace>/"
+            "  name. Adopt with an explicit one: luma-foreman get <namespace>/"
             f"{names[0]}"
         )
     return 0

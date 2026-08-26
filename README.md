@@ -9,8 +9,8 @@ It walks into a project repository, sets it up to succeed, and comes back period
 ## The foreman commands
 
 - **Init.** Stand a new project up with the structure it should have had as soon as possible.
-- **Adopt.** Adopt a bundle of knowledge from a catalog and make it available in this repository.
-- **Outfit.** Wire up what was adopted so agents use it correctly, so nobody has to say where to look.
+- **Get.** Take a bundle of knowledge from a catalog and make it available in this repository.
+- **Apply.** Project what was adopted so agents use it correctly, so nobody has to say where to look.
 - **Inspect.** Check a project against the baseline and report where it falls short.
 
 ## Knowledge in, agent out
@@ -18,16 +18,16 @@ It walks into a project repository, sets it up to succeed, and comes back period
 The loop foreman exists for. A catalog publishes bundles, a project adopts the ones it wants, and the projection puts them where an agent will meet them without being told to look.
 
 ```bash
-luma-foreman adopt --list --from https://github.com/LumaStack/luma-catalog
-luma-foreman adopt luma/decision-records --from https://github.com/LumaStack/luma-catalog
-luma-foreman outfit
+luma-foreman get --list --from https://github.com/LumaStack/luma-catalog
+luma-foreman get luma/decision-records --from https://github.com/LumaStack/luma-catalog
+luma-foreman apply
 ```
 
-**`adopt` is a directory copy with a receipt.** The bundle lands in `.luma/bundles/<org>/<name>/` and `adopted.toml` records the version, where it came from, the catalog commit, and a checksum of exactly what landed. Nothing resolves and nothing is fetched later — bundles depend on nothing, which is what keeps this a copy rather than an install. The copy is committed, so a fresh clone with no network reproduces the project exactly.
+**`get` is a directory copy with a receipt.** The bundle lands in `.luma/bundles/<org>/<name>/` and `adopted.toml` records the version, where it came from, the catalog commit, and a checksum of exactly what landed. Nothing resolves and nothing is fetched later — bundles depend on nothing, which is what keeps this a copy rather than an install. The copy is committed, so a fresh clone with no network reproduces the project exactly.
 
 An edited copy is never silently overwritten, and a bundle with no version cannot be adopted at all.
 
-**`outfit` writes thin adapters, never copies.** Each workflow becomes a Claude Code skill that points at the real document under `.luma/` and names the standing context that document assumes. A managed block in `CLAUDE.md` indexes everything adopted, with `preload: mandatory` documents hoisted into a *read these first* section — load the index, never the content.
+**`apply` writes thin adapters, never copies.** Each workflow becomes a Claude Code skill that points at the real document under `.luma/` and names the standing context that document assumes. A managed block in `CLAUDE.md` indexes everything adopted, with `preload: mandatory` documents hoisted into a *read these first* section — load the index, never the content.
 
 Everything it writes is generated and disposable: commit it or gitignore it, but regenerate rather than edit. Only the region between the `luma:begin` and `luma:end` markers in `CLAUDE.md` is touched, so a hand-written file keeps the rest.
 
@@ -120,7 +120,7 @@ The last row is the awkward one, and it earns its place: some per-project decisi
 
 **Inspect** is the command that must survive a bare environment — fresh clone, no configuration, no organization access, exit codes, continuous integration. It is the one that has to hold the line.
 
-**Init** and **Outfit** are workstation operations. They change a repository, they expect an operator, and they may use workstation state to do it. Requiring them to run in continuous integration was never the point and would buy nothing.
+**Init** and **Apply** are workstation operations. They change a repository, they expect an operator, and they may use workstation state to do it. Requiring them to run in continuous integration was never the point and would buy nothing.
 
 ## Relationship to luma-leader
 

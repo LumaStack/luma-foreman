@@ -3,7 +3,7 @@ name: install-the-tools
 description: Get foreman onto a machine and wired into a harness. Use on a new workstation, after an upgrade, or when a permission gate is not firing.
 ---
 
-<!-- luma-foreman:generated from luma/luma-tools workflows/install-the-tools. Regenerate with `luma-foreman outfit`; edits are lost. -->
+<!-- luma-foreman:generated from luma/luma-tools workflows/install-the-tools. Regenerate with `luma-foreman apply`; edits are lost. -->
 
 # Install the luma tools
 

@@ -3,7 +3,7 @@ name: prune-archived-decisions
 description: Permanently remove decision records that have been archived longer than the retention period. Only reaches `archived/`, never a live decision. Rarely the right call.
 ---
 
-<!-- luma-foreman:generated from luma/decision-records workflows/prune-archived-decisions. Regenerate with `luma-foreman outfit`; edits are lost. -->
+<!-- luma-foreman:generated from luma/decision-records workflows/prune-archived-decisions. Regenerate with `luma-foreman apply`; edits are lost. -->
 
 # Prune archived decisions
 

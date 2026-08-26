@@ -61,7 +61,14 @@ done
 run 'help'            0 help;            contains 'help' 'Commands:'
 run 'unknown command' 1 not-a-command
 run 'unbuilt command' 2 init        # inspect is built now; init is not
-run 'refit is gone'   1 refit       # removed by ADR-0004, not merely unbuilt
+
+# Renamed commands are a hard error with no alias (ADR-0003), so the message is
+# the whole migration path. Pin it: a bare "unknown command" would strand people.
+run 'adopt renamed'     1 adopt;     contains 'adopt renamed'     'renamed to: get'
+run 'outfit renamed'    1 outfit;    contains 'outfit renamed'    'renamed to: apply'
+run 'bootstrap renamed' 1 bootstrap; contains 'bootstrap renamed' 'renamed to: init'
+run 'refit is gone'     1 refit;     contains 'refit is gone'     'removed, with no replacement'
+
 run 'permissions default'  0 agent-permissions;          contains 'permissions default' 'KEY'
 
 # --- reads work before anything is configured ------------------------------------
@@ -248,3 +255,7 @@ printf '# force an update\n' >> "$LUMA_FOREMAN_DATA/gate/foreman/agent_permissio
   && ok || bad 'install left an empty stale module directory'
 [ -f "$LUMA_FOREMAN_DATA/gate/foreman/agent_permissions/gate.py" ] \
   && ok || bad 'pruning removed a module that is still part of the gate'
+
+# Every other suite ends this way, and this one did not — so its assertions
+# could not fail the build. `[ ... ]` as the last command is the exit status.
+[ "$fail" -eq 0 ]
