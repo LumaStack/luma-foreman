@@ -146,15 +146,12 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
     unknown_kind: list[str] = []
     unknown_event: list[str] = []
     always_on: list[str] = []
-    legacy_field: list[str] = []
     for doc_id, keys in docs.items():
         if doc_id == "BUNDLE":
             continue
         owned = root / doc_id / f"{doc_id.rsplit('/', 1)[-1].upper()}.md"
         path = owned if owned.is_file() else root / f"{doc_id}.md"
         triggers = lkf.matches(path)
-        if lkf.field_name(path) == "applies_to":
-            legacy_field.append(doc_id)
         for trigger in triggers:
             kind, _, value = trigger.partition(":")
             if ":" not in trigger:
@@ -188,14 +185,6 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
             "why this is worth confirming rather than fixing: if the rule "
             "governs a particular activity, say so and it arrives when that "
             "activity does.")
-    if legacy_field:
-        bad("low", f"{len(legacy_field)} document(s) still say applies_to",
-            legacy_field,
-            "applies_to is the former name of matches and is read only so that "
-            "upgrading the tools does not silently drop every trigger a "
-            "repository declared. Rename the field; nothing else about it "
-            "changes. This finding is the migration's own ledger — it goes "
-            "quiet when the work is done.")
 
     manifest = docs.get("BUNDLE")
     if manifest is None:

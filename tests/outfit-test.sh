@@ -7,7 +7,7 @@
 # `adopt-test.sh` already covers outfit end to end — that a skill appears, that
 # CLAUDE.md is spliced rather than owned, that orphans leave. This file covers
 # the part that decides *what* gets written: an author declares `compliance` and
-# `applies_to`, and everything else is computed.
+# `matches`, and everything else is computed.
 #
 # Three classes come out of that computation, and the whole point is that none
 # of them is chosen by hand:
@@ -88,7 +88,7 @@ type: policy
 title: Stylesheet rules
 description: How stylesheets are written here.
 
-applies_to:
+matches:
   - path: "**/*.css"
 ---
 Rules for CSS.
@@ -102,7 +102,7 @@ title: Never commit a credential
 description: Credentials must not reach a commit.
 
 on_violation: block
-applies_to:
+matches:
   - command: git commit
 ---
 Do not commit credentials.
@@ -264,7 +264,7 @@ title: Never force-push a shared branch
 description: Force-pushing a shared branch destroys other people's work.
 
 on_violation: block
-applies_to:
+matches:
   - command: git push --force
 ---
 Do not force-push.
@@ -315,7 +315,7 @@ title: Needs a person
 description: Someone has to approve this.
 
 on_violation: require_approval
-applies_to:
+matches:
   - command: git push
 ---
 Ask first.
@@ -339,7 +339,7 @@ type: policy
 title: Rules for a directory that is not here
 description: Governs a place this project does not have.
 
-applies_to:
+matches:
   - path: "nowhere-at-all/**"
 ---
 Rules.
