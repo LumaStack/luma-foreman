@@ -1,7 +1,7 @@
 """luma-foreman — the entrypoint.
 
-Each job lives under its own module so that `luma-foreman <job>` is the only
-thing anyone has to remember.
+Each command lives under its own module so that `luma-foreman <command>` is the
+only thing anyone has to remember.
 """
 
 from __future__ import annotations
@@ -11,9 +11,9 @@ import sys
 from .inspect import registry, report
 from .agent_permissions import commands
 
-USAGE = """usage: luma-foreman <job> [args]
+USAGE = """usage: luma-foreman <command> [args]
 
-Jobs:
+Commands:
   agent-permissions   what an agent is allowed to do in this repository
   adopt               take a bundle from a catalog into this project
   outfit              project what this project adopted into what a harness reads
@@ -22,7 +22,7 @@ Jobs:
   bootstrap           stand a new project up with the structure it should have had
   refit               confirm the latest learnings were actually applied
 
-Run `luma-foreman <job> --help` for a job's own options."""
+Run `luma-foreman <command> --help` for a command's own options."""
 
 POLICY_USAGE = """Read and write the per-project agent permissions that the permission gate
 consults on every Bash tool call. Changes take effect on the NEXT tool call — no
@@ -150,34 +150,34 @@ def _inspect(argv: list[str]) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
-    job = argv[0] if argv else "help"
+    command = argv[0] if argv else "help"
 
-    if job in ("help", "-h", "--help"):
+    if command in ("help", "-h", "--help"):
         print(USAGE)
         return 0
-    if job == "agent-permissions":
+    if command == "agent-permissions":
         return _policy(argv[1:])
-    if job == "inspect":
+    if command == "inspect":
         return _inspect(argv[1:])
-    if job == "adopt":
+    if command == "adopt":
         from . import adopt
 
         return adopt.main(argv[1:])
-    if job == "outfit":
+    if command == "outfit":
         from . import outfit
 
         return outfit.main(argv[1:])
-    if job == "outdated":
+    if command == "outdated":
         from . import outdated
 
         return outdated.main(argv[1:])
-    if job in UNBUILT:
+    if command in UNBUILT:
         print(
-            f"luma-foreman: {job} is not built yet — see .luma/backlog/ideas/",
+            f"luma-foreman: {command} is not built yet — see .luma/backlog/ideas/",
             file=sys.stderr,
         )
         return 2
-    print(f"luma-foreman: unknown job: {job}", file=sys.stderr)
+    print(f"luma-foreman: unknown command: {command}", file=sys.stderr)
     print(USAGE, file=sys.stderr)
     return 1
 

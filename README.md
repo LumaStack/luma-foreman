@@ -6,7 +6,7 @@ It walks into a project repository, sets it up to succeed, and comes back period
 
 > **Status:** early. Adoption, projection and inspection work end to end; `bootstrap` and `refit` are still shape.
 
-## The foreman jobs
+## The foreman commands
 
 - **Bootstrap.** Stand a new project up with the structure it should have had as soon as possible.
 - **Adopt.** Adopt a bundle of knowledge from a catalog and make it available in this repository.
@@ -117,9 +117,9 @@ carries it between projects.
 
 The last row is the awkward one, and it earns its place: some per-project decisions must not be committed. What an agent is permitted to do inside a repository is the operator's call on their own machine, not a property of the repository that every clone should inherit.
 
-## Which jobs run where
+## Which commands run where
 
-**Inspect** is the job that must survive a bare environment — fresh clone, no configuration, no organization access, exit codes, continuous integration. It is the one that has to hold the line.
+**Inspect** is the command that must survive a bare environment — fresh clone, no configuration, no organization access, exit codes, continuous integration. It is the one that has to hold the line.
 
 **Bootstrap**, **Outfit** and **Refit** are workstation operations. They change a repository, they expect an operator, and they may use workstation state to do it. Requiring them to run in continuous integration was never the point and would buy nothing.
 

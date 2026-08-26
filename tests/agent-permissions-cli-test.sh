@@ -58,9 +58,9 @@ for f in "$CLI" "$ROOT/libexec/permission-gate.py" "$ROOT"/src/foreman/*.py "$RO
 done
 
 # --- dispatcher -----------------------------------------------------------------
-run 'help'            0 help;            contains 'help' 'Jobs:'
-run 'unknown job'     1 not-a-job
-run 'unbuilt job'     2 bootstrap   # inspect is built now; bootstrap is not
+run 'help'            0 help;            contains 'help' 'Commands:'
+run 'unknown command' 1 not-a-command
+run 'unbuilt command' 2 bootstrap   # inspect is built now; bootstrap is not
 run 'permissions default'  0 agent-permissions;          contains 'permissions default' 'KEY'
 
 # --- reads work before anything is configured ------------------------------------
