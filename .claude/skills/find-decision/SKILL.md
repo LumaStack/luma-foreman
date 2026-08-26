@@ -3,7 +3,7 @@ name: find-decision
 description: Locate a decision record from a number, a title, or a link that no longer resolves. Use whenever a citation points at nothing, or before concluding that something was never decided.
 ---
 
-<!-- luma-foreman:generated from luma/decision-records workflows/find-decision. Regenerate with `luma-foreman outfit`; edits are lost. -->
+<!-- luma-foreman:generated from luma/decision-records workflows/find-decision. Regenerate with `luma-foreman apply`; edits are lost. -->
 
 # Find a decision
 

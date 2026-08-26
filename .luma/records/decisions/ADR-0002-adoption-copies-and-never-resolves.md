@@ -10,7 +10,7 @@ reopen_trigger: Bundle dependencies are adopted as a design, at which point some
 
 ## Summary
 
-`luma-foreman adopt` copies one bundle directory and writes a receipt. It
+`luma-foreman get` copies one bundle directory and writes a receipt. It
 resolves no graph, fetches nothing later, and installs nothing.
 
 ## Problem

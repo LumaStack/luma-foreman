@@ -10,7 +10,7 @@ reopen_trigger: A harness appears that cannot follow a file path from a skill bo
 
 ## Summary
 
-`luma-foreman outfit` writes a pointer to each adopted document and never a copy
+`luma-foreman apply` writes a pointer to each adopted document and never a copy
 of its content.
 
 ## Problem

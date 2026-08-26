@@ -44,7 +44,7 @@ def check(repo: Path) -> Result:
                 Skipped(
                     RULE,
                     "nothing adopted — .luma/bundles/ is absent or empty",
-                    "luma-foreman adopt --list --from <catalog>",
+                    "luma-foreman get --list --from <catalog>",
                 )
             ]
         )
@@ -102,7 +102,7 @@ def check(repo: Path) -> Result:
             "medium",
             f"{len(unprojected)} bundle(s) are adopted but reach no agent",
             sorted(unprojected),
-            "Run `luma-foreman outfit`. A bundle nothing projects is present, "
+            "Run `luma-foreman apply`. A bundle nothing projects is present, "
             "checksummed, reported clean, and never loaded — which looks "
             "identical to working.",
         )
@@ -123,7 +123,7 @@ def _projected(repo: Path, bundle_id: str) -> bool:
     """Does the generated index mention this bundle at all?
 
     Deliberately weak. Whether the projection is *current* is what
-    `luma-foreman outfit --check` answers, and duplicating that here would be a
+    `luma-foreman apply --check` answers, and duplicating that here would be a
     second implementation of the same comparison. This answers the cruder and
     more damaging question: has this bundle ever been projected.
     """

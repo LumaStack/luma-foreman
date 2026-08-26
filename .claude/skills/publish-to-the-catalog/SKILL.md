@@ -3,7 +3,7 @@ name: publish-to-the-catalog
 description: Add or change a bundle in luma-catalog and get the version honest. Use when promoting something out of a project, or changing anything already published.
 ---
 
-<!-- luma-foreman:generated from luma/luma-maintainers workflows/publish-to-the-catalog. Regenerate with `luma-foreman outfit`; edits are lost. -->
+<!-- luma-foreman:generated from luma/luma-maintainers workflows/publish-to-the-catalog. Regenerate with `luma-foreman apply`; edits are lost. -->
 
 # Publish a bundle to the universal catalog
 

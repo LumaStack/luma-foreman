@@ -3,7 +3,7 @@ name: change-a-shared-type
 description: Alter a shared type without making every tool upgrade at once. Use before touching anything in luma/luma-types, or any type a second consumer already reads.
 ---
 
-<!-- luma-foreman:generated from luma/luma-maintainers workflows/change-a-shared-type. Regenerate with `luma-foreman outfit`; edits are lost. -->
+<!-- luma-foreman:generated from luma/luma-maintainers workflows/change-a-shared-type. Regenerate with `luma-foreman apply`; edits are lost. -->
 
 # Change a type more than one tool depends on
 

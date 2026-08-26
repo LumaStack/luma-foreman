@@ -3,7 +3,7 @@ name: record-decision
 description: Find or establish where this project keeps decisions, then write one. Use when a position is settled, when an irreversible change is proposed, or when asked where decisions live.
 ---
 
-<!-- luma-foreman:generated from luma/decision-records workflows/record-decision. Regenerate with `luma-foreman outfit`; edits are lost. -->
+<!-- luma-foreman:generated from luma/decision-records workflows/record-decision. Regenerate with `luma-foreman apply`; edits are lost. -->
 
 # Record a decision
 

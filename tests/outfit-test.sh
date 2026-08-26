@@ -1,5 +1,5 @@
 #!/bin/sh
-# Tests for how `luma-foreman outfit` derives delivery from what a Document
+# Tests for how `luma-foreman apply` derives delivery from what a Document
 # declares.
 #
 #   sh tests/outfit-test.sh
@@ -46,7 +46,7 @@ ungrep()  { grep -q -- "$1" "$2" 2>/dev/null && bad "expected '$1' NOT in $(base
 
 outfit() {
   label=$1 want=$2; shift 2
-  LAST=$(cd "$PROJECT" && "$CLI" outfit "$@" 2>&1); got=$?
+  LAST=$(cd "$PROJECT" && "$CLI" apply "$@" 2>&1); got=$?
   [ "$got" -eq "$want" ] && ok || bad "$label (exit $got, wanted $want): $LAST"
 }
 

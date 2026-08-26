@@ -15,8 +15,8 @@ USAGE = """usage: luma-foreman <command> [args]
 
 Commands:
   agent-permissions   what an agent is allowed to do in this repository
-  adopt               take a bundle from a catalog into this project
-  outfit              project what this project adopted into what a harness reads
+  get                 take a bundle from a catalog into this project
+  apply               project what this project adopted into what a harness reads
   inspect             check a project against the baseline and report shortfalls
   outdated            which adopted bundles have a newer version published
   init                stand a new project up with the structure it should have had
@@ -49,6 +49,17 @@ project. Reads always show the merged result. Add --json to `policy`, `keys`
 and `doctor` for machine-readable output."""
 
 UNBUILT = ("init",)
+
+# Renamed commands are a hard error, not an alias — ADR-0003. This is the only
+# thing between somebody typing the old name and a bare failure, so it has to
+# say where the command went. `refit` is here too: removed by ADR-0004 with no
+# replacement, and saying so beats letting it read as a typo.
+RENAMED = {
+    "adopt": "get",
+    "outfit": "apply",
+    "bootstrap": "init",
+    "refit": None,
+}
 
 
 def _policy(argv: list[str]) -> int:
@@ -158,11 +169,11 @@ def main(argv: list[str] | None = None) -> int:
         return _policy(argv[1:])
     if command == "inspect":
         return _inspect(argv[1:])
-    if command == "adopt":
+    if command == "get":
         from . import adopt
 
         return adopt.main(argv[1:])
-    if command == "outfit":
+    if command == "apply":
         from . import outfit
 
         return outfit.main(argv[1:])
@@ -176,6 +187,11 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
         return 2
+    if command in RENAMED:
+        moved = RENAMED[command]
+        note = f"renamed to: {moved}" if moved else "removed, with no replacement"
+        print(f"luma-foreman: unknown command: {command} ({note})", file=sys.stderr)
+        return 1
     print(f"luma-foreman: unknown command: {command}", file=sys.stderr)
     print(USAGE, file=sys.stderr)
     return 1

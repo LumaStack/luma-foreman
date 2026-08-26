@@ -10,6 +10,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 ## [Unreleased]
 
 ### Changed
+- **The commands are named for what they do, not for the foreman metaphor.** `adopt` is now **`get`**, `outfit` is now **`apply`**, `bootstrap` is now **`init`**, and `refit` is gone. `jobs` was already renamed to `commands` in the help text.
+  **The old names are a hard error, not an alias.** `luma-foreman adopt` prints `unknown command: adopt (renamed to: get)` and exits 1. An alias would let the catalog's own documentation keep working while still being wrong, which removes the pressure to ever correct it — see ADR-0003.
+  *`refit` says `removed, with no replacement`* rather than reading as a typo. Its three checks already exist as `outdated`, `inspect --rule adoption` and `apply --check`, and merging them would cross the offline/online line that keeps `inspect` runnable in a bare clone — see ADR-0004.
+
 - **`applies_to` is read as `matches`, and the default reverses.** The format renamed the field in `v0.0.14`, and the meaning of *saying nothing* changed with it: a Document that declares no `matches` is now **available on request** rather than loaded into every session. `matches: always` is the only route to being present up front.
   **The old default made the lazy path the expensive one.** Forgetting a field bought a permanent seat in every adopter's context, and it failed in the direction that cannot be recovered from — under-delivering is fixable, over-delivering is a token bomb. Asking for the cost out loud makes it impossible by accident, which beats making it visible in a low finding somebody has to run a tool to read.
   **The type no longer decides anything.** It used to break the tie for a Document with no trigger — `policy` meant loaded-always, anything else meant findable. With the default reversed there is no tie to break.
@@ -23,15 +27,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 - **The index lists every policy and workflow, not only the ones that match something.** A rule nobody can see governs nothing, and with the default reversed a policy that matches nothing would otherwise have vanished from `CLAUDE.md` entirely — turning a cost saving into silent absence. Background under `concepts/` stays unannounced on the format's own reasoning: it does not act, and is reached through the things that do.
 
 ### Added
-- **`luma-foreman outfit --explain`** prints what each Document derives to, beside what produced it. The class names live here rather than in anybody's head — a derived column printed next to its input is a lookup table, not a glossary.
+- **`luma-foreman apply --explain`** prints what each Document derives to, beside what produced it. The class names live here rather than in anybody's head — a derived column printed next to its input is a lookup table, not a glossary.
 - **`inspect` reports any Document still using `applies_to`.** The migration's own ledger: *what is left* is a command rather than a checklist, and it goes quiet when the work is done.
 
-- **`luma-foreman adopt` — a bundle from a catalog becomes part of this project.** It copies into `.luma/bundles/<org>/<name>/` and writes `adopted.toml` with the version, the catalog's origin, the commit it came from and a checksum of exactly what landed. Nothing is resolved and nothing is fetched later: bundles depend on nothing, which is what keeps adoption a directory copy rather than an install.
+- **`luma-foreman get` — a bundle from a catalog becomes part of this project.** It copies into `.luma/bundles/<org>/<name>/` and writes `adopted.toml` with the version, the catalog's origin, the commit it came from and a checksum of exactly what landed. Nothing is resolved and nothing is fetched later: bundles depend on nothing, which is what keeps adoption a directory copy rather than an install.
   **The copy is committed, and that is the difference from a package cache.** A fresh clone with no network reproduces the project, because the knowledge is in the repository rather than in a cache directory a teammate does not have.
   `--from` takes a local checkout or a git URL; a URL is cloned into `~/.cache/luma/catalogs/`, which is genuinely cache — deleting it loses nothing, since everything adopted from it is already committed. With no `--from`, `[catalog] source` in `.luma/config/foreman.toml` is used.
   **Two refusals rather than an overwrite.** A vendored copy that has been edited locally is never silently replaced — that is somebody's work, and the message says where the change should go instead. A bundle with no version cannot be adopted at all, because nothing about it could be honestly reported afterwards.
 
-- **`luma-foreman outfit` — adopted knowledge reaches an agent without anybody pointing at it.** Two projections: one Claude Code skill per `workflow`, and one managed block in `CLAUDE.md` indexing everything adopted.
+- **`luma-foreman apply` — adopted knowledge reaches an agent without anybody pointing at it.** Two projections: one Claude Code skill per `workflow`, and one managed block in `CLAUDE.md` indexing everything adopted.
   **Thin adapters, never copies.** A generated skill carries the harness-specific frontmatter, a pointer to the real document under `.luma/`, and the standing context that document assumes. It deliberately does not carry the workflow body — a copy is a second source of truth, and it would charge every session for content meant to load only when the work matched.
   **The index is the part that closes the gap.** `preload: mandatory` documents are hoisted into a *read these first* section; everything else is one line saying what it is. Make existence cheap and content expensive.
   Only the region between the `luma:begin` and `luma:end` markers in `CLAUDE.md` is touched, so a hand-written file keeps everything else. `--check` reports staleness and writes nothing, for continuous integration.

@@ -3,7 +3,7 @@ name: migrate-decisions
 description: Split a single DECISIONS.md into individual records, reconstruct what supersedes what, repoint everything that linked to the file, and only then remove it. Use once per project that has one.
 ---
 
-<!-- luma-foreman:generated from luma/decision-records workflows/migrate-decisions. Regenerate with `luma-foreman outfit`; edits are lost. -->
+<!-- luma-foreman:generated from luma/decision-records workflows/migrate-decisions. Regenerate with `luma-foreman apply`; edits are lost. -->
 
 # Migrate a DECISIONS file
 
