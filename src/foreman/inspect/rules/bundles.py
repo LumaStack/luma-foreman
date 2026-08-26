@@ -24,7 +24,7 @@ import subprocess
 from pathlib import Path
 
 from ... import lkf
-from ..finding import Finding, Result, Skipped
+from ..finding import Finding, Notice, Result, Skipped
 
 # The closed vocabularies `matches` draws on. Closed is the point: anything
 # outside them is a typo that would otherwise publish silently.
@@ -75,9 +75,10 @@ def _prose(text: str) -> str:
     return INLINE.sub("", FENCE.sub("", text))
 
 
-def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
-    """Check one bundle. Returns findings and the paths it looked at."""
+def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[str]]:
+    """Check one bundle. Returns findings, notices, and the paths it looked at."""
     findings: list[Finding] = []
+    notices: list[Notice] = []
     label = root.relative_to(repo).as_posix() or "."
 
     # A vendored bundle is somebody else's, and every remedy below says "fix
@@ -178,17 +179,26 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
             "event is a closed vocabulary — " + ", ".join(sorted(EVENTS)) +
             ". A name nothing fires is a rule that never arrives.")
     if always_on:
-        bad("low", f"{len(always_on)} document(s) load in every session",
-            always_on,
-            "matches: always asks for a permanent seat in every adopter's "
-            "context, forever. Deliberate rather than accidental now, which is "
-            "why this is worth confirming rather than fixing: if the rule "
-            "governs a particular activity, say so and it arrives when that "
-            "activity does.")
+        # Not a defect, and the old remedy said so outright — "worth confirming
+        # rather than fixing" is a notice by definition, and it was exiting 1
+        # over a choice somebody made deliberately.
+        notices.append(
+            Notice(
+                rule=RULE,
+                summary=f"{label}: {len(always_on)} document(s) load in every session",
+                evidence=tuple(sorted(always_on)),
+                remedy=(
+                    "matches: always asks for a permanent seat in every "
+                    "adopter's context, forever. Confirm it was meant: if the "
+                    "rule governs a particular activity, say so and it arrives "
+                    "when that activity does."
+                ),
+            )
+        )
 
     manifest = docs.get("BUNDLE")
     if manifest is None:
-        return findings, seen
+        return findings, notices, seen
 
     if not manifest.get("version"):
         bad("high", "BUNDLE.md declares no version", ["BUNDLE.md"],
@@ -269,7 +279,7 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
             "Nothing owns an Asset, so unreferenced files accumulate in silence. "
             "Delete them, or link them from the Document that needs them.")
 
-    return findings, seen
+    return findings, notices, seen
 
 
 def _manifests(repo: Path) -> list[Path] | None:
@@ -379,6 +389,7 @@ def check(repo: Path) -> Result:
         # inner one separately is right; auditing it twice is not.
         if any(other != root and other in root.parents for other in nested):
             continue
-        findings, _ = _audit(root, repo)
+        findings, notices, _ = _audit(root, repo)
         result.findings.extend(findings)
+        result.notices.extend(notices)
     return result

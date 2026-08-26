@@ -8,7 +8,7 @@ It walks into a project repository, sets it up to succeed, and comes back period
 
 ## The foreman commands
 
-- **Init.** Stand `.luma/` up in a repository that has none — a descriptor and a config, and nothing that has no contents yet.
+- **Init.** Stand `.luma/` up in a repository that has none — a descriptor and a config, and nothing that has no contents yet. Idempotent: run it again and it adds what is missing.
 - **Get.** Take a bundle of knowledge from a catalog and make it available in this repository.
 - **Apply.** Write what was taken into what a harness reads, so nobody has to say where to look.
 - **Inspect.** Check a project against the baseline and report where it falls short.
@@ -59,6 +59,8 @@ luma-foreman inspect                # 0 nothing found, 1 findings, 2 could not r
 luma-foreman inspect --json         # for continuous integration
 luma-foreman inspect --rule adoption
 ```
+
+A **notice** is the third outcome: something worth a reader's judgement that is not a defect. It prints as loudly as a finding and never changes the exit code — a heuristic wired to a merge gate is a heuristic somebody switches off.
 
 Every check works in a bare clone with no configuration, and a check that *cannot* run is reported as skipped rather than passed — an inspection that reads clean while silently skipping half its checks is worse than no inspection.
 

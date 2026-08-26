@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 from . import adopt, project
+from . import catalog as catalogs
 
 USAGE = """Stand `.luma/` up in a repository that does not have one.
 
@@ -95,7 +96,22 @@ source = "{source}"
 
 
 
-def _shown(path: Path, target: Path) -> str:
+# Where a project keeps records before it has a `.luma/`. The same list
+# `record-decision` searches, which is what makes finding one here meaningful
+# rather than a guess: these are the places a migration would be moving from.
+ELSEWHERE = (
+    "DECISIONS.md",
+    "docs/DECISIONS.md",
+    "docs/decisions",
+    ".records",
+)
+
+
+def _records_elsewhere(target: Path) -> list[str]:
+    return [p for p in ELSEWHERE if (target / p).exists()]
+
+
+def _shown(path: Path) -> str:
     """A path as the operator would type it, absolute only when it has to be."""
     try:
         return str(path.relative_to(Path.cwd()))
@@ -115,17 +131,6 @@ def _refuse(summary: str, remedy: str) -> int:
 
 
 def run(target: Path, catalog: str | None) -> int:
-    luma = target / ".luma"
-
-    if luma.exists():
-        # Not an error worth two exit codes: whether the right answer is
-        # `migrate-into-luma` or just adding the one missing directory depends
-        # on what is in there, and this command cannot tell.
-        return _refuse(
-            f"{luma} already exists — nothing to initialize",
-            "Add what is missing, or see the `migrate-into-luma` workflow in "
-            "luma/luma-layout for moving an existing structure into it.",
-        )
     if not target.is_dir():
         return _err(f"not a directory: {target}")
 
@@ -134,32 +139,87 @@ def run(target: Path, catalog: str | None) -> int:
     root = project.repo_root(project.canonical(target))
     if root is None:
         return _refuse(
-            f"{target} is not in a git repository",
+            f"{_shown(target)} is not in a git repository",
             "`.luma/` is committed with the project, so there has to be a "
             "project. Run `git init` first.",
         )
 
-    (luma / "config").mkdir(parents=True)
-    (luma / "PROJECT.md").write_text(DESCRIPTOR.format(title=root.name))
-    adopt.config_path(target).write_text(
-        CONFIG_SET.format(source=catalog) if catalog else CONFIG_BLANK
-    )
+    luma = target / ".luma"
+    descriptor = luma / "PROJECT.md"
+    config = adopt.config_path(target)
 
-    print(f"initialized {_shown(luma, target)}")
+    # Idempotent, and never destructive. A file that is already there is left
+    # exactly as it is — running this twice is how somebody adds what a newer
+    # version writes, and refusing would make them do by hand what the refusal
+    # had just finished diagnosing.
+    plan = [
+        (descriptor, DESCRIPTOR.format(title=root.name),
+         "created — every TODO in it is yours to answer"),
+        (config, CONFIG_SET.format(source=catalog) if catalog else CONFIG_BLANK,
+         f"created — bundles come from {catalog}" if catalog else "created"),
+    ]
+    wrote: list[Path] = []
+    kept: list[Path] = []
+    done: list[tuple[Path, str]] = []
+
+    for path, contents, note in plan:
+        if path.exists():
+            kept.append(path)
+            done.append((path, "already there, left alone"))
+            continue
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(contents)
+        wrote.append(path)
+        done.append((path, note))
+
+    print("luma-foreman init:")
+    width = max(len(_shown(p)) for p, _ in done)
+    for path, note in done:
+        print(f"  {_shown(path):<{width}}  {note}")
+
     print()
-    config = f"config/{adopt.CONFIG}"
-    width = max(len("PROJECT.md"), len(config))
-    print(f"  {'PROJECT.md':<{width}}  describe this repository — every TODO is yours")
-    where = f"bundles come from {catalog}" if catalog else "where bundles come from, once you set it"
-    print(f"  {config:<{width}}  {where}")
-    print()
-    print("  Nothing to gitignore — .luma/ is committed in full. Anything here")
-    print("  that should not be is machine-local and belongs in ~/.config/luma/.")
-    print()
-    if catalog:
-        print("  Then: luma-foreman get luma/<bundle>")
+    if not wrote:
+        print("Nothing to do.")
+        return 0
+
+    if catalog and config in kept:
+        print("--catalog was not applied: the config already exists, and this")
+        print("never overwrites one. Set [catalog] source in it by hand.")
+        print()
+
+    if descriptor in wrote:
+        print("  Nothing to gitignore — .luma/ is committed in full. Anything here")
+        print("  that should not be is machine-local and belongs in ~/.config/luma/.")
+        print()
+
+    # Two steps, because the first question is always what is on offer and the
+    # answer is a command nobody guesses. Named concretely where the config
+    # knows the catalog, so neither line has a placeholder to work out.
+    source = catalog or adopt._configured(target)
+    print("Next steps:")
+    if source:
+        name = catalogs.short_name(source)
+        steps = [
+            (f"luma-foreman catalog show {name}", "what it publishes"),
+            ("luma-foreman get luma/<bundle>", "take one"),
+        ]
     else:
-        print("  Then: luma-foreman get luma/<bundle> --from <catalog>")
+        steps = [
+            ("luma-foreman catalog show <catalog>", "what a catalog publishes"),
+            ("luma-foreman get luma/<bundle> --from <catalog>", "take one"),
+        ]
+    step_width = max(len(s) for s, _ in steps)
+    for step, why in steps:
+        print(f"  {step:<{step_width}}  {why}")
+
+    # Only said when it is true. A standing pointer to a migration workflow is
+    # noise in the common case, and the case it is for is one this can check.
+    found = _records_elsewhere(target)
+    if found:
+        print()
+        print(f"This project already keeps records in {', '.join(found)}.")
+        print("The `migrate-into-luma` workflow in luma/luma-layout moves an")
+        print("existing project in, rather than leaving two places to look.")
     return 0
 
 

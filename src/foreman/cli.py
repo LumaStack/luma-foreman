@@ -14,7 +14,7 @@ from .agent_permissions import commands
 USAGE = """usage: luma-foreman <command> [args]
 
 Commands:
-  init                stand a new project up with the structure it should have had
+  init                stand `.luma/` up in a repository that has none
   get                 adopt a bundle from a catalog into this project
   apply               write what this project adopted into what a harness reads
   inspect             check a project against the baseline and report shortfalls
