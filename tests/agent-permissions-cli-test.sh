@@ -60,7 +60,6 @@ done
 # --- dispatcher -----------------------------------------------------------------
 run 'help'            0 help;            contains 'help' 'Commands:'
 run 'unknown command' 1 not-a-command
-run 'unbuilt command' 2 init        # inspect is built now; init is not
 
 # Renamed commands are a hard error with no alias (ADR-0003), so the message is
 # the whole migration path. Pin it: a bare "unknown command" would strand people.

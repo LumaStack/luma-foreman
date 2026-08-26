@@ -10,6 +10,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 ## [Unreleased]
 
 ### Added
+- **`luma-foreman init` is built.** It creates `.luma/PROJECT.md` and `.luma/records/`, and nothing else — `bundles/` arrives on the first `get`, `config/` when a setting needs one. An empty directory is a question a reader has to answer, so none is created ahead of having contents.
+  **It refuses twice.** Where `.luma/` already exists it stops and points at `migrate-into-luma`, because whether the answer is a migration or one missing directory depends on what is in there and this command cannot tell. Outside a git repository it stops too: a descriptor describing a repository, written where there is not one, is wrong in a way nobody notices until it travels.
+  *No `.gitignore` entry, deliberately.* `.luma/` is committed in full, and a project whose `.luma/` differs between two machines is two projects. The output says so, and says that git will not track `records/` while it is empty.
+  Follows `luma/luma-layout`'s `initialize-luma`, which is the specification.
+
+### Added
 - **`luma-foreman bundle` and `luma-foreman catalog` — two nouns that only report.** `bundle list` prints what this project holds and the shape each copy is in; `bundle show <name>` prints one bundle's receipt and the Documents inside it; `catalog list` prints where knowledge comes from; `catalog show <name>` prints what a catalog publishes.
   **The inventory always existed and nothing read it.** `adopted.toml` has carried the version, source, commit and checksum since adoption was built. `outdated` came closest to printing it but needs a network and answers a different question, and the command whose name sounded right — `adopt --list` — returned the *catalog's* contents.
   *Only `catalog show` reaches the network.* The other three read committed state, so they hold in a bare clone — the guarantee `inspect` already carries.

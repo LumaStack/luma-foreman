@@ -44,7 +44,7 @@ def check(repo: Path) -> Result:
                 Skipped(
                     RULE,
                     "nothing adopted — .luma/bundles/ is absent or empty",
-                    "luma-foreman get --list --from <catalog>",
+                    "luma-foreman catalog show <catalog>",
                 )
             ]
         )

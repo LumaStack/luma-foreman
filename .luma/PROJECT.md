@@ -41,7 +41,7 @@ for a person to apply.
 
 ## Status
 
-Early. `agent-permissions`, `get`, `apply`, `outdated` and `inspect` work;
-`init` exits 2. Python 3.11+, standard library only — see `docs/scope.md` for what the
-tool is for now that the catalog holds the knowledge the original four jobs were
-built on.
+Early, and every command works — `init`, `get`, `apply`, `inspect`, `bundle`,
+`catalog` and `agent-permissions`. Python 3.11+, standard library only — see
+`docs/scope.md` for what the tool is for now that the catalog holds the
+knowledge the original command set was built on.
