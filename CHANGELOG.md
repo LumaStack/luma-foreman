@@ -9,8 +9,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 
 ## [Unreleased]
 
+### Added
+- **`luma-foreman bundle` and `luma-foreman catalog` — two nouns that only report.** `bundle list` prints what this project holds and the shape each copy is in; `bundle show <name>` prints one bundle's receipt and the Documents inside it; `catalog list` prints where knowledge comes from; `catalog show <name>` prints what a catalog publishes.
+  **The inventory always existed and nothing read it.** `adopted.toml` has carried the version, source, commit and checksum since adoption was built. `outdated` came closest to printing it but needs a network and answers a different question, and the command whose name sounded right — `adopt --list` — returned the *catalog's* contents.
+  *Only `catalog show` reaches the network.* The other three read committed state, so they hold in a bare clone — the guarantee `inspect` already carries.
+  **The set of catalogs is derived, not registered.** There is no `catalog add`: a catalog is an argument, and `list` reads the distinct sources in `adopted.toml` plus `[catalog] source` if one is set.
+
 ### Changed
-- **The commands are named for what they do, not for the foreman metaphor.** `adopt` is now **`get`**, `outfit` is now **`apply`**, `bootstrap` is now **`init`**, and `refit` is gone. `jobs` was already renamed to `commands` in the help text.
+- **The commands are named for what they do, not for the foreman metaphor.** `adopt` is now **`get`**, `outfit` is now **`apply`**, `bootstrap` is now **`init`**, `outdated` is now **`bundle outdated`**, `adopt --list` is now **`catalog show <name>`**, and `refit` is gone. `jobs` was already renamed to `commands` in the help text.
   **The old names are a hard error, not an alias.** `luma-foreman adopt` prints `unknown command: adopt (renamed to: get)` and exits 1. An alias would let the catalog's own documentation keep working while still being wrong, which removes the pressure to ever correct it — see ADR-0003.
   *`refit` says `removed, with no replacement`* rather than reading as a typo. Its three checks already exist as `outdated`, `inspect --rule adoption` and `apply --check`, and merging them would cross the offline/online line that keeps `inspect` runnable in a bare clone — see ADR-0004.
 
@@ -35,12 +41,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
   `--from` takes a local checkout or a git URL; a URL is cloned into `~/.cache/luma/catalogs/`, which is genuinely cache — deleting it loses nothing, since everything adopted from it is already committed. With no `--from`, `[catalog] source` in `.luma/config/foreman.toml` is used.
   **Two refusals rather than an overwrite.** A vendored copy that has been edited locally is never silently replaced — that is somebody's work, and the message says where the change should go instead. A bundle with no version cannot be adopted at all, because nothing about it could be honestly reported afterwards.
 
-- **`luma-foreman apply` — adopted knowledge reaches an agent without anybody pointing at it.** Two projections: one Claude Code skill per `workflow`, and one managed block in `CLAUDE.md` indexing everything adopted.
+- **`luma-foreman apply` — adopted knowledge reaches an agent without anybody pointing at it.** Two outputs: one Claude Code skill per `workflow`, and one managed block in `CLAUDE.md` indexing everything adopted.
   **Thin adapters, never copies.** A generated skill carries the harness-specific frontmatter, a pointer to the real document under `.luma/`, and the standing context that document assumes. It deliberately does not carry the workflow body — a copy is a second source of truth, and it would charge every session for content meant to load only when the work matched.
   **The index is the part that closes the gap.** `preload: mandatory` documents are hoisted into a *read these first* section; everything else is one line saying what it is. Make existence cheap and content expensive.
   Only the region between the `luma:begin` and `luma:end` markers in `CLAUDE.md` is touched, so a hand-written file keeps everything else. `--check` reports staleness and writes nothing, for continuous integration.
 
-- **`inspect` gained an `adoption` rule** covering the three ways an adopted bundle stops being what was adopted: **edited** in place, **missing** from disk, and **unprojected** — present, checksummed, reported clean, and never shown to an agent. The third is the one nothing else would surface, because it looks correct from every angle.
+- **`inspect` gained an `adoption` rule** covering the three ways an adopted bundle stops being what was adopted: **edited** in place, **missing** from disk, and **unapplied** — present, checksummed, reported clean, and never shown to an agent. The third is the one nothing else would surface, because it looks correct from every angle.
   It cannot say whether a newer version exists: that needs the catalog, and `inspect` runs in a bare clone with no network.
 
 ### Changed

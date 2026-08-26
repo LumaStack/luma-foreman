@@ -66,12 +66,11 @@ def check(repo: Path) -> Result:
     edited: list[str] = []
     missing: list[str] = []
     for bundle_id, entry in sorted(recorded.items()):
-        home = adoption.vendored(repo, bundle_id)
-        if not home.is_dir():
-            missing.append(f"{bundle_id} {entry.version}")
-            continue
-        if entry.checksum and adoption.checksum(home) != entry.checksum:
-            edited.append(f"{bundle_id} {entry.version}")
+        match adoption.state(repo, entry):
+            case "missing":
+                missing.append(f"{bundle_id} {entry.version}")
+            case "edited":
+                edited.append(f"{bundle_id} {entry.version}")
 
     if missing:
         bad(
