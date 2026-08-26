@@ -22,7 +22,7 @@ separate from an hq: it has to run against content it does not contain.
 
 Whether that is its own repository or a foreman capability is open. Foreman is
 already what talks to catalogs at apply time, and `list what is available here`
-is close to `outfit` and `refit` in what it has to read, so a subcommand may
+is close to `apply` in what it has to read, so a subcommand may
 earn it before a second program does.
 
 A secondary reason to keep it out regardless: an application gives the one

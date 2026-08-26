@@ -131,18 +131,18 @@ and a routine that returns something is a substantially larger design — it mak
 bundles into modules, and the loose coupling that lets a bundle be a directory
 copy is the first thing it would cost.
 
-### This stops being *someday* the moment `outfit` is built
+### This stops being *someday* the moment `apply` is built
 
-`outfit` projects an adopted bundle's workflows into harness adapters — a Claude
+`apply` writes an adopted bundle's workflows into harness adapters — a Claude
 Code skill per *what?*
 
 **That question is this idea.** Per workflow means the internal surface is the
 public one and every rename breaks a caller. Per declared routine means this
-gets designed first. **`outfit` cannot be built without answering it**, which is
+gets designed first. **`apply` cannot be built without answering it**, which is
 why the horizon is `next` rather than `someday` — and why the answer will
 probably come from building rather than from more reasoning.
 
-**Built the same day, and it took the third option.** `outfit` projects *every*
+**Built the same day, and it took the third option.** `apply` writes *every*
 `type: workflow` document as a skill, so a bundle's public surface is currently
 whatever workflows it happens to contain. It works, and it makes the cost
 concrete rather than hypothetical: **renaming any workflow in any bundle is now
@@ -151,7 +151,7 @@ records that a name was ever promised.
 
 It also hit the collision case immediately in the design, before it happened in
 practice — two bundles may both publish `audit-bundle`, and a silent first-seen
-win would leave one permanently unreachable. `outfit` prefixes both sides and
+win would leave one permanently unreachable. `apply` prefixes both sides and
 says so. **A declared routine list would have made that a publish-time error
 instead of a runtime rename**, which is the clearest single argument for it.
 
