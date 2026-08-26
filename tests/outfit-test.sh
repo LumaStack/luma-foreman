@@ -70,13 +70,13 @@ description: Rules for widget work.
 ---
 EOF
 
-# standing: mandatory, and nobody can say when it applies.
+# always-on: it asks for a permanent seat, which is now the only way to get one.
 cat > "$B/policy/house-rules.md" <<'EOF'
 ---
 type: policy
 title: House rules
 description: The rules that govern all work here.
-
+matches: always
 ---
 Everything here is always in force.
 EOF
@@ -181,11 +181,12 @@ ungrep '@.luma/bundles/acme/rules/policy/stylesheets.md' "$CLAUDE"
 grepped 'no-credentials' "$CLAUDE"
 ungrep '@.luma/bundles/acme/rules/policy/no-credentials.md' "$CLAUDE"
 
-# --- on-demand: not announced at all --------------------------------------------
+# --- on-demand background: not announced at all ---------------------------------
 #
-# A concept obliges nothing. Announcing it spends the standing surface on
-# something no consumer is ever obliged to read, and the bundle's own index is
-# where it stays findable.
+# A concept obliges nothing. Announcing it spends the index on something no
+# consumer is ever obliged to read, and it is reached through the rules and
+# procedures that do act. A *policy* matching nothing is a different case and is
+# still listed — see below — because a rule nobody can see governs nothing.
 
 ungrep 'why-widgets' "$CLAUDE"
 
@@ -240,8 +241,13 @@ grepped 'policy/stylesheets' "$ROUTING"
 grepped 'path:\*\*/\*.css' "$ROUTING"
 grepped 'command:git commit' "$ROUTING"
 
-# A Document with no trigger has nothing to route, so it earns no row.
-ungrep 'house-rules' "$ROUTING"
+# A Document that matches always earns a row saying so — it is a routing fact
+# like any other, and the gate ignores it because no `always` entry names a
+# command. What earns no row is a Document that matches nothing: there is
+# nothing to route.
+grepped 'house-rules' "$ROUTING"
+grepped 'matches = \["always"\]' "$ROUTING"
+ungrep 'why-widgets' "$ROUTING"
 
 # Subordinate documents are invisible here too — they arrive with their owner.
 ungrep '01-first' "$ROUTING"
@@ -281,6 +287,7 @@ type: policy
 title: Legacy rule
 description: Still using the old field.
 preload: mandatory
+matches: always
 ---
 Old-style declaration.
 EOF
@@ -288,10 +295,10 @@ EOF
 outfit 'reports a bundle still using preload' 0
 case $LAST in *preload*) ok ;; *) bad "expected outfit to report the legacy preload field: $LAST" ;; esac
 
-# It *is* imported — but not because `preload` was read. It is a policy with no
-# `applies_to`, and a policy binds unless it says otherwise, so it is standing.
-# That is the design working, and it is the right pressure: an unmigrated policy
-# costs every session until somebody says when it applies.
+# It *is* imported — but not because `preload` was read. It says
+# `matches: always`, which is the one route to being loaded up front. The old
+# field is reported and otherwise ignored, so a half-migrated bundle cannot
+# behave correctly and stall there forever.
 grepped '@.luma/bundles/acme/rules/policy/legacy.md' "$CLAUDE"
 
 # --- a trigger nothing can honour fails loudly ----------------------------------

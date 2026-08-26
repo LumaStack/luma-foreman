@@ -11,7 +11,11 @@ Decisions recorded with their reasoning, deferred alternatives, and re-open trig
 In `.luma/bundles/luma/decision-records/` — **open one when the work matches its line**, and not before:
 
 - `policy/decision-guidelines` (policy) — When to record a decision, what makes one worth reading years later, and what you may edit once it is settled.
-  - applies to: topic:recording a decision, or deciding whether one is worth recording
+  - matches: topic:recording a decision, or deciding whether one is worth recording
+- `workflows/find-decision` (workflow) — Locate a decision record from a number, a title, or a link that no longer resolves. Use whenever a citation points at nothing, or before concluding that something was never decided.
+- `workflows/migrate-decisions` (workflow) — Split a single DECISIONS.md into individual records, reconstruct what supersedes what, repoint everything that linked to the file, and only then remove it. Use once per project that has one.
+- `workflows/prune-archived-decisions` (workflow) — Permanently remove decision records that have been archived longer than the retention period. Only reaches `archived/`, never a live decision. Rarely the right call.
+- `workflows/record-decision` (workflow) — Find or establish where this project keeps decisions, then write one. Use when a position is settled, when an irreversible change is proposed, or when asked where decisions live.
 
 ### `luma/luma-maintainers` 0.8.0
 
@@ -20,7 +24,9 @@ Working on the luma tools themselves — the repositories and the boundary each 
 In `.luma/bundles/luma/luma-maintainers/` — **open one when the work matches its line**, and not before:
 
 - `policy/the-estate` (policy) — The six repositories, the boundary each one defends, and the rule that decides where a new thing goes. Read before adding anything to any of them.
-  - applies to: topic:deciding which repository a new thing belongs in
+  - matches: topic:deciding which repository a new thing belongs in
+- `workflows/change-a-shared-type` (workflow) — Alter a shared type without making every tool upgrade at once. Use before touching anything in luma/luma-types, or any type a second consumer already reads.
+- `workflows/publish-to-the-catalog` (workflow) — Add or change a bundle in luma-catalog and get the version honest. Use when promoting something out of a project, or changing anything already published.
 
 ### `luma/luma-tools` 0.6.0
 
@@ -29,7 +35,9 @@ Using the luma tools — which one does what, getting them onto a machine, and t
 In `.luma/bundles/luma/luma-tools/` — **open one when the work matches its line**, and not before:
 
 - `policy/what-each-tool-does` (policy) — The tools, the one job each performs, and when to use them. Read before installing or invoking any of them.
-  - applies to: command:luma-foreman, command:luma-catalog-curator, topic:choosing which luma tool does a job
+  - matches: command:luma-foreman, command:luma-catalog-curator, topic:choosing which luma tool does a job
+- `workflows/adopt-knowledge` (workflow) — Take bundles from a catalog into a repository and make an agent aware of them. Use when setting a project up, when adding a capability, or when an agent keeps needing to be told where to look.
+- `workflows/install-the-tools` (workflow) — Get foreman onto a machine and wired into a harness. Use on a new workstation, after an upgrade, or when a permission gate is not firing.
 
 Workflows here are also installed as skills, so they can be invoked by name. Everything under `.luma/bundles/` is a copy — change it upstream and re-adopt, never in place.
 

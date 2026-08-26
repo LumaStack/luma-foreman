@@ -248,25 +248,58 @@ has 'patth'
 # `moment` is a closed vocabulary for the same reason: a name nobody fires is
 # indistinguishable from a moment that has not arrived.
 d=$(bundle trigmoment)
-printf -- '---\ntype: policy\ntitle: T\napplies_to:\n  - event: before-lunch\n---\nx\n' > "$d/b/p.md"
+printf -- '---\ntype: policy\ntitle: T\nmatches:\n  - event: before-lunch\n---\nx\n' > "$d/b/p.md"
 run 'unknown event' 1 "$d"
 has 'before-lunch'
 
 d=$(bundle trigok)
-printf -- '---\ntype: policy\ntitle: T\napplies_to:\n  - event: before-commit\n  - path: "**/*.css"\n  - command: git commit\n  - topic: doing the thing\n---\nx\n' > "$d/b/p.md"
+printf -- '---\ntype: policy\ntitle: T\nmatches:\n  - event: before-commit\n  - path: "**/*.css"\n  - command: git commit\n  - topic: doing the thing\n---\nx\n' > "$d/b/p.md"
 run 'well-formed triggers are quiet' 0 "$d"
 lacks 'rule=bundles'
 
-# --- mandatory with nowhere to fire ---------------------------------------------
+# --- asking for a permanent seat ------------------------------------------------
 #
 # Legal, and the most expensive thing a bundle can do: it loads into every
-# session of every adopter, forever. Worth saying out loud rather than leaving
-# somebody to discover it in a context budget.
+# session of every adopter, forever. Deliberate now rather than accidental —
+# `matches: always` is the only route to it — so this confirms a choice rather
+# than catching a slip. Still worth saying out loud rather than leaving somebody
+# to discover it in a context budget.
 
 d=$(bundle alwayson)
-printf -- '---\ntype: policy\ntitle: T\ncompliance: mandatory\n---\nx\n' > "$d/b/p.md"
-run 'mandatory with no trigger is surfaced' 1 "$d"
+printf -- '---\ntype: policy\ntitle: T\nmatches: always\n---\nx\n' > "$d/b/p.md"
+run 'matches always is surfaced' 1 "$d"
 has 'every session'
+
+# And the reverse, which is the default flipping: a policy that says nothing
+# gets a permanent seat no longer. Silence used to buy the costliest delivery
+# mode in the system, which made the lazy path the expensive one.
+
+d=$(bundle silentpolicy)
+printf -- '---\ntype: policy\ntitle: T\n---\nx\n' > "$d/b/p.md"
+run 'a policy that says nothing is quiet' 0 "$d"
+lacks 'every session'
+
+# --- the migration's own ledger -------------------------------------------------
+#
+# `applies_to` is read where `matches` is absent, so upgrading the tools cannot
+# silently drop every trigger a repository declared. Each use is reported, which
+# is what makes the migration finishable rather than merely started.
+
+d=$(bundle legacyfield)
+printf -- '---\ntype: policy\ntitle: T\napplies_to:\n  - command: git commit\n---\nx\n' > "$d/b/p.md"
+run 'applies_to is still read, and reported' 1 "$d"
+has 'still say applies_to'
+
+# --- always is a value, never a trigger kind ------------------------------------
+#
+# It was briefly both, and that state shipped: unwritable in the spellings that
+# meant it, and in the one that parsed it classed the document as cheap. A rule
+# declaring itself ever-present was the one rule that would not be there.
+
+d=$(bundle alwaysinlist)
+printf -- '---\ntype: policy\ntitle: T\nmatches:\n  - always: true\n---\nx\n' > "$d/b/p.md"
+run 'always inside the list is not a trigger' 1 "$d"
+has 'not a trigger'
 
 # The silent one. [[..]] is YAML flow-sequence syntax, so unquoted it parses as
 # a nested array and the link never resolves — with no parser complaining.
