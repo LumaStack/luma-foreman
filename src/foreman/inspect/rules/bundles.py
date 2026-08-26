@@ -14,7 +14,7 @@ adoption rather than by being compiled in, and a tool that hardcoded them would
 be deciding standards rather than enforcing them.
 
 The frontmatter parser is deliberately a small subset, and lives in
-``foreman.lkf`` because ``adopt`` reads the same thing.
+``foreman.lkf`` because ``get`` reads the same thing.
 """
 
 from __future__ import annotations
@@ -82,14 +82,14 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
 
     # A vendored bundle is somebody else's, and every remedy below says "fix
     # it" — which is the one thing you must not do to an adopted copy, because
-    # the next adopt discards the fix and upstream never hears about the defect.
+    # the next `get` discards the fix and upstream never hears about the defect.
     # Reporting it is still right: you are the one carrying it.
     vendored = label.startswith(".luma/bundles/")
 
     def bad(sev: str, summary: str, evidence: list[str], remedy: str) -> None:
         if vendored:
             remedy += (
-                "  This is an adopted copy — fix it upstream and re-adopt, "
+                "  This is an adopted copy — fix it upstream and take it again, "
                 "never here."
             )
         findings.append(

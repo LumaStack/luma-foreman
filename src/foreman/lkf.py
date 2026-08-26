@@ -5,7 +5,7 @@ and enough of the block syntax to catch the nested-array trap. Anything that
 needs real YAML is a job that belongs somewhere else, not a reason to grow this.
 
 It lives here rather than inside a rule because two callers now need it —
-``inspect`` reports on bundles and ``adopt`` copies them — and the second caller
+``inspect`` reports on bundles and ``get`` copies them — and the second caller
 is exactly when a private helper becomes a shared one. A tool that grew a second
 frontmatter reader would be doing to itself what the estate already does to
 itself across three languages, which is a known problem rather than a new one.

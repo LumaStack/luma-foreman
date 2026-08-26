@@ -1,7 +1,7 @@
 """What a project took, and proof of what it looked like.
 
 The model behind ``adopted.toml``. Three commands need it and they need it for
-three different reasons — ``adopt`` writes it, ``outfit`` reads it to know what
+three different reasons — ``get`` writes it, ``apply`` reads it to know what
 there is to project, and ``inspect`` re-derives the checksum to find out whether
 anybody edited the copy. Putting the format in one place is what keeps those
 three from disagreeing about it.

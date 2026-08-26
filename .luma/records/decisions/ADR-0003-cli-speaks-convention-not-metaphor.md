@@ -49,6 +49,11 @@ Neither is what `luma-foreman inspect` is.
 **Every rename is a clean break.** No aliases, no deprecation period. The old
 names stop working the day the new ones land.
 
+**Three words are retired, not just unused.** `jobs` for subcommands,
+`projection` for what `apply` writes, and `refit` for anything. They do not
+appear in code, output, documentation, records or the backlog — only in
+published `## Version` histories, which record what was true when written.
+
 **`install` is not the verb for taking a bundle.**
 
 **Nouns are for reading; verbs stay flat.** `get`, `apply` and `inspect` remain
@@ -72,8 +77,21 @@ by the author.** That asymmetry decides it on its own.
 **`install` is precluded by [[ADR-0002-adoption-copies-and-never-resolves]].** It
 promises a resolver, a lockfile, an uninstall, and transitive fetching. Adoption
 refuses all four by design, and the README already names the conflict — *"which
-is what keeps this a copy rather than an install."* The nearest real analogue in
-any ecosystem is `go get`, which is called `get`.
+is what keeps this a copy rather than an install."*
+
+**`get` is right for what it does not promise.** `adopt` sounds like taking
+something *in*, which reasonably includes wiring it up — and `get` wires nothing
+up. It copies a directory and writes a receipt; `apply` is a separate command
+somebody has to run. A bundle that was taken and never applied is present,
+checksummed, reported clean and invisible to every agent, which is the failure
+`inspect` reports as `unapplied`. A verb implying the two were one step would
+work against the check. (`go get` is the nearest analogue in any ecosystem, and
+is precedent rather than the argument.)
+
+**Which reserves `adopt` rather than rejecting it.** The thing it overpromises
+for one command is an accurate description of two, so it is the obvious name if
+a `get`-then-apply shorthand is ever wanted — see
+[[adopt-or-install-as-shorthand]].
 
 **`apply` names the contract that `outfit` left implicit.** Applying is
 idempotent, re-runnable, and produces derived output that is safe to delete —
@@ -81,6 +99,18 @@ which is [[ADR-0001-apply-writes-adapters-not-copies]]. `apply` is the
 terraform and kubectl reading of exactly that: make derived state match declared
 state. It also survives being run repeatedly, which matters because `--check`
 runs in continuous integration.
+
+**`projection` collided with the noun for a repository**, and the collision was
+in the line that explains the command: `apply — project what this project
+adopted`. One word, twice, two meanings. `jobs` was taken by shells and CI, and
+neither meaning is what `luma-foreman inspect` is.
+
+**A retired word comes back by being reinvented, not by being remembered.**
+Both are the natural English for what they described, so absence from the
+codebase is a weak defence — an author reaches for `projection` again and it
+reads as a fresh choice rather than a revival. This record is what makes the
+retirement citable; an `inspect` rule is what would make it enforced, and is
+filed rather than built.
 
 **A clean break rather than aliases, because an alias would let the catalog stay
 wrong.** `luma/luma-tools workflows/adopt-knowledge` prints `luma-foreman adopt`
@@ -195,7 +225,7 @@ by regeneration — never by editing `.claude/skills/`.
 
 **Renaming a command is now a two-repository change.** Any bundle that documents
 foreman has to be updated, versioned and published in `luma-catalog`, then
-re-adopted. Follow `publish-to-the-catalog`.
+taken again. Follow `publish-to-the-catalog`.
 
 **The unknown-command message has to carry the rename.** With no aliases it is
 the only thing standing between someone typing `adopt` and a bare failure, so it

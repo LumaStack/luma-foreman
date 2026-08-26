@@ -108,7 +108,7 @@ now with a number against it.
 `preload` levels currently differ only in emphasis once written this way —
 recorded in `.luma/backlog/ideas/preload-levels-collapse-into-emphasis.md`.
 
-**Reporting this number at adopt time** is the cheap version of the same
+**Reporting this number at `get` time** is the cheap version of the same
 insight, and is unbuilt — `luma-leader/docs/adoption-use-cases.md` names it as
 the highest-value item nobody has built.
 

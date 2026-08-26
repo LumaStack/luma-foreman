@@ -287,11 +287,11 @@ def run(
     )
     adoption.write(project_root, entries)
 
-    # `--force` at the same version is a re-adoption, not an upgrade. Saying
+    # `--force` at the same version re-copies, it does not upgrade. Saying
     # "upgraded 0.3.1 -> 0.3.1" reports something that did not happen, and
     # output nobody can trust is worse than output nobody reads.
     if upgrade == version:
-        verb = f"re-adopted {version}"
+        verb = f"took {version} again"
     elif upgrade:
         verb = f"upgraded {upgrade} -> {version}"
     else:
