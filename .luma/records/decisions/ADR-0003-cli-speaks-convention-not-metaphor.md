@@ -2,7 +2,7 @@
 type: decision
 title: The CLI speaks command-line convention, not the foreman metaphor
 decided: 2026-08-26
-lifecycle_status: draft
+lifecycle_status: provisional
 reopen_trigger: Bundles declare dependencies and foreman resolves them — the re-open condition of ADR-0002. At that point `install` stops being a lie and the verb is worth revisiting.
 ---
 
@@ -59,10 +59,10 @@ commands that only report — `list`, `show`, and `outdated`.
 project holds; `catalog list` lists catalogs it draws from. `show` drills into
 one of either. Nothing is named for a thing it does not return.
 
-**Only `catalog show` needs a network.** The other three read committed state —
-`adopted.toml` and `.luma/config/foreman.toml` — so they work in a bare clone.
-The offline guarantee that `inspect` carries extends to every read command
-except the one that reaches the far side.
+**Two of the five need a network: `bundle outdated` and `catalog show`.** Both
+ask about the far side. The other three read committed state — `adopted.toml`
+and `.luma/config/foreman.toml` — so they work in a bare clone, which extends
+the guarantee `inspect` carries to every read command that can honour it.
 
 ## Why
 
@@ -212,11 +212,16 @@ the first real pressure toward registering catalogs rather than deriving them,
 and it should be recorded as such when it arrives rather than solved by
 accident.
 
-**Only `catalog show` may reach the network.** `bundle list`, `bundle show` and
-`catalog list` read committed state, and the guarantee is the one `inspect`
-carries: a check that cannot run is reported as skipped, never as a pass. A
-version-available column on `bundle list` would quietly break it — that
-comparison belongs to `outdated`.
+**Two commands may reach the network and no others: `bundle outdated` and
+`catalog show`.** Both answer a question about the far side, and neither has an
+offline answer worth giving. `bundle list`, `bundle show` and `catalog list`
+read committed state, so the guarantee `inspect` carries extends to them: a
+check that cannot run is reported as skipped, never as a pass.
+
+**A version-available column on `bundle list` would quietly break that**, which
+is the tempting change to refuse. It reads as a small convenience and it moves
+the command across the line — the comparison belongs to `bundle outdated`,
+which is named for needing a network.
 
 ## References
 
