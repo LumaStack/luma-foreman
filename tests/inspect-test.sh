@@ -248,12 +248,12 @@ has 'patth'
 # `moment` is a closed vocabulary for the same reason: a name nobody fires is
 # indistinguishable from a moment that has not arrived.
 d=$(bundle trigmoment)
-printf -- '---\ntype: policy\ntitle: T\ncompliance: mandatory\napplies_to:\n  - moment: before-lunch\n---\nx\n' > "$d/b/p.md"
-run 'unknown moment' 1 "$d"
+printf -- '---\ntype: policy\ntitle: T\ncompliance: mandatory\napplies_to:\n  - event: before-lunch\n---\nx\n' > "$d/b/p.md"
+run 'unknown event' 1 "$d"
 has 'before-lunch'
 
 d=$(bundle trigok)
-printf -- '---\ntype: policy\ntitle: T\ncompliance: mandatory\napplies_to:\n  - moment: before-commit\n  - path: "**/*.css"\n  - command: git commit\n  - topic: doing the thing\n---\nx\n' > "$d/b/p.md"
+printf -- '---\ntype: policy\ntitle: T\ncompliance: mandatory\napplies_to:\n  - event: before-commit\n  - path: "**/*.css"\n  - command: git commit\n  - topic: doing the thing\n---\nx\n' > "$d/b/p.md"
 run 'well-formed triggers are quiet' 0 "$d"
 lacks 'rule=bundles'
 

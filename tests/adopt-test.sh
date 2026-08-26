@@ -198,8 +198,10 @@ grep -q 'Steps go here' "$PROJECT/.claude/skills/make-a-widget/SKILL.md" \
 # half-migrated bundle behave correctly and stall there forever, so this bundle
 # — which still declares it — reaches the index as nothing at all.
 case $LAST in *preload*) ok ;; *) bad "expected the legacy preload reported: $LAST" ;; esac
-grep -q 'widget-rules' "$PROJECT/CLAUDE.md" \
-  && bad 'preload must not be honoured' || ok
+# It reaches the standing surface, and not because `preload` was read: it is a
+# policy with no `applies_to`, and a policy binds unless it says otherwise. The
+# legacy field is reported and ignored; the cost comes from having no trigger.
+grepped 'widget-rules' "$PROJECT/CLAUDE.md"
 
 # A Type Definition is not reading material: it is consulted when writing a
 # Document of its type, which is a job the workflow already sends you to.

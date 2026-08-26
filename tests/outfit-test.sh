@@ -76,7 +76,7 @@ cat > "$B/policy/house-rules.md" <<'EOF'
 type: policy
 title: House rules
 description: The rules that govern all work here.
-compliance: mandatory
+compliance: required
 ---
 Everything here is always in force.
 EOF
@@ -87,7 +87,7 @@ cat > "$B/policy/stylesheets.md" <<'EOF'
 type: policy
 title: Stylesheet rules
 description: How stylesheets are written here.
-compliance: mandatory
+compliance: required
 applies_to:
   - path: "**/*.css"
 ---
@@ -100,7 +100,7 @@ cat > "$B/policy/no-credentials.md" <<'EOF'
 type: policy
 title: Never commit a credential
 description: Credentials must not reach a commit.
-compliance: mandatory
+compliance: required
 on_violation: block
 applies_to:
   - command: git commit
@@ -256,7 +256,7 @@ cat > "$B/policy/no-force-push.md" <<'EOF'
 type: policy
 title: Never force-push a shared branch
 description: Force-pushing a shared branch destroys other people's work.
-compliance: mandatory
+compliance: required
 on_violation: block
 applies_to:
   - command: git push --force
@@ -287,7 +287,12 @@ EOF
 
 outfit 'reports a bundle still using preload' 0
 case $LAST in *preload*) ok ;; *) bad "expected outfit to report the legacy preload field: $LAST" ;; esac
-ungrep '@.luma/bundles/acme/rules/policy/legacy.md' "$CLAUDE"
+
+# It *is* imported — but not because `preload` was read. It is a policy with no
+# `applies_to`, and a policy binds unless it says otherwise, so it is standing.
+# That is the design working, and it is the right pressure: an unmigrated policy
+# costs every session until somebody says when it applies.
+grepped '@.luma/bundles/acme/rules/policy/legacy.md' "$CLAUDE"
 
 # --- a trigger nothing can honour fails loudly ----------------------------------
 #
@@ -301,7 +306,7 @@ cat > "$B/policy/needs-approval.md" <<'EOF'
 type: policy
 title: Needs a person
 description: Someone has to approve this.
-compliance: mandatory
+compliance: required
 on_violation: require_approval
 applies_to:
   - command: git push
@@ -326,7 +331,7 @@ cat > "$B/policy/nonexistent.md" <<'EOF'
 type: policy
 title: Rules for a directory that is not here
 description: Governs a place this project does not have.
-compliance: mandatory
+compliance: required
 applies_to:
   - path: "nowhere-at-all/**"
 ---
