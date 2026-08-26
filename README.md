@@ -4,15 +4,14 @@
 
 It walks into a project repository, sets it up to succeed, and comes back periodically to check the work still holds.
 
-> **Status:** early. Adoption, projection and inspection work end to end; `bootstrap` and `refit` are still shape.
+> **Status:** early. Adoption, projection and inspection work end to end; `init` is still shape.
 
 ## The foreman commands
 
-- **Bootstrap.** Stand a new project up with the structure it should have had as soon as possible.
+- **Init.** Stand a new project up with the structure it should have had as soon as possible.
 - **Adopt.** Adopt a bundle of knowledge from a catalog and make it available in this repository.
 - **Outfit.** Wire up what was adopted so agents use it correctly, so nobody has to say where to look.
 - **Inspect.** Check a project against the baseline and report where it falls short.
-- **Refit.** Return over time and confirm the latest learnings have actually been applied, not just published.
 
 ## Knowledge in, agent out
 
@@ -57,7 +56,7 @@ luma-foreman inspect --rule adoption
 
 Every check works in a bare clone with no configuration, and a check that *cannot* run is reported as skipped rather than passed — an inspection that reads clean while silently skipping half its checks is worse than no inspection.
 
-`bootstrap` and `refit` print "not built yet" and exit 2.
+`init` prints "not built yet" and exits 2.
 
 ## Install
 
@@ -121,7 +120,7 @@ The last row is the awkward one, and it earns its place: some per-project decisi
 
 **Inspect** is the command that must survive a bare environment — fresh clone, no configuration, no organization access, exit codes, continuous integration. It is the one that has to hold the line.
 
-**Bootstrap**, **Outfit** and **Refit** are workstation operations. They change a repository, they expect an operator, and they may use workstation state to do it. Requiring them to run in continuous integration was never the point and would buy nothing.
+**Init** and **Outfit** are workstation operations. They change a repository, they expect an operator, and they may use workstation state to do it. Requiring them to run in continuous integration was never the point and would buy nothing.
 
 ## Relationship to luma-leader
 

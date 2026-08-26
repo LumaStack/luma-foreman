@@ -2,7 +2,7 @@
 type: decision
 title: The CLI speaks command-line convention, not the foreman metaphor
 decided: 2026-08-26
-lifecycle_status: provisional
+lifecycle_status: draft
 reopen_trigger: Bundles declare dependencies and foreman resolves them — the re-open condition of ADR-0002. At that point `install` stops being a lie and the verb is worth revisiting.
 ---
 
@@ -14,7 +14,7 @@ Commands are named the way other command-line tools name them. The word for a
 subcommand is **command**. The verbs are `get`, `apply`, `init` — not `adopt`,
 `outfit`, `bootstrap`. Reading an inventory happens under a noun — `bundle` for
 what this project has, `catalog` for where it came from — each with `list` and
-`show`. The old names survive as deprecated aliases.
+`show`. Every rename is a clean break — the old names stop working.
 
 ## Problem
 
@@ -43,19 +43,17 @@ Neither is what `luma-foreman inspect` is.
 | `outfit` | `apply` |
 | `adopt` | `get` |
 | `adopt --list` | `catalog show <name>` |
+| `outdated` | `bundle outdated` |
 | *nothing* | `bundle list`, `bundle show <name>`, `catalog list` |
 
-**`adopt` and `outfit` remain as working aliases** that print a deprecation
-notice. `bootstrap` gets none — it was never built, so nothing can depend on it.
+**Every rename is a clean break.** No aliases, no deprecation period. The old
+names stop working the day the new ones land.
 
 **`install` is not the verb for taking a bundle.**
 
-**Nouns are for reading an inventory; verbs stay flat.** `bundle` and `catalog`
-group the two listing commands and nothing else. `get`, `apply`, `inspect` and
-`outdated` remain top-level, because a noun group earns its place by
-partitioning the command set rather than by being frequent — and bundles are the
-product, not a subsystem. Prefixing every verb with `bundle` would add a word
-everywhere and distinguish nothing.
+**Nouns are for reading; verbs stay flat.** `get`, `apply` and `inspect` remain
+top-level because they act on the project. `bundle` and `catalog` hold the
+commands that only report — `list`, `show`, and `outdated`.
 
 **Each noun lists instances of itself.** `bundle list` lists bundles this
 project holds; `catalog list` lists catalogs it draws from. `show` drills into
@@ -84,12 +82,18 @@ terraform and kubectl reading of exactly that: make derived state match declared
 state. It also survives being run repeatedly, which matters because `--check`
 runs in continuous integration.
 
-**Aliases rather than a clean break, because the catalog documents foreman and
-ships on its own version.** `luma/luma-tools workflows/adopt-knowledge` prints
-`luma-foreman adopt` and `luma-foreman outfit`. A project can adopt an older
-`luma-tools` into a newer foreman at any time, so a stale command name in bundle
-prose is a permanent condition rather than a transitional one. An agent reading
-that prose must not hit a hard error.
+**A clean break rather than aliases, because an alias would let the catalog stay
+wrong.** `luma/luma-tools workflows/adopt-knowledge` prints `luma-foreman adopt`
+and `luma-foreman outfit`, and the only real fix is to update that bundle and
+republish it. An alias makes the stale prose keep working, which removes the
+pressure to ever correct it — and leaves two names for one command with no
+condition under which either dies. A hard error naming the new command teaches
+the rename once; an alias defers it indefinitely.
+
+**`bundle outdated` because it reports rather than acts.** It answers a question
+about bundles and changes nothing, which is what the nouns are for. Leaving it
+top-level would have made it the only bare word in the set that is a state
+rather than an action.
 
 **`catalog show` rather than `get --list`.** Browsing what a catalog offers was
 never an adoption operation; it was filed under the adoption verb because that
@@ -174,9 +178,11 @@ checkout — which is the normal case when developing a catalog.
   unknown verb with *unknown command*.
 
 **Cons**
-- Two aliases to carry, and no decided date for dropping them.
-- The rename is not complete until `luma-catalog` ships updated bundle prose,
-  which is a second repository on its own release cadence.
+- A window where `luma-catalog` still documents the old names and an agent
+  following that prose hits an error. Closing it means shipping the catalog
+  update promptly rather than eventually.
+- Anyone with the old names in a script or in muscle memory gets a failure
+  rather than a warning.
 - `get` feeds the package-manager mental model that
   [[ADR-0002-adoption-copies-and-never-resolves]] exists to fight. The
   documentation carries that correction now, not the verb.
@@ -191,9 +197,13 @@ by regeneration — never by editing `.claude/skills/`.
 foreman has to be updated, versioned and published in `luma-catalog`, then
 re-adopted. Follow `publish-to-the-catalog`.
 
-**Deprecated aliases need a removal condition before they accumulate.** None is
-set here deliberately — the condition depends on how long stale bundle prose
-stays in circulation, which nothing has measured yet.
+**The unknown-command message has to carry the rename.** With no aliases it is
+the only thing standing between someone typing `adopt` and a bare failure, so it
+names the replacement: `unknown command: adopt (renamed to: get)`.
+
+**The catalog update is not optional follow-up work.** It is what closes the
+window this decision opens, and it should ship immediately after the rename
+rather than whenever convenient.
 
 **Catalogs need a short name, and do not have one.** `catalog show` takes an
 argument, and today a catalog is identified by a URL or a path. Derive a short

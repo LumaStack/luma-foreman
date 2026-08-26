@@ -19,8 +19,7 @@ Commands:
   outfit              project what this project adopted into what a harness reads
   inspect             check a project against the baseline and report shortfalls
   outdated            which adopted bundles have a newer version published
-  bootstrap           stand a new project up with the structure it should have had
-  refit               confirm the latest learnings were actually applied
+  init                stand a new project up with the structure it should have had
 
 Run `luma-foreman <command> --help` for a command's own options."""
 
@@ -49,7 +48,7 @@ Add -g/--global to any write to target the global fallback instead of this
 project. Reads always show the merged result. Add --json to `policy`, `keys`
 and `doctor` for machine-readable output."""
 
-UNBUILT = ("bootstrap", "refit")
+UNBUILT = ("init",)
 
 
 def _policy(argv: list[str]) -> int:
