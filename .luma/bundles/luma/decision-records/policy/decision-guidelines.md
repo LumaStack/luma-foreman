@@ -2,7 +2,6 @@
 type: policy
 title: Writing a decision record
 description: When to record a decision, what makes one worth reading years later, and what you may edit once it is settled.
-compliance: recommended
 applies_to:
   - topic: recording a decision, or deciding whether one is worth recording
 ---

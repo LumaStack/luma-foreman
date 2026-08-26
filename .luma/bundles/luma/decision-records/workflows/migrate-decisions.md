@@ -2,7 +2,6 @@
 type: workflow
 title: Migrate a DECISIONS file
 description: Split a single DECISIONS.md into individual records, reconstruct what supersedes what, repoint everything that linked to the file, and only then remove it. Use once per project that has one.
-compliance: optional
 ---
 
 # Migrate a DECISIONS file
