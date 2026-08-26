@@ -20,7 +20,7 @@ Commands:
   inspect             check a project against the baseline and report shortfalls
 
   bundle              what this project holds — list, show, outdated
-  catalog             where it came from — list, show
+  catalog             where bundles come from — list, show
   agent-permissions   what an agent is allowed to do in this repository
 
 Run `luma-foreman <command> --help` for a command's own options."""
