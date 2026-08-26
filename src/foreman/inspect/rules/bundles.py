@@ -28,9 +28,13 @@ from ..finding import Finding, Result, Skipped
 
 # The closed vocabularies `applies_to` draws on. Closed is the point: anything
 # outside them is a typo that would otherwise publish silently.
-TRIGGER_KINDS = ("always", "path", "tool", "command", "moment", "topic")
-MOMENTS = ("session-start", "session-end", "before-commit", "before-push",
-           "before-merge", "before-release")
+TRIGGER_KINDS = ("always", "path", "tool", "command", "event", "topic")
+# `event` reaches what no other trigger can: a lifecycle point, fired however
+# it is arrived at. Four of these overlap with `command` on purpose — a command
+# trigger catches a literal invocation, an event catches the point itself — and
+# under OR semantics that is belt and braces rather than redundancy.
+EVENTS = ("session-start", "session-end", "before-commit", "before-push",
+          "before-merge", "before-release")
 
 # Reserved names, keyed by their lowercase spelling so a miscased file can be
 # recognised and named.
@@ -133,7 +137,7 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
     # never fires. Nothing distinguishes that from a rule whose moment has not
     # come, which is the failure the whole applicability design exists to end.
     unknown_kind: list[str] = []
-    unknown_moment: list[str] = []
+    unknown_event: list[str] = []
     always_on: list[str] = []
     for doc_id, keys in docs.items():
         if doc_id == "BUNDLE":
@@ -144,8 +148,8 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
             kind, _, value = trigger.partition(":")
             if kind not in TRIGGER_KINDS:
                 unknown_kind.append(f"{doc_id}: {kind}")
-            elif kind == "moment" and value not in MOMENTS:
-                unknown_moment.append(f"{doc_id}: {value}")
+            elif kind == "event" and value not in EVENTS:
+                unknown_event.append(f"{doc_id}: {value}")
         if not triggers and lkf.unquote(keys.get("compliance", "")).strip() == "mandatory":
             always_on.append(doc_id)
 
@@ -155,10 +159,10 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
             "applies_to takes a closed vocabulary — " + ", ".join(sorted(TRIGGER_KINDS)) +
             ". Anything else parses, publishes, and never fires, which is "
             "indistinguishable from a rule whose moment has not come.")
-    if unknown_moment:
-        bad("high", f"{len(unknown_moment)} moment(s) are not moments anybody fires",
-            unknown_moment,
-            "moment is a closed vocabulary — " + ", ".join(sorted(MOMENTS)) +
+    if unknown_event:
+        bad("high", f"{len(unknown_event)} event(s) are not events anybody fires",
+            unknown_event,
+            "event is a closed vocabulary — " + ", ".join(sorted(EVENTS)) +
             ". A name nothing fires is a rule that never arrives.")
     if always_on:
         bad("low", f"{len(always_on)} mandatory document(s) load in every session",
