@@ -3,23 +3,23 @@ type: type_definition
 defines: decision
 fields:
   decided:
-    obligation: mandatory
+    field_presence: required
     field_type: date
     desc: "when the decision was settled — not when the document was created"
   reopen_trigger:
-    obligation: recommended
+    field_presence: recommended
     field_type: text
     desc: "what would have to become true for this to be worth revisiting"
   superseded_by:
-    obligation: optional
+    field_presence: optional
     field_type: wikilink
     desc: "the decision that replaced this one — quoted (§8); set together with lifecycle_status: archived"
   archived:
-    obligation: recommended
+    field_presence: recommended
     field_type: date
     desc: "when this stopped being the answer. Set together with lifecycle_status: archived; the clock a retention period measures from"
   archived_reason:
-    obligation: recommended
+    field_presence: recommended
     field_type: enum
     values: [superseded, retired, invalidated, noise]
     desc: "why it stopped being the answer. Set together with lifecycle_status: archived"
