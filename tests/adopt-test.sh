@@ -307,9 +307,35 @@ grep -q "^source = \"$CATALOG\"" "$WITHCAT/.luma/config/luma-foreman.toml" \
 LAST=$(cd "$WITHCAT" && "$CLI" get acme/widgets 2>&1); got=$?
 [ "$got" -eq 0 ] && ok || bad "get without --from (exit $got): $LAST"
 
-init 'init refuses a second time' 1
-has 'already exists'
-has 'migrate-into-luma'
+# Idempotent. A second run adds whatever a newer version writes and touches
+# nothing that is already there — refusing would make somebody do by hand the
+# work the refusal had just finished diagnosing.
+init 'init runs again cleanly' 0
+has 'already there, left alone'
+has 'Nothing to do'
+
+# ...and it really is non-destructive.
+printf 'MINE\n' >> "$FRESH/.luma/PROJECT.md"
+init 'init leaves an edited descriptor alone' 0
+grepped 'MINE' "$FRESH/.luma/PROJECT.md"
+
+# A missing piece is added rather than reported.
+rm "$FRESH/.luma/config/luma-foreman.toml"
+init 'init adds what is missing' 0
+has 'created'
+[ -f "$FRESH/.luma/config/luma-foreman.toml" ] && ok || bad 'init did not restore the config'
+grepped 'MINE' "$FRESH/.luma/PROJECT.md"
+
+# migrate-into-luma is named only where there is something to migrate.
+lacks 'migrate-into-luma'
+MIG=$T/migrate
+mkdir -p "$MIG/docs"
+git -C "$MIG" init -q
+printf '# Decisions\n' > "$MIG/docs/DECISIONS.md"
+LAST=$(cd "$MIG" && "$CLI" init 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "init beside an existing structure (exit $got): $LAST"
+case $LAST in *"migrate-into-luma"*) ok ;; *) bad 'existing records not noticed' ;; esac
+case $LAST in *"docs/DECISIONS.md"*) ok ;; *) bad 'did not say what it found' ;; esac
 
 # A descriptor describing a repository, written where there is not one, is
 # wrong in a way nobody notices until it travels.
