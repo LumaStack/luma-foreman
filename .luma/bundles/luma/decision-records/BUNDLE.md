@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.4.0
+version: 0.6.0
 published: 2026-08-25
 consumers: [project, organization]
 entry_point: workflows/record-decision
@@ -122,6 +122,23 @@ against the possibility. That is the field working as intended rather than an
 omission.
 
 ## Version
+
+`0.6.0` — **`compliance` is gone.** A policy binds because it is a policy —
+that is what the type means — and what happens when it is broken is what
+`on_violation` says. The field between them restated the type on documents that
+bind, and offered a soft tier to documents that arguably should not be policies
+at all.
+
+Minor. Nothing a reader is obliged to do has changed.
+
+`0.5.0` — **vocabulary.** `moment` becomes `event` — a moment is a point in
+time and `applies_to` takes nouns. `compliance` is dropped wherever it was
+saying nothing: a policy binds unless it says otherwise, so only a strong
+default declares `recommended`, and a workflow's steps bind by being steps.
+Type Definitions use `field_presence: required` for what was
+`obligation: mandatory`, matching the format.
+
+Minor. Nothing a reader is obliged to do has changed; what declares it has.
 
 `0.4.0` — **`preload` is replaced by `compliance` and `applies_to`.** An author
 now says how strongly a rule binds and when it governs; *when it is delivered* is
