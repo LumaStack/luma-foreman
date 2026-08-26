@@ -14,14 +14,14 @@ from .agent_permissions import commands
 USAGE = """usage: luma-foreman <command> [args]
 
 Commands:
-  agent-permissions   what an agent is allowed to do in this repository
-  get                 take a bundle from a catalog into this project
+  init                stand a new project up with the structure it should have had
+  get                 adopt a bundle from a catalog into this project
   apply               write what this project adopted into what a harness reads
   inspect             check a project against the baseline and report shortfalls
-  init                stand a new project up with the structure it should have had
 
-  bundle              what this project holds — list, show, outdated
-  catalog             where it came from — list, show
+  bundle              bundles this project holds — list, show, outdated
+  catalog             where bundles come from — list, show
+  agent-permissions   what an agent is allowed to do in this repository
 
 Run `luma-foreman <command> --help` for a command's own options."""
 
