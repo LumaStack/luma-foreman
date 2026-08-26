@@ -98,7 +98,6 @@ class Doc:
     type: str
     title: str
     description: str
-    compliance: str
     on_violation: str
     applies_to: tuple[str, ...]
     legacy_preload: str = ""
@@ -112,14 +111,18 @@ class Doc:
         """Where this lands: standing, advertised, or on-demand.
 
         Derived, never declared. **There is exactly one path to standing** — a
-        policy that binds with no trigger anyone could state — so the expensive
-        outcome is something an author falls into rather than selects, and it
-        shows up as a gap in what was said rather than as a decision somebody
-        made.
+        policy whose subject never stops arising — so the expensive outcome is
+        something an author falls into by being unable to say *when*, rather
+        than something they select.
+
+        **A policy binds because it is a policy.** Nothing declares that, which
+        is why the type is what decides here: a rule with no `applies_to` is in
+        force always, and anything else with no `applies_to` is simply
+        available.
         """
         if self.applies_to:
             return "advertised"
-        return "standing" if self.compliance == "required" else "on-demand"
+        return "standing" if self.type == "policy" else "on-demand"
 
 
 @dataclass(frozen=True)
@@ -213,14 +216,6 @@ def discover(project_root: Path) -> list[Bundle]:
                     type=_text(front, "type"),
                     title=_text(front, "title"),
                     description=_text(front, "description"),
-                    # A policy *is* an obligation, so it binds unless it says
-                    # otherwise — absent means `required`. Nothing else carries
-                    # compliance at all: a workflow's steps bind by being steps,
-                    # and a concept obliges nothing by definition.
-                    compliance=(
-                        _text(front, "compliance")
-                        or ("required" if _text(front, "type") == "policy" else "")
-                    ),
                     on_violation=_text(front, "on_violation") or "allow",
                     applies_to=lkf.applies_to(path),
                     legacy_preload=_text(front, "preload"),
@@ -348,8 +343,8 @@ def _index(bundles: list[Bundle], project_root: Path) -> str:
     if standing:
         lines += [
             "**These are in force here and are loaded with this file.** Each one "
-            "is `compliance: mandatory` with no condition narrowing when it "
-            "applies, so it governs everything done in this repository.",
+            "is a policy with no `applies_to`, so nothing narrows when it "
+            "governs — which means everything done in this repository.",
             "",
         ]
         for doc in standing:
@@ -452,7 +447,6 @@ def _routing(bundles: list[Bundle], project_root: Path) -> str:
                 f"document = {_toml_str(doc.doc_id)}",
                 f"title = {_toml_str(doc.title or doc.doc_id)}",
                 f"path = {_toml_str(rel)}",
-                f"compliance = {_toml_str(doc.compliance)}",
                 f"on_violation = {_toml_str(doc.on_violation)}",
                 "applies_to = ["
                 + ", ".join(_toml_str(a) for a in doc.applies_to)
@@ -511,7 +505,7 @@ def _notices(bundles: list[Bundle], project_root: Path) -> list[str]:
             if doc.legacy_preload:
                 out.append(
                     f"{bundle.bundle_id} {doc.doc_id}: still declares "
-                    f"preload — replace with compliance and applies_to"
+                    f"preload — say when its subject arises with applies_to, or nothing"
                 )
             # A glob matching nothing never fires, and silence is
             # indistinguishable from a rule that has simply not come up. Saying
