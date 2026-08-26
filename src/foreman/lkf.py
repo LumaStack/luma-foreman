@@ -73,23 +73,7 @@ def unquote(value: str) -> str:
 
 ITEM = re.compile(r"^\s*-\s*([A-Za-z_][\w-]*)\s*:\s*(.+?)\s*$")
 
-# `matches`, and the name it carried through the format's v0.0.13. The old one
-# is read where the new one is absent so that a repository upgrading its tools
-# does not silently lose every trigger it declared — `inspect` reports each use
-# so the migration finishes rather than lingering.
-FIELDS = ("matches", "applies_to")
-
-
-def _header(front: str, field: str) -> re.Match[str] | None:
-    return re.compile(rf"^{field}\s*:[ \t]*(.*)$", re.M).search(front)
-
-
-def field_name(path: Path) -> str:
-    """Which spelling this Document used — ``matches``, ``applies_to``, or none."""
-    front = _front(path)
-    if front is None:
-        return ""
-    return next((f for f in FIELDS if _header(front, f)), "")
+MATCHES = re.compile(r"^matches\s*:[ \t]*(.*)$", re.M)
 
 
 def matches(path: Path) -> tuple[str, ...]:
@@ -115,23 +99,21 @@ def matches(path: Path) -> tuple[str, ...]:
     front = _front(path)
     if front is None:
         return ()
-    for field in FIELDS:
-        start = _header(front, field)
-        if start is None:
+    start = MATCHES.search(front)
+    if start is None:
+        return ()
+    keyword = unquote(start.group(1).strip())
+    if keyword:
+        return (keyword,) if keyword == "always" else ()
+    out: list[str] = []
+    for line in front[start.end() :].splitlines():
+        if line.strip() == "":
             continue
-        keyword = unquote(start.group(1).strip())
-        if keyword:
-            return (keyword,) if keyword == "always" else ()
-        out: list[str] = []
-        for line in front[start.end() :].splitlines():
-            if line.strip() == "":
-                continue
-            item = ITEM.match(line)
-            if item is None:
-                break  # the list ended; the next top-level key has begun
-            out.append(f"{item.group(1)}:{unquote(item.group(2))}")
-        return tuple(out)
-    return ()
+        item = ITEM.match(line)
+        if item is None:
+            break  # the list ended; the next top-level key has begun
+        out.append(f"{item.group(1)}:{unquote(item.group(2))}")
+    return tuple(out)
 
 
 def _front(path: Path) -> str | None:

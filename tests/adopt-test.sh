@@ -199,7 +199,7 @@ grep -q 'Steps go here' "$PROJECT/.claude/skills/make-a-widget/SKILL.md" \
 # — which still declares it — reaches the index as nothing at all.
 case $LAST in *preload*) ok ;; *) bad "expected the legacy preload reported: $LAST" ;; esac
 # It reaches the standing surface, and not because `preload` was read: it is a
-# policy with no `applies_to`, and a policy binds unless it says otherwise. The
+# policy declaring `matches: always`, which is the one route to being loaded. The
 # legacy field is reported and ignored; the cost comes from having no trigger.
 grepped 'widget-rules' "$PROJECT/CLAUDE.md"
 

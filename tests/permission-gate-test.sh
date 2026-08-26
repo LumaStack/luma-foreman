@@ -96,7 +96,7 @@ title = "Never commit a credential"
 path = ".luma/bundles/luma/git-secrets/policy/never-commit-credentials.md"
 compliance = "mandatory"
 on_violation = "block"
-applies_to = ["command:git commit"]
+matches = ["command:git commit"]
 EOF
 
 tb deny 'git commit -m "x"'
@@ -119,7 +119,7 @@ title = "CSS rules"
 path = ".luma/bundles/acme/style/policy/css.md"
 compliance = "recommended"
 on_violation = "allow"
-applies_to = ["command:git commit"]
+matches = ["command:git commit"]
 EOF
 tb none 'git commit -m "x"'
 

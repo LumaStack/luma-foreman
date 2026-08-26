@@ -102,7 +102,6 @@ class Doc:
     on_violation: str
     matches: tuple[str, ...]
     legacy_preload: str = ""
-    legacy_field: str = ""
 
     @property
     def slug(self) -> str:
@@ -226,7 +225,6 @@ def discover(project_root: Path) -> list[Bundle]:
                     on_violation=_text(front, "on_violation") or "allow",
                     matches=lkf.matches(path),
                     legacy_preload=_text(front, "preload"),
-                    legacy_field=lkf.field_name(path),
                 )
             )
 

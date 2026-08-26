@@ -240,7 +240,7 @@ lacks 'wrong case'
 # never fires. Nothing distinguishes that from a rule whose moment has not come.
 
 d=$(bundle trigkind)
-printf -- '---\ntype: policy\ntitle: T\napplies_to:\n  - patth: "src/**"\n---\nx\n' > "$d/b/p.md"
+printf -- '---\ntype: policy\ntitle: T\nmatches:\n  - patth: "src/**"\n---\nx\n' > "$d/b/p.md"
 run 'unknown trigger kind' 1 "$d"
 has 'not a trigger'
 has 'patth'
@@ -279,16 +279,18 @@ printf -- '---\ntype: policy\ntitle: T\n---\nx\n' > "$d/b/p.md"
 run 'a policy that says nothing is quiet' 0 "$d"
 lacks 'every session'
 
-# --- the migration's own ledger -------------------------------------------------
+# --- the old name is gone, not merely discouraged -------------------------------
 #
-# `applies_to` is read where `matches` is absent, so upgrading the tools cannot
-# silently drop every trigger a repository declared. Each use is reported, which
-# is what makes the migration finishable rather than merely started.
+# `applies_to` was read during the rename so that upgrading the tools could not
+# drop a repository's triggers mid-migration. The migration finished the same
+# day, so the fallback bought compatibility with nobody and cost every reader a
+# second spelling. A Document still declaring it now surfaces nothing — the safe
+# direction, and the policy lands in on-demand rather than being loaded anyway.
 
-d=$(bundle legacyfield)
+d=$(bundle oldname)
 printf -- '---\ntype: policy\ntitle: T\napplies_to:\n  - command: git commit\n---\nx\n' > "$d/b/p.md"
-run 'applies_to is still read, and reported' 1 "$d"
-has 'still say applies_to'
+run 'applies_to is no longer read' 0 "$d"
+lacks 'rule=bundles'
 
 # --- always is a value, never a trigger kind ------------------------------------
 #
