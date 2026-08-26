@@ -71,39 +71,73 @@ def unquote(value: str) -> str:
     return value
 
 
-APPLIES = re.compile(r"^applies_to\s*:\s*$", re.M)
 ITEM = re.compile(r"^\s*-\s*([A-Za-z_][\w-]*)\s*:\s*(.+?)\s*$")
 
+# `matches`, and the name it carried through the format's v0.0.13. The old one
+# is read where the new one is absent so that a repository upgrading its tools
+# does not silently lose every trigger it declared — `inspect` reports each use
+# so the migration finishes rather than lingering.
+FIELDS = ("matches", "applies_to")
 
-def applies_to(path: Path) -> tuple[str, ...]:
-    """A Document's triggers, as ``kind:value`` strings in declared order.
 
-    ``applies_to`` is the one field here that is not a flat scalar — it is a
-    list of single-key mappings — so the general reader flattens it into
-    nonsense and its entries leak out as top-level keys. This reads it directly
-    rather than growing the subset parser into a YAML implementation.
+def _header(front: str, field: str) -> re.Match[str] | None:
+    return re.compile(rf"^{field}\s*:[ \t]*(.*)$", re.M).search(front)
 
-    Triggers combine with **OR**: any one matching is enough. There is no
-    grammar and no nesting, which is what keeps this eleven lines rather than a
-    parser with precedence rules.
+
+def field_name(path: Path) -> str:
+    """Which spelling this Document used — ``matches``, ``applies_to``, or none."""
+    front = _front(path)
+    if front is None:
+        return ""
+    return next((f for f in FIELDS if _header(front, f)), "")
+
+
+def matches(path: Path) -> tuple[str, ...]:
+    """What makes a Document surface, as ``kind:value`` strings in declared order.
+
+    **Two shapes, and the bare word is the whole point of the split.** A list of
+    single-key mappings yields ``("command:git commit", …)``; the scalar forms
+    yield a single entry with no colon — ``("always",)`` — which is what tells a
+    keyword apart from a trigger without a second return value. ``nothing``, an
+    unrecognised keyword, and an absent field all yield ``()``.
+
+    **An unknown keyword resolving to nothing is deliberate.** It fails toward
+    *available on request* rather than toward *loaded in every session*, because
+    under-delivering is recoverable and over-delivering is a token bomb.
+    `inspect` reports it, so the cost of the typo is a finding rather than a
+    permanent seat in everybody's context.
+
+    This is read directly rather than through the general reader, which flattens
+    a list of mappings into nonsense and leaks its entries out as top-level
+    keys. Triggers combine with **OR**: any one matching is enough, and there is
+    no grammar and no nesting to parse.
     """
+    front = _front(path)
+    if front is None:
+        return ()
+    for field in FIELDS:
+        start = _header(front, field)
+        if start is None:
+            continue
+        keyword = unquote(start.group(1).strip())
+        if keyword:
+            return (keyword,) if keyword == "always" else ()
+        out: list[str] = []
+        for line in front[start.end() :].splitlines():
+            if line.strip() == "":
+                continue
+            item = ITEM.match(line)
+            if item is None:
+                break  # the list ended; the next top-level key has begun
+            out.append(f"{item.group(1)}:{unquote(item.group(2))}")
+        return tuple(out)
+    return ()
+
+
+def _front(path: Path) -> str | None:
     try:
         text = path.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError):
-        return ()
+        return None
     front, _ = split(text)
-    if front is None:
-        return ()
-    start = APPLIES.search(front)
-    if start is None:
-        return ()
-
-    out: list[str] = []
-    for line in front[start.end() :].splitlines():
-        if line.strip() == "":
-            continue
-        item = ITEM.match(line)
-        if item is None:
-            break  # the list ended; the next top-level key has begun
-        out.append(f"{item.group(1)}:{unquote(item.group(2))}")
-    return tuple(out)
+    return front

@@ -39,6 +39,7 @@ USAGE = """Project adopted bundles into what this project's harness reads.
 
   luma-foreman outfit             write the adapters and the index
   luma-foreman outfit --check     report what would change, write nothing
+  luma-foreman outfit --explain   show what each Document derives to, and from what
   luma-foreman outfit --to <dir>  a project other than this repository
 
 Writes .claude/skills/<name>/SKILL.md for every workflow, and a managed block in
@@ -99,8 +100,9 @@ class Doc:
     title: str
     description: str
     on_violation: str
-    applies_to: tuple[str, ...]
+    matches: tuple[str, ...]
     legacy_preload: str = ""
+    legacy_field: str = ""
 
     @property
     def slug(self) -> str:
@@ -108,21 +110,26 @@ class Doc:
 
     @property
     def klass(self) -> str:
-        """Where this lands: standing, advertised, or on-demand.
+        """Where this lands: always-on, advertised, or on-demand.
 
-        Derived, never declared. **There is exactly one path to standing** — a
-        policy whose subject never stops arising — so the expensive outcome is
-        something an author falls into by being unable to say *when*, rather
-        than something they select.
+        Derived, never declared — but **the expensive outcome is asked for
+        rather than fallen into**. `matches: always` is the only route to
+        always-on, so a Document cannot acquire a permanent seat in every
+        session because somebody forgot a field.
 
-        **A policy binds because it is a policy.** Nothing declares that, which
-        is why the type is what decides here: a rule with no `applies_to` is in
-        force always, and anything else with no `applies_to` is simply
-        available.
+        **The type no longer decides anything here**, and that is a
+        simplification rather than an omission. It used to break the tie for a
+        Document with no trigger — policy meant loaded-always, anything else
+        meant findable. With the default reversed there is no tie: nothing
+        surfaces a Document that says nothing surfaces it, whatever its type.
+
+        **An unknown keyword lands here as on-demand**, which is the safe
+        direction. `inspect` names it; the alternative is a typo buying a
+        permanent seat in everybody's context.
         """
-        if self.applies_to:
-            return "advertised"
-        return "standing" if self.type == "policy" else "on-demand"
+        if self.matches == ("always",):
+            return "always-on"
+        return "advertised" if self.matches else "on-demand"
 
 
 @dataclass(frozen=True)
@@ -141,9 +148,9 @@ class Bundle:
     def of_class(self, klass: str) -> list[Doc]:
         return [d for d in self.docs if d.klass == klass]
 
-    def standing(self) -> list[Doc]:
+    def always_on(self) -> list[Doc]:
         """Documents whose bodies have to be present before work starts."""
-        return self.of_class("standing")
+        return self.of_class("always-on")
 
 
 def _text(keys: dict[str, str], name: str) -> str:
@@ -217,8 +224,9 @@ def discover(project_root: Path) -> list[Bundle]:
                     title=_text(front, "title"),
                     description=_text(front, "description"),
                     on_violation=_text(front, "on_violation") or "allow",
-                    applies_to=lkf.applies_to(path),
+                    matches=lkf.matches(path),
                     legacy_preload=_text(front, "preload"),
+                    legacy_field=lkf.field_name(path),
                 )
             )
 
@@ -257,10 +265,10 @@ def _skill(doc: Doc, bundle: Bundle, project_root: Path) -> str:
         f"carries no copy of it — the copy would drift.",
     ]
 
-    standing = [d for d in bundle.standing() if d.doc_id != doc.doc_id]
-    if standing:
-        lines += ["", "Standing context this workflow assumes:", ""]
-        for d in standing:
+    always_on = [d for d in bundle.always_on() if d.doc_id != doc.doc_id]
+    if always_on:
+        lines += ["", "Always-on context this workflow assumes:", ""]
+        for d in always_on:
             rel = d.path.relative_to(project_root).as_posix()
             lines.append(f"- `{rel}` — {d.description or d.title or d.doc_id}")
 
@@ -320,13 +328,13 @@ def _names(bundles: list[Bundle]) -> tuple[dict[str, Doc], list[str]]:
 
 
 def _index(bundles: list[Bundle], project_root: Path) -> str:
-    """The standing surface: what is delivered, and what merely exists.
+    """What is delivered, and what merely exists.
 
     Three classes, and the difference between the first two is the whole point.
-    A **standing** Document is *imported* — its body arrives, because that is
-    what `mandatory` with no statable trigger claims and a list of paths under a
-    heading is only a recommendation. An **advertised** Document contributes one
-    line: enough that nothing can be missed out of ignorance, not enough to cost
+    An **always-on** Document is *imported* — its body arrives, because
+    `matches: always` asks for exactly that and a list of paths under a heading
+    is only a recommendation. An **advertised** Document contributes one line:
+    enough that nothing can be missed out of ignorance, not enough to cost
     anything. An **on-demand** Document contributes nothing at all.
     """
     lines = [
@@ -339,15 +347,15 @@ def _index(bundles: list[Bundle], project_root: Path) -> str:
         "",
     ]
 
-    standing = [d for b in bundles for d in b.of_class("standing")]
-    if standing:
+    always_on = [d for b in bundles for d in b.of_class("always-on")]
+    if always_on:
         lines += [
             "**These are in force here and are loaded with this file.** Each one "
-            "is a policy with no `applies_to`, so nothing narrows when it "
-            "governs — which means everything done in this repository.",
+            "declares `matches: always`, so nothing gates when it governs — "
+            "which means everything done in this repository.",
             "",
         ]
-        for doc in standing:
+        for doc in always_on:
             rel = doc.path.relative_to(project_root).as_posix()
             lines.append(f"@{rel}")
         lines.append("")
@@ -361,9 +369,23 @@ def _index(bundles: list[Bundle], project_root: Path) -> str:
         if bundle.description:
             lines += [bundle.description, ""]
 
-        shown = bundle.of_class("advertised")
+        # **Anything that acts on a consumer gets its line, whatever its
+        # class.** Existence is cheap and content is expensive, so the index
+        # names these and delivers almost none of them. This matters more since
+        # the default reversed: a policy that matches nothing now lands in
+        # on-demand, and a rule nobody can see governs nothing — listing only
+        # the advertised ones would have turned a cost saving into the silent
+        # absence this whole design exists to end.
+        #
+        # Background is the deliberate exception, on the format's own reasoning
+        # (§10.7): it does not act, and it is reached *through* the things that
+        # do. A concept announced beside the rules competes with them for
+        # attention while obliging nobody.
+        shown = [d for d in bundle.docs
+                 if d.klass == "advertised"
+                 or (d.klass == "on-demand" and d.type in ("policy", "workflow"))]
         if not shown:
-            lines += [f"Nothing here applies conditionally. In `{home}/`.", ""]
+            lines += [f"Everything here is loaded above. In `{home}/`.", ""]
             continue
 
         lines += [
@@ -373,11 +395,11 @@ def _index(bundles: list[Bundle], project_root: Path) -> str:
         ]
         for doc in sorted(shown, key=lambda d: (d.type, d.doc_id)):
             note = doc.description or doc.title or ""
-            when = ", ".join(doc.applies_to)
+            when = ", ".join(doc.matches)
             teeth = " **[blocked]**" if doc.on_violation == "block" else ""
             lines.append(f"- `{doc.doc_id}` ({doc.type}){teeth} — {note}".rstrip(" —"))
             if when:
-                lines.append(f"  - applies to: {when}")
+                lines.append(f"  - matches: {when}")
         lines.append("")
 
     lines += [
@@ -438,7 +460,7 @@ def _routing(bundles: list[Bundle], project_root: Path) -> str:
     ]
     for bundle in bundles:
         for doc in bundle.docs:
-            if not doc.applies_to:
+            if not doc.matches:
                 continue
             rel = doc.path.relative_to(project_root).as_posix()
             lines += [
@@ -448,8 +470,8 @@ def _routing(bundles: list[Bundle], project_root: Path) -> str:
                 f"title = {_toml_str(doc.title or doc.doc_id)}",
                 f"path = {_toml_str(rel)}",
                 f"on_violation = {_toml_str(doc.on_violation)}",
-                "applies_to = ["
-                + ", ".join(_toml_str(a) for a in doc.applies_to)
+                "matches = ["
+                + ", ".join(_toml_str(a) for a in doc.matches)
                 + "]",
                 "",
             ]
@@ -505,13 +527,13 @@ def _notices(bundles: list[Bundle], project_root: Path) -> list[str]:
             if doc.legacy_preload:
                 out.append(
                     f"{bundle.bundle_id} {doc.doc_id}: still declares "
-                    f"preload — say when its subject arises with applies_to, or nothing"
+                    f"preload — say what surfaces it with matches, or nothing"
                 )
             # A glob matching nothing never fires, and silence is
             # indistinguishable from a rule that has simply not come up. Saying
             # so is the difference between *does not apply* and *will never be
             # seen*.
-            for trigger in doc.applies_to:
+            for trigger in doc.matches:
                 kind, _, value = trigger.partition(":")
                 if kind != "path" or not value:
                     continue
@@ -526,7 +548,33 @@ def _notices(bundles: list[Bundle], project_root: Path) -> list[str]:
     return out
 
 
-def run(project_root: Path, check: bool) -> int:
+def _explain(bundles: list[Bundle]) -> None:
+    """The derivation, per Document, with its input beside its outcome.
+
+    **The class names live here and nowhere else that matters.** `always-on`,
+    `advertised` and `on-demand` are not vocabulary an author has to learn
+    before writing anything — they are a derived column, printed next to what
+    produced it, so the rule is visible rather than memorised. A lookup table
+    nobody has to hold in their head is a different thing from a glossary.
+    """
+    docs = sorted((d for b in bundles for d in b.docs),
+                  key=lambda d: (d.bundle, d.doc_id))
+    if not docs:
+        return
+    width = min(max((len(d.doc_id) for d in docs), default=0), 44)
+    print()
+    print(f"  {'document':<{width}}  {'matches':<26}  derives to")
+    print(f"  {'-' * width}  {'-' * 26}  {'-' * 10}")
+    for doc in docs:
+        kinds = dict.fromkeys(m.partition(":")[0] for m in doc.matches)
+        shown = ", ".join(kinds)
+        print(f"  {doc.doc_id[:width]:<{width}}  {(shown or '—')[:26]:<26}  {doc.klass}")
+    print()
+    print("  A Document that matches nothing is not lost — its name and line are")
+    print("  in the index above. Only its body waits to be asked for.")
+
+
+def run(project_root: Path, check: bool, explain: bool = False) -> int:
     bundles = discover(project_root)
     if not bundles:
         print(
@@ -583,12 +631,14 @@ def run(project_root: Path, check: bool) -> int:
 
     workflows = sum(len(b.of_type("workflow")) for b in bundles)
     counts = {k: sum(len(b.of_class(k)) for b in bundles)
-              for k in ("standing", "advertised", "on-demand")}
+              for k in ("always-on", "advertised", "on-demand")}
     print(f"{len(bundles)} bundle(s) projected")
     print(f"  skills     {workflows} workflow(s) -> .claude/skills/")
-    print(f"  standing   {counts['standing']} loaded with CLAUDE.md")
+    print(f"  always-on  {counts['always-on']} loaded with CLAUDE.md")
     print(f"  advertised {counts['advertised']} named, opened when they match")
     print(f"  on-demand  {counts['on-demand']} reachable, not announced")
+    if explain:
+        _explain(bundles)
 
     blocking = [d for b in bundles for d in b.docs if d.on_violation == "block"]
     if blocking and not _gate_installed():
@@ -622,6 +672,7 @@ def run(project_root: Path, check: bool) -> int:
 
 def main(argv: list[str]) -> int:
     check = False
+    explain = False
     target: Path | None = None
     rest = list(argv)
     while rest:
@@ -631,6 +682,8 @@ def main(argv: list[str]) -> int:
             return 0
         if arg == "--check":
             check = True
+        elif arg == "--explain":
+            explain = True
         elif arg == "--to":
             if not rest:
                 print("luma-foreman outfit: --to needs a directory", file=sys.stderr)
@@ -644,4 +697,4 @@ def main(argv: list[str]) -> int:
         print(f"luma-foreman outfit: not a directory: {target}", file=sys.stderr)
         return 2
     project_root, _ = project.resolve(target or Path.cwd())
-    return run(project_root, check)
+    return run(project_root, check, explain)

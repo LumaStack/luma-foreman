@@ -135,7 +135,11 @@ def _refused_by_bundle(cmd: str, cwd: str) -> tuple[str, str] | None:
     for rule in data.get("rule", []):
         if rule.get("on_violation") != "block":
             continue
-        for trigger in rule.get("applies_to", []):
+        # `applies_to` is the key routing.toml wrote before the field was
+        # renamed. Read both: the gate must keep blocking through an upgrade
+        # where the table has not been rewritten yet, and a permission gate that
+        # silently stops refusing is the one failure it cannot have.
+        for trigger in rule.get("matches", rule.get("applies_to", [])):
             kind, _, shape = str(trigger).partition(":")
             if kind == "command" and _command_fires(shape, cmd):
                 title = rule.get("title") or rule.get("document", "an adopted rule")

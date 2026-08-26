@@ -26,9 +26,16 @@ from pathlib import Path
 from ... import lkf
 from ..finding import Finding, Result, Skipped
 
-# The closed vocabularies `applies_to` draws on. Closed is the point: anything
+# The closed vocabularies `matches` draws on. Closed is the point: anything
 # outside them is a typo that would otherwise publish silently.
-TRIGGER_KINDS = ("always", "path", "tool", "command", "event", "topic")
+#
+# `always` is absent deliberately — it is a value of the field, never a member
+# of this list. As a list member it could sit beside a condition it silently
+# rendered dead, since OR semantics make everything next to it unreachable.
+TRIGGER_KINDS = ("path", "tool", "command", "event", "topic")
+# The scalar forms. Anything else in that position is a typo, and it resolves
+# to `nothing` — the safe direction, and reported rather than absorbed.
+KEYWORDS = ("always", "nothing")
 # `event` reaches what no other trigger can: a lifecycle point, fired however
 # it is arrived at. Four of these overlap with `command` on purpose — a command
 # trigger catches a literal invocation, an event catches the point itself — and
@@ -139,39 +146,56 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
     unknown_kind: list[str] = []
     unknown_event: list[str] = []
     always_on: list[str] = []
+    legacy_field: list[str] = []
     for doc_id, keys in docs.items():
         if doc_id == "BUNDLE":
             continue
-        triggers = lkf.applies_to(root / f"{doc_id}.md") or lkf.applies_to(
-            root / doc_id / f"{doc_id.rsplit('/', 1)[-1].upper()}.md")
+        owned = root / doc_id / f"{doc_id.rsplit('/', 1)[-1].upper()}.md"
+        path = owned if owned.is_file() else root / f"{doc_id}.md"
+        triggers = lkf.matches(path)
+        if lkf.field_name(path) == "applies_to":
+            legacy_field.append(doc_id)
         for trigger in triggers:
             kind, _, value = trigger.partition(":")
+            if ":" not in trigger:
+                if trigger not in KEYWORDS:
+                    unknown_kind.append(f"{doc_id}: {trigger}")
+                continue
             if kind not in TRIGGER_KINDS:
                 unknown_kind.append(f"{doc_id}: {kind}")
             elif kind == "event" and value not in EVENTS:
                 unknown_event.append(f"{doc_id}: {value}")
-        if not triggers and lkf.unquote(keys.get("type", "")).strip() == "policy":
+        if triggers == ("always",):
             always_on.append(doc_id)
 
     if unknown_kind:
         bad("high", f"{len(unknown_kind)} trigger(s) name something that is not a trigger",
             unknown_kind,
-            "applies_to takes a closed vocabulary — " + ", ".join(sorted(TRIGGER_KINDS)) +
-            ". Anything else parses, publishes, and never fires, which is "
-            "indistinguishable from a rule whose moment has not come.")
+            "matches takes a closed vocabulary — " + ", ".join(sorted(TRIGGER_KINDS)) +
+            ", or the bare word always or nothing. Anything else parses, "
+            "publishes, and never fires, which is indistinguishable from a rule "
+            "whose moment has not come.")
     if unknown_event:
         bad("high", f"{len(unknown_event)} event(s) are not events anybody fires",
             unknown_event,
             "event is a closed vocabulary — " + ", ".join(sorted(EVENTS)) +
             ". A name nothing fires is a rule that never arrives.")
     if always_on:
-        bad("low", f"{len(always_on)} policy(ies) load in every session",
+        bad("low", f"{len(always_on)} document(s) load in every session",
             always_on,
-            "A policy binds because it is a policy, so one with no applies_to "
-            "is in force always — the single path to being loaded "
-            "unconditionally, and it costs every adopter every session forever. "
-            "Legal, and worth being sure of: if the rule governs a particular "
-            "activity, say so and it arrives when that activity does.")
+            "matches: always asks for a permanent seat in every adopter's "
+            "context, forever. Deliberate rather than accidental now, which is "
+            "why this is worth confirming rather than fixing: if the rule "
+            "governs a particular activity, say so and it arrives when that "
+            "activity does.")
+    if legacy_field:
+        bad("low", f"{len(legacy_field)} document(s) still say applies_to",
+            legacy_field,
+            "applies_to is the former name of matches and is read only so that "
+            "upgrading the tools does not silently drop every trigger a "
+            "repository declared. Rename the field; nothing else about it "
+            "changes. This finding is the migration's own ledger — it goes "
+            "quiet when the work is done.")
 
     manifest = docs.get("BUNDLE")
     if manifest is None:

@@ -9,7 +9,23 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 
 ## [Unreleased]
 
+### Changed
+- **`applies_to` is read as `matches`, and the default reverses.** The format renamed the field in `v0.0.14`, and the meaning of *saying nothing* changed with it: a Document that declares no `matches` is now **available on request** rather than loaded into every session. `matches: always` is the only route to being present up front.
+  **The old default made the lazy path the expensive one.** Forgetting a field bought a permanent seat in every adopter's context, and it failed in the direction that cannot be recovered from — under-delivering is fixable, over-delivering is a token bomb. Asking for the cost out loud makes it impossible by accident, which beats making it visible in a low finding somebody has to run a tool to read.
+  **The type no longer decides anything.** It used to break the tie for a Document with no trigger — `policy` meant loaded-always, anything else meant findable. With the default reversed there is no tie to break.
+  *`applies_to` is still read where `matches` is absent*, so upgrading the tools cannot silently drop every trigger a repository declared, and `inspect` reports each use. That fallback is scheduled for removal.
+
+- **`always` is a value of `matches`, not a trigger kind.** `matches: always`, never an entry inside the list — where it could sit beside a condition that OR semantics rendered dead.
+  It was previously in `TRIGGER_KINDS` and unwritable: `matches: always` and `- always:` were silently discarded, and `- always: true` parsed into a trigger that classed the Document as *cheap*. A rule declaring itself ever-present was the one rule that would not be there.
+
+- **`standing` is now `always-on`**, in output, in generated files, and in the reasoning. A reader took *standing* to mean *left over from before* — which is the opposite of what it meant, and the fifth name this slot has worn.
+
+- **The index lists every policy and workflow, not only the ones that match something.** A rule nobody can see governs nothing, and with the default reversed a policy that matches nothing would otherwise have vanished from `CLAUDE.md` entirely — turning a cost saving into silent absence. Background under `concepts/` stays unannounced on the format's own reasoning: it does not act, and is reached through the things that do.
+
 ### Added
+- **`luma-foreman outfit --explain`** prints what each Document derives to, beside what produced it. The class names live here rather than in anybody's head — a derived column printed next to its input is a lookup table, not a glossary.
+- **`inspect` reports any Document still using `applies_to`.** The migration's own ledger: *what is left* is a command rather than a checklist, and it goes quiet when the work is done.
+
 - **`luma-foreman adopt` — a bundle from a catalog becomes part of this project.** It copies into `.luma/bundles/<org>/<name>/` and writes `adopted.toml` with the version, the catalog's origin, the commit it came from and a checksum of exactly what landed. Nothing is resolved and nothing is fetched later: bundles depend on nothing, which is what keeps adoption a directory copy rather than an install.
   **The copy is committed, and that is the difference from a package cache.** A fresh clone with no network reproduces the project, because the knowledge is in the repository rather than in a cache directory a teammate does not have.
   `--from` takes a local checkout or a git URL; a URL is cloned into `~/.cache/luma/catalogs/`, which is genuinely cache — deleting it loses nothing, since everything adopted from it is already committed. With no `--from`, `[catalog] source` in `.luma/config/foreman.toml` is used.
