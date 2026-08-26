@@ -10,6 +10,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 ## [Unreleased]
 
 ### Added
+- **`inspect` has a third outcome: a notice.** Something worth a reader's judgement that is not a defect — printed as loudly as a finding, counted separately, and never part of the exit code. `--json` carries `notices` and a `notices` count in the summary.
+  **A finding says what is wrong; a notice says what to look at.** The difference is who decides, so a notice carries more context than a finding rather than less: somebody is being asked to make a call and needs the basis for it.
+  *The first one already existed as a finding.* `matches: always` was reported at `low` with a remedy that said it was *"worth confirming rather than fixing"* — a notice by its own words, exiting 1 over a legal and deliberate choice.
 - **`luma-foreman init` is built.** It creates `.luma/PROJECT.md` and `.luma/config/luma-foreman.toml`, and nothing else — `bundles/` arrives on the first `get` and `records/` on the first decision or audit. Both files have contents on the day they are written, which matters because git will not commit an empty directory: one created ahead of use exists only on the machine that ran `init`.
   **`--catalog <source>` records where bundles come from**, so the next command is `get luma/<bundle>` with no `--from`.
   **The config carries overrides and as little else as possible.** A value written there is one an upgrade cannot move, so defaults stay in the tool. Nothing is shipped commented-out either: a commented default is a behavioural override one keystroke away, frozen at whatever it said the day `init` ran. What is settable is a link rather than a list. The single exception is `[catalog] source`, which is written out because it has no default at all.

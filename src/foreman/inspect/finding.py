@@ -1,9 +1,11 @@
 """What a check reports.
 
-Two kinds of outcome matter, and conflating them is how an inspection lies. A
-check that ran and found nothing is a pass. A check that could not run — because
-what it needed was absent — is NOT a pass, and must never be rendered as one.
-That distinction is the whole reason `Skipped` exists alongside `Finding`.
+Three kinds of outcome, and conflating any two is how an inspection lies.
+
+A check that ran and found nothing is a pass. A check that could not run —
+because what it needed was absent — is NOT a pass, and must never be rendered
+as one; that is why `Skipped` exists. And a thing worth a reader's attention
+that is not a defect is neither, which is why `Notice` does.
 """
 
 from __future__ import annotations
@@ -50,6 +52,37 @@ class Finding:
 
 
 @dataclass(frozen=True)
+class Notice:
+    """Something worth a reader's judgement, which must not fail a build.
+
+    **A finding says what is wrong. A notice says what to look at.** The
+    difference is who decides: a finding has already decided, and a notice
+    cannot — because the check that raised it does not have what it would take.
+
+    So a notice carries *more* context than a finding, not less. Somebody is
+    being asked to make a call, and `remedy` is where the basis for it goes:
+    what was expected, what decided that, and where to read why.
+
+    **It counts for nothing in the exit code.** A heuristic wired to a merge
+    gate is a heuristic somebody switches off, and every reason to raise a
+    notice rather than a finding is a reason it will sometimes be wrong.
+    """
+
+    rule: str
+    summary: str
+    evidence: tuple[str, ...] = ()
+    remedy: str = ""
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "rule": self.rule,
+            "summary": self.summary,
+            "evidence": list(self.evidence),
+            "remedy": self.remedy,
+        }
+
+
+@dataclass(frozen=True)
 class Skipped:
     """A check that could not run, and why.
 
@@ -69,11 +102,13 @@ class Skipped:
 @dataclass
 class Result:
     findings: list[Finding] = field(default_factory=list)
+    notices: list[Notice] = field(default_factory=list)
     skipped: list[Skipped] = field(default_factory=list)
     ran: list[str] = field(default_factory=list)
 
     def extend(self, other: "Result") -> None:
         self.findings.extend(other.findings)
+        self.notices.extend(other.notices)
         self.skipped.extend(other.skipped)
         self.ran.extend(other.ran)
 

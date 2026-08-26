@@ -267,8 +267,14 @@ lacks 'rule=bundles'
 
 d=$(bundle alwayson)
 printf -- '---\ntype: policy\ntitle: T\nmatches: always\n---\nx\n' > "$d/b/p.md"
-run 'matches always is surfaced' 1 "$d"
+run 'matches always is surfaced' 0 "$d"
 has 'every session'
+# A notice, not a finding: the choice is legal and deliberate, so it is printed
+# as loudly as anything else and exits 0. Failing a build over a correct
+# decision is how a check gets switched off.
+has 'NOTICE'
+has 'never fails a run'
+lacks 'LOW '
 
 # And the reverse, which is the default flipping: a policy that says nothing
 # gets a permanent seat no longer. Silence used to buy the costliest delivery
@@ -278,6 +284,17 @@ d=$(bundle silentpolicy)
 printf -- '---\ntype: policy\ntitle: T\n---\nx\n' > "$d/b/p.md"
 run 'a policy that says nothing is quiet' 0 "$d"
 lacks 'every session'
+
+# A notice never suppresses a finding, and a finding never demotes to a notice.
+# Both in one run: exit follows the finding alone.
+
+d=$(bundle both)
+printf -- '---\ntype: policy\ntitle: T\nmatches: always\n---\nx\n' > "$d/b/p.md"
+printf -- '---\ntype: policy\ntitle: U\nmatches:\n  - nonsense: x\n---\ny\n' > "$d/b/q.md"
+run 'a notice does not hide a finding' 1 "$d"
+has 'NOTICE'
+has 'HIGH'
+has 'finding(s) and 1 notice(s)'
 
 # --- the old name is gone, not merely discouraged -------------------------------
 #

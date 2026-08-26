@@ -44,21 +44,42 @@ it would falsify the record. So would an ADR describing a decision in the terms
 of its day. A rule that cannot express *everywhere except history* will be
 turned off within a week.
 
-## It needs a severity that does not fail
+## The severity it needs now exists
 
-**A retired word is not broken code**, and every `inspect` severity is a finding
-that exits 1. Failing continuous integration over a word teaches people that a
-red run means nothing, which costs more than the word does.
+`inspect` has a **notice**: printed as loudly as a finding, counted separately,
+never part of the exit code. Built 2026-08-26, taking the word
+`luma-catalog-curator` already used. [[a-reminder-needs-somewhere-to-live]]
+wanted the same tier and can use it too.
 
-`luma-catalog-curator` already has the tier and calls it a **notice**: *"A
-notice is for a second reader, and never fails a run."* It earned that on
-2026-08-26, catching a real meaning shift inside a change that read as a pure
-rename.
+That was the blocker. What remains is the rule.
 
-**This is the same missing tier [[a-reminder-needs-somewhere-to-live]] needs**,
-for the same reason — a draft that has gone into use is not broken either.
-Whichever gets built first should build the tier, and adopting the word the
-sibling tool already uses beats inventing a second one.
+## A grep cannot tell a revival from a legitimate use
+
+**And it must not try.** *Projection* has an ordinary mathematical sense.
+*Jobs* means something real in a sentence about CI. A quotation of somebody
+else's prose is not a revival, and neither is an example of what not to write.
+
+**This is the reason it is a notice rather than a finding**, and the reason a
+notice carries more context than a finding: the check is handing somebody a
+judgement it cannot make, so it owes them what the judgement needs.
+
+Each hit should carry:
+
+- **the term**, and what replaced it
+- **where it was retired and why** — a citation, so the reader can go and read
+  the reasoning rather than take the tool's word
+- **the hit in context**, with its location
+
+A model reading `inspect --json` then has enough to decide *this is a revival,
+fix it* against *this is fine, leave it*, and to say which. A bare list of
+line numbers would make it guess, and guessing is what turns a notice into
+noise somebody filters out.
+
+**One exemption is mechanical rather than a judgement.** A published `##
+Version` history correctly names a since-renamed thing — it records what was
+true when written, and rewriting it falsifies the record. Same for a decision
+record describing its own moment. A rule that cannot express *everywhere except
+history* gets switched off within a week.
 
 ## The objection
 

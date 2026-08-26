@@ -60,6 +60,8 @@ luma-foreman inspect --json         # for continuous integration
 luma-foreman inspect --rule adoption
 ```
 
+A **notice** is the third outcome: something worth a reader's judgement that is not a defect. It prints as loudly as a finding and never changes the exit code — a heuristic wired to a merge gate is a heuristic somebody switches off.
+
 Every check works in a bare clone with no configuration, and a check that *cannot* run is reported as skipped rather than passed — an inspection that reads clean while silently skipping half its checks is worse than no inspection.
 
 ## Install

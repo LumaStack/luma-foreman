@@ -28,16 +28,14 @@ nothing.
 
 Two ways out.
 
-**A tier that reports without failing.** `luma-catalog-curator` already has one
-and calls it a *notice*: *"A notice is for a second reader, and never fails a
-run."* It has earned its place there — it caught a real meaning shift during the
-2026-08-26 vocabulary sweep, in a change that read as a rename. The same
-distinction would serve here, and adopting the word the sibling tool already
-uses beats inventing a second one.
+**A tier that reports without failing — which now exists.** `inspect` gained a
+**notice** on 2026-08-26, taking the word `luma-catalog-curator` already used:
+printed as loudly as a finding, counted separately, never part of the exit code.
+So this no longer needs building, only using.
 
-The cost is real: a tier nothing fails on is a tier people stop reading. Whether
-a notice belongs in the gate at all, or only in a command somebody runs on
-purpose, is the question.
+The cost is still real: a tier nothing fails on is a tier people stop reading.
+Whether a promotion nudge belongs in the gate at all, or only in a command
+somebody runs on purpose, is the remaining question.
 
 **Its own command.** `luma-foreman records` or similar — drafts in use, records
 never promoted, citations pointing at something not in force. Nothing to fail,
