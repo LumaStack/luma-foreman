@@ -255,6 +255,50 @@ apply 'block from an older wording' 0
   && ok || bad 'a reworded marker orphaned the old block'
 grepped 'Hand-written and mine' "$PROJECT/CLAUDE.md"
 
+# --- init -----------------------------------------------------------------------
+# A fresh repository of its own: init refuses to run where .luma/ already is,
+# so it cannot share the fixture the rest of this file adopts into.
+
+FRESH=$T/fresh
+mkdir -p "$FRESH"
+git -C "$FRESH" init -q
+
+init() {
+  label=$1 want=$2; shift 2
+  LAST=$(cd "$FRESH" && "$CLI" init "$@" 2>&1); got=$?
+  [ "$got" -eq "$want" ] && ok || bad "$label (exit $got, wanted $want): $LAST"
+}
+
+init 'init' 0
+has 'PROJECT.md'
+[ -f "$FRESH/.luma/PROJECT.md" ] && ok || bad 'init wrote no descriptor'
+[ -d "$FRESH/.luma/records" ] && ok || bad 'init created no records directory'
+
+# Only what will have contents. bundles/ arrives on the first get, config/ when
+# something is actually configured — an empty directory is a question.
+[ ! -e "$FRESH/.luma/bundles" ] && ok || bad 'init created bundles/ ahead of use'
+[ ! -e "$FRESH/.luma/config" ] && ok || bad 'init created config/ ahead of use'
+
+# .luma/ is committed in full. An ignore rule here is the one edit that breaks
+# the invariant the whole directory depends on.
+[ ! -e "$FRESH/.gitignore" ] && ok || bad 'init wrote a .gitignore'
+
+grepped 'type: luma/project' "$FRESH/.luma/PROJECT.md"
+grepped 'TODO' "$FRESH/.luma/PROJECT.md"
+
+init 'init refuses a second time' 1
+has 'already exists'
+has 'migrate-into-luma'
+
+# A descriptor describing a repository, written where there is not one, is
+# wrong in a way nobody notices until it travels.
+NOGIT=$T/nogit
+mkdir -p "$NOGIT"
+LAST=$(cd "$NOGIT" && "$CLI" init 2>&1); got=$?
+[ "$got" -eq 1 ] && ok || bad "init outside a repository (exit $got, wanted 1)"
+case $LAST in *"not in a git repository"*) ok ;; *) bad 'init did not say why' ;; esac
+[ ! -e "$NOGIT/.luma" ] && ok || bad 'init wrote .luma outside a repository'
+
 # --- reading the inventory ------------------------------------------------------
 # These read committed state only. Every one must hold with no network, which
 # is what separates them from `bundle outdated`.

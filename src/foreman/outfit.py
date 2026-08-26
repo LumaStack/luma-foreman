@@ -581,7 +581,7 @@ def run(project_root: Path, check: bool, explain: bool = False) -> int:
     if not bundles:
         print(
             "nothing adopted — .luma/bundles/ holds no bundles.\n"
-            "  luma-foreman get --list --from <catalog>",
+            "  luma-foreman catalog show <catalog>",
             file=sys.stderr,
         )
         return 2

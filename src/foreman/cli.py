@@ -50,8 +50,6 @@ Add -g/--global to any write to target the global fallback instead of this
 project. Reads always show the merged result. Add --json to `policy`, `keys`
 and `doctor` for machine-readable output."""
 
-UNBUILT = ("init",)
-
 # Renamed commands are a hard error, not an alias — ADR-0003. This is the only
 # thing between somebody typing the old name and a bare failure, so it has to
 # say where the command went. `refit` is here too: removed by ADR-0004 with no
@@ -188,12 +186,10 @@ def main(argv: list[str] | None = None) -> int:
         from . import catalog
 
         return catalog.main(argv[1:])
-    if command in UNBUILT:
-        print(
-            f"luma-foreman: {command} is not built yet — see .luma/backlog/ideas/",
-            file=sys.stderr,
-        )
-        return 2
+    if command == "init":
+        from . import init
+
+        return init.main(argv[1:])
     if command in RENAMED:
         moved = RENAMED[command]
         note = f"renamed to: {moved}" if moved else "removed, with no replacement"

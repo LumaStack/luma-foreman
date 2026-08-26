@@ -4,11 +4,11 @@
 
 It walks into a project repository, sets it up to succeed, and comes back periodically to check the work still holds.
 
-> **Status:** early. Getting, applying and inspecting work end to end; `init` is still shape.
+> **Status:** early. Getting, applying, inspecting and initializing work end to end.
 
 ## The foreman commands
 
-- **Init.** Stand a new project up with the structure it should have had as soon as possible.
+- **Init.** Stand `.luma/` up in a repository that has none — a descriptor and `records/`, and nothing that has no contents yet.
 - **Get.** Take a bundle of knowledge from a catalog and make it available in this repository.
 - **Apply.** Write what was taken into what a harness reads, so nobody has to say where to look.
 - **Inspect.** Check a project against the baseline and report where it falls short.
@@ -61,8 +61,6 @@ luma-foreman inspect --rule adoption
 ```
 
 Every check works in a bare clone with no configuration, and a check that *cannot* run is reported as skipped rather than passed — an inspection that reads clean while silently skipping half its checks is worse than no inspection.
-
-`init` prints "not built yet" and exits 2.
 
 ## Install
 
