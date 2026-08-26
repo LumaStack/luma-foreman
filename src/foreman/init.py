@@ -67,20 +67,17 @@ TODO — what works, what does not, and what somebody should not rely on yet.
 # being surprised. `[catalog] source` is both, so it is written out even when
 # it is only a comment.
 #
-# What is settable is a POINTER rather than a list. A commented default is a
-# behavioural override one keystroke away — somebody uncomments it to be
-# explicit and freezes a value that should have followed the upgrade. The link
-# is to the repository root rather than a deep path, because a generated file
-# outlives any particular page.
+# No commented-out defaults either. One is a behavioural override a keystroke
+# away — somebody uncomments it to be explicit and freezes a value that should
+# have followed the upgrade. Where settings get documented, this header should
+# point at that rather than list them; there is nothing to point at yet.
 
 CONFIG_HEADER = """\
-# How luma-foreman behaves in this project. Committed, and read by every clone.
+# How luma-foreman behaves in this project. Committed, and shared by everyone.
 #
-# Keep this small. Anything not set here follows the tool's own defaults and
-# moves with an upgrade; anything set here does not.
-#
-# What can be set, and what each setting does:
-#   https://github.com/LumaStack/luma-foreman
+# Kept minimal by design. Embrace missing keys which follow tool defaults and
+# play well with upgrades; anything set in this file could result in migration
+# friction later.
 """
 
 CONFIG_BLANK = CONFIG_HEADER + """

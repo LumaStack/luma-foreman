@@ -283,7 +283,7 @@ has 'PROJECT.md'
 # is a behavioural override one keystroke away, frozen at whatever it said the
 # day init ran. The one value written out has no default to fall back to.
 grepped 'catalog' "$FRESH/.luma/config/luma-foreman.toml"
-grepped 'github.com/LumaStack/luma-foreman' "$FRESH/.luma/config/luma-foreman.toml"
+grepped 'Kept minimal by design' "$FRESH/.luma/config/luma-foreman.toml"
 grep -q '^source' "$FRESH/.luma/config/luma-foreman.toml" \
   && bad 'init set a catalog nobody asked for' || ok
 
