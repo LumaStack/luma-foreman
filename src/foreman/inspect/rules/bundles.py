@@ -150,7 +150,7 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
                 unknown_kind.append(f"{doc_id}: {kind}")
             elif kind == "event" and value not in EVENTS:
                 unknown_event.append(f"{doc_id}: {value}")
-        if not triggers and lkf.unquote(keys.get("compliance", "")).strip() == "mandatory":
+        if not triggers and lkf.unquote(keys.get("type", "")).strip() == "policy":
             always_on.append(doc_id)
 
     if unknown_kind:
@@ -165,12 +165,13 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[str]]:
             "event is a closed vocabulary — " + ", ".join(sorted(EVENTS)) +
             ". A name nothing fires is a rule that never arrives.")
     if always_on:
-        bad("low", f"{len(always_on)} mandatory document(s) load in every session",
+        bad("low", f"{len(always_on)} policy(ies) load in every session",
             always_on,
-            "compliance: mandatory with no applies_to is the one path to being "
-            "loaded unconditionally, and it costs every adopter in every session "
-            "forever. Legal, and worth being sure of: if the rule governs a "
-            "particular activity, say so and it arrives when that activity does.")
+            "A policy binds because it is a policy, so one with no applies_to "
+            "is in force always — the single path to being loaded "
+            "unconditionally, and it costs every adopter every session forever. "
+            "Legal, and worth being sure of: if the rule governs a particular "
+            "activity, say so and it arrives when that activity does.")
 
     manifest = docs.get("BUNDLE")
     if manifest is None:

@@ -240,7 +240,7 @@ lacks 'wrong case'
 # never fires. Nothing distinguishes that from a rule whose moment has not come.
 
 d=$(bundle trigkind)
-printf -- '---\ntype: policy\ntitle: T\ncompliance: mandatory\napplies_to:\n  - patth: "src/**"\n---\nx\n' > "$d/b/p.md"
+printf -- '---\ntype: policy\ntitle: T\napplies_to:\n  - patth: "src/**"\n---\nx\n' > "$d/b/p.md"
 run 'unknown trigger kind' 1 "$d"
 has 'not a trigger'
 has 'patth'
@@ -248,12 +248,12 @@ has 'patth'
 # `moment` is a closed vocabulary for the same reason: a name nobody fires is
 # indistinguishable from a moment that has not arrived.
 d=$(bundle trigmoment)
-printf -- '---\ntype: policy\ntitle: T\ncompliance: mandatory\napplies_to:\n  - event: before-lunch\n---\nx\n' > "$d/b/p.md"
+printf -- '---\ntype: policy\ntitle: T\napplies_to:\n  - event: before-lunch\n---\nx\n' > "$d/b/p.md"
 run 'unknown event' 1 "$d"
 has 'before-lunch'
 
 d=$(bundle trigok)
-printf -- '---\ntype: policy\ntitle: T\ncompliance: mandatory\napplies_to:\n  - event: before-commit\n  - path: "**/*.css"\n  - command: git commit\n  - topic: doing the thing\n---\nx\n' > "$d/b/p.md"
+printf -- '---\ntype: policy\ntitle: T\napplies_to:\n  - event: before-commit\n  - path: "**/*.css"\n  - command: git commit\n  - topic: doing the thing\n---\nx\n' > "$d/b/p.md"
 run 'well-formed triggers are quiet' 0 "$d"
 lacks 'rule=bundles'
 
