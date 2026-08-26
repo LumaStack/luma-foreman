@@ -8,7 +8,7 @@ It walks into a project repository, sets it up to succeed, and comes back period
 
 ## The foreman commands
 
-- **Init.** Stand `.luma/` up in a repository that has none — a descriptor and `records/`, and nothing that has no contents yet.
+- **Init.** Stand `.luma/` up in a repository that has none — a descriptor and a config, and nothing that has no contents yet.
 - **Get.** Take a bundle of knowledge from a catalog and make it available in this repository.
 - **Apply.** Write what was taken into what a harness reads, so nobody has to say where to look.
 - **Inspect.** Check a project against the baseline and report where it falls short.

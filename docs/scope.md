@@ -13,7 +13,7 @@ unbuilt thing would cost.
 
 | | |
 | --- | --- |
-| `init` | `.luma/PROJECT.md` and `records/`, and nothing that has no contents yet |
+| `init` | `.luma/PROJECT.md` and `.luma/config/luma-foreman.toml`, and nothing that has no contents yet |
 | `get` | vendoring a bundle into `.luma/bundles/`, with version, origin, catalog commit and checksum in `adopted.toml` |
 | `apply` | a thin skill per workflow, and an index of everything adopted in a managed block in `CLAUDE.md` |
 | `inspect` | identity, secrets, bundle structure, adoption drift |

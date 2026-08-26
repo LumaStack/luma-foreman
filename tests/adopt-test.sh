@@ -272,12 +272,20 @@ init() {
 init 'init' 0
 has 'PROJECT.md'
 [ -f "$FRESH/.luma/PROJECT.md" ] && ok || bad 'init wrote no descriptor'
-[ -d "$FRESH/.luma/records" ] && ok || bad 'init created no records directory'
+[ -f "$FRESH/.luma/config/luma-foreman.toml" ] && ok || bad 'init wrote no config'
 
-# Only what will have contents. bundles/ arrives on the first get, config/ when
-# something is actually configured — an empty directory is a question.
+# Only what will have contents, and git cannot commit an empty directory
+# anyway. bundles/ arrives on the first get, records/ on the first record.
 [ ! -e "$FRESH/.luma/bundles" ] && ok || bad 'init created bundles/ ahead of use'
-[ ! -e "$FRESH/.luma/config" ] && ok || bad 'init created config/ ahead of use'
+[ ! -e "$FRESH/.luma/records" ] && ok || bad 'init created an empty records/'
+
+# The config carries overrides, not a copy of the defaults: a commented default
+# is a behavioural override one keystroke away, frozen at whatever it said the
+# day init ran. The one value written out has no default to fall back to.
+grepped 'catalog' "$FRESH/.luma/config/luma-foreman.toml"
+grepped 'github.com/LumaStack/luma-foreman' "$FRESH/.luma/config/luma-foreman.toml"
+grep -q '^source' "$FRESH/.luma/config/luma-foreman.toml" \
+  && bad 'init set a catalog nobody asked for' || ok
 
 # .luma/ is committed in full. An ignore rule here is the one edit that breaks
 # the invariant the whole directory depends on.
@@ -285,6 +293,30 @@ has 'PROJECT.md'
 
 grepped 'type: luma/project' "$FRESH/.luma/PROJECT.md"
 grepped 'TODO' "$FRESH/.luma/PROJECT.md"
+
+# --catalog writes the one setting that has no default, and makes the next
+# command shorter by exactly the argument it records.
+WITHCAT=$T/withcat
+mkdir -p "$WITHCAT"
+git -C "$WITHCAT" init -q
+LAST=$(cd "$WITHCAT" && "$CLI" init --catalog "$CATALOG" 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "init --catalog (exit $got): $LAST"
+grep -q "^source = \"$CATALOG\"" "$WITHCAT/.luma/config/luma-foreman.toml" \
+  && ok || bad 'init --catalog did not record the source'
+# ...and `get` with no --from now resolves through it.
+LAST=$(cd "$WITHCAT" && "$CLI" get acme/widgets 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "get without --from (exit $got): $LAST"
+
+# The config is named for the binary. An old-name file is reported rather than
+# silently ignored — nothing errors when a config stops being read, the default
+# just goes missing.
+STALE=$T/stale
+mkdir -p "$STALE/.luma/config"
+git -C "$STALE" init -q
+printf '[catalog]\nsource = "%s"\n' "$CATALOG" > "$STALE/.luma/config/foreman.toml"
+LAST=$(cd "$STALE" && "$CLI" get acme/widgets 2>&1); got=$?
+[ "$got" -eq 2 ] && ok || bad "stale config (exit $got, wanted 2): $LAST"
+case $LAST in *"no longer read"*) ok ;; *) bad 'stale config not reported' ;; esac
 
 init 'init refuses a second time' 1
 has 'already exists'

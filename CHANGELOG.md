@@ -10,7 +10,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 ## [Unreleased]
 
 ### Added
-- **`luma-foreman init` is built.** It creates `.luma/PROJECT.md` and `.luma/records/`, and nothing else — `bundles/` arrives on the first `get`, `config/` when a setting needs one. An empty directory is a question a reader has to answer, so none is created ahead of having contents.
+- **`luma-foreman init` is built.** It creates `.luma/PROJECT.md` and `.luma/config/luma-foreman.toml`, and nothing else — `bundles/` arrives on the first `get` and `records/` on the first decision or audit. Both files have contents on the day they are written, which matters because git will not commit an empty directory: one created ahead of use exists only on the machine that ran `init`.
+  **`--catalog <source>` records where bundles come from**, so the next command is `get luma/<bundle>` with no `--from`.
+  **The config carries overrides and as little else as possible.** A value written there is one an upgrade cannot move, so defaults stay in the tool. Nothing is shipped commented-out either: a commented default is a behavioural override one keystroke away, frozen at whatever it said the day `init` ran. What is settable is a link rather than a list. The single exception is `[catalog] source`, which is written out because it has no default at all.
   **It refuses twice.** Where `.luma/` already exists it stops and points at `migrate-into-luma`, because whether the answer is a migration or one missing directory depends on what is in there and this command cannot tell. Outside a git repository it stops too: a descriptor describing a repository, written where there is not one, is wrong in a way nobody notices until it travels.
   *No `.gitignore` entry, deliberately.* `.luma/` is committed in full, and a project whose `.luma/` differs between two machines is two projects. The output says so, and says that git will not track `records/` while it is empty.
   Follows `luma/luma-layout`'s `initialize-luma`, which is the specification.
@@ -22,6 +24,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
   **The set of catalogs is derived, not registered.** There is no `catalog add`: a catalog is an argument, and `list` reads the distinct sources in `adopted.toml` plus `[catalog] source` if one is set.
 
 ### Changed
+- **The foreman config is `.luma/config/luma-foreman.toml`**, named for the binary rather than truncated to `foreman.toml`.
+  **An old-name file is reported, not ignored.** Nothing errors when a config stops being read — the default just goes missing and `get` starts asking for a `--from` it used to infer. `get` now says `foreman.toml is no longer read` and names the new path.
 - **The commands are named for what they do, not for the foreman metaphor.** `adopt` is now **`get`**, `outfit` is now **`apply`**, `bootstrap` is now **`init`**, `outdated` is now **`bundle outdated`**, `adopt --list` is now **`catalog show <name>`**, and `refit` is gone. `jobs` was already renamed to `commands` in the help text.
   **The old names are a hard error, not an alias.** `luma-foreman adopt` prints `unknown command: adopt (renamed to: get)` and exits 1. An alias would let the catalog's own documentation keep working while still being wrong, which removes the pressure to ever correct it — see ADR-0003.
   *`refit` says `removed, with no replacement`* rather than reading as a typo. Its three checks already exist as `outdated`, `inspect --rule adoption` and `apply --check`, and merging them would cross the offline/online line that keeps `inspect` runnable in a bare clone — see ADR-0004.
