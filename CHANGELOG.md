@@ -24,8 +24,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
   **The set of catalogs is derived, not registered.** There is no `catalog add`: a catalog is an argument, and `list` reads the distinct sources in `adopted.toml` plus `[catalog] source` if one is set.
 
 ### Changed
-- **The foreman config is `.luma/config/luma-foreman.toml`**, named for the binary rather than truncated to `foreman.toml`.
-  **An old-name file is reported, not ignored.** Nothing errors when a config stops being read — the default just goes missing and `get` starts asking for a `--from` it used to infer. `get` now says `foreman.toml is no longer read` and names the new path.
+- **The foreman config is `.luma/config/luma-foreman.toml`**, named for the binary rather than truncated to `foreman.toml`. Nothing has ever written the old name, so nothing reads it.
 - **The commands are named for what they do, not for the foreman metaphor.** `adopt` is now **`get`**, `outfit` is now **`apply`**, `bootstrap` is now **`init`**, `outdated` is now **`bundle outdated`**, `adopt --list` is now **`catalog show <name>`**, and `refit` is gone. `jobs` was already renamed to `commands` in the help text.
   **The old names are a hard error, not an alias.** `luma-foreman adopt` prints `unknown command: adopt (renamed to: get)` and exits 1. An alias would let the catalog's own documentation keep working while still being wrong, which removes the pressure to ever correct it — see ADR-0003.
   *`refit` says `removed, with no replacement`* rather than reading as a typo. Its three checks already exist as `outdated`, `inspect --rule adoption` and `apply --check`, and merging them would cross the offline/online line that keeps `inspect` runnable in a bare clone — see ADR-0004.
@@ -48,7 +47,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 
 - **`luma-foreman get` — a bundle from a catalog becomes part of this project.** It copies into `.luma/bundles/<org>/<name>/` and writes `adopted.toml` with the version, the catalog's origin, the commit it came from and a checksum of exactly what landed. Nothing is resolved and nothing is fetched later: bundles depend on nothing, which is what keeps adoption a directory copy rather than an install.
   **The copy is committed, and that is the difference from a package cache.** A fresh clone with no network reproduces the project, because the knowledge is in the repository rather than in a cache directory a teammate does not have.
-  `--from` takes a local checkout or a git URL; a URL is cloned into `~/.cache/luma/catalogs/`, which is genuinely cache — deleting it loses nothing, since everything adopted from it is already committed. With no `--from`, `[catalog] source` in `.luma/config/foreman.toml` is used.
+  `--from` takes a local checkout or a git URL; a URL is cloned into `~/.cache/luma/catalogs/`, which is genuinely cache — deleting it loses nothing, since everything adopted from it is already committed. With no `--from`, `[catalog] source` in `.luma/config/luma-foreman.toml` is used.
   **Two refusals rather than an overwrite.** A vendored copy that has been edited locally is never silently replaced — that is somebody's work, and the message says where the change should go instead. A bundle with no version cannot be adopted at all, because nothing about it could be honestly reported afterwards.
 
 - **`luma-foreman apply` — adopted knowledge reaches an agent without anybody pointing at it.** Two outputs: one Claude Code skill per `workflow`, and one managed block in `CLAUDE.md` indexing everything adopted.

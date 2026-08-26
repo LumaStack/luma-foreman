@@ -307,17 +307,6 @@ grep -q "^source = \"$CATALOG\"" "$WITHCAT/.luma/config/luma-foreman.toml" \
 LAST=$(cd "$WITHCAT" && "$CLI" get acme/widgets 2>&1); got=$?
 [ "$got" -eq 0 ] && ok || bad "get without --from (exit $got): $LAST"
 
-# The config is named for the binary. An old-name file is reported rather than
-# silently ignored — nothing errors when a config stops being read, the default
-# just goes missing.
-STALE=$T/stale
-mkdir -p "$STALE/.luma/config"
-git -C "$STALE" init -q
-printf '[catalog]\nsource = "%s"\n' "$CATALOG" > "$STALE/.luma/config/foreman.toml"
-LAST=$(cd "$STALE" && "$CLI" get acme/widgets 2>&1); got=$?
-[ "$got" -eq 2 ] && ok || bad "stale config (exit $got, wanted 2): $LAST"
-case $LAST in *"no longer read"*) ok ;; *) bad 'stale config not reported' ;; esac
-
 init 'init refuses a second time' 1
 has 'already exists'
 has 'migrate-into-luma'

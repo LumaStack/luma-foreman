@@ -119,7 +119,6 @@ def _clone(url: str) -> Path | None:
 
 
 CONFIG = "luma-foreman.toml"
-CONFIG_WAS = "foreman.toml"
 
 
 def config_path(project_root: Path) -> Path:
@@ -127,12 +126,7 @@ def config_path(project_root: Path) -> Path:
 
 
 def _configured(project_root: Path) -> str | None:
-    """``[catalog] source`` from the project's committed foreman config.
-
-    Named for the binary. A file the tool silently stops reading is the failure
-    worth spending a branch on, so the old spelling is reported rather than
-    ignored — see `stale_config`, which is what says so.
-    """
+    """``[catalog] source`` from the project's committed foreman config."""
     path = config_path(project_root)
     if not path.is_file():
         return None
@@ -143,17 +137,6 @@ def _configured(project_root: Path) -> str | None:
     source = data.get("catalog", {}).get("source")
     return str(source) if source else None
 
-
-def stale_config(project_root: Path) -> Path | None:
-    """An old-name config sitting where the new one would be read.
-
-    The rename is a clean break like every other in this tool, but a config is
-    not a command: nothing errors when one stops being read, the default simply
-    goes missing and `get` starts asking for `--from` it used to infer. That is
-    a silent behaviour change, so it gets found and reported instead.
-    """
-    old = project_root / ".luma" / "config" / CONFIG_WAS
-    return old if old.is_file() and not config_path(project_root).is_file() else None
 
 
 def _root(start: Path) -> Path | None:
@@ -407,12 +390,6 @@ def main(argv: list[str]) -> int:
     if source is None:
         source = _configured(project_root)
     if source is None:
-        stale = stale_config(project_root)
-        if stale is not None:
-            return _err(
-                f"no catalog — {stale.name} is no longer read; the config is "
-                f"named for the binary now. Rename it to {CONFIG}"
-            )
         return _err(
             "no catalog — pass --from <path-or-url>, or set [catalog] source "
             f"in .luma/config/{CONFIG}"
