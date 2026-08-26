@@ -271,6 +271,10 @@ init() {
 
 init 'init' 0
 has 'PROJECT.md'
+# Two next steps: what is on offer, then how to take one. The first question is
+# always the former and the command for it is not guessable.
+has 'catalog show <catalog>'
+has 'get luma/<bundle> --from <catalog>'
 [ -f "$FRESH/.luma/PROJECT.md" ] && ok || bad 'init wrote no descriptor'
 [ -f "$FRESH/.luma/config/luma-foreman.toml" ] && ok || bad 'init wrote no config'
 
@@ -303,6 +307,11 @@ LAST=$(cd "$WITHCAT" && "$CLI" init --catalog "$CATALOG" 2>&1); got=$?
 [ "$got" -eq 0 ] && ok || bad "init --catalog (exit $got): $LAST"
 grep -q "^source = \"$CATALOG\"" "$WITHCAT/.luma/config/luma-foreman.toml" \
   && ok || bad 'init --catalog did not record the source'
+# The next steps name the catalog rather than leaving a placeholder, and drop
+# the --from the config now answers.
+has 'Next steps'
+has "catalog show $(basename "$CATALOG")"
+case $LAST in *"--from <catalog>"*) bad 'told to pass --from with a source set' ;; *) ok ;; esac
 # ...and `get` with no --from now resolves through it.
 LAST=$(cd "$WITHCAT" && "$CLI" get acme/widgets 2>&1); got=$?
 [ "$got" -eq 0 ] && ok || bad "get without --from (exit $got): $LAST"

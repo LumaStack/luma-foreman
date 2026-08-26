@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 from . import adopt, project
+from . import catalog as catalogs
 
 USAGE = """Stand `.luma/` up in a repository that does not have one.
 
@@ -191,11 +192,25 @@ def run(target: Path, catalog: str | None) -> int:
         print("  that should not be is machine-local and belongs in ~/.config/luma/.")
         print()
 
-    source_known = catalog or (config in kept and adopt._configured(target))
-    if source_known:
-        print("  Then: luma-foreman get luma/<bundle>")
+    # Two steps, because the first question is always what is on offer and the
+    # answer is a command nobody guesses. Named concretely where the config
+    # knows the catalog, so neither line has a placeholder to work out.
+    source = catalog or adopt._configured(target)
+    print("Next steps:")
+    if source:
+        name = catalogs.short_name(source)
+        steps = [
+            (f"luma-foreman catalog show {name}", "what it publishes"),
+            ("luma-foreman get luma/<bundle>", "take one"),
+        ]
     else:
-        print("  Then: luma-foreman get luma/<bundle> --from <catalog>")
+        steps = [
+            ("luma-foreman catalog show <catalog>", "what a catalog publishes"),
+            ("luma-foreman get luma/<bundle> --from <catalog>", "take one"),
+        ]
+    step_width = max(len(s) for s, _ in steps)
+    for step, why in steps:
+        print(f"  {step:<{step_width}}  {why}")
 
     # Only said when it is true. A standing pointer to a migration workflow is
     # noise in the common case, and the case it is for is one this can check.
