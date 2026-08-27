@@ -90,7 +90,8 @@ value; runtime swapping has no mechanism in any harness.
 **Needs a decision, and adoption is what will settle it.**
 
 - *Do the standards used to build luma tooling live outside luma tooling?*
-  Foreman adopts `luma/decision-records` and records its own decisions through a
+  Foreman adopts `lumastack/luma-catalog/decision-records` and records its own
+  decisions through a
   bundle it took from the catalog. If its release process, its versioning rules
   and its prose conventions go the same way, foreman is a consumer of the
   catalog it was built to serve. **Elegant, or a permanent headache for whoever

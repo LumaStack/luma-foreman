@@ -94,6 +94,6 @@ drafts the reversal, and adopting that draft is the re-open condition.
 
 ## References
 
-The layout and `adopted.toml` shape come from the `luma/luma-layout` bundle,
+The layout and `adopted.toml` shape come from the `luma-layout` bundle,
 which specifies both. `docs/scope.md` carries the wider argument about declaring
 and detecting dependencies rather than solving them.

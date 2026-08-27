@@ -24,7 +24,7 @@ The loop foreman exists for. A catalog publishes bundles, a project takes the on
 
 ```bash
 luma-foreman catalog show https://github.com/LumaStack/luma-catalog
-luma-foreman get luma/decision-records --from https://github.com/LumaStack/luma-catalog
+luma-foreman get lumastack/luma-catalog/decision-records --from https://github.com/LumaStack/luma-catalog
 luma-foreman apply
 luma-foreman bundle list
 ```

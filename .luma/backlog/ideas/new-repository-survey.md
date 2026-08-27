@@ -52,7 +52,7 @@ are questions this survey would ask:
   [[declared-maturity-and-behaviour]], filed in this repository. It covers
   declaring maturity and behaving differently in response, and notes that LKF's
   `lifecycle_status` already supplies the vocabulary.
-- *what are your example names, addresses* is answered by the `luma/git-secrets`
+- *what are your example names, addresses* is answered by the `git-secrets`
   bundle's `configure-identity` workflow, step 5 — decide them at project start
   and record them in the project's policy.
 

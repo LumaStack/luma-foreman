@@ -10,7 +10,7 @@ lifecycle_status: draft
 
 # A promotion reminder needs somewhere to live
 
-`luma/decision-records` 0.9.0 says a record stays `draft` until its owner
+`decision-records` 0.9.0 says a record stays `draft` until its owner
 promotes it, that citing a draft is discouraged, and that a citation **should
 trigger a promotion request**. It does not say what does the triggering.
 
@@ -56,7 +56,7 @@ a record can still be revised in place.
 
 ## Notes
 
-The policy half shipped in `luma/decision-records` 0.9.0, published from this
+The policy half shipped in `decision-records` 0.9.0, published from this
 repository on 2026-08-26 after a record was written straight to `provisional`
 and had to be walked back. This is the half that did not ship, and it is a
 foreman change rather than a bundle one — which is why it is filed here.

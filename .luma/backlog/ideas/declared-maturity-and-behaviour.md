@@ -35,7 +35,7 @@ provide a list of maturities"*, and the entry's own guess that it might already
 be there was right.
 
 **A repo-level field belongs to the `project` type, not to the format.**
-`.luma/project.md` is defined by the `luma/project-documentation` bundle, which
+`.luma/project.md` is defined by the `project-documentation` bundle, which
 is where a repository-wide maturity declaration would sit — alongside
 `disclosure_level`, which is the same shape of claim.
 
