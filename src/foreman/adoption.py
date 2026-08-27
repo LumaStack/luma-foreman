@@ -125,6 +125,21 @@ def discover(project: Path) -> dict[str, Path]:
     }
 
 
+def by_namespace(bundle_ids: list[str]) -> list[tuple[str, list[str]]]:
+    """Bundle IDs grouped under their namespace, both sorted.
+
+    Printed flat, every row repeats a namespace that is usually identical and
+    is 23 characters wide for the universal catalog — a quarter of a laptop
+    screen saying nothing that changes between rows. Grouped, the namespace is
+    said once and stays visible when a project draws on more than one.
+    """
+    groups: dict[str, list[str]] = {}
+    for bundle_id in bundle_ids:
+        namespace, _, name = bundle_id.rpartition("/")
+        groups.setdefault(namespace, []).append(name)
+    return [(ns, sorted(names)) for ns, names in sorted(groups.items())]
+
+
 def state(project: Path, entry: Adopted) -> str:
     """``ok``, ``edited`` or ``missing`` — what this copy is right now.
 

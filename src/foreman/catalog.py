@@ -18,8 +18,10 @@ from __future__ import annotations
 
 import os
 import re
+import shutil
 import subprocess
 import sys
+import textwrap
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -202,6 +204,15 @@ def find(source: str) -> Catalog | str:
 
 
 
+def _terminal_width() -> int:
+    """Usable width, capped so a wide terminal does not sprawl.
+
+    Prose stops being readable somewhere around 100 columns however much room
+    there is, and `shutil` already answers 80 when it cannot tell.
+    """
+    return min(shutil.get_terminal_size((80, 24)).columns, 100)
+
+
 def _err(message: str) -> int:
     print(f"luma-foreman catalog: {message}", file=sys.stderr)
     return 2
@@ -237,13 +248,42 @@ def show(source: str) -> int:
     if not names:
         return _err(f"catalog at {catalog.root} publishes no bundles")
 
-    prefix = f"{catalog.namespace}/" if catalog.namespace else ""
-    width = max(len(n) for n in names) + len(prefix)
+    # The namespace is a header rather than a column. It is identical on every
+    # row and 23 characters wide for this catalog — repeating it costs a quarter
+    # of a laptop screen to say nothing that changes.
+    if catalog.namespace:
+        print(f"{catalog.namespace} — {len(names)} bundle(s)")
+        print()
+
+    rows = []
     for name in names:
         manifest = lkf.read(catalog.root / "bundles" / name / "BUNDLE.md") or {}
-        version = lkf.unquote(manifest.get("version", "?"))
-        description = manifest.get("description", "")
-        print(f"  {prefix + name:<{width}}  {version:<8}  {description}")
+        rows.append((
+            name,
+            lkf.unquote(manifest.get("version", "?")),
+            " ".join(str(manifest.get("description", "")).split()),
+        ))
+
+    width = max(len(n) for n, _, _ in rows)
+    held = max(len(v) for _, v, _ in rows)
+    lead = 2 + width + 2 + held + 2
+    body = max(32, _terminal_width() - lead)
+
+    # Blank lines only where descriptions wrap. Without them a wrapped list is
+    # a wall; with them everywhere, a short list is twice as tall as it needs.
+    wrapped = any(len(d) > body for _, _, d in rows)
+
+    for i, (name, version, description) in enumerate(rows):
+        if wrapped and i:
+            print()
+        head = f"  {name:<{width}}  {version:<{held}}  "
+        if not description:
+            print(head.rstrip())
+            continue
+        # Hanging indent, so the name column stays scannable and no line runs
+        # off the screen. A description is a sentence, not a field.
+        for i, line in enumerate(textwrap.wrap(description, body) or [""]):
+            print((head if i == 0 else " " * lead) + line)
 
     if not catalog.namespace:
         print()

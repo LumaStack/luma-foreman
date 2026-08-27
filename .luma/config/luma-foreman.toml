@@ -22,32 +22,28 @@
 # An entry is removed when the thing the word named no longer exists — not
 # after a number of releases, and not because the count has been zero for a
 # while. ADR-0005 has the argument. `refit` qualifies; the other two do not.
+# `refit` was released 2026-08-26 under ADR-0005: the command was removed rather
+# than renamed, so there is nothing left for anybody to reach for a word about.
+# The other two name things still in the product under other names, so they stay.
+
 [[retired]]
 term = "projection"
 use = "what `apply` writes, or `apply` itself"
-decided = ["ADR-0003"]
+decided = ["ADR-0003", "ADR-0005"]
 except = [
-  "src/foreman/cli.py",                    # RENAMED has to name the old word
-  "tests/agent-permissions-cli-test.sh",   # ...and the tests pin those messages
-  "tests/inspect-test.sh",                 # ...and this rule's own fixtures use it
+  "src/foreman/cli.py",                       # RENAMED has to name the old word
+  "src/foreman/inspect/rules/vocabulary.py",  # ...and this rule explains the word
+  "tests/agent-permissions-cli-test.sh",      # ...and the tests pin those messages
+  "tests/inspect-test.sh",                    # ...and its fixtures use it as data
 ]
 
 [[retired]]
 term = "outfit"
 use = "`apply`"
-decided = ["ADR-0003", "ADR-0004"]
+decided = ["ADR-0003", "ADR-0004", "ADR-0005"]
 except = [
-  "src/foreman/cli.py",                    # RENAMED has to name the old word
-  "tests/agent-permissions-cli-test.sh",   # ...and the tests pin those messages
-  "tests/inspect-test.sh",                 # ...and this rule's own fixtures use it
-]
-
-[[retired]]
-term = "refit"
-use = "nothing — the command was removed"
-decided = ["ADR-0004", "ADR-0003"]
-except = [
-  "src/foreman/cli.py",                    # RENAMED has to name the old word
-  "tests/agent-permissions-cli-test.sh",   # ...and the tests pin those messages
-  "tests/inspect-test.sh",                 # ...and this rule's own fixtures use it
+  "src/foreman/cli.py",                       # RENAMED has to name the old word
+  "tests/adopt-test.sh",                      # ...and one test builds an old marker
+  "tests/agent-permissions-cli-test.sh",      # ...and the tests pin those messages
+  "tests/inspect-test.sh",                    # ...and its fixtures use it as data
 ]

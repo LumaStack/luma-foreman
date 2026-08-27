@@ -134,15 +134,24 @@ def main(argv: list[str]) -> int:
         ))
         return 1 if behind else 0
 
-    width = max(len(r.bundle) for r in rows)
+    by_id = {r.bundle: r for r in rows}
+    groups = adoption.by_namespace(list(by_id))
+    width = max(len(n) for _, names in groups for n in names)
     held = max(len(r.held) for r in rows)
-    for row in rows:
-        if row.behind:
-            print(f"  {row.bundle:<{width}}  {row.held:<{held}}  ->  {row.available}")
-        elif row.available is None:
-            print(f"  {row.bundle:<{width}}  {row.held:<{held}}      ? {row.note}")
-        else:
-            print(f"  {row.bundle:<{width}}  {row.held:<{held}}      current")
+
+    for i, (namespace, names) in enumerate(groups):
+        if i:
+            print()
+        print(namespace)
+        for name in names:
+            row = by_id[f"{namespace}/{name}" if namespace else name]
+            head = f"  {name:<{width}}  {row.held:<{held}}"
+            if row.behind:
+                print(f"{head}  ->  {row.available}")
+            elif row.available is None:
+                print(f"{head}      ? {row.note}")
+            else:
+                print(f"{head}      current")
 
     print()
     if behind:
