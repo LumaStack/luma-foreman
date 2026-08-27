@@ -4,6 +4,55 @@
 
 Everything below is vendored under `.luma/bundles/` and is part of this repository.
 
+### `lumastack/luma-catalog/audit-records` 0.7.1
+
+Audits as records — findings written by one party, answered by another, closed by the first. The whole exchange lives in git.
+
+In `.luma/bundles/lumastack/luma-catalog/audit-records/` — **open one when the work matches its line**, and not before:
+
+- `policy/audit-layout` (policy) — Where an audit lives, how it is named, and the three-party loop — auditor, respondent, auditor again — that makes the record settle rather than accumulate.
+  - matches: topic:conducting an audit, or recording one
+- `policy/writing-findings` (policy) — What makes a finding actionable rather than an opinion — the five parts, how to rate severity, and the failures that make audits get ignored.
+  - matches: topic:writing a finding in an audit
+- `workflows/conduct-audit` (workflow) — Examine something, record what is wrong and why, and leave a record somebody else can act on. Use when auditing a codebase, a process, or any artifact that has a commit.
+- `workflows/respond-to-audit` (workflow) — Take a position on every finding — agreed, partially agreed, disagreed, or accepted — and point at the evidence. Use when an audit has been filed against something you are accountable for.
+- `workflows/verify-audit` (workflow) — Check whether each finding is genuinely resolved and record a disposition. Use after a response is filed — this is what closes the loop.
+
+### `lumastack/luma-catalog/backlog-ideas` 0.11.1
+
+Ideas as individual files rather than one growing IDEAS.md — what earns a file, how capture stays fast, and how the list gets tended rather than accumulating.
+
+In `.luma/bundles/lumastack/luma-catalog/backlog-ideas/` — **open one when the work matches its line**, and not before:
+
+- `policy/capturing-ideas` (policy) — The test for whether an idea earns a file, what disqualifies one, and why capture optimises for flow rather than completeness.
+  - matches: topic:capturing an idea worth keeping
+- `policy/tending-ideas` (policy) — The gardening practice — growth stages, when to prune, archiving rather than deleting, and how long an archived idea is kept.
+  - matches: topic:pruning, archiving or reviewing a backlog
+- `policy/where-an-idea-lives` (policy) — Choosing the scope — project, department or organization — and the default that applies when it is unclear.
+  - matches: topic:capturing an idea worth keeping
+- `workflows/capture-idea` (workflow) — Write down an idea before it is lost, check whether it already exists, and only then ask how much detail is worth adding now. Use when something worth doing surfaces during other work.
+- `workflows/migrate-ideas` (workflow) — Move ideas out of a single IDEAS.md into individual files, verify nothing was lost, and only then remove the original. Use once per project that has one.
+- `workflows/tend-ideas` (workflow) — A gardening session — read everything, advance what has grown, prune what has not, and record what the session taught about cadence. Use when the list feels unfamiliar.
+
+### `lumastack/luma-catalog/bundle-manager` 0.10.3
+
+Creating, updating, auditing, repairing, migrating and retiring bundles — the layout they use and which catalog they belong in.
+
+In `.luma/bundles/lumastack/luma-catalog/bundle-manager/` — **open one when the work matches its line**, and not before:
+
+- `policy/an-index-of-what-exists` (policy) — Always load what says a thing exists; load the thing when it matters. The pattern that lets a bundle be large without being expensive, assembled from three parts the format already has.
+  - matches: topic:deciding what a consumer should load, and when
+- `policy/organizing-a-bundle` (policy) — The layout every bundle uses, what each directory is for, and the two rules that decide whether something is a document, an asset, or a type.
+  - matches: topic:creating or restructuring a bundle
+- `policy/where-a-bundle-belongs` (policy) — Which catalog a bundle goes in — universal, an organization's private one, or the project it was written in — and how it moves between them.
+  - matches: topic:deciding which catalog a bundle belongs in
+- `workflows/audit-bundle` (workflow) — Check a bundle for the defects that are silent — broken links, unquoted wikilinks, orphaned assets, a missing manifest. Use before publishing or adopting.
+- `workflows/create-bundle` (workflow) — Scaffold a new bundle, decide where it belongs, and get it to a publishable state. Use when asked to create, start, or extract a bundle.
+- `workflows/delete-bundle` (workflow) — Retire a bundle without breaking the projects that adopted it. Use when a bundle is superseded, wrong, or no longer maintained.
+- `workflows/migrate-bundle` (workflow) — Move a bundle between catalogs, or restructure one in place, without stranding the projects that adopted it. Use when promoting, relocating, or reorganizing.
+- `workflows/repair-bundle` (workflow) — Fix what an audit found, in an order that avoids making it worse. Use after audit-bundle reports findings.
+- `workflows/update-bundle` (workflow) — Change a bundle's contents and version it correctly. Use when editing, extending, or fixing an existing bundle.
+
 ### `lumastack/luma-catalog/decision-records` 0.9.1
 
 Decisions recorded with their reasoning, deferred alternatives, and re-open triggers. Spent decisions are archived rather than deleted.
@@ -16,6 +65,78 @@ In `.luma/bundles/lumastack/luma-catalog/decision-records/` — **open one when 
 - `workflows/migrate-decisions` (workflow) — Split a single DECISIONS.md into individual records, reconstruct what supersedes what, repoint everything that linked to the file, and only then remove it. Use once per project that has one.
 - `workflows/prune-archived-decisions` (workflow) — Permanently remove decision records that have been archived longer than the retention period. Only reaches `archived/`, never a live decision. Rarely the right call.
 - `workflows/record-decision` (workflow) — Find or establish where this project keeps decisions, then write one. Use when a position is settled, when an irreversible change is proposed, or when asked where decisions live.
+
+### `lumastack/luma-catalog/git-secrets` 0.5.0
+
+Keeping credentials and private identity out of a repository — names, personal addresses, home paths, machine names, tokens and key files. Prevention first, then audit.
+
+In `.luma/bundles/lumastack/luma-catalog/git-secrets/` — **open one when the work matches its line**, and not before:
+
+- `policy/never-commit-credentials` (policy) — What counts as a credential, which files never belong in a repository, and why rotation comes before cleanup.
+  - matches: command:git commit, command:git push, event:before-commit
+- `policy/never-commit-private-identity` (policy) — Real names, personal emails, home paths and machine names must not appear in commits or tracked content. What to use instead, and why deletion does not undo it.
+  - matches: command:git commit, command:git config, event:before-commit
+- `workflows/audit-sensitive-data` (workflow) — Check whether a repository has already published credentials or private identity, and decide what each finding is worth. Use before making a repository public, or on any repository nobody has checked.
+- `workflows/configure-identity` (workflow) — Set a repository's commit identity so it cannot leak a real name or personal address. Use when starting a project, cloning one, or on a new machine.
+- `workflows/ignore-secret-files` (workflow) — Add the file patterns that are a credential by their name alone to .gitignore, before the commit that would have carried one. Use when starting a project or adding a tool that writes credentials.
+
+### `lumastack/luma-catalog/git-workflow` 0.5.0
+
+How changes get integrated — merge commits rather than squash or rebase, and the repository settings that make it true.
+
+In `.luma/bundles/lumastack/luma-catalog/git-workflow/` — **open one when the work matches its line**, and not before:
+
+- `policy/merge-commits` (policy) — Pull requests are integrated with true merge commits. Squash and rebase merging are disabled at the forge, because they break the only reliable answer to "is this branch merged?"
+  - matches: command:gh pr merge, command:git merge, event:before-merge
+- `workflows/configure-merge-settings` (workflow) — Disable squash and rebase merging at the forge and enable branch auto-delete. Written for GitHub; the equivalent setting exists elsewhere. Use when setting up a repository, or when a merge dropdown still offers squash.
+
+### `lumastack/luma-catalog/git-worktrees` 0.6.1
+
+Isolated worktrees for concurrent agents in one repository — where they live, what has to be provisioned, and how to tear them down without leaving wreckage.
+
+In `.luma/bundles/lumastack/luma-catalog/git-worktrees/` — **open one when the work matches its line**, and not before:
+
+- `policy/worktree-isolation` (policy) — Where worktrees live, how they are named, and what is shared versus isolated — so concurrent agents in one repository can never collide.
+  - matches: command:git worktree, topic:working in or creating a worktree
+- `workflows/create-worktree` (workflow) — Create an isolated worktree for a task, provision what it needs to run, and verify it before starting work. Use before beginning any task that runs alongside another agent.
+- `workflows/recover-worktree` (workflow) — Reclaim a worktree left behind by a crashed session or a failed setup — a lock nobody holds, or a half-created checkout. Use when create or remove is blocked by state nobody owns.
+- `workflows/remove-worktree` (workflow) — Tear down a worktree completely — directory, metadata, branch and any namespaced resources it claimed. Use as the last step of a task, at merge.
+- `workflows/repair-worktrees` (workflow) — Diagnose and fix the states worktrees get stuck in — stale metadata, a branch that will not check out, a moved directory, a locked entry. Use when create or remove fails.
+
+### `lumastack/luma-catalog/github-release` 0.6.1
+
+Cutting and publishing GitHub releases — choosing the version, the changelog, release titles and contents, and the gh workflow.
+
+In `.luma/bundles/lumastack/luma-catalog/github-release/` — **open one when the work matches its line**, and not before:
+
+- `policy/changelog` (policy) — CHANGELOG.md follows Keep a Changelog. The six change groups, the Unreleased section, and how the changelog differs from release notes.
+  - matches: path:CHANGELOG.md
+- `policy/release-notes` (policy) — What a release is called and what it must contain. Release notes are the only thing most people will ever read about a version.
+  - matches: command:gh release create, event:before-release
+- `policy/release-versions` (policy) — Which part to bump when cutting a release, and the two cases that must be said out loud in the notes. Enough to act; the reasoning lives in the versioning bundle.
+  - matches: event:before-release, topic:choosing which part of a version to bump
+- `workflows/publish-release` (workflow) — Verify the gh CLI is installed and authenticated, then cut and publish a release. Use when asked to cut, tag, or publish a release.
+
+### `lumastack/luma-catalog/luma-config` 0.7.1
+
+Where luma configuration lives, what is committed and what belongs to the machine, and the order in which layers win.
+
+In `.luma/bundles/lumastack/luma-catalog/luma-config/` — **open one when the work matches its line**, and not before:
+
+- `policy/where-configuration-lives` (policy) — Two homes and one cache — what is committed, what belongs to the machine, and the test that tells them apart.
+  - matches: path:.luma/config/**, topic:deciding where a setting belongs
+- `workflows/add-a-setting` (workflow) — Decide where a new configuration value lives and how strongly it binds. Use when introducing any value somebody might want to change.
+
+### `lumastack/luma-catalog/luma-layout` 0.11.1
+
+The .luma directory every luma tool writes into — the four tiers, what belongs in each, and the committed-only invariant that makes it trustworthy.
+
+In `.luma/bundles/lumastack/luma-catalog/luma-layout/` — **open one when the work matches its line**, and not before:
+
+- `policy/luma-directory-layout` (policy) — The four directories every luma tool honours, what belongs in each, and the one invariant that makes the whole thing trustworthy.
+  - matches: path:.luma/**
+- `workflows/initialize-luma` (workflow) — Initialize .luma/ in a repository that does not have one. Use when setting up luma in a project for the first time.
+- `workflows/migrate-into-luma` (workflow) — Move an existing project's scattered conventions, decisions and notes into .luma/. Use on a project that already has this material somewhere else.
 
 ### `lumastack/luma-catalog/luma-maintainers` 0.10.3
 
@@ -38,6 +159,66 @@ In `.luma/bundles/lumastack/luma-catalog/luma-tools/` — **open one when the wo
   - matches: command:luma-foreman, command:luma-catalog-curator, topic:choosing which luma tool does a job
 - `workflows/adopt-knowledge` (workflow) — Take bundles from a catalog into a repository and make an agent aware of them. Use when setting a project up, when adding a capability, or when an agent keeps needing to be told where to look.
 - `workflows/install-the-tools` (workflow) — Get foreman onto a machine and wired into a harness. Use on a new workstation, after an upgrade, or when a permission gate is not firing.
+
+### `lumastack/luma-catalog/luma-types` 0.10.1
+
+The type definitions more than one luma tool has to agree on — namespaced, vendored, and deliberately not built into the knowledge format.
+
+Everything here is loaded above. In `.luma/bundles/lumastack/luma-catalog/luma-types/`.
+
+### `lumastack/luma-catalog/project-documentation` 0.15.2
+
+The prose a repository publishes — where it lives, what a README is for, and which documents are worth having at all.
+
+In `.luma/bundles/lumastack/luma-catalog/project-documentation/` — **open one when the work matches its line**, and not before:
+
+- `policy/documentation-layout` (policy) — Prose goes in docs/. What stays at the repository root and why, and which documents this bundle deliberately does not own.
+  - matches: path:docs/**, topic:deciding where a document belongs
+- `policy/readme` (policy) — A README answers what this is, why it exists, and where to go next — in that order. What belongs in one, what does not, and why the limit matters.
+  - matches: path:README.md
+- `policy/reserved-document-names` (policy) — Which filenames are claimed by an outside convention or matched by a tool, where the capitals are load-bearing and where they are only typography, and the one distinction no convention gives you.
+  - matches: topic:naming a new file at a repository root
+- `policy/the-project-descriptor` (policy) — The file a repository publishes about itself for something outside it to read — where it lives, what belongs in it, and why the repository has to own it rather than whoever collects it.
+  - matches: path:.luma/PROJECT.md
+- `policy/which-document` (policy) — The documents most projects can have, what each is called, and the condition that earns it. Write one when its condition is met, not before.
+  - matches: topic:deciding whether a document is worth writing
+- `policy/writing-style` (policy) — How prose is written here — the conventions a reader should be able to rely on across every document. Read before writing or editing documentation.
+  - matches: topic:writing or editing prose
+- `workflows/add-document` (workflow) — Decide whether a document is needed, which one it is, and where it goes. Use when writing anything new, or when a document is outgrowing the file it is in.
+- `workflows/describe-project` (workflow) — Write or refresh the descriptor a repository publishes about itself at .luma/PROJECT.md. Use when a repository is one of several, or when what it is for has changed.
+
+### `lumastack/luma-catalog/session-manager` 0.6.3
+
+Ending an agent session without losing what it learned — checkpoint while working, hand off to a successor, or close for good, each writing for a different reader.
+
+In `.luma/bundles/lumastack/luma-catalog/session-manager/` — **open one when the work matches its line**, and not before:
+
+- `policy/session-continuity` (policy) — The three ways a session ends, who reads what each one leaves behind, and the invariant that makes a session note safe to destroy.
+  - matches: event:session-start, event:session-end
+- `policy/where-knowledge-goes` (policy) — How to find the durable home for something worth keeping, without this bundle containing the list — the resolution order, the kinds, and what to do when there is no destination.
+  - matches: topic:deciding where something worth keeping belongs
+- `workflows/session-checkpoint` (workflow) — Snapshot where the work is so a crash or a compaction costs nothing, without stopping. Use mid-session after something starts working, before anything irreversible, or at a natural seam.
+- `workflows/session-close` (workflow) — Wind a session down for good — land everything durably, shut down what is running, and leave nothing that only exists in this machine or this conversation. Use when stopping with no idea when work resumes.
+- `workflows/session-handoff` (workflow) — Transfer work to another agent or a future session so it resumes without losing what this one learned. Use before a compaction, before exiting, or when someone else takes over — the work is continuing, somewhere else.
+- `workflows/session-resume` (workflow) — Pick up work another session left — find what it wrote, judge how much of it is still true, act on it, and destroy it. Use at the start of a session that is continuing somebody else's work.
+
+### `lumastack/luma-catalog/token-manager` 0.10.1
+
+Where an agent session's tokens actually go — a paced tutorial on the mechanism and the fixes that follow from it, and an audit that measures a real setup instead of guessing at it.
+
+In `.luma/bundles/lumastack/luma-catalog/token-manager/` — **open one when the work matches its line**, and not before:
+
+- `workflows/token-audit` (workflow) — Measure one setup for token waste — memory files, tool deferral, model and effort, output filtering, subagents, schedule intervals and cache hit rate — and report it ranked by cost. Reports only; changes nothing. Use before deciding what to fix.
+- `workflows/token-tutorial` (workflow) — A paced tutorial on where an agent session's tokens actually go — presented a step at a time, pausing after each one for questions or practice, and ending in a short quiz. Use when somebody wants to learn the material rather than measure a setup.
+
+### `lumastack/luma-catalog/versioning` 0.5.0
+
+What a version number promises, when to bump which part, and the rules that get decided wrongly — for anything versioned, not only releases.
+
+In `.luma/bundles/lumastack/luma-catalog/versioning/` — **open one when the work matches its line**, and not before:
+
+- `policy/semantic-versioning` (policy) — What each part of a version means, when to bump which, and the parts that get decided wrongly — the pre-1.0 rules, the v prefix, and deprecating before removing.
+  - matches: topic:choosing a version number, path:**/BUNDLE.md
 
 Workflows here are also installed as skills, so they can be invoked by name. Everything under `.luma/bundles/` is a copy — change it upstream and take it again, never in place.
 
