@@ -305,14 +305,39 @@ def listing(project_root: Path) -> int:
         return 0
 
     configured = config.catalog_source(project_root)
-    width = max(len(short_name(s)) for s in found)
+
+    # How many a catalog publishes is the part worth knowing — `3 taken` says
+    # nothing you did not already know, and `3 of 19 taken` says there is more
+    # here. It costs a fetch per catalog, which is what `catalog` is for.
+    rows = []
     for source, bundles in sorted(found.items(), key=lambda kv: short_name(kv[0])):
-        count = f"{len(bundles)} bundle(s)" if bundles else "nothing taken yet"
+        catalog = find(source)
+        if isinstance(catalog, str):
+            # Unreachable is reported, not fatal. An outage is not a property
+            # of this repository, and a blank where a number belongs reads as
+            # zero — which is the one thing that must not happen.
+            taken = f"{len(bundles)} taken" if bundles else "none taken"
+            rows.append((short_name(source), f"{taken}, ? published", source, catalog))
+            continue
+        published = len(catalog.names())
+        taken = f"{len(bundles)} of {published} taken" if bundles else f"0 of {published} taken"
+        rows.append((short_name(source), taken, source, None))
+
+    width = max(len(n) for n, _, _, _ in rows)
+    held = max(len(c) for _, c, _, _ in rows)
+    for name, count, source, why in rows:
         default = "  (configured default)" if source == configured else ""
-        print(f"  {short_name(source):<{width}}  {count:<16}  {source}{default}")
+        print(f"  {name:<{width}}  {count:<{held}}  {source}{default}")
+        if why:
+            # `find` puts the source in its message; the row above already has
+            # it, so the second line carries the reason and nothing else.
+            print(f"  {'':<{width}}  {'':<{held}}  {why.replace(source, '').strip(': ')}")
 
     print()
     print(f"{len(found)} catalog(s), derived from what has been adopted.")
+    unreachable = [n for n, _, _, why in rows if why]
+    if unreachable:
+        print(f"{len(unreachable)} could not be reached, so what they publish is unknown.")
     print()
     print("  luma-foreman catalog show <name>    what one publishes")
     return 0
