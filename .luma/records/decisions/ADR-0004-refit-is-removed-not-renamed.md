@@ -2,12 +2,14 @@
 type: decision
 title: refit is removed rather than renamed, and there is no composite status command
 decided: 2026-08-26
-lifecycle_status: provisional
+lifecycle_status: draft
 reopen_trigger: Somebody needs a single answer to "am I current" and the three existing commands are genuinely too many. The record that re-opens this has to say what such a command can honestly report with no network.
 ---
 
 # ADR-0004: refit is removed rather than renamed, and there is no composite status command
 
+
+**Returned to `draft` on 2026-08-26.** This was recorded as settled while the argument was still running, and several positions in it moved the same day. `provisional` means decided and in force; this was neither, and saying so was the error rather than the changes that followed.
 ## Summary
 
 `refit` is deleted from the command set. It is not renamed to `reapply`, and it

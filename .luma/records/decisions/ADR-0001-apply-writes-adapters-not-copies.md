@@ -2,12 +2,14 @@
 type: decision
 title: Apply writes adapters, never copies of a document
 decided: 2026-08-23
-lifecycle_status: provisional
+lifecycle_status: draft
 reopen_trigger: A harness appears that cannot follow a file path from a skill body, or measurement shows the extra read costs more than the duplication would.
 ---
 
 # ADR-0001: Apply writes adapters, never copies of a document
 
+
+**Returned to `draft` on 2026-08-26.** This was recorded as settled while the argument was still running, and several positions in it moved the same day. `provisional` means decided and in force; this was neither, and saying so was the error rather than the changes that followed.
 ## Summary
 
 `luma-foreman apply` writes a pointer to each adopted document and never a copy

@@ -2,12 +2,14 @@
 type: decision
 title: Adoption copies a directory and never resolves anything
 decided: 2026-08-23
-lifecycle_status: provisional
+lifecycle_status: draft
 reopen_trigger: Bundle dependencies are adopted as a design, at which point something has to decide what a bundle's declared needs mean at `get` time.
 ---
 
 # ADR-0002: Adoption copies a directory and never resolves anything
 
+
+**Returned to `draft` on 2026-08-26.** This was recorded as settled while the argument was still running, and several positions in it moved the same day. `provisional` means decided and in force; this was neither, and saying so was the error rather than the changes that followed.
 ## Summary
 
 `luma-foreman get` copies one bundle directory and writes a receipt. It
