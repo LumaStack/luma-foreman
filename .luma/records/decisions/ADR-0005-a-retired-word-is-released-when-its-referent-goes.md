@@ -35,9 +35,13 @@ Applied to what is retired here today:
 
 | word | named | releasable |
 | --- | --- | --- |
-| `refit` | a command that was removed rather than renamed | **yes**, once its count is zero |
+| `refit` | a command that was removed rather than renamed | **released 2026-08-26** |
 | `outfit` | the command now called `apply` — still there | **no** |
 | `projection` | what `apply` writes — still there | **no** |
+
+`refit` is the worked example: its count reached zero, nothing in the product
+needs a name for what it named, and the entry is gone. The other two never
+reach that state while `apply` exists.
 
 **A second condition, rarely reached:** the decision that retired the word is
 archived with nothing superseding it. A retirement nothing decides is not in
