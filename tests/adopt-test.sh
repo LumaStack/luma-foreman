@@ -381,6 +381,22 @@ has 'not adopted'
 catalog 'catalog list' 0 list
 has "$CATALOG"
 has '1 catalog(s)'
+# How many a catalog publishes is the part worth knowing — `1 taken` says
+# nothing you did not already know. The fixture gains bundles as the file runs,
+# so the shape is what matters rather than the number.
+case $LAST in *" of "*" taken"*) ok ;; *) bad "no published count: $LAST" ;; esac
+
+# Unreachable is reported per row and does not fail the run. A blank where a
+# number belongs reads as zero, which is the one thing that must not happen.
+GONE=$T/gone; mkdir -p "$GONE/.luma/bundles/acme/x"; git -C "$GONE" init -q
+printf -- '["acme/x"]\nversion  = "1.0.0"\nsource   = "https://example.invalid/nope.git"\ncommit   = "c"\nchecksum = "sha256:c"\n' \
+  > "$GONE/.luma/bundles/adopted.toml"
+printf -- '---\ntype: bundle\nversion: 1.0.0\n---\nb\n' > "$GONE/.luma/bundles/acme/x/BUNDLE.md"
+LAST=$(cd "$GONE" && "$CLI" catalog list 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "unreachable catalog failed the run (exit $got): $LAST"
+case $LAST in *"? published"*) ok ;; *) bad "did not mark the count unknown: $LAST" ;; esac
+case $LAST in *"could not"*) ok ;; *) bad "did not say why: $LAST" ;; esac
+case $LAST in *"1 could not be reached"*) ok ;; *) bad 'no summary of what was missed' ;; esac
 
 # A short name is derived from the source, and resolves back to it.
 catalog 'catalog show by short name' 0 show "$(basename "$CATALOG")"
