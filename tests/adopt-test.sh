@@ -450,6 +450,46 @@ EOF
 get 'unversioned refused' 2 acme/unversioned --from "$CATALOG"
 has 'declares no version'
 
+# --- the same ID from a different catalog ---------------------------------------
+#
+# Derivation makes this impossible by accident, so reaching it means two
+# catalogs both declared the same namespace — deliberately, or by a fork
+# copying the line. Either way it is a change of lineage rather than an
+# upgrade, and the one case where doing nothing is the wrong answer: before
+# this, `get` compared ID and version only and said "nothing to do" while the
+# content it was asked for sat unfetched.
+
+declaring() {        # declaring <dir> <bundle-description>
+  mkdir -p "$1/catalog/bundles/widgets"
+  printf -- '---\ntype: luma/catalog\nnamespace: shared\ndescription: d\n---\nc\n' \
+    > "$1/catalog/CATALOG.md"
+  printf -- '---\ntype: bundle\nversion: 1.0.0\ndescription: %s\n---\nb\n' "$2" \
+    > "$1/catalog/bundles/widgets/BUNDLE.md"
+  git -C "$1" init -q
+}
+declaring "$T/lup" upstream
+declaring "$T/lfk" fork
+
+LIN=$T/lin; mkdir -p "$LIN"; git -C "$LIN" init -q
+LAST=$(cd "$LIN" && "$CLI" get widgets --from "$T/lup" 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "first adoption (exit $got): $LAST"
+
+LAST=$(cd "$LIN" && "$CLI" get widgets --from "$T/lfk" 2>&1); got=$?
+[ "$got" -eq 1 ] && ok || bad "lineage switch not refused (exit $got): $LAST"
+case $LAST in *"different catalog"*) ok ;; *) bad 'refusal did not say why' ;; esac
+case $LAST in *"$T/lup"*) ok ;; *) bad 'refusal did not name what is held' ;; esac
+case $LAST in *"$T/lfk"*) ok ;; *) bad 'refusal did not name what was asked for' ;; esac
+grep -q "$T/lup" "$LIN/.luma/bundles/adopted.toml" \
+  && ok || bad 'a refused switch changed the receipt'
+
+# --force takes it, and reports a lineage change rather than a version event —
+# the version may not have moved at all.
+LAST=$(cd "$LIN" && "$CLI" get widgets --from "$T/lfk" --force 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "forced switch (exit $got): $LAST"
+case $LAST in *"from another catalog"*) ok ;; *) bad "not reported as a switch: $LAST" ;; esac
+grep -q "$T/lfk" "$LIN/.luma/bundles/adopted.toml" \
+  && ok || bad 'the receipt did not record the new source'
+
 # --- a namespace derives from where the catalog lives ---------------------------
 #
 # Declaring one is allowed and always wins. Not declaring is the common case,
