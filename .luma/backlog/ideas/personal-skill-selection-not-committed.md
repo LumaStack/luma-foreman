@@ -19,7 +19,7 @@ project and is committed, while some belongs to you and is not.
 A project's skill set and an individual's are not the same set, and only one of
 them should travel with a clone. Today there is nowhere for the second to live.
 
-**`.luma/` cannot hold it.** The `luma/luma-layout` bundle states the invariant
+**`.luma/` cannot hold it.** The `luma-layout` bundle states the invariant
 plainly — *"Everything in `.luma/` is committed, no exceptions"* — because if
 uncommitted files could live there, two agents on two machines would read
 different rules for the same repository. That is the right invariant and this

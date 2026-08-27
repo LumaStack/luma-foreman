@@ -113,9 +113,9 @@ retirement citable; an `inspect` rule is what would make it enforced, and is
 filed rather than built.
 
 **A clean break rather than aliases, because an alias would let the catalog stay
-wrong.** `luma/luma-tools workflows/adopt-knowledge` prints `luma-foreman adopt`
-and `luma-foreman outfit`, and the only real fix is to update that bundle and
-republish it. An alias makes the stale prose keep working, which removes the
+wrong.** `luma-tools`' `adopt-knowledge` printed `luma-foreman adopt` and
+`luma-foreman outfit` for hours after this landed, and the only real fix was to
+update that bundle and republish it. An alias makes the stale prose keep working, which removes the
 pressure to ever correct it — and leaves two names for one command with no
 condition under which either dies. A hard error naming the new command teaches
 the rename once; an alias defers it indefinitely.

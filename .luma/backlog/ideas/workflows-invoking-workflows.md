@@ -34,9 +34,9 @@ so.
 type: workflow
 invokes:
   record-the-run: { workflow: acme/journal, level: require }
-  refresh-index:  { workflow: luma/organization-internal-hq#index-repositories, level: recommend, absent: silent }
+  refresh-index:  { workflow: organization-internal-hq#index-repositories, level: recommend, absent: silent }
   need-gh:        { command: "gh", level: require }
-  load-security:  { bundle: luma/git-secrets, level: recommend }
+  load-security:  { bundle: git-secrets, level: recommend }
 before: [record-the-run]
 ---
 ```
