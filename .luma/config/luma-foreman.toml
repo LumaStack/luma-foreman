@@ -18,6 +18,10 @@
 # `except` names documents that discuss the retirement itself. The record that
 # decided it is exempt automatically; anything else arguing about the word has
 # to be listed, so an exemption is a choice somebody made rather than a hole.
+#
+# An entry is removed when the thing the word named no longer exists — not
+# after a number of releases, and not because the count has been zero for a
+# while. ADR-0005 has the argument. `refit` qualifies; the other two do not.
 [[retired]]
 term = "projection"
 use = "what `apply` writes, or `apply` itself"
