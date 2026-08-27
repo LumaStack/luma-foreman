@@ -2,12 +2,14 @@
 type: decision
 title: The CLI speaks command-line convention, not the foreman metaphor
 decided: 2026-08-26
-lifecycle_status: provisional
+lifecycle_status: draft
 reopen_trigger: Bundles declare dependencies and foreman resolves them — the re-open condition of ADR-0002. At that point `install` stops being a lie and the verb is worth revisiting.
 ---
 
 # ADR-0003: The CLI speaks command-line convention, not the foreman metaphor
 
+
+**Returned to `draft` on 2026-08-26.** This was recorded as settled while the argument was still running, and several positions in it moved the same day. `provisional` means decided and in force; this was neither, and saying so was the error rather than the changes that followed.
 ## Summary
 
 Commands are named the way other command-line tools name them. The word for a
@@ -64,10 +66,13 @@ commands that only report — `list`, `show`, and `outdated`.
 project holds; `catalog list` lists catalogs it draws from. `show` drills into
 one of either. Nothing is named for a thing it does not return.
 
-**Two of the five need a network: `bundle outdated` and `catalog show`.** Both
-ask about the far side. The other three read committed state — `adopted.toml`
-and `.luma/config/foreman.toml` — so they work in a bare clone, which extends
-the guarantee `inspect` carries to every read command that can honour it.
+**`catalog` commands reach the catalog.** `catalog list` reports what each one
+publishes rather than only naming it, because `bundle list` already answers the
+local question — a `catalog` command reading only `adopted.toml` would answer
+it worse under the wrong name.
+
+The set of catalogs comes from `adopted.toml`, because nothing remote knows
+which catalogs a project draws on.
 
 ## Why
 
@@ -242,16 +247,22 @@ the first real pressure toward registering catalogs rather than deriving them,
 and it should be recorded as such when it arrives rather than solved by
 accident.
 
-**Two commands may reach the network and no others: `bundle outdated` and
-`catalog show`.** Both answer a question about the far side, and neither has an
-offline answer worth giving. `bundle list`, `bundle show` and `catalog list`
-read committed state, so the guarantee `inspect` carries extends to them: a
-check that cannot run is reported as skipped, never as a pass.
+**Local where it works, the network where it is needed.** `catalog list` and
+`catalog show` ask a catalog what it publishes; `bundle outdated` compares
+against one. None of those has an offline answer. `bundle list` and `bundle
+show` read what is already here. That is where things stand, not a line
+anybody drew.
 
-**A version-available column on `bundle list` would quietly break that**, which
-is the tempting change to refuse. It reads as a small convenience and it moves
-the command across the line — the comparison belongs to `bundle outdated`,
-which is named for needing a network.
+`bundle outdated` sits under `bundle` because it returns bundles, which is what
+the noun decides. Reaching a catalog is what comparison takes.
+
+**Where the network is unavailable, say so and carry on.** `bundle outdated`
+prints `?` with the reason and exits 0. An outage is not a property of the
+repository, and a blank where a number belongs reads as zero.
+
+**`bundle list` does not grow a version-available column.** Not for crossing a
+line — because `bundle list` answers what this project holds and `bundle
+outdated` answers what has moved past it. Two questions, two commands.
 
 ## References
 
