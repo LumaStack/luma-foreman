@@ -140,6 +140,26 @@ def by_namespace(bundle_ids: list[str]) -> list[tuple[str, list[str]]]:
     return [(ns, sorted(names)) for ns, names in sorted(groups.items())]
 
 
+def applied(project: Path, bundle_id: str) -> bool:
+    """Has this bundle ever been written into what an agent reads?
+
+    Deliberately weak. Whether what was written is *current* is what
+    `luma-foreman apply --check` answers, and a second implementation of that
+    comparison would be a second thing to keep true. This answers the cruder
+    and more damaging question: has anybody ever seen this bundle.
+    """
+    from . import apply  # imported here: apply reads this module at import time
+
+    claude = project / "CLAUDE.md"
+    if not claude.is_file():
+        return False
+    try:
+        text = claude.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        return False
+    return apply.BEGIN in text and bundle_id in text
+
+
 def state(project: Path, entry: Adopted) -> str:
     """``ok``, ``edited`` or ``missing`` — what this copy is right now.
 

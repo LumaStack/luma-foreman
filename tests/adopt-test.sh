@@ -139,6 +139,10 @@ catalog 'catalog show by path' 0 show "$CATALOG"
 has 'acme'
 has 'widgets'
 lacks 'acme/widgets'
+# Three states, because the tool has two steps — a bundle can be here and still
+# reach no agent. Nothing is adopted in this project yet, so all are empty.
+has '○ widgets'
+has 'not taken'
 has '0.1.0'
 has 'Everything about widgets'
 
@@ -380,7 +384,7 @@ has 'not adopted'
 
 catalog 'catalog list' 0 list
 has "$CATALOG"
-has '1 catalog(s)'
+has '1 catalog,'
 # How many a catalog publishes is the part worth knowing — `1 taken` says
 # nothing you did not already know. The fixture gains bundles as the file runs,
 # so the shape is what matters rather than the number.
@@ -573,6 +577,19 @@ case $LAST in *"1 bundle(s) written out"*) ok ;; *) bad "apply found nothing: $L
 LAST=$(cd "$DEEP" && "$CLI" inspect --rule adoption 2>&1); got=$?
 [ "$got" -eq 0 ] && ok || bad "inspect on a deep namespace (exit $got): $LAST"
 case $LAST in *"not on disk"*) bad 'inspect could not see a deep bundle' ;; *) ok ;; esac
+
+# The mark tracks both steps, not just the first. A bundle that was taken and
+# never applied reaches no agent, which is the state `inspect` calls unapplied
+# and the one somebody browsing a catalog cannot otherwise see.
+MARK=$T/mark; mkdir -p "$MARK"; git -C "$MARK" init -q
+LAST=$(cd "$MARK" && "$CLI" get acme/widgets --from "$CATALOG" 2>&1)
+LAST=$(cd "$MARK" && "$CLI" catalog show "$CATALOG" 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "catalog show after get (exit $got): $LAST"
+case $LAST in *"◐ widgets"*) ok ;; *) bad "taken-not-applied not marked: $LAST" ;; esac
+LAST=$(cd "$MARK" && "$CLI" apply 2>&1)
+LAST=$(cd "$MARK" && "$CLI" catalog show "$CATALOG" 2>&1)
+case $LAST in *"● widgets"*) ok ;; *) bad "applied not marked: $LAST" ;; esac
+case $LAST in *"1 taken"*) ok ;; *) bad "header did not count what is taken: $LAST" ;; esac
 
 # --- a catalog with no namespace ------------------------------------------------
 

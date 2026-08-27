@@ -204,6 +204,11 @@ def find(source: str) -> Catalog | str:
 
 
 
+def _count(n: int, noun: str) -> str:
+    """`1 bundle`, `19 bundles`. A `(s)` makes the reader do the work."""
+    return f"{n} {noun}" if n == 1 else f"{n} {noun}s"
+
+
 def _terminal_width() -> int:
     """Usable width, capped so a wide terminal does not sprawl.
 
@@ -239,7 +244,7 @@ def sources(project_root: Path) -> dict[str, list[str]]:
     return out
 
 
-def show(source: str) -> int:
+def show(source: str, project_root: Path) -> int:
     catalog = find(source)
     if isinstance(catalog, str):
         return _err(catalog)
@@ -251,39 +256,50 @@ def show(source: str) -> int:
     # The namespace is a header rather than a column. It is identical on every
     # row and 23 characters wide for this catalog — repeating it costs a quarter
     # of a laptop screen to say nothing that changes.
-    if catalog.namespace:
-        print(f"{catalog.namespace} — {len(names)} bundle(s)")
-        print()
-
+    # Three states, because the tool has two steps. A bundle can be here and
+    # still reach no agent — which is what `inspect` reports as `unapplied`,
+    # and the state somebody browsing a catalog has no other way to notice.
+    held_here = adoption.read(project_root)
     rows = []
     for name in names:
         manifest = lkf.read(catalog.root / "bundles" / name / "BUNDLE.md") or {}
+        bundle_id = f"{catalog.namespace}/{name}" if catalog.namespace else name
+        if bundle_id not in held_here:
+            mark = "○"
+        elif adoption.applied(project_root, bundle_id):
+            mark = "●"
+        else:
+            mark = "◐"
         rows.append((
+            mark,
             name,
             lkf.unquote(manifest.get("version", "?")),
             " ".join(str(manifest.get("description", "")).split()),
         ))
 
-    width = max(len(n) for n, _, _ in rows)
-    held = max(len(v) for _, v, _ in rows)
-    lead = 2 + width + 2 + held + 2
+    taken = sum(1 for m, _, _, _ in rows if m != "○")
+    if catalog.namespace:
+        print(f"{catalog.namespace} — {len(names)} bundles, {taken} taken")
+    print("● taken and applied   ◐ taken, not applied yet   ○ not taken")
+    print()
+
+    # The name is a heading rather than a column. As a column it reserved its
+    # own width on every line of every description — twenty-six characters of
+    # nothing, on the lines that needed the room most.
+    # Name and version are the heading; the description sits under it. As
+    # columns they reserved their own width on every line of every
+    # description — thirty characters of nothing, on the lines needing it most.
+    lead = 4
     body = max(32, _terminal_width() - lead)
 
-    # Blank lines only where descriptions wrap. Without them a wrapped list is
-    # a wall; with them everywhere, a short list is twice as tall as it needs.
-    wrapped = any(len(d) > body for _, _, d in rows)
-
-    for i, (name, version, description) in enumerate(rows):
-        if wrapped and i:
+    for i, (mark, name, version, description) in enumerate(rows):
+        if i:
             print()
-        head = f"  {name:<{width}}  {version:<{held}}  "
-        if not description:
-            print(head.rstrip())
-            continue
-        # Hanging indent, so the name column stays scannable and no line runs
-        # off the screen. A description is a sentence, not a field.
-        for i, line in enumerate(textwrap.wrap(description, body) or [""]):
-            print((head if i == 0 else " " * lead) + line)
+        # The mark is the first character on the line, so the three states are
+        # a column the eye can run down rather than something to look for.
+        print(f"{mark} {name}  {version}")
+        for line in textwrap.wrap(description, body, break_on_hyphens=False):
+            print(" " * lead + line)
 
     if not catalog.namespace:
         print()
@@ -316,25 +332,31 @@ def listing(project_root: Path) -> int:
             # Unreachable is reported, not fatal. An outage is not a property
             # of this repository, and a blank where a number belongs reads as
             # zero — which is the one thing that must not happen.
-            taken = f"{len(bundles)} taken" if bundles else "none taken"
-            rows.append((short_name(source), f"{taken}, ? published", source, catalog))
+            taken = f"{_count(len(bundles), 'bundle')} taken, ? published"
+            rows.append((short_name(source), taken, source, catalog))
             continue
         published = len(catalog.names())
-        taken = f"{len(bundles)} of {published} taken" if bundles else f"0 of {published} taken"
-        rows.append((short_name(source), taken, source, None))
+        rows.append((
+            short_name(source),
+            f"{len(bundles)} of {_count(published, 'bundle')} taken",
+            source,
+            None,
+        ))
 
-    width = max(len(n) for n, _, _, _ in rows)
-    held = max(len(c) for _, c, _, _ in rows)
-    for name, count, source, why in rows:
-        default = "  (configured default)" if source == configured else ""
-        print(f"  {name:<{width}}  {count:<{held}}  {source}{default}")
-        if why:
-            # `find` puts the source in its message; the row above already has
-            # it, so the second line carries the reason and nothing else.
-            print(f"  {'':<{width}}  {'':<{held}}  {why.replace(source, '').strip(': ')}")
+    # Same shape as `catalog show`: the name is a heading, everything about it
+    # is indented under it. Three kinds of thing on one line — a name, a count
+    # and a URL — was three columns competing for the same width.
+    for i, (name, count, source, why) in enumerate(rows):
+        if i:
+            print()
+        default = "   (configured default)" if source == configured else ""
+        print(f"  {name}{default}")
+        # `find` puts the source in its message, and the line below carries it.
+        print(f"    {count}" + (f" — {why.replace(source, '').strip(': ')}" if why else ""))
+        print(f"    {source}")
 
     print()
-    print(f"{len(found)} catalog(s), derived from what has been adopted.")
+    print(f"{_count(len(found), 'catalog')}, derived from what this project has adopted.")
     unreachable = [n for n, _, _, why in rows if why]
     if unreachable:
         print(f"{len(unreachable)} could not be reached, so what they publish is unknown.")
@@ -382,6 +404,6 @@ def main(argv: list[str]) -> int:
             if short_name(source) == wanted:
                 wanted = source
                 break
-        return show(wanted)
+        return show(wanted, project_root)
 
     return _err(f"unknown: catalog {verb} (try luma-foreman catalog --help)")
