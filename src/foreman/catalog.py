@@ -19,7 +19,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from . import adopt, adoption, project
+from . import adoption, get, project
 
 USAGE = """Where this project's knowledge comes from.
 
@@ -55,7 +55,7 @@ def sources(project_root: Path) -> dict[str, list[str]]:
     out: dict[str, list[str]] = {}
     for bundle_id, entry in sorted(adoption.read(project_root).items()):
         out.setdefault(entry.source, []).append(bundle_id)
-    configured = adopt._configured(project_root)
+    configured = get._configured(project_root)
     if configured:
         out.setdefault(configured, [])
     return out
@@ -69,7 +69,7 @@ def listing(project_root: Path) -> int:
         print("  luma-foreman get <bundle> --from <catalog>")
         return 0
 
-    configured = adopt._configured(project_root)
+    configured = get._configured(project_root)
     width = max(len(short_name(s)) for s in found)
     for source, bundles in sorted(found.items(), key=lambda kv: short_name(kv[0])):
         count = f"{len(bundles)} bundle(s)" if bundles else "nothing taken yet"
@@ -122,6 +122,6 @@ def main(argv: list[str]) -> int:
             if short_name(source) == wanted:
                 wanted = source
                 break
-        return adopt.listing(wanted)
+        return get.listing(wanted)
 
     return _err(f"unknown: catalog {verb} (try luma-foreman catalog --help)")

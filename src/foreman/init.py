@@ -5,7 +5,7 @@ have contents on the day they are written and both are committed; everything
 else in `.luma/` arrives when something writes to it — `bundles/` on the first
 `get`, `records/` on the first decision or audit.
 
-Follows `luma/luma-layout`'s `initialize-luma`: create only what will have
+Follows `luma-layout`'s `initialize-luma`: create only what will have
 contents, add no `.gitignore` entry, and commit before using. That workflow is
 what an agent reads; this is the same thing as one command.
 """
@@ -15,7 +15,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from . import adopt, project
+from . import get, project
 from . import catalog as catalogs
 
 USAGE = """Stand `.luma/` up in a repository that does not have one.
@@ -146,7 +146,7 @@ def run(target: Path, catalog: str | None) -> int:
 
     luma = target / ".luma"
     descriptor = luma / "PROJECT.md"
-    config = adopt.config_path(target)
+    config = get.config_path(target)
 
     # Idempotent, and never destructive. A file that is already there is left
     # exactly as it is — running this twice is how somebody adds what a newer
@@ -195,7 +195,7 @@ def run(target: Path, catalog: str | None) -> int:
     # Two steps, because the first question is always what is on offer and the
     # answer is a command nobody guesses. Named concretely where the config
     # knows the catalog, so neither line has a placeholder to work out.
-    source = catalog or adopt._configured(target)
+    source = catalog or get._configured(target)
     print("Next steps:")
     if source:
         name = catalogs.short_name(source)
@@ -218,7 +218,7 @@ def run(target: Path, catalog: str | None) -> int:
     if found:
         print()
         print(f"This project already keeps records in {', '.join(found)}.")
-        print("The `migrate-into-luma` workflow in luma/luma-layout moves an")
+        print("The `migrate-into-luma` workflow in luma-layout moves an")
         print("existing project in, rather than leaving two places to look.")
     return 0
 
