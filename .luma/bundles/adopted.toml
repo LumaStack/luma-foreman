@@ -4,20 +4,20 @@
 # sha256, in sorted path order. Editing this value makes the drift check start
 # passing silently, which is the one failure it exists to prevent.
 
-["luma/decision-records"]
-version  = "0.9.0"
-source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "0dc9e7079de3a5b8b6154e4213903355031a1b90"
-checksum = "sha256:47564ad1c3aebb533b2eef59765b7850df467f4f0f4734e21843856ef4b4370e"
-
-["luma/luma-maintainers"]
-version  = "0.10.2"
-source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "0dc9e7079de3a5b8b6154e4213903355031a1b90"
-checksum = "sha256:44065d4a78dec69222dd13ab9f268ce12458252ff660bd512c397ee6518e4572"
-
-["luma/luma-tools"]
+["lumastack/luma-catalog/decision-records"]
 version  = "0.9.1"
 source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "ea7c1b064daf63881a60ab5bf0218de90ccd4e44"
-checksum = "sha256:ad1819b12391c3acba963ef20845cdaf5b66d2a896cfcd1943b836fccd5790f2"
+commit   = "a48f0101354bebe13a196751bbee13375d0bfd1b"
+checksum = "sha256:33b96b715bf8a9e9b7d19a508818d695743c7aa2ffa0438c922a908a9cec332a"
+
+["lumastack/luma-catalog/luma-maintainers"]
+version  = "0.10.3"
+source   = "https://github.com/LumaStack/luma-catalog.git"
+commit   = "a48f0101354bebe13a196751bbee13375d0bfd1b"
+checksum = "sha256:1457a85c2142895cc37dfc9e7bcb4c63059907845d5a9799aba831144ffe0c9f"
+
+["lumastack/luma-catalog/luma-tools"]
+version  = "0.9.2"
+source   = "https://github.com/LumaStack/luma-catalog.git"
+commit   = "a48f0101354bebe13a196751bbee13375d0bfd1b"
+checksum = "sha256:fcc4796456c965e67b23dd5cc25d8fb13eb81e684ea70abb86349307f41942b3"

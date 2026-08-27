@@ -43,7 +43,7 @@ in the wrong repository.
 **A built-in type takes a word from everyone, permanently.** The bar is not
 importance: *"a consumer that ignored it would be broken"* means broken as a
 reader of the format, not broken as a user of our tools. `luma/project` and
-`luma/catalog` both failed that bar and live in the `luma/luma-types` bundle
+`luma/catalog` both failed that bar and live in the `lumastack/luma-catalog/luma-types` bundle
 instead. **Importance is what a namespace is for.**
 
 **The catalog holds no executable code.** A catalog is copied from by agents, and

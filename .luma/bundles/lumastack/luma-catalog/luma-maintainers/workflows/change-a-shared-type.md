@@ -1,7 +1,7 @@
 ---
 type: workflow
 title: Change a type more than one tool depends on
-description: Alter a shared type without making every tool upgrade at once. Use before touching anything in luma/luma-types, or any type a second consumer already reads.
+description: Alter a shared type without making every tool upgrade at once. Use before touching anything in lumastack/luma-catalog/luma-types, or any type a second consumer already reads.
 ---
 
 # Change a type more than one tool depends on

@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.10.2
+version: 0.10.3
 published: 2026-08-26
 consumers: [organization]
 entry_point: policy/the-estate
@@ -18,7 +18,7 @@ noise in a project that merely uses the tools — foreman's release process is n
 information an Acme developer needs, and a bundle that ships it to them has
 mistaken *important to us* for *useful to them*.
 
-## It is additive to `luma/luma-tools`, never a replacement
+## It is additive to `lumastack/luma-catalog/luma-tools`, never a replacement
 
 **A maintainer is also a consumer**, and that is the reason these are two
 bundles rather than two modes. Building foreman does not exempt you from using
@@ -63,6 +63,20 @@ no sensible project-level reading of *how the luma estate is maintained* —
 adopting it into a project would be adopting somebody else's internals.
 
 ## Version
+
+`0.10.3` — **bundle IDs in this catalog gained their namespace.** A bundle here
+is `lumastack/luma-catalog/<name>` rather than `luma/<name>`, because the
+namespace now derives from where the catalog lives instead of being declared.
+Every reference in this bundle's prose is updated.
+
+**A fork can no longer publish under this catalog's name.** It lives somewhere
+else, so it is named something else, and its bundles sit beside these in a
+project rather than colliding with them.
+
+*Type names are unaffected.* `type: luma/catalog` and its siblings name the
+format, not this catalog, and resolve separately.
+
+Patch: nothing but the identifiers a reference points at.
 
 `0.10.2` — **`the-estate` described foreman as "adoption, projection,
 inspection."** Two of those three are no longer words the tool uses. It now
@@ -177,7 +191,7 @@ names the command *and* says that nothing runs it unless somebody does.
 
 `0.2.0` — the tool that checks a catalog is **`curator`**, named on 2026-08-23
 by firing a re-open trigger while renaming was still free. Same reasoning as
-`luma/luma-tools` `0.2.0`: naming a thing the previous version called unnamed
+`lumastack/luma-catalog/luma-tools` `0.2.0`: naming a thing the previous version called unnamed
 changes what a reader writes.
 
 `0.1.0`. Extracted from one estate's practice on the day adoption first worked,

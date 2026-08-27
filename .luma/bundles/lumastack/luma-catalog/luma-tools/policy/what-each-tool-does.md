@@ -81,6 +81,6 @@ runs it against theirs.
 
 What maintainers additionally need is context about the estate — its layout,
 its release process, its conventions — and that is a **separate bundle**
-(`luma/luma-maintainers`) rather than a mode of this one. **The two are
+(`lumastack/luma-catalog/luma-maintainers`) rather than a mode of this one. **The two are
 additive.** Adopt both in a repository that builds the tools; adopt only this
 one everywhere else.
