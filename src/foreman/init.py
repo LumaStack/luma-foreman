@@ -15,7 +15,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from . import get, project
+from . import config, project
 from . import catalog as catalogs
 
 USAGE = """Stand `.luma/` up in a repository that does not have one.
@@ -146,7 +146,7 @@ def run(target: Path, catalog: str | None) -> int:
 
     luma = target / ".luma"
     descriptor = luma / "PROJECT.md"
-    config = get.config_path(target)
+    config_file = config.config_path(target)
 
     # Idempotent, and never destructive. A file that is already there is left
     # exactly as it is — running this twice is how somebody adds what a newer
@@ -155,7 +155,7 @@ def run(target: Path, catalog: str | None) -> int:
     plan = [
         (descriptor, DESCRIPTOR.format(title=root.name),
          "created — every TODO in it is yours to answer"),
-        (config, CONFIG_SET.format(source=catalog) if catalog else CONFIG_BLANK,
+        (config_file, CONFIG_SET.format(source=catalog) if catalog else CONFIG_BLANK,
          f"created — bundles come from {catalog}" if catalog else "created"),
     ]
     wrote: list[Path] = []
@@ -182,7 +182,7 @@ def run(target: Path, catalog: str | None) -> int:
         print("Nothing to do.")
         return 0
 
-    if catalog and config in kept:
+    if catalog and config_file in kept:
         print("--catalog was not applied: the config already exists, and this")
         print("never overwrites one. Set [catalog] source in it by hand.")
         print()
@@ -195,7 +195,7 @@ def run(target: Path, catalog: str | None) -> int:
     # Two steps, because the first question is always what is on offer and the
     # answer is a command nobody guesses. Named concretely where the config
     # knows the catalog, so neither line has a placeholder to work out.
-    source = catalog or get._configured(target)
+    source = catalog or config.catalog_source(target)
     print("Next steps:")
     if source:
         name = catalogs.short_name(source)

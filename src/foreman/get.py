@@ -1,5 +1,10 @@
 """`get` — adopting a bundle from a catalog into this project.
 
+**Finding the catalog is `catalog`'s job, not this one's.** This copies a
+bundle out of one and writes the receipt; resolving a source to a `Catalog`,
+deriving its namespace and listing what it publishes all live next to the
+commands that report on catalogs.
+
 **Adoption is a directory copy, and keeping it one is the design.** Bundles
 depend on nothing, so there is no graph to resolve, no version to solve for and
 no order to install in. What separates this from ``cp -r`` is the record it
@@ -14,16 +19,11 @@ directory that a teammate does not have.
 
 from __future__ import annotations
 
-import os
-import re
 import shutil
-import subprocess
 import sys
-import tomllib
-from dataclasses import dataclass
 from pathlib import Path
 
-from . import adoption, lkf, project
+from . import adoption, catalog as catalogs, config, lkf, project
 
 USAGE = """Adopt a bundle from a catalog into this project, and record what you took.
 
@@ -47,188 +47,13 @@ depend on nothing, which is what keeps this a copy rather than an install.
 
 Exit codes: 0 adopted, 1 refused, 2 could not run."""
 
-URL = re.compile(r"^(https?://|git@|ssh://|git://)")
-
-
 def _err(message: str) -> int:
     print(f"luma-foreman get: {message}", file=sys.stderr)
     return 2
 
 
-def _git(cwd: Path, *args: str) -> str | None:
-    """Run git in *cwd* and return stripped stdout, or None if it could not."""
-    try:
-        out = subprocess.run(
-            ["git", "-C", str(cwd), *args],
-            capture_output=True, text=True, timeout=120,
-        )
-    except (OSError, subprocess.SubprocessError):
-        return None
-    return out.stdout.strip() if out.returncode == 0 else None
-
-
 # --------------------------------------------------------------------------
 # finding a catalog
-
-
-@dataclass(frozen=True)
-class Catalog:
-    """A catalog checkout on this machine, and where it came from."""
-
-    root: Path
-    source: str
-    commit: str
-    dirty: bool
-    namespace: str | None
-
-    def bundle(self, name: str) -> Path | None:
-        manifest = self.root / "bundles" / name / "BUNDLE.md"
-        return manifest.parent if manifest.is_file() else None
-
-    def names(self) -> list[str]:
-        directory = self.root / "bundles"
-        if not directory.is_dir():
-            return []
-        return sorted(
-            p.name for p in directory.iterdir() if (p / "BUNDLE.md").is_file()
-        )
-
-
-def _cache_dir() -> Path:
-    base = os.environ.get("XDG_CACHE_HOME") or (Path.home() / ".cache")
-    return Path(base) / "luma" / "catalogs"
-
-
-def _clone(url: str) -> Path | None:
-    """Fetch a catalog into the cache, or refresh it if it is already there.
-
-    **The cache is genuinely cache** — deleting it loses no decision anybody
-    made, because everything adopted from it is already committed in the
-    project. That is the test luma-config gives for telling the two apart, and
-    it is why this is not under ``~/.config``.
-    """
-    target = _cache_dir() / re.sub(r"[^A-Za-z0-9._-]", "-", url)
-    if (target / ".git").exists():
-        _git(target, "fetch", "--quiet", "--depth", "1", "origin", "HEAD")
-        _git(target, "checkout", "--quiet", "FETCH_HEAD")
-        return target
-    target.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        out = subprocess.run(
-            ["git", "clone", "--quiet", "--depth", "1", url, str(target)],
-            capture_output=True, text=True, timeout=300,
-        )
-    except (OSError, subprocess.SubprocessError):
-        return None
-    return target if out.returncode == 0 else None
-
-
-CONFIG = "luma-foreman.toml"
-
-
-def config_path(project_root: Path) -> Path:
-    return project_root / ".luma" / "config" / CONFIG
-
-
-def _configured(project_root: Path) -> str | None:
-    """``[catalog] source`` from the project's committed foreman config."""
-    path = config_path(project_root)
-    if not path.is_file():
-        return None
-    try:
-        data = tomllib.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError):
-        return None
-    source = data.get("catalog", {}).get("source")
-    return str(source) if source else None
-
-
-
-def _root(start: Path) -> Path | None:
-    """A catalog's content directory — where ``CATALOG.md`` sits.
-
-    Checked one level down as well, because a catalog repository conventionally
-    keeps its content under ``catalog/`` and pointing ``--from`` at the
-    repository is what anybody would do.
-    """
-    for candidate in (start, start / "catalog"):
-        if (candidate / "CATALOG.md").is_file():
-            return candidate
-    return None
-
-
-def derive_namespace(source: str) -> str | None:
-    """A catalog's namespace from where it lives, or None if nowhere says.
-
-    **The last two path segments, `.git` stripped, lowercased.**
-    `https://github.com/LumaStack/luma-catalog.git` becomes
-    `lumastack/luma-catalog`. No hosting is assumed: any URL with a path
-    derives, a LAN git server included, and a local checkout resolves through
-    its origin so `--from ../luma-catalog` gives the same answer as the URL it
-    was cloned from.
-
-    **A fork gets its own namespace without anybody thinking about it**, which
-    is the point — it lives somewhere else, so it is named something else. Only
-    a catalog declaring one explicitly can be impersonated by a fork, and that
-    catalog chose to be nameable.
-
-    Returns None for a plain directory with no remote. Nothing can guess a name
-    for that, so it has to declare one.
-    """
-    text = source.strip().rstrip("/")
-    if not text:
-        return None
-
-    if "://" in text:                       # scheme://host/path...
-        path = text.split("://", 1)[1].split("/")[1:]
-    elif ":" in text and not text[1:3] == ":\\":   # scp-style git@host:org/repo
-        path = text.split(":", 1)[1].split("/")
-    else:
-        return None                         # a bare local path says nothing
-
-    segments = [s for s in path if s]
-    if not segments:
-        return None
-    segments[-1] = segments[-1].removesuffix(".git")
-    return "/".join(segments[-2:]).lower() or None
-
-
-def find(source: str) -> Catalog | str:
-    """Resolve *source* to a Catalog, or return a message saying why not."""
-    if URL.match(source):
-        checkout = _clone(source)
-        if checkout is None:
-            return f"could not fetch catalog: {source}"
-        origin = source
-    else:
-        checkout = Path(source).expanduser()
-        if not checkout.is_dir():
-            return f"no such catalog: {source}"
-        origin = _git(checkout, "remote", "get-url", "origin") or str(
-            checkout.resolve()
-        )
-
-    root = _root(checkout)
-    if root is None:
-        return (
-            f"not a catalog: {checkout} — nothing named CATALOG.md here or in "
-            f"catalog/"
-        )
-
-    commit = _git(root, "rev-parse", "HEAD") or ""
-    status = _git(root, "status", "--porcelain")
-    manifest = lkf.read(root / "CATALOG.md") or {}
-    declared = manifest.get("namespace")
-    # Declared always wins; derived is the default so that the common case
-    # needs no configuration and a fork cannot inherit somebody else's name.
-    namespace = lkf.unquote(declared) if declared else derive_namespace(origin)
-    return Catalog(
-        root=root,
-        source=origin,
-        commit=commit,
-        dirty=bool(status),
-        namespace=namespace or None,
-    )
 
 
 # --------------------------------------------------------------------------
@@ -251,7 +76,7 @@ def _copy(src: Path, dst: Path) -> int:
     return len(adoption.files(dst))
 
 
-def _resolve_id(catalog: Catalog, requested: str) -> tuple[str, str] | str:
+def _resolve_id(catalog: catalogs.Catalog, requested: str) -> tuple[str, str] | str:
     """Full bundle ID and bundle name, or a message saying what is wrong.
 
     A bundle is addressed ``<namespace>/<name>``, and **the namespace is the
@@ -293,7 +118,7 @@ def run(
     project_root: Path,
     force: bool,
 ) -> int:
-    catalog = find(source)
+    catalog = catalogs.find(source)
     if isinstance(catalog, str):
         return _err(catalog)
 
@@ -399,33 +224,6 @@ def _refuse(summary: str, remedy: str) -> int:
     return 1
 
 
-def listing(source: str) -> int:
-    catalog = find(source)
-    if isinstance(catalog, str):
-        return _err(catalog)
-
-    names = catalog.names()
-    if not names:
-        return _err(f"catalog at {catalog.root} publishes no bundles")
-
-    prefix = f"{catalog.namespace}/" if catalog.namespace else ""
-    width = max(len(n) for n in names) + len(prefix)
-    for name in names:
-        manifest = lkf.read(catalog.root / "bundles" / name / "BUNDLE.md") or {}
-        version = lkf.unquote(manifest.get("version", "?"))
-        description = manifest.get("description", "")
-        print(f"  {prefix + name:<{width}}  {version:<8}  {description}")
-
-    if not catalog.namespace:
-        print()
-        print(
-            "  This catalog declares no namespace, so a bundle here has no full\n"
-            "  name. Adopt with an explicit one: luma-foreman get <namespace>/"
-            f"{names[0]}"
-        )
-    return 0
-
-
 def main(argv: list[str]) -> int:
     source: str | None = None
     target: Path | None = None
@@ -465,11 +263,11 @@ def main(argv: list[str]) -> int:
         return _err(f"not a directory: {target}")
 
     if source is None:
-        source = _configured(project_root)
+        source = config.catalog_source(project_root)
     if source is None:
         return _err(
             "no catalog — pass --from <path-or-url>, or set [catalog] source "
-            f"in .luma/config/{CONFIG}"
+            f"in .luma/config/{config.CONFIG}"
         )
 
     if len(requested) != 1:
