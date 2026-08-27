@@ -25,7 +25,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from ... import adoption, apply
+from ... import adoption
 from ..finding import Finding, Result, Skipped
 
 RULE = "adoption"
@@ -92,7 +92,7 @@ def check(repo: Path) -> Result:
     # Being present and unedited says nothing about whether anything reads it.
     # This is the state that reports green while a project quietly carries rules
     # no agent has ever been shown.
-    unapplied = [b for b in present if not _applied(repo, b)]
+    unapplied = [b for b in present if not adoption.applied(repo, b)]
     if unapplied:
         bad(
             "medium",
@@ -113,21 +113,3 @@ def check(repo: Path) -> Result:
         )
 
     return result
-
-
-def _applied(repo: Path, bundle_id: str) -> bool:
-    """Does the generated index mention this bundle at all?
-
-    Deliberately weak. Whether what was written is *current* is what
-    `luma-foreman apply --check` answers, and duplicating that here would be a
-    second implementation of the same comparison. This answers the cruder and
-    more damaging question: has this bundle ever been applied.
-    """
-    claude = repo / "CLAUDE.md"
-    if not claude.is_file():
-        return False
-    try:
-        text = claude.read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError):
-        return False
-    return apply.BEGIN in text and bundle_id in text
