@@ -23,6 +23,30 @@ was nothing to be wrong about.
 That is the shape of the problem: a convention everybody follows and nobody
 states drifts silently, and the drift is invisible until somebody counts.
 
+## Absolutes are a claim, not a register
+
+**Say what a thing does. Assert what it will always do only where boxing in the
+future is the point.** *Always*, *never* and *no others* read as authority and
+are often just emphasis — and an absolute stated in passing is one somebody has
+to supersede later rather than update.
+
+ADR-0003 is the worked example, twice in one afternoon. It said *"two commands
+may reach the network and no others"*, which was a taxonomy of the day written
+as a rule; correcting it looked like it needed a superseding record. The
+replacement was *"`catalog` always reaches the catalog"* — the same mistake with
+new content. What it says now is which commands reach the network today, and
+that this is a description.
+
+**Some absolutes earn it and must survive the sweep.** *Adoption never resolves
+anything* is the decision itself. *A flag may change how much or how, never what
+comes back* is a rule with three worked failures behind it. *A notice never
+fails a run* is a designed guarantee. The test is not the word — it is whether
+the sentence is deliberately constraining what may happen next, and whether
+somebody could say why.
+
+The five decision records hold about thirty-four of these and they have not been
+sorted. That is a pass with judgement in it rather than a find-and-replace.
+
 ## Notes
 
 Migrated from `docs/next-steps.md` on 2026-08-23, where it was listed twice

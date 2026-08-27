@@ -66,14 +66,13 @@ commands that only report — `list`, `show`, and `outdated`.
 project holds; `catalog list` lists catalogs it draws from. `show` drills into
 one of either. Nothing is named for a thing it does not return.
 
-**`catalog` always reaches the catalog.** That is what the noun means, and it
-is why `catalog list` reports what each one publishes rather than only naming
-it — `bundle list` already answers the local question, and a `catalog` command
-that only read `adopted.toml` would be answering it worse under the wrong name.
+**`catalog` commands reach the catalog.** `catalog list` reports what each one
+publishes rather than only naming it, because `bundle list` already answers the
+local question — a `catalog` command reading only `adopted.toml` would answer
+it worse under the wrong name.
 
-The set of catalogs is still derived locally, because nothing remote knows
-which catalogs a project draws on. `catalog list` reads that from
-`adopted.toml` and then asks each catalog what it publishes.
+The set of catalogs comes from `adopted.toml`, because nothing remote knows
+which catalogs a project draws on.
 
 ## Why
 
@@ -248,22 +247,24 @@ the first real pressure toward registering catalogs rather than deriving them,
 and it should be recorded as such when it arrives rather than solved by
 accident.
 
-**A `catalog` command reaching the network is a guarantee, not an exclusion.**
-It says what `catalog` does; it says nothing about what `bundle` may do. So
-`bundle outdated` reaching a catalog is not an exception to be explained — it
-returns bundles, which is what puts it under that noun, and a comparison needs
-both sides by construction.
+**Which commands reach the network is a description, not a boundary.** Today
+`catalog list`, `catalog show` and `bundle outdated` do, and the other reads
+are local. That is worth knowing and not worth freezing: nothing here needs a
+promise about what a command will never do, and a taxonomy asserted as a rule
+is one somebody has to supersede rather than update.
 
-**Where the network is unavailable, say so per row and exit 0.** `bundle
-outdated` already does: an unreachable catalog prints `?` with the reason and
-does not fail the run. A network outage is not a property of the repository,
-and the thing that must never happen is silence — a blank where a number
-belongs reads as zero.
+`bundle outdated` sits under `bundle` because it returns bundles, which is what
+the noun decides. That it reaches a catalog is a property of comparison needing
+both sides, not an exception to anything.
 
-**A version-available column on `bundle list` is still refused.** Not because
-it crosses a line, but because `bundle list` answers what this project holds
-and `bundle outdated` answers what has moved past it. Two commands, two
-questions.
+**Where the network is unavailable, say so and carry on.** This one is a rule
+rather than a description, because the failure it prevents is silence: a blank
+where a number belongs reads as zero. `bundle outdated` already prints `?` with
+the reason and exits 0, and an outage is not a property of the repository.
+
+**A version-available column on `bundle list` is still refused** — not for
+crossing a line, but because `bundle list` answers what this project holds and
+`bundle outdated` answers what has moved past it. Two questions, two commands.
 
 ## References
 
