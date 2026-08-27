@@ -70,16 +70,23 @@ def listing(project_root: Path) -> int:
         print("  luma-foreman get <bundle> --from <catalog>")
         return 0
 
-    rows = [(b, e, adoption.state(project_root, e)) for b, e in sorted(entries.items())]
-    width = max(len(b) for b, _, _ in rows)
-    held = max(len(e.version) for _, e, _ in rows)
-    for bundle_id, entry, condition in rows:
-        line = f"  {bundle_id:<{width}}  {entry.version:<{held}}"
-        note = STATE_NOTE.get(condition)
-        print(f"{line}  {note}" if note else line.rstrip())
+    rows = {b: (e, adoption.state(project_root, e)) for b, e in entries.items()}
+    groups = adoption.by_namespace(list(rows))
+    width = max(len(n) for _, names in groups for n in names)
+    held = max(len(e.version) for e, _ in rows.values())
+
+    for i, (namespace, names) in enumerate(groups):
+        if i:
+            print()
+        print(namespace)
+        for name in names:
+            entry, condition = rows[f"{namespace}/{name}" if namespace else name]
+            line = f"  {name:<{width}}  {entry.version:<{held}}"
+            note = STATE_NOTE.get(condition)
+            print(f"{line}  {note}" if note else line.rstrip())
 
     print()
-    wrong = [c for _, _, c in rows if c != "ok"]
+    wrong = [c for _, c in rows.values() if c != "ok"]
     print(f"{len(rows)} adopted bundle(s)" + (f", {len(wrong)} not as adopted." if wrong else "."))
     if wrong:
         print()
