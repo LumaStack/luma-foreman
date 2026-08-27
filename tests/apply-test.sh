@@ -2,9 +2,9 @@
 # Tests for how `luma-foreman apply` derives delivery from what a Document
 # declares.
 #
-#   sh tests/outfit-test.sh
+#   sh tests/apply-test.sh
 #
-# `adopt-test.sh` already covers outfit end to end — that a skill appears, that
+# `adopt-test.sh` already covers apply end to end — that a skill appears, that
 # CLAUDE.md is spliced rather than owned, that orphans leave. This file covers
 # the part that decides *what* gets written: an author declares `compliance` and
 # `matches`, and everything else is computed.
@@ -31,7 +31,7 @@ export PYTHONDONTWRITEBYTECODE=1
 # see. Pointing CLAUDE_CONFIG_DIR at an empty directory means the gate reads as
 # not installed here, whatever is true of this machine.
 
-T=$(mktemp -d /tmp/outfit.XXXXXX) || exit 2
+T=$(mktemp -d /tmp/apply.XXXXXX) || exit 2
 export CLAUDE_CONFIG_DIR=$T/no-harness
 trap 'rm -rf "$T"' EXIT INT TERM
 
@@ -44,7 +44,7 @@ absent()  { [ -e "$1" ] && bad "expected NOT to exist: $1" || ok; }
 grepped() { grep -q -- "$1" "$2" 2>/dev/null && ok || bad "expected '$1' in $(basename "$2")"; }
 ungrep()  { grep -q -- "$1" "$2" 2>/dev/null && bad "expected '$1' NOT in $(basename "$2")" || ok; }
 
-outfit() {
+apply() {
   label=$1 want=$2; shift 2
   LAST=$(cd "$PROJECT" && "$CLI" apply "$@" 2>&1); got=$?
   [ "$got" -eq "$want" ] && ok || bad "$label (exit $got, wanted $want): $LAST"
@@ -53,7 +53,7 @@ outfit() {
 # --- a project with one bundle written into it ----------------------------------
 #
 # Written directly rather than adopted. `.luma/bundles/` holds both what a
-# project took from a catalog and what it wrote itself, and outfit projects both
+# project took from a catalog and what it wrote itself, and apply writes both
 # — so this exercises the same path with none of the adoption machinery.
 
 PROJECT=$T/project
@@ -158,7 +158,7 @@ EOF
 CLAUDE=$PROJECT/CLAUDE.md
 SKILLS=$PROJECT/.claude/skills
 
-outfit 'projects a bundle written in place' 0
+apply 'projects a bundle written in place' 0
 
 # --- standing: the one path to always-loaded ------------------------------------
 #
@@ -270,10 +270,10 @@ matches:
 Do not force-push.
 EOF
 
-outfit 'compiles a blocking rule' 0
+apply 'compiles a blocking rule' 0
 grepped 'no-force-push' "$ROUTING"
 grepped 'on_violation = "block"' "$ROUTING"
-case $LAST in *"nothing here enforces"*) ok ;; *) bad "expected outfit to say blocking is unenforced here: $LAST" ;; esac
+case $LAST in *"nothing here enforces"*) ok ;; *) bad "expected apply to say blocking is unenforced here: $LAST" ;; esac
 
 # --- `preload` is reported, never honoured --------------------------------------
 #
@@ -292,8 +292,8 @@ matches: always
 Old-style declaration.
 EOF
 
-outfit 'reports a bundle still using preload' 0
-case $LAST in *preload*) ok ;; *) bad "expected outfit to report the legacy preload field: $LAST" ;; esac
+apply 'reports a bundle still using preload' 0
+case $LAST in *preload*) ok ;; *) bad "expected apply to report the legacy preload field: $LAST" ;; esac
 
 # It *is* imported — but not because `preload` was read. It says
 # `matches: always`, which is the one route to being loaded up front. The old
@@ -321,7 +321,7 @@ matches:
 Ask first.
 EOF
 
-outfit 'refuses an intervention it cannot perform' 2
+apply 'refuses an intervention it cannot perform' 2
 case $LAST in *require_approval*) ok ;; *) bad "expected the unsupported value named: $LAST" ;; esac
 
 rm "$B/policy/needs-approval.md" "$B/policy/legacy.md"
@@ -345,7 +345,7 @@ matches:
 Rules.
 EOF
 
-outfit 'reports a trigger that matches nothing' 0
+apply 'reports a trigger that matches nothing' 0
 case $LAST in *nowhere-at-all*) ok ;; *) bad "expected the inert trigger reported: $LAST" ;; esac
 
 printf '\n%s passed, %s failed\n' "$pass" "$fail"

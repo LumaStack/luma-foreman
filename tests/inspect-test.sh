@@ -397,6 +397,60 @@ has 'declares no version'
 run 'bundles rule alone' 0 --rule bundles "$clean"
 has 'no bundles found'
 
+# --- retired words ---------------------------------------------------------------
+#
+# Nothing is retired by default: a tool shipping opinions about English would be
+# wrong everywhere at once. A project declares its own, and every hit is a
+# notice rather than a finding, because a grep cannot tell a revival from an
+# ordinary use of the same word.
+
+v=$T/vocab; mkdir -p "$v/.luma/config" "$v/docs"; git -C "$v" init -q
+printf 'the old projection wrote skills\n' > "$v/docs/a.md"
+git -C "$v" add -A
+
+run 'no retired words is a skip' 0 "$v" --rule vocabulary
+has 'nothing is retired'
+lacks 'NOTICE'
+
+cat > "$v/.luma/config/luma-foreman.toml" <<'EOF'
+[[retired]]
+term = "projection"
+use = "`apply`"
+decided = ["ADR-0003"]
+EOF
+git -C "$v" add -A
+run 'a retired word is a notice, not a finding' 0 "$v" --rule vocabulary
+has 'NOTICE'
+has 'projection'
+has 'docs/a.md:1'
+has 'never fails a run'
+# It hands over what the judgement needs, not just a line number.
+has 'ADR-0003'
+has '`apply`'
+
+# The record that retired it has to name it.
+printf -- '---\ntype: decision\n---\nprojection is retired\n' \
+  > "$v/docs/ADR-0003-words.md"
+git -C "$v" add -A
+run 'the deciding record is exempt' 0 "$v" --rule vocabulary
+lacks 'ADR-0003-words.md'
+
+# A published version history says what was true when it was written.
+printf 'clean\n\n## Version\n\n`0.1.0` the projection did things\n' > "$v/docs/B.md"
+git -C "$v" add -A
+run 'version history is exempt' 0 "$v" --rule vocabulary
+lacks 'docs/B.md'
+
+# A vendored bundle is somebody else's prose; this retirement does not bind it.
+mkdir -p "$v/.luma/bundles/acme/thing"
+printf 'projection everywhere\n' > "$v/.luma/bundles/acme/thing/BUNDLE.md"
+git -C "$v" add -A
+run 'a vendored bundle is exempt' 0 "$v" --rule vocabulary
+lacks '.luma/bundles/'
+
+# And a notice never changes the exit code, even beside a real finding.
+run 'notice does not fail the run' 0 "$v" --rule vocabulary
+
 # --- argument handling ---------------------------------------------------------------
 run 'unknown rule'      2 --rule nonsense "$clean"
 has 'unknown rule'

@@ -193,12 +193,12 @@ inspect 'clean adoption, unprojected' 1
 has 'reach no agent'
 lacks 'edited in place'
 
-# --- projection -----------------------------------------------------------------
+# --- writing it out -------------------------------------------------------------
 
-apply 'check before outfit' 1 --check
+apply 'check before apply' 1 --check
 has 'stale'
 
-apply 'outfit' 0
+apply 'apply' 0
 exists "$PROJECT/.claude/skills/make-a-widget/SKILL.md"
 exists "$PROJECT/CLAUDE.md"
 grepped 'name: make-a-widget' "$PROJECT/.claude/skills/make-a-widget/SKILL.md"
@@ -224,12 +224,12 @@ grepped 'widget-rules' "$PROJECT/CLAUDE.md"
 grep -q '_types/widget' "$PROJECT/CLAUDE.md" \
   && bad '_types should not be indexed' || ok
 
-apply 'check after outfit' 0 --check
+apply 'check after apply' 0 --check
 has 'up to date'
 
 inspect 'projected adoption is clean' 0
 
-# --- outfit owns a block, not the file ------------------------------------------
+# --- apply owns a block, not the file -------------------------------------------
 
 MINE='# My project
 
@@ -410,7 +410,7 @@ rm -f "$MANIFEST"
 apply 'nothing adopted' 2
 has 'nothing adopted'
 
-# Nothing was adopted, so outfit refused — and refusing left the hand-written
+# Nothing was adopted, so apply refused — and refusing left the hand-written
 # skill alone, which is the point of the marker.
 exists "$PROJECT/.claude/skills/hand-written/SKILL.md"
 exists "$PROJECT/.claude/skills/make-a-widget/SKILL.md"
