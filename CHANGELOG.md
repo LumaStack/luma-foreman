@@ -10,6 +10,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 ## [Unreleased]
 
 ### Added
+- **`inspect --rule vocabulary` reports words this project retired.** Declared as `[[retired]]` in `.luma/config/luma-foreman.toml` with what replaced each and where that was decided. **Nothing is retired by default** — a tool shipping opinions about English would be wrong everywhere at once.
+  **Every hit is a notice, never a finding.** A grep cannot tell a revival from a legitimate use: *projection* has a mathematical sense, *jobs* means something real about CI, and a quotation is not a revival. So it hands over what the judgement needs — the term, the replacement, the deciding record, and the line as written — and the reader decides.
+  *Exempt without being asked:* a published `## Version` history, a `CHANGELOG.md`, the config that declares the term, a vendored bundle, and the record that retired the word. A rule that cannot express **everywhere except history** gets switched off in a week. Anything else is listed per term in `except`.
 - **`inspect` has a third outcome: a notice.** Something worth a reader's judgement that is not a defect — printed as loudly as a finding, counted separately, and never part of the exit code. `--json` carries `notices` and a `notices` count in the summary.
   **A finding says what is wrong; a notice says what to look at.** The difference is who decides, so a notice carries more context than a finding rather than less: somebody is being asked to make a call and needs the basis for it.
   *The first one already existed as a finding.* `matches: always` was reported at `low` with a remedy that said it was *"worth confirming rather than fixing"* — a notice by its own words, exiting 1 over a legal and deliberate choice.

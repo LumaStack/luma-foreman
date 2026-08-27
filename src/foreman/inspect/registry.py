@@ -12,13 +12,14 @@ from __future__ import annotations
 from pathlib import Path
 
 from .finding import Result
-from .rules import adoption, bundles, identity, secrets
+from .rules import adoption, bundles, identity, secrets, vocabulary
 
 RULES = {
     identity.RULE: identity.check,
     secrets.RULE: secrets.check,
     bundles.RULE: bundles.check,
     adoption.RULE: adoption.check,
+    vocabulary.RULE: vocabulary.check,
 }
 
 

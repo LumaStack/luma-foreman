@@ -175,9 +175,9 @@ def main(argv: list[str] | None = None) -> int:
 
         return adopt.main(argv[1:])
     if command == "apply":
-        from . import outfit
+        from . import apply
 
-        return outfit.main(argv[1:])
+        return apply.main(argv[1:])
     if command == "bundle":
         from . import bundle
 

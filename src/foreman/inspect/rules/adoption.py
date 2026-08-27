@@ -25,7 +25,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from ... import adoption, outfit
+from ... import adoption, apply
 from ..finding import Finding, Result, Skipped
 
 RULE = "adoption"
@@ -130,4 +130,4 @@ def _applied(repo: Path, bundle_id: str) -> bool:
         text = claude.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError):
         return False
-    return outfit.BEGIN in text and bundle_id in text
+    return apply.BEGIN in text and bundle_id in text

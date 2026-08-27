@@ -8,3 +8,42 @@
 # Where `luma-foreman get` takes bundles from when no --from is given.
 # No default — nothing can guess which catalog is yours.
 # source = "https://github.com/LumaStack/luma-catalog"
+
+# Words this project retired. `luma-foreman inspect` reports each use as a
+# notice — never a finding, because a grep cannot tell a revival from an
+# ordinary use of the same word, and the reader has to decide.
+#
+# Nothing is retired by default. This is here because ADR-0003 says so.
+
+# `except` names documents that discuss the retirement itself. The record that
+# decided it is exempt automatically; anything else arguing about the word has
+# to be listed, so an exemption is a choice somebody made rather than a hole.
+[[retired]]
+term = "projection"
+use = "what `apply` writes, or `apply` itself"
+decided = ["ADR-0003"]
+except = [
+  "src/foreman/cli.py",                    # RENAMED has to name the old word
+  "tests/agent-permissions-cli-test.sh",   # ...and the tests pin those messages
+  "tests/inspect-test.sh",                 # ...and this rule's own fixtures use it
+]
+
+[[retired]]
+term = "outfit"
+use = "`apply`"
+decided = ["ADR-0003", "ADR-0004"]
+except = [
+  "src/foreman/cli.py",                    # RENAMED has to name the old word
+  "tests/agent-permissions-cli-test.sh",   # ...and the tests pin those messages
+  "tests/inspect-test.sh",                 # ...and this rule's own fixtures use it
+]
+
+[[retired]]
+term = "refit"
+use = "nothing — the command was removed"
+decided = ["ADR-0004", "ADR-0003"]
+except = [
+  "src/foreman/cli.py",                    # RENAMED has to name the old word
+  "tests/agent-permissions-cli-test.sh",   # ...and the tests pin those messages
+  "tests/inspect-test.sh",                 # ...and this rule's own fixtures use it
+]

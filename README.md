@@ -52,6 +52,7 @@ luma-foreman agent-permissions doctor          # ...and confirm it is actually w
 - **identity** — personal information published through git: machine-derived author identities, malformed addresses, home directory paths in tracked content.
 - **secrets** — provider-issued credentials in tracked content, and files that normally hold them. Findings never contain the secret itself, because findings end up in continuous integration logs.
 - **bundles** — bundles broken in ways nothing else notices: a dangling link, an unquoted wikilink in frontmatter, a template carrying live frontmatter. All three are conformant, so the bundle publishes cleanly and the defect travels.
+- **vocabulary** — words this project retired, still in use. Every hit is a **notice**: a grep cannot tell a revival from an ordinary use of the same word, so it hands over the term, what replaced it, where that was decided, and the line — and the reader judges. Nothing is retired by default.
 - **adoption** — an adopted bundle that is no longer what was adopted: edited in place, missing from disk, or adopted and never written anywhere an agent reads. The last one reads green from every angle while the project quietly carries rules no agent has seen.
 
 ```bash
