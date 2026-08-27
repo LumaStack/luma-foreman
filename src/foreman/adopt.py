@@ -319,6 +319,21 @@ def run(
     entries = adoption.read(project_root)
     existing = entries.get(bundle_id)
 
+    # A different catalog under the same ID is a change of lineage, not an
+    # upgrade, and it is the one case where doing nothing is the wrong answer.
+    # Two catalogs can only share an ID by both declaring the same namespace —
+    # derivation makes that impossible — so this catches the deliberate case
+    # and the misconfigured one, both of which somebody should decide about.
+    if existing and existing.source and existing.source != catalog.source and not force:
+        return _refuse(
+            f"{bundle_id} here came from a different catalog",
+            f"holds:  {existing.source}\n"
+            f"  asked:  {catalog.source}\n"
+            "  Same name, different origin — an upgrade would silently swap "
+            "what this bundle is. --force to switch lineage; adopted.toml "
+            "records the new source.",
+        )
+
     if dst.exists() and not force:
         here = adoption.checksum(dst)
         if existing and existing.checksum and here != existing.checksum:
@@ -334,6 +349,7 @@ def run(
             return 0
 
     upgrade = existing.version if existing else None
+    switched = bool(existing and existing.source and existing.source != catalog.source)
     count = _copy(src, dst)
     entries[bundle_id] = adoption.Adopted(
         bundle=bundle_id,
@@ -347,7 +363,11 @@ def run(
     # `--force` at the same version re-copies, it does not upgrade. Saying
     # "upgraded 0.3.1 -> 0.3.1" reports something that did not happen, and
     # output nobody can trust is worse than output nobody reads.
-    if upgrade == version:
+    if switched:
+        # Reporting a lineage change as a version event would describe the one
+        # thing that did not happen. The version may not have moved at all.
+        verb = f"switched to {version} from another catalog"
+    elif upgrade == version:
         verb = f"took {version} again"
     elif upgrade:
         verb = f"upgraded {upgrade} -> {version}"
