@@ -44,7 +44,7 @@ archived_retention = "3y"
 period means one operator can delete what another could not, from the same commit.
 That is a correctness problem rather than a preference.
 
-*Where settings live and how the layers resolve is the `luma/luma-config` bundle's
+*Where settings live and how the layers resolve is the `lumastack/luma-catalog/luma-config` bundle's
 subject. **This bundle does not depend on it** — the file above is plain TOML and
 reading one key from it needs nothing installed.*
 

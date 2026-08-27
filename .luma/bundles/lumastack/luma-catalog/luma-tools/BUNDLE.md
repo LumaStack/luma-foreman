@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.9.1
+version: 0.9.2
 published: 2026-08-26
 consumers: [project, organization]
 entry_point: workflows/adopt-knowledge
@@ -14,7 +14,7 @@ about consuming: installing an engine, adopting bundles into a repository, and
 making an agent aware of what was adopted.
 
 **It carries no knowledge about building the tools.** That is
-`luma/luma-maintainers`, and the two are additive rather than alternatives — a
+`lumastack/luma-catalog/luma-maintainers`, and the two are additive rather than alternatives — a
 repository that builds a tool adopts both, everywhere else adopts only this.
 
 ## What is here
@@ -55,6 +55,20 @@ which is the same gap adoption exists to close, left open in the one place it is
 most embarrassing.
 
 ## Version
+
+`0.9.2` — **bundle IDs in this catalog gained their namespace.** A bundle here
+is `lumastack/luma-catalog/<name>` rather than `luma/<name>`, because the
+namespace now derives from where the catalog lives instead of being declared.
+Every reference in this bundle's prose is updated.
+
+**A fork can no longer publish under this catalog's name.** It lives somewhere
+else, so it is named something else, and its bundles sit beside these in a
+project rather than colliding with them.
+
+*Type names are unaffected.* `type: luma/catalog` and its siblings name the
+format, not this catalog, and resolve separately.
+
+Patch: nothing but the identifiers a reference points at.
 
 `0.9.1` — **the description named two commands that no longer exist.** It
 called this the *adopt-then-project loop*; both words were renamed in 0.9.0 and

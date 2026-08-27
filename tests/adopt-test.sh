@@ -537,6 +537,21 @@ LAST=$(cd "$DEC" && "$CLI" get widgets --from "$T/dec" 2>&1); got=$?
 [ "$got" -eq 0 ] && ok || bad "declared namespace (exit $got): $LAST"
 case $LAST in *"chosen/widgets"*) ok ;; *) bad "declaration did not win: $LAST" ;; esac
 
+# A multi-segment namespace has to survive every stage, not just `get`. Bundle
+# discovery globbed exactly two levels, so a three-segment ID was invisible:
+# `apply` reported "nothing adopted" and `inspect` reported the same bundles as
+# recorded-but-not-on-disk. Both read identical to an empty project.
+
+DEEP=$T/deep; mkdir -p "$DEEP"; git -C "$DEEP" init -q
+LAST=$(cd "$DEEP" && "$CLI" get widgets --from "$T/up" 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "deep adoption (exit $got): $LAST"
+LAST=$(cd "$DEEP" && "$CLI" apply 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "apply on a deep namespace (exit $got): $LAST"
+case $LAST in *"1 bundle(s) written out"*) ok ;; *) bad "apply found nothing: $LAST" ;; esac
+LAST=$(cd "$DEEP" && "$CLI" inspect --rule adoption 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "inspect on a deep namespace (exit $got): $LAST"
+case $LAST in *"not on disk"*) bad 'inspect could not see a deep bundle' ;; *) ok ;; esac
+
 # --- a catalog with no namespace ------------------------------------------------
 
 BARE=$T/bare

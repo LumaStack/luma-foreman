@@ -10,7 +10,7 @@ description: Take bundles from a catalog into a repository and make an agent awa
 
 ```bash
 luma-foreman get --list --from https://github.com/LumaStack/luma-catalog
-luma-foreman get luma/decision-records --from https://github.com/LumaStack/luma-catalog
+luma-foreman get lumastack/luma-catalog/decision-records --from https://github.com/LumaStack/luma-catalog
 luma-foreman apply
 ```
 

@@ -172,9 +172,8 @@ def discover(project_root: Path) -> list[Bundle]:
         return []
 
     out: list[Bundle] = []
-    for manifest in sorted(root.glob("*/*/BUNDLE.md")):
-        home = manifest.parent
-        bundle_id = home.relative_to(root).as_posix()
+    for bundle_id, home in adoption.discover(project_root).items():
+        manifest = home / "BUNDLE.md"
         keys = lkf.read(manifest) or {}
 
         # A directory that *is* a Document owns everything beneath it. Its

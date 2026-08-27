@@ -33,10 +33,7 @@ RULE = "adoption"
 
 def check(repo: Path) -> Result:
     recorded = adoption.read(repo)
-    present = {
-        p.parent.relative_to(adoption.bundles_dir(repo)).as_posix()
-        for p in adoption.bundles_dir(repo).glob("*/*/BUNDLE.md")
-    } if adoption.bundles_dir(repo).is_dir() else set()
+    present = set(adoption.discover(repo))
 
     if not recorded and not present:
         return Result(

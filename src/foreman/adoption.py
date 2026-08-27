@@ -100,6 +100,31 @@ def checksum(root: Path) -> str:
     return f"sha256:{outer.hexdigest()}"
 
 
+def discover(project: Path) -> dict[str, Path]:
+    """Every bundle on disk, by ID, whether adopted or written here.
+
+    One implementation because three callers ask and must agree: `apply` writes
+    what it finds, `inspect` compares what it finds against the receipt, and a
+    disagreement between them reports a bundle as both present and missing.
+
+    **Any depth.** A namespace may be any number of segments, so a fixed
+    `*/*/BUNDLE.md` finds nothing under `lumastack/luma-catalog/x` and reports
+    an empty project rather than an error.
+
+    **A bundle inside a bundle is not a concept the format has.** The outer one
+    owns its whole tree; anything below is its content, not a second bundle.
+    """
+    root = bundles_dir(project)
+    if not root.is_dir():
+        return {}
+    homes = {m.parent for m in root.rglob("BUNDLE.md")}
+    return {
+        home.relative_to(root).as_posix(): home
+        for home in sorted(homes)
+        if not any(other != home and other in home.parents for other in homes)
+    }
+
+
 def state(project: Path, entry: Adopted) -> str:
     """``ok``, ``edited`` or ``missing`` — what this copy is right now.
 

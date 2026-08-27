@@ -6,25 +6,25 @@
 # writes here.
 
 [[rule]]
-bundle = "luma/decision-records"
+bundle = "lumastack/luma-catalog/decision-records"
 document = "policy/decision-guidelines"
 title = "Writing a decision record"
-path = ".luma/bundles/luma/decision-records/policy/decision-guidelines.md"
+path = ".luma/bundles/lumastack/luma-catalog/decision-records/policy/decision-guidelines.md"
 on_violation = "allow"
 matches = ["topic:recording a decision, or deciding whether one is worth recording"]
 
 [[rule]]
-bundle = "luma/luma-maintainers"
+bundle = "lumastack/luma-catalog/luma-maintainers"
 document = "policy/the-estate"
 title = "The estate, and what each repository owns"
-path = ".luma/bundles/luma/luma-maintainers/policy/the-estate.md"
+path = ".luma/bundles/lumastack/luma-catalog/luma-maintainers/policy/the-estate.md"
 on_violation = "allow"
 matches = ["topic:deciding which repository a new thing belongs in"]
 
 [[rule]]
-bundle = "luma/luma-tools"
+bundle = "lumastack/luma-catalog/luma-tools"
 document = "policy/what-each-tool-does"
 title = "What each luma tool does"
-path = ".luma/bundles/luma/luma-tools/policy/what-each-tool-does.md"
+path = ".luma/bundles/lumastack/luma-catalog/luma-tools/policy/what-each-tool-does.md"
 on_violation = "allow"
 matches = ["command:luma-foreman", "command:luma-catalog-curator", "topic:choosing which luma tool does a job"]

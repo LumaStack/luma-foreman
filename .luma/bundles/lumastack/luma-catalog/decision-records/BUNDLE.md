@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.9.0
+version: 0.9.1
 published: 2026-08-26
 consumers: [project, organization]
 entry_point: workflows/record-decision
@@ -129,6 +129,20 @@ not held in context against the possibility.
 
 ## Version
 
+`0.9.1` — **bundle IDs in this catalog gained their namespace.** A bundle here
+is `lumastack/luma-catalog/<name>` rather than `luma/<name>`, because the
+namespace now derives from where the catalog lives instead of being declared.
+Every reference in this bundle's prose is updated.
+
+**A fork can no longer publish under this catalog's name.** It lives somewhere
+else, so it is named something else, and its bundles sit beside these in a
+project rather than colliding with them.
+
+*Type names are unaffected.* `type: luma/catalog` and its siblings name the
+format, not this catalog, and resolve separately.
+
+Patch: nothing but the identifiers a reference points at.
+
 `0.9.0` — **nothing promotes itself.** `decision-guidelines` said to record
 something *"as a `draft`, or as `provisional` the moment you start acting on
 it"* — two options, no gate, and the second fired by itself. A record now stays
@@ -232,7 +246,7 @@ breaking change: anything naming the old path by hand stops resolving.
 `0.2.1` — a heading no longer says how many things are beneath it. Wording only.
 
 Patch: no normative sentence moved and a reader who correctly understood
-`0.2.0` behaves identically. See `writing-style` in `luma/project-documentation`
+`0.2.0` behaves identically. See `writing-style` in `lumastack/luma-catalog/project-documentation`
 for the rule and the failure it prevents.
 
 `0.2.0` — archiving as a real mechanism, and the two workflows around it. New
