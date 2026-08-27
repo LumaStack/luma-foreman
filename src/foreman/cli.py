@@ -171,9 +171,9 @@ def main(argv: list[str] | None = None) -> int:
     if command == "inspect":
         return _inspect(argv[1:])
     if command == "get":
-        from . import adopt
+        from . import get
 
-        return adopt.main(argv[1:])
+        return get.main(argv[1:])
     if command == "apply":
         from . import apply
 

@@ -23,7 +23,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from . import adopt, adoption, lkf, project
+from . import adoption, get, lkf, project
 
 USAGE = """Report which adopted bundles have a newer version published.
 
@@ -54,7 +54,7 @@ class Status:
 def _newest(source: str, name: str, cache: dict) -> tuple[str | None, str]:
     """The version a catalog currently publishes for *name*, and why not."""
     if source not in cache:
-        cache[source] = adopt.find(source)
+        cache[source] = get.find(source)
     catalog = cache[source]
     if isinstance(catalog, str):
         return None, catalog

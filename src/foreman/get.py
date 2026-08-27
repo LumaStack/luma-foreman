@@ -1,4 +1,4 @@
-"""Taking a bundle from a catalog and making it this project's own.
+"""`get` — adopting a bundle from a catalog into this project.
 
 **Adoption is a directory copy, and keeping it one is the design.** Bundles
 depend on nothing, so there is no graph to resolve, no version to solve for and
@@ -25,9 +25,9 @@ from pathlib import Path
 
 from . import adoption, lkf, project
 
-USAGE = """Take a bundle from a catalog into this project, and record what you took.
+USAGE = """Adopt a bundle from a catalog into this project, and record what you took.
 
-  luma-foreman get <bundle>            take one — e.g. luma/decision-records
+  luma-foreman get <bundle>            adopt one — e.g. lumastack/luma-catalog/decision-records
   luma-foreman get <bundle> --force    overwrite a copy that was edited here
 
 To see what a catalog publishes: luma-foreman catalog show <name>
