@@ -247,24 +247,22 @@ the first real pressure toward registering catalogs rather than deriving them,
 and it should be recorded as such when it arrives rather than solved by
 accident.
 
-**Which commands reach the network is a description, not a boundary.** Today
-`catalog list`, `catalog show` and `bundle outdated` do, and the other reads
-are local. That is worth knowing and not worth freezing: nothing here needs a
-promise about what a command will never do, and a taxonomy asserted as a rule
-is one somebody has to supersede rather than update.
+**Local where it works, the network where it is needed.** `catalog list` and
+`catalog show` ask a catalog what it publishes; `bundle outdated` compares
+against one. None of those has an offline answer. `bundle list` and `bundle
+show` read what is already here. That is where things stand, not a line
+anybody drew.
 
 `bundle outdated` sits under `bundle` because it returns bundles, which is what
-the noun decides. That it reaches a catalog is a property of comparison needing
-both sides, not an exception to anything.
+the noun decides. Reaching a catalog is what comparison takes.
 
-**Where the network is unavailable, say so and carry on.** This one is a rule
-rather than a description, because the failure it prevents is silence: a blank
-where a number belongs reads as zero. `bundle outdated` already prints `?` with
-the reason and exits 0, and an outage is not a property of the repository.
+**Where the network is unavailable, say so and carry on.** `bundle outdated`
+prints `?` with the reason and exits 0. An outage is not a property of the
+repository, and a blank where a number belongs reads as zero.
 
-**A version-available column on `bundle list` is still refused** — not for
-crossing a line, but because `bundle list` answers what this project holds and
-`bundle outdated` answers what has moved past it. Two questions, two commands.
+**`bundle list` does not grow a version-available column.** Not for crossing a
+line — because `bundle list` answers what this project holds and `bundle
+outdated` answers what has moved past it. Two questions, two commands.
 
 ## References
 

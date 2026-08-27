@@ -30,12 +30,12 @@ future is the point.** *Always*, *never* and *no others* read as authority and
 are often just emphasis — and an absolute stated in passing is one somebody has
 to supersede later rather than update.
 
-ADR-0003 is the worked example, twice in one afternoon. It said *"two commands
-may reach the network and no others"*, which was a taxonomy of the day written
-as a rule; correcting it looked like it needed a superseding record. The
-replacement was *"`catalog` always reaches the catalog"* — the same mistake with
-new content. What it says now is which commands reach the network today, and
-that this is a description.
+ADR-0003 is the worked example, three times in one afternoon. It said *"two
+commands may reach the network and no others"* — a taxonomy of the day written
+as a rule, so correcting it looked like it needed a superseding record. That
+became *"`catalog` always reaches the catalog"*, the same mistake with new
+content. Then *"a description, not a boundary"*, which is a rule about not
+making rules. It now just says which commands reach out and which do not.
 
 **Some absolutes earn it and must survive the sweep.** *Adoption never resolves
 anything* is the decision itself. *A flag may change how much or how, never what
