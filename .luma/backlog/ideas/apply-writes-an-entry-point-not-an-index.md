@@ -158,8 +158,14 @@ hard call. **The real gap is that committed-derived material has no tier** —
 `routing.toml` sits in `bundles/` and is not a bundle. *Belongs to
 `luma-leader`.*
 
-**What to call the new tier and its files.** `routing` is spoken for by the
-permission gate. `index.md` is reserved at a bundle root, not at a project root.
+**What to call the new tier and its files — not a blocker, and no name here is
+sacred.** `routing` is currently spoken for by the permission gate and
+`index.md` is reserved at a bundle root rather than a project root, but that is
+a constraint to know about rather than one to design around. **The collision
+resolves in either direction**: `routing.toml` holds a permission table, which is
+the narrower job, so it may be the file that should move. Every copy of it lives
+in a repository we own and is days old, which is the cheapest this rename will
+ever be.
 
 **Per-tool subsections in the adapter block: no, not yet.** One writer today, and
 structure is cheap to add later.
