@@ -4,7 +4,9 @@
 
 Where luma configuration lives, what is committed and what belongs to the machine, and the order in which layers win.
 
-**Start at `policy/where-configuration-lives`** — Two homes and one cache — what is committed, what belongs to the machine, and the test that tells them apart.
+**Start at `policy/where-configuration-lives`.**
+
+**1 workflow(s) here reach you as skills, not through this ring** — invoke by name: `add-a-setting`.
 
 In `.luma/bundles/lumastack/luma-catalog/luma-config/`:
 

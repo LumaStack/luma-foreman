@@ -4,7 +4,9 @@
 
 The prose a repository publishes — where it lives, what a README is for, and which documents are worth having at all.
 
-**Start at `policy/readme`** — A README answers what this is, why it exists, and where to go next — in that order. What belongs in one, what does not, and why the limit matters.
+**Start at `policy/readme`.**
+
+**2 workflow(s) here reach you as skills, not through this ring** — invoke by name: `add-document`, `describe-project`.
 
 In `.luma/bundles/lumastack/luma-catalog/project-documentation/`:
 

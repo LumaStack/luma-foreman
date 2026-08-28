@@ -370,12 +370,15 @@ description: Open one adopted bundle and see what it holds — its rules, what f
 
 # Open a bundle
 
-Read `.luma/bundles/rings/<bundle-id>.md`, where the bundle ID is the full name
-including its namespace — `lumastack/luma-catalog/git-secrets`, not
-`git-secrets`.
+**Every adopted bundle and the exact path to its ring:**
 
-`{ring}` has every adopted bundle and the path to its ring. Use
-`/list-bundles` if you do not know the name.
+{listing}
+
+Read the path beside the one you want. Nothing needs assembling — a bundle ID
+carries its namespace, and guessing at one is how this fails.
+
+If the name you were given is not above, `{ring}` is the current list; this copy
+is generated and can be behind it.
 
 **What you get.** Anything the bundle says applies throughout it, to read now;
 then every rule it holds, with what fires each. **Bodies are not included** —
@@ -568,9 +571,10 @@ def _bundle_ring(bundle: Bundle, project_root: Path) -> str:
     # so it earns a line at the top rather than a delivery of its own.
     entry = bundle.entrypoint
     if entry and any(d.doc_id == entry for d in bundle.docs):
-        doc = next(d for d in bundle.docs if d.doc_id == entry)
-        lines += [f"**Start at `{entry}`** — {doc.description or doc.title}".rstrip(" —"),
-                  ""]
+        # Named without its description, because the list below carries that and
+        # a ring is fifteen lines long — saying the same sentence twice in one is
+        # the sort of thing an author does not notice and a reader cannot miss.
+        lines += [f"**Start at `{entry}`.**", ""]
 
     always = bundle.of_class("always-on")
     if always:
@@ -601,6 +605,21 @@ def _bundle_ring(bundle: Bundle, project_root: Path) -> str:
              and d.klass != "always-on"
              and (d.klass == "advertised"
                   or (d.klass == "on-demand" and d.type == "policy"))]
+    # **Say what is not here, or the count is a lie.** A ring claims to say what a
+    # bundle holds. `git-secrets` holds five Documents, this named two, and the
+    # sentence explaining the other three lived only in the project ring — which
+    # a reader arriving by `/load-bundle` never opened. Reachable and invisible
+    # is the failure the whole design exists to end, and it was in the artifact
+    # built to end it.
+    workflows = bundle.of_type("workflow")
+    if workflows:
+        names = ", ".join(f"`{w.slug}`" for w in sorted(workflows, key=lambda d: d.slug))
+        lines += [
+            f"**{len(workflows)} workflow(s) here reach you as skills, not through "
+            f"this ring** — invoke by name: {names}.",
+            "",
+        ]
+
     if shown:
         lines += [f"In `{home}/`:", ""]
         for doc in sorted(shown, key=lambda d: (d.type, d.doc_id)):
@@ -611,7 +630,7 @@ def _bundle_ring(bundle: Bundle, project_root: Path) -> str:
             if when:
                 lines.append(f"  - matches: {when}")
         lines.append("")
-    elif not always:
+    elif not always and not workflows:
         lines += [f"Nothing here is named separately. In `{home}/`.", ""]
 
     return "\n".join(lines)

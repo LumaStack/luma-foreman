@@ -4,7 +4,9 @@
 
 Ideas as individual files rather than one growing IDEAS.md — what earns a file, how capture stays fast, and how the list gets tended rather than accumulating.
 
-**Start at `policy/capturing-ideas`** — The test for whether an idea earns a file, what disqualifies one, and why capture optimises for flow rather than completeness.
+**Start at `policy/capturing-ideas`.**
+
+**3 workflow(s) here reach you as skills, not through this ring** — invoke by name: `capture-idea`, `migrate-ideas`, `tend-ideas`.
 
 In `.luma/bundles/lumastack/luma-catalog/backlog-ideas/`:
 

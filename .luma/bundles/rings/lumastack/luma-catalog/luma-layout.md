@@ -4,7 +4,7 @@
 
 The .luma directory every luma tool writes into — the four tiers, what belongs in each, and the committed-only invariant that makes it trustworthy.
 
-**Start at `policy/luma-directory-layout`** — The four directories every luma tool honours, what belongs in each, and the one invariant that makes the whole thing trustworthy.
+**Start at `policy/luma-directory-layout`.**
 
 In `.luma/bundles/lumastack/luma-catalog/luma-layout/`:
 

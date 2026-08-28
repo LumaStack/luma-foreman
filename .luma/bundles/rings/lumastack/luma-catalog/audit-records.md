@@ -4,7 +4,9 @@
 
 Audits as records — findings written by one party, answered by another, closed by the first. The whole exchange lives in git.
 
-**Start at `policy/audit-layout`** — Where an audit lives, how it is named, and the three-party loop — auditor, respondent, auditor again — that makes the record settle rather than accumulate.
+**Start at `policy/audit-layout`.**
+
+**3 workflow(s) here reach you as skills, not through this ring** — invoke by name: `conduct-audit`, `respond-to-audit`, `verify-audit`.
 
 In `.luma/bundles/lumastack/luma-catalog/audit-records/`:
 
