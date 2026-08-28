@@ -222,15 +222,18 @@ grep -q 'Steps go here' "$PROJECT/.claude/skills/make-a-widget/SKILL.md" \
 # half-migrated bundle behave correctly and stall there forever, so this bundle
 # — which still declares it — reaches the index as nothing at all.
 case $LAST in *preload*) ok ;; *) bad "expected the legacy preload reported: $LAST" ;; esac
-# It reaches the standing surface, and not because `preload` was read: it is a
-# policy declaring `matches: always`, which is the one route to being loaded. The
-# legacy field is reported and ignored; the cost comes from having no trigger.
-grepped 'widget-rules' "$PROJECT/CLAUDE.md"
+# It is named in the ring and its body is not delivered, which is correct and is
+# not what the legacy field asked for: it declares no `matches`, so nothing
+# surfaces it and it waits to be asked for. The legacy field is reported and
+# ignored — a rule nobody can see governs nothing, so it is still named.
+RING=$PROJECT/.luma/bundles/entrypoint.md
+grepped 'widget-rules' "$RING"
+ungrep '@.luma/bundles/acme/widgets/policy/widget-rules.md' "$PROJECT/CLAUDE.md"
 
 # A Type Definition is not reading material: it is consulted when writing a
 # Document of its type, which is a job the workflow already sends you to.
-grep -q '_types/widget' "$PROJECT/CLAUDE.md" \
-  && bad '_types should not be indexed' || ok
+grep -q '_types/widget' "$RING" \
+  && bad '_types should not be named in the ring' || ok
 
 apply 'check after apply' 0 --check
 has 'up to date'
