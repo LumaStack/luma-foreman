@@ -53,6 +53,38 @@ is fired rather than at session start.
 This is where the saving actually is. It is also where `entry_point` stops being
 a single pointer and becomes the thing that fires a ring.
 
+## The platform fact 4 turns on, now checked
+
+**`hookSpecificOutput.additionalContext` exists and injects text into the model's
+context.** Confirmed from the shipped binary rather than the published docs,
+which are truncated at exactly this table — two readings of the same page
+contradicted each other on it.
+
+| | |
+| --- | --- |
+| `additionalContext` | *"Text injected into model context"* — carries **no** event restriction |
+| `permissionDecision`, `permissionDecisionReason`, `updatedInput` | each marked **(PreToolUse only)** |
+
+**Worked examples exist for `PostToolUse`, `Stop` and `SubagentStop`.** Whether
+`PreToolUse` honours it is **not** settled by anything readable — the field is
+not marked PreToolUse-only, and no example uses it there. That needs an
+empirical test before anything relies on it.
+
+**What it means for delivery**, and it is tidier than expected: enforcement and
+delivery are different events, matching the two fields a policy already
+declares.
+
+| field | event | what it does |
+| --- | --- | --- |
+| `on_violation` | `PreToolUse` | blocks. Already built — the permission gate |
+| `matches` | `PostToolUse` | delivers the document once its trigger has fired |
+
+**`PostToolUse` fires after the tool ran**, so a `path:` rule arrives *after* the
+edit it governs. That is late for prevention and fine for everything after —
+and prevention is `on_violation`'s job at the earlier event, not `matches`'s.
+Worth being honest that this is a weaker guarantee than the design assumed when
+it called firing *the only guaranteed path*.
+
 ## 4. Firing a bundle ring
 
 **`/list-bundles` and `/load-bundle` first**, because they are the floor: they
