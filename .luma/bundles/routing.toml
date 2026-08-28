@@ -214,6 +214,46 @@ on_violation = "allow"
 matches = ["topic:writing or editing prose"]
 
 [[rule]]
+bundle = "lumastack/luma-catalog/review-sweeps"
+document = "policy/choosing-an-order"
+title = "Choosing an order"
+path = ".luma/bundles/lumastack/luma-catalog/review-sweeps/policy/choosing-an-order.md"
+on_violation = "allow"
+matches = ["topic:deciding what to review first"]
+
+[[rule]]
+bundle = "lumastack/luma-catalog/review-sweeps"
+document = "policy/how-a-sweep-is-stored"
+title = "How a sweep is stored"
+path = ".luma/bundles/lumastack/luma-catalog/review-sweeps/policy/how-a-sweep-is-stored.md"
+on_violation = "allow"
+matches = ["topic:running or resuming a review sweep", "path:.luma/backlog/sweeps/**"]
+
+[[rule]]
+bundle = "lumastack/luma-catalog/review-sweeps"
+document = "policy/the-pairing-turn"
+title = "The pairing turn"
+path = ".luma/bundles/lumastack/luma-catalog/review-sweeps/policy/the-pairing-turn.md"
+on_violation = "allow"
+matches = ["topic:reviewing code alongside a second party", "topic:giving feedback on a file somebody is about to read"]
+
+[[rule]]
+bundle = "lumastack/luma-catalog/review-sweeps"
+document = "policy/what-a-slice-produces"
+title = "What a slice produces"
+path = ".luma/bundles/lumastack/luma-catalog/review-sweeps/policy/what-a-slice-produces.md"
+on_violation = "allow"
+matches = ["topic:acting on what a review turned up"]
+
+[[rule]]
+bundle = "lumastack/luma-catalog/review-sweeps"
+document = "policy/who-does-the-reading"
+title = "Who does the reading"
+path = ".luma/bundles/lumastack/luma-catalog/review-sweeps/policy/who-does-the-reading.md"
+on_violation = "allow"
+matches = ["topic:who takes part in a review sweep"]
+
+[[rule]]
 bundle = "lumastack/luma-catalog/session-manager"
 document = "policy/session-continuity"
 title = "How a session survives its own end"
