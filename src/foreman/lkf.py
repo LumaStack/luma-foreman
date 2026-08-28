@@ -11,7 +11,7 @@ frontmatter reader would be doing to itself what the estate already does to
 itself across three languages, which is a known problem rather than a new one.
 
 **Reading a value here is never validation.** A missing key comes back as None
-and an unparseable one comes back as text; §4 puts a MUST on consumers not to
+and an unparseable one comes back as text; the format puts a MUST on consumers not to
 reject a Document for what they do not understand, and a reader that raised
 would make every caller responsible for remembering that.
 """

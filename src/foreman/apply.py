@@ -590,8 +590,8 @@ def _bundle_ring(bundle: Bundle, project_root: Path) -> str:
     # this whole design exists to end.
     #
     # Two deliberate exceptions. **Background** is left out on the format's own
-    # reasoning (§10.7): it does not act, and it is reached *through* the things
-    # that do. **Workflows** are left out because this harness already loads
+    # reasoning about `matches`: it does not act, and it is reached *through* the
+    # things that do. **Workflows** are left out because this harness already loads
     # every skill's name and description at startup, and an adapter must not
     # render what its harness already carries.
     shown = [d for d in bundle.docs
