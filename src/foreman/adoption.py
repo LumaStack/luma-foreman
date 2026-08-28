@@ -15,6 +15,7 @@ alongside.
 from __future__ import annotations
 
 import hashlib
+import re
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
@@ -165,6 +166,45 @@ def applied(project: Path, bundle_id: str) -> bool:
     except (OSError, UnicodeDecodeError):
         return False
     return apply.BEGIN in adapter and bundle_id in named
+
+
+def same_origin(a: str, b: str) -> bool:
+    """Do two recorded sources name the same catalog?
+
+    **Compared after normalising, because the raw strings disagree over things
+    that are not disagreements.** One repository recorded this catalog as
+    `.../luma-catalog` and another as `.../luma-catalog.git`; git accepts both,
+    GitHub serves both, and a literal comparison called them different lineages
+    and refused every upgrade.
+
+    **The refusal it guards is the right one** — a bundle quietly acquiring a
+    different origin is a change nobody would see — which is exactly why it must
+    not fire on a suffix. The workaround is `--force`, and `--force` performs the
+    real lineage switch too: teaching somebody to reach for it while the check is
+    being pedantic is how they reach for it on the day it is right.
+
+    What is normalised is only what cannot distinguish two repositories: a
+    trailing slash, a trailing `.git`, the scheme, an embedded user, and the
+    case of the host. **The path keeps its case** — hosts are case-insensitive
+    and paths are not, everywhere except the one forge everybody tests on.
+    """
+    return _origin(a) == _origin(b)
+
+
+def _origin(source: str) -> str:
+    s = source.strip().rstrip("/")
+    if s.endswith(".git"):
+        s = s[:-4]
+    # scp-style, which has no scheme: git@host:org/repo
+    scp = re.match(r"^[^/@]+@([^:/]+):(.+)$", s)
+    if scp:
+        return f"{scp.group(1).lower()}/{scp.group(2)}"
+    url = re.match(r"^[A-Za-z][A-Za-z0-9+.-]*://(?:[^@/]+@)?([^/]+)(/.*)?$", s)
+    if url:
+        return f"{url.group(1).lower()}{url.group(2) or ''}"
+    # A filesystem path. Left alone beyond the two suffixes above, because its
+    # case is load-bearing and it has no host to fold.
+    return s
 
 
 def state(project: Path, entry: Adopted) -> str:

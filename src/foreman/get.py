@@ -149,7 +149,9 @@ def run(
     # Two catalogs can only share an ID by both declaring the same namespace —
     # derivation makes that impossible — so this catches the deliberate case
     # and the misconfigured one, both of which somebody should decide about.
-    if existing and existing.source and existing.source != catalog.source and not force:
+    if (existing and existing.source
+            and not adoption.same_origin(existing.source, catalog.source)
+            and not force):
         return _refuse(
             f"{bundle_id} here came from a different catalog",
             f"holds:  {existing.source}\n"
@@ -174,7 +176,8 @@ def run(
             return 0
 
     upgrade = existing.version if existing else None
-    switched = bool(existing and existing.source and existing.source != catalog.source)
+    switched = bool(existing and existing.source
+                    and not adoption.same_origin(existing.source, catalog.source))
     count = _copy(src, dst)
     entries[bundle_id] = adoption.Adopted(
         bundle=bundle_id,
