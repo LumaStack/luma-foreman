@@ -33,7 +33,7 @@ luma-foreman bundle list
 
 An edited copy is never silently overwritten, and a bundle with no version cannot be adopted at all.
 
-**`apply` writes thin adapters, never copies.** Each workflow becomes a Claude Code skill that points at the real document under `.luma/` and names the standing context that document assumes. A managed block in `CLAUDE.md` indexes everything adopted, with `preload: mandatory` documents hoisted into a *read these first* section — load the index, never the content.
+**`apply` writes thin adapters, never copies.** Each workflow becomes a Claude Code skill that points at the real document under `.luma/` and names the standing context that document assumes. A managed block in `CLAUDE.md` indexes everything adopted: a document declaring `matches: always` is imported, so its body arrives; everything else contributes one line saying what it is and what surfaces it.
 
 Everything it writes is generated and disposable: commit it or gitignore it, but regenerate rather than edit. Only the region between the `luma:begin` and `luma:end` markers in `CLAUDE.md` is touched, so a hand-written file keeps the rest.
 

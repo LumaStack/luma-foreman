@@ -165,9 +165,14 @@ commit rather than from the first `get`.
   bundles is a legitimate state whose correct output is the adapter block plus a
   stub entry point saying so. Making the empty case correct also makes `apply`
   safe to run from four places, which is what a generated artifact needs.
-- **The first run has to migrate.** Today's `CLAUDE.md` has no markers, so the
-  block must recognise and replace the current unmarked form rather than
-  appending a second index beside it.
+- **No migration is needed, which was recorded wrongly here.** This entry claimed
+  `CLAUDE.md` has no markers and the first run would have to recognise an
+  unmarked form. It has them — `<!-- luma:begin … -->` and `<!-- luma:end -->`,
+  `apply.py:59`. **The marker mechanism already exists and works**; what changes
+  is only what goes between them. Worth noticing that this repository's
+  `CLAUDE.md` is *entirely* managed block, so there is currently no hand-written
+  content for the shared writer to preserve — which the design must not assume,
+  since an adopting project will have some.
 
 **Rejected: `init` installing a default bundle so the empty case never occurs.**
 It needs a network and a catalog at `init` time, there is no way to un-adopt what

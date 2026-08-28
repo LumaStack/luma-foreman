@@ -26,6 +26,31 @@
 # than renamed, so there is nothing left for anybody to reach for a word about.
 # The other two name things still in the product under other names, so they stay.
 
+# `preload` carries no `decided`, unlike the two below. It was not retired by a
+# decision of this project — the field was removed and replaced upstream, in the
+# format and in `luma-leader`'s loading-mechanisms draft. `decided` exempts
+# records by filename prefix, which an external reference cannot use, so it is
+# left out rather than filled with something that resolves to nothing.
+#
+# It stays retired for the same reason `projection` and `outfit` do: the thing it
+# named still exists under another name.
+
+[[retired]]
+term = "preload"
+use = "`matches` — what surfaces a Document — or nothing"
+except = [
+  "src/foreman/apply.py",       # reads the old field only so it can report it
+  "tests/adopt-test.sh",        # builds a fixture declaring it, to test that report
+  "tests/apply-test.sh",        # ...and this one pins the message
+  "CHANGELOG.md",               # records what was true when written
+  ".luma/records/decisions/ADR-0001-apply-writes-adapters-not-copies.md",  # ...as does a record
+  "docs/scope.md",              # argues about the shape of the field it replaced
+  ".luma/backlog/ideas/preload-levels-collapse-into-emphasis.md",   # is the retirement
+  ".luma/backlog/ideas/routers.md",                                 # ...and these three
+  ".luma/backlog/ideas/bundle-routines.md",                         # ...argue about it
+  ".luma/backlog/ideas/apply-writes-an-entry-point-not-an-index.md",
+]
+
 [[retired]]
 term = "projection"
 use = "what `apply` writes, or `apply` itself"
