@@ -55,35 +55,38 @@ a single pointer and becomes the thing that fires a ring.
 
 ## The platform fact 4 turns on, now checked
 
-**`hookSpecificOutput.additionalContext` exists and injects text into the model's
-context.** Confirmed from the shipped binary rather than the published docs,
-which are truncated at exactly this table — two readings of the same page
-contradicted each other on it.
+**`additionalContext` injects text into the model's context, and `PreToolUse`
+supports it.** From the decision-control table in `hooks.md`:
 
-| | |
-| --- | --- |
-| `additionalContext` | *"Text injected into model context"* — carries **no** event restriction |
-| `permissionDecision`, `permissionDecisionReason`, `updatedInput` | each marked **(PreToolUse only)** |
-
-**Worked examples exist for `PostToolUse`, `Stop` and `SubagentStop`.** Whether
-`PreToolUse` honours it is **not** settled by anything readable — the field is
-not marked PreToolUse-only, and no example uses it there. That needs an
-empirical test before anything relies on it.
-
-**What it means for delivery**, and it is tidier than expected: enforcement and
-delivery are different events, matching the two fields a policy already
-declares.
-
-| field | event | what it does |
+| event | `additionalContext` | what it gives us |
 | --- | --- | --- |
-| `on_violation` | `PreToolUse` | blocks. Already built — the permission gate |
-| `matches` | `PostToolUse` | delivers the document once its trigger has fired |
+| `SessionStart` | **yes** | `1-project` without going through a harness file |
+| `UserPromptSubmit` | **yes** | sees the prompt, so **`topic:` becomes deliverable** |
+| `PreToolUse` | **yes** | `path:` / `command:` arrive **before** the tool runs |
+| `PostToolUse` | yes | too late to govern the action it followed |
 
-**`PostToolUse` fires after the tool ran**, so a `path:` rule arrives *after* the
-edit it governs. That is late for prevention and fine for everything after —
-and prevention is `on_violation`'s job at the earlier event, not `matches`'s.
-Worth being honest that this is a weaker guarantee than the design assumed when
-it called firing *the only guaranteed path*.
+**Three things I had recorded as constraints are wrong.**
+
+**`topic:` is not model-only.** Twenty of the twenty-nine routing rules declare a
+`topic:`, and this plan called them a model judgement nothing could enforce. A
+`UserPromptSubmit` hook sees the prompt text, so a topic can be matched and its
+document delivered — the same route as any other trigger. **That is two-thirds of
+the routing surface moving from advisory to deliverable.**
+
+**Delivery is in time, not after the fact.** `PreToolUse` fires before the tool
+runs, so a `path:` rule arrives before the edit it governs rather than after.
+`how-knowledge-arrives` calling firing *the only guaranteed path* stands.
+
+**`1-project` need not arrive through `CLAUDE.md` at all.** `SessionStart`
+carries it, which is a second adapter for a harness that has one — and the
+strongest evidence yet that ring and adapter were right to split.
+
+**How this was checked, because the method mattered.** The published page at
+`/docs/en/hooks` is truncated before the table, and the reference URL 404s. Two
+fetches of the truncated page gave **opposite** answers about `PreToolUse`, and
+the one that answered confidently had invented a row it could not have read.
+`hooks.md` — the raw markdown behind the same page — serves the table whole.
+**Ask for the source rather than the rendering.**
 
 ## 4. Firing a bundle ring
 
