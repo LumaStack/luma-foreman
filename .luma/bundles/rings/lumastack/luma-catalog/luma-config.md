@@ -4,6 +4,8 @@
 
 Where luma configuration lives, what is committed and what belongs to the machine, and the order in which layers win.
 
+**Start at `policy/where-configuration-lives`** — Two homes and one cache — what is committed, what belongs to the machine, and the test that tells them apart.
+
 In `.luma/bundles/lumastack/luma-catalog/luma-config/`:
 
 - `policy/where-configuration-lives` (policy) — Two homes and one cache — what is committed, what belongs to the machine, and the test that tells them apart.

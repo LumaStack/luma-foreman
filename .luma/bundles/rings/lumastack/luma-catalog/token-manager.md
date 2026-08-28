@@ -4,4 +4,6 @@
 
 Where an agent session's tokens actually go — a paced tutorial on the mechanism and the fixes that follow from it, and an audit that measures a real setup instead of guessing at it.
 
+**Start at `workflows/token-tutorial`** — A paced tutorial on where an agent session's tokens actually go — presented a step at a time, pausing after each one for questions or practice, and ending in a short quiz. Use when somebody wants to learn the material rather than measure a setup.
+
 Nothing here is named separately. In `.luma/bundles/lumastack/luma-catalog/token-manager/`.

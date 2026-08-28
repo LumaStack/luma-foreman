@@ -4,6 +4,8 @@
 
 Keeping credentials and private identity out of a repository — names, personal addresses, home paths, machine names, tokens and key files. Prevention first, then audit.
 
+**Start at `policy/never-commit-private-identity`** — Real names, personal emails, home paths and machine names must not appear in commits or tracked content. What to use instead, and why deletion does not undo it.
+
 In `.luma/bundles/lumastack/luma-catalog/git-secrets/`:
 
 - `policy/never-commit-credentials` (policy) — What counts as a credential, which files never belong in a repository, and why rotation comes before cleanup.

@@ -67,6 +67,7 @@ cat > "$B/BUNDLE.md" <<'EOF'
 type: bundle
 version: 0.1.0
 description: Rules for widget work.
+entrypoint: policy/house-rules
 ---
 EOF
 
@@ -182,6 +183,14 @@ grepped '@.luma/bundles/entrypoint.md' "$CLAUDE"
 grepped 'run-the-thing' "$SKILLS/run-the-thing/SKILL.md"
 ungrep 'run-the-thing' "$RING"
 ungrep 'run-the-thing' "$BRING"
+
+# --- a bundle's own answer to where to start ------------------------------------
+#
+# `entrypoint` is a claim about reading order and nothing else. It reached no
+# reader until the ring existed — twenty published bundles declared one and
+# nothing consumed it, which is the same defect as a rule nobody can see.
+
+grepped 'Start at' "$BRING"
 
 # --- 1-project names bundles; 2-bundle names what is inside one ------------------
 #

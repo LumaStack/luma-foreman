@@ -4,6 +4,8 @@
 
 Creating, updating, auditing, repairing, migrating and retiring bundles — the layout they use and which catalog they belong in.
 
+**Start at `policy/organizing-a-bundle`** — The layout every bundle uses, what each directory is for, and the two rules that decide whether something is a document, an asset, or a type.
+
 In `.luma/bundles/lumastack/luma-catalog/bundle-manager/`:
 
 - `policy/an-index-of-what-exists` (policy) — Always load what says a thing exists; load the thing when it matters. The pattern that lets a bundle be large without being expensive, assembled from three parts the format already has.

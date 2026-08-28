@@ -4,6 +4,8 @@
 
 The prose a repository publishes — where it lives, what a README is for, and which documents are worth having at all.
 
+**Start at `policy/readme`** — A README answers what this is, why it exists, and where to go next — in that order. What belongs in one, what does not, and why the limit matters.
+
 In `.luma/bundles/lumastack/luma-catalog/project-documentation/`:
 
 - `policy/documentation-layout` (policy) — Prose goes in docs/. What stays at the repository root and why, and which documents this bundle deliberately does not own.

@@ -4,6 +4,8 @@
 
 Working on the luma tools themselves — the repositories and the boundary each defends, publishing to the universal catalog, and changing a type without making every tool upgrade at once.
 
+**Start at `policy/the-estate`** — The six repositories, the boundary each one defends, and the rule that decides where a new thing goes. Read before adding anything to any of them.
+
 In `.luma/bundles/lumastack/luma-catalog/luma-maintainers/`:
 
 - `policy/the-estate` (policy) — The six repositories, the boundary each one defends, and the rule that decides where a new thing goes. Read before adding anything to any of them.
