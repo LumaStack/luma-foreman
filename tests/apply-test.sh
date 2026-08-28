@@ -425,8 +425,14 @@ case $LAST in *nowhere-at-all*) ok ;; *) bad "expected the inert trigger reporte
 
 exists "$SKILLS/list-bundles/SKILL.md"
 exists "$SKILLS/load-bundle/SKILL.md"
-grepped 'acme/rules' "$SKILLS/list-bundles/SKILL.md"
+# Neither copies the project ring. That file already arrives at the start of a
+# session, so rendering it again would charge twice for one list — the same
+# adapter obligation that keeps workflows out of it. They point instead, which
+# also means they cannot go stale.
+grepped 'entrypoint.md' "$SKILLS/list-bundles/SKILL.md"
+ungrep 'acme/rules' "$SKILLS/list-bundles/SKILL.md"
 grepped '.luma/bundles/rings' "$SKILLS/load-bundle/SKILL.md"
+ungrep 'acme/rules' "$SKILLS/load-bundle/SKILL.md"
 
 # A workflow named `load-bundle` must not be able to replace the floor. It is
 # renamed on collision, exactly as it would be against another workflow.

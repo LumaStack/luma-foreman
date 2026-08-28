@@ -334,11 +334,6 @@ def _navigation(bundles: list[Bundle]) -> dict[str, str]:
     a project holds, so nothing here scales with adoption.
     """
     ring = ENTRYPOINT.as_posix()
-    listing = "\n".join(
-        f"- `{b.bundle_id}` — {b.description or 'no description'}\n"
-        f"  `{ring_path(b.bundle_id).as_posix()}`"
-        for b in bundles) or "Nothing is adopted yet."
-
     return {
         "list-bundles": f"""---
 name: list-bundles
@@ -349,13 +344,14 @@ description: List the knowledge bundles this project has adopted, and what each 
 
 # What this project knows
 
-Read `{ring}` for the current list — it is generated and this copy is not.
+Read `{ring}`. It names every adopted bundle, what each is for, and the path to
+its ring.
 
-{listing}
-
-**Open one with `/load-bundle`**, or read its ring directly. A bundle's ring
-says what it holds and what brings each part into play; nothing below it is
-loaded until you go there.
+**It is not copied here on purpose.** That file already arrives at the start of
+a session, and rendering it a second time would charge twice for one list. What
+this skill is for is the moment it has fallen out of context and you need it
+back — so read the file, which is current, rather than a copy, which would not
+be.
 
 **This lists what is adopted, not what exists.** Bundles this project has not
 taken are in whatever catalog it draws on, and nothing here can see them —
@@ -370,19 +366,17 @@ description: Open one adopted bundle and see what it holds — its rules, what f
 
 # Open a bundle
 
-**Every adopted bundle and the exact path to its ring:**
+Read `.luma/bundles/rings/<bundle-id>.md`.
 
-{listing}
-
-Read the path beside the one you want. Nothing needs assembling — a bundle ID
-carries its namespace, and guessing at one is how this fails.
-
-If the name you were given is not above, `{ring}` is the current list; this copy
-is generated and can be behind it.
+**The bundle ID carries its namespace** — `lumastack/luma-catalog/git-secrets`,
+never `git-secrets`. Guessing at one is the only way this fails, so take it from
+`{ring}`, which lists every adopted bundle beside the path to its ring. Use
+`/list-bundles` if you do not have a name at all.
 
 **What you get.** Anything the bundle says applies throughout it, to read now;
-then every rule it holds, with what fires each. **Bodies are not included** —
-open the ones that match the work, and not the rest.
+then every rule it holds, with what fires each, and a line naming anything that
+reaches you by another route. **Bodies are not included** — open the ones that
+match the work, and not the rest.
 
 **If the path does not exist**, the bundle is not adopted here. That is an
 answer, not an error.
