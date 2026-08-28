@@ -227,13 +227,15 @@ case $LAST in *preload*) ok ;; *) bad "expected the legacy preload reported: $LA
 # surfaces it and it waits to be asked for. The legacy field is reported and
 # ignored — a rule nobody can see governs nothing, so it is still named.
 RING=$PROJECT/.luma/bundles/entrypoint.md
-grepped 'widget-rules' "$RING"
+BRING=$PROJECT/.luma/bundles/rings/acme/widgets.md
+grepped 'acme/widgets' "$RING"
+grepped 'widget-rules' "$BRING"
 ungrep '@.luma/bundles/acme/widgets/policy/widget-rules.md' "$PROJECT/CLAUDE.md"
 
 # A Type Definition is not reading material: it is consulted when writing a
 # Document of its type, which is a job the workflow already sends you to.
-grep -q '_types/widget' "$RING" \
-  && bad '_types should not be named in the ring' || ok
+grep -q '_types/widget' "$BRING" \
+  && bad '_types should not be named in a ring' || ok
 
 apply 'check after apply' 0 --check
 has 'up to date'
@@ -436,16 +438,19 @@ EOF
 
 rm -rf "$VENDORED"
 rm -f "$MANIFEST"
-apply 'nothing adopted' 2
-has 'nothing adopted'
+# An empty project is a state, not an error. It used to exit 2, which made the
+# one case that has to be correct the one case never exercised — a repository
+# whose last bundle just left still needs its skills and rings swept, and it
+# still needs an adapter pointing at something true.
+apply 'nothing adopted is not an error' 0
+grepped 'Nothing is adopted yet' "$RING"
 
-# Nothing was adopted, so apply refused — and refusing left the hand-written
-# skill alone, which is the point of the marker.
+# Sweeping reaches what foreman wrote and stops there, which is the point of
+# the marker: the generated skill goes and the hand-written one is untouched.
+absent "$PROJECT/.claude/skills/make-a-widget"
 exists "$PROJECT/.claude/skills/hand-written/SKILL.md"
-exists "$PROJECT/.claude/skills/make-a-widget/SKILL.md"
 
-# With a different bundle adopted, the orphaned generated skill goes and the
-# hand-written one stays.
+# With a different bundle adopted, the hand-written skill still stays.
 mkdir -p "$CATALOG/catalog/bundles/gadgets/workflows"
 cat > "$CATALOG/catalog/bundles/gadgets/BUNDLE.md" <<'EOF'
 ---
