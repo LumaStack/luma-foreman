@@ -4,6 +4,8 @@
 
 Using the luma tools — which one does what, getting them onto a machine, standing a project up, and the get-then-apply loop that puts knowledge in front of an agent.
 
+**Start at `workflows/adopt-knowledge`** — Take bundles from a catalog into a repository and make an agent aware of them. Use when setting a project up, when adding a capability, or when an agent keeps needing to be told where to look.
+
 In `.luma/bundles/lumastack/luma-catalog/luma-tools/`:
 
 - `policy/what-each-tool-does` (policy) — The tools, the one job each performs, and when to use them. Read before installing or invoking any of them.

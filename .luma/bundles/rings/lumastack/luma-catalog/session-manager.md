@@ -4,6 +4,8 @@
 
 Ending an agent session without losing what it learned — checkpoint while working, hand off to a successor, or close for good, each writing for a different reader.
 
+**Start at `policy/session-continuity`** — The three ways a session ends, who reads what each one leaves behind, and the invariant that makes a session note safe to destroy.
+
 In `.luma/bundles/lumastack/luma-catalog/session-manager/`:
 
 - `policy/session-continuity` (policy) — The three ways a session ends, who reads what each one leaves behind, and the invariant that makes a session note safe to destroy.

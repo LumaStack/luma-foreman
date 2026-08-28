@@ -162,6 +162,7 @@ class Bundle:
     version: str
     description: str
     docs: tuple[Doc, ...]
+    entrypoint: str = ""
 
     def of_type(self, kind: str) -> list[Doc]:
         return [d for d in self.docs if d.type == kind]
@@ -256,6 +257,10 @@ def discover(project_root: Path) -> list[Bundle]:
                 version=_text(keys, "version"),
                 description=_text(keys, "description"),
                 docs=tuple(docs),
+                # Both spellings while the rename finishes. A bundle that has
+                # not been republished still has an answer to *where do I
+                # start*, and reading only the new key would discard it.
+                entrypoint=_text(keys, "entrypoint") or _text(keys, "entry_point"),
             )
         )
     return out
@@ -555,6 +560,17 @@ def _bundle_ring(bundle: Bundle, project_root: Path) -> str:
     ]
     if bundle.description:
         lines += [bundle.description, ""]
+
+    # **The bundle's own answer to where to start, which nothing read until
+    # now.** Twenty of the catalog's bundles declare `entrypoint` and it reached
+    # no reader — a declared field nobody consumes, which is the same defect as
+    # a rule nobody can see. It is a claim about reading order and nothing more,
+    # so it earns a line at the top rather than a delivery of its own.
+    entry = bundle.entrypoint
+    if entry and any(d.doc_id == entry for d in bundle.docs):
+        doc = next(d for d in bundle.docs if d.doc_id == entry)
+        lines += [f"**Start at `{entry}`** — {doc.description or doc.title}".rstrip(" —"),
+                  ""]
 
     always = bundle.of_class("always-on")
     if always:

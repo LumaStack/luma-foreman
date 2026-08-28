@@ -4,6 +4,8 @@
 
 Ideas as individual files rather than one growing IDEAS.md — what earns a file, how capture stays fast, and how the list gets tended rather than accumulating.
 
+**Start at `policy/capturing-ideas`** — The test for whether an idea earns a file, what disqualifies one, and why capture optimises for flow rather than completeness.
+
 In `.luma/bundles/lumastack/luma-catalog/backlog-ideas/`:
 
 - `policy/capturing-ideas` (policy) — The test for whether an idea earns a file, what disqualifies one, and why capture optimises for flow rather than completeness.

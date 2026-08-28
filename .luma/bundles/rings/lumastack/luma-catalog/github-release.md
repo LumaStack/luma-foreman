@@ -4,6 +4,8 @@
 
 Cutting and publishing GitHub releases — choosing the version, the changelog, release titles and contents, and the gh workflow.
 
+**Start at `workflows/publish-release`** — Verify the gh CLI is installed and authenticated, then cut and publish a release. Use when asked to cut, tag, or publish a release.
+
 In `.luma/bundles/lumastack/luma-catalog/github-release/`:
 
 - `policy/changelog` (policy) — CHANGELOG.md follows Keep a Changelog. The six change groups, the Unreleased section, and how the changelog differs from release notes.

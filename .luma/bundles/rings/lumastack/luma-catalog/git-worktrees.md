@@ -4,6 +4,8 @@
 
 Isolated worktrees for concurrent agents in one repository — where they live, what has to be provisioned, and how to tear them down without leaving wreckage.
 
+**Start at `policy/worktree-isolation`** — Where worktrees live, how they are named, and what is shared versus isolated — so concurrent agents in one repository can never collide.
+
 In `.luma/bundles/lumastack/luma-catalog/git-worktrees/`:
 
 - `policy/worktree-isolation` (policy) — Where worktrees live, how they are named, and what is shared versus isolated — so concurrent agents in one repository can never collide.

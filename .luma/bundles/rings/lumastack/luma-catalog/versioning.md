@@ -4,6 +4,8 @@
 
 What a version number promises, when to bump which part, and the rules that get decided wrongly — for anything versioned, not only releases.
 
+**Start at `policy/semantic-versioning`** — What each part of a version means, when to bump which, and the parts that get decided wrongly — the pre-1.0 rules, the v prefix, and deprecating before removing.
+
 In `.luma/bundles/lumastack/luma-catalog/versioning/`:
 
 - `policy/semantic-versioning` (policy) — What each part of a version means, when to bump which, and the parts that get decided wrongly — the pre-1.0 rules, the v prefix, and deprecating before removing.
