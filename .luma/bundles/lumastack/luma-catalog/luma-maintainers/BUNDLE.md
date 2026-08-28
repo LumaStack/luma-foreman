@@ -1,9 +1,9 @@
 ---
 type: bundle
-version: 0.10.3
-published: 2026-08-26
-consumers: [organization]
-entry_point: policy/the-estate
+version: 0.11.1
+published: 2026-08-27
+consumers: [project, organization]
+entrypoint: policy/the-estate
 description: Working on the luma tools themselves — the repositories and the boundary each defends, publishing to the universal catalog, and changing a type without making every tool upgrade at once.
 ---
 
@@ -58,11 +58,40 @@ something depends on it.
 
 ## Consumers
 
-`organization` only, and deliberately narrower than most bundles here. There is
-no sensible project-level reading of *how the luma estate is maintained* —
-adopting it into a project would be adopting somebody else's internals.
+`project` and `organization`, because **the estate is mostly projects.** Building
+foreman, the format or the curator happens in a repository, and
+[[publish-to-the-catalog]] and [[change-a-shared-type]] are things you do
+standing in one. A headquarters needs [[the-estate]] as well, so both values are
+right and neither alone is.
+
+**The narrower value this field used to carry was answering the wrong question.**
+`consumers` says *would this bundle function in a repository like yours* — a
+floor. What this bundle wants to say is *this is ours rather than yours*, which
+is a fence, and no field expresses one. Reaching for `consumers` made the
+manifest contradict the body directly above.
+
+**Until a fence exists, the restriction is prose**, and it is stated plainly at
+the top: adopt this only in a repository that is part of the estate.
 
 ## Version
+
+`0.11.1` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+
+Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
+
+`0.11.0` — **`consumers` was `organization` only, and the manifest contradicted
+the body.** The body tells estate repositories to adopt this, and says the
+separation is *"by repository, not by person — you are a user standing in a
+different repository."* Those repositories are projects. `luma-foreman` had
+adopted it, correctly by the body and against the frontmatter, and nothing
+reported the mismatch because nothing can: **no repository declares what kind of
+consumer it is**, so `consumers` is currently unenforceable from either side.
+
+**The old value was carrying a restriction the field cannot express** — see
+`## Consumers` above. The restriction itself is unchanged and still applies.
+
+Minor: project repositories may now adopt what the body already told them to
+adopt. Nobody doing nothing has to act.
 
 `0.10.3` — **bundle IDs in this catalog gained their namespace.** A bundle here
 is `lumastack/luma-catalog/<name>` rather than `luma/<name>`, because the

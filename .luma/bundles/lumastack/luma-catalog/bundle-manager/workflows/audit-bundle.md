@@ -17,7 +17,7 @@ checklist rather than a feeling.
 - `BUNDLE.md` exists at the root, with `type: bundle`.
 - **`version` is present.** Without it a bundle cannot be pinned, compared, or
   reported as outdated — a consumer can say nothing honest about it.
-- `entry_point`, if present, resolves to a document that exists.
+- `entrypoint`, if present, resolves to a document that exists.
 - `description` is there and says who the bundle is for.
 
 ## Every file is a document or an asset

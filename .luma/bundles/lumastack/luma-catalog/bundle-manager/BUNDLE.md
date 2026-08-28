@@ -1,9 +1,9 @@
 ---
 type: bundle
-version: 0.10.3
-published: 2026-08-26
+version: 0.10.4
+published: 2026-08-27
 consumers: [project, organization]
-entry_point: policy/organizing-a-bundle
+entrypoint: policy/organizing-a-bundle
 description: Creating, updating, auditing, repairing, migrating and retiring bundles — the layout they use and which catalog they belong in.
 ---
 
@@ -83,6 +83,10 @@ Both levels. An organization curates a catalog and a project writes bundles it
 may later promote, and the procedure is the same at either end.
 
 ## Version
+
+`0.10.4` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears. The policy, the three workflows and the template all taught the old spelling, so each is corrected — a bundle that teaches a field name is wrong in a way that spreads.
+
+Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 
 `0.10.3` — **bundle IDs in this catalog gained their namespace.** A bundle here
 is `lumastack/luma-catalog/<name>` rather than `luma/<name>`, because the

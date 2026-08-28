@@ -1,9 +1,9 @@
 ---
 type: bundle
-version: 0.7.1
-published: 2026-08-26
+version: 0.7.2
+published: 2026-08-27
 consumers: [project, organization]
-entry_point: policy/audit-layout
+entrypoint: policy/audit-layout
 description: Audits as records — findings written by one party, answered by another, closed by the first. The whole exchange lives in git.
 ---
 
@@ -76,6 +76,10 @@ Both levels. A project audits its code and its own practice; an organization
 audits conformance across projects. The exchange is the same shape either way.
 
 ## Version
+
+`0.7.2` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+
+Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 
 `0.7.1` — **bundle IDs in this catalog gained their namespace.** A bundle here
 is `lumastack/luma-catalog/<name>` rather than `luma/<name>`, because the

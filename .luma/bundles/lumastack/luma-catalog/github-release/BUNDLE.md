@@ -1,9 +1,9 @@
 ---
 type: bundle
-version: 0.6.1
-published: 2026-08-26
+version: 0.6.2
+published: 2026-08-27
 consumers: [project]
-entry_point: workflows/publish-release
+entrypoint: workflows/publish-release
 description: Cutting and publishing GitHub releases — choosing the version, the changelog, release titles and contents, and the gh workflow.
 ---
 
@@ -62,6 +62,14 @@ to undo than anything else in the workflow, and on a managed machine it may not
 be yours to do.
 
 ## Version
+
+`0.6.2` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+
+**Also: a release-title example named `preload`**, which the format released
+in `v0.0.12`. An example's content is arbitrary, so it cost nothing to stop
+teaching a dead word from published material.
+
+Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 
 `0.6.1` — **bundle IDs in this catalog gained their namespace.** A bundle here
 is `lumastack/luma-catalog/<name>` rather than `luma/<name>`, because the

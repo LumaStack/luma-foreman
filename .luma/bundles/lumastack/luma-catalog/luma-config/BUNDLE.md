@@ -1,9 +1,9 @@
 ---
 type: bundle
-version: 0.7.1
-published: 2026-08-26
+version: 0.7.2
+published: 2026-08-27
 consumers: [project, organization]
-entry_point: policy/where-configuration-lives
+entrypoint: policy/where-configuration-lives
 description: Where luma configuration lives, what is committed and what belongs to the machine, and the order in which layers win.
 ---
 
@@ -68,6 +68,10 @@ Both levels. An organization's headquarters is a repository and configures its
 own tooling the same way.
 
 ## Version
+
+`0.7.2` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+
+Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 
 `0.7.1` — **bundle IDs in this catalog gained their namespace.** A bundle here
 is `lumastack/luma-catalog/<name>` rather than `luma/<name>`, because the

@@ -1,9 +1,9 @@
 ---
 type: bundle
-version: 0.11.1
-published: 2026-08-26
+version: 0.13.1
+published: 2026-08-27
 consumers: [project, organization]
-entry_point: policy/luma-directory-layout
+entrypoint: policy/luma-directory-layout
 description: The .luma directory every luma tool writes into — the four tiers, what belongs in each, and the committed-only invariant that makes it trustworthy.
 ---
 
@@ -21,10 +21,11 @@ is bound by FHS.
 
 ## What is here
 
-- [[luma-directory-layout]] — the four tiers, what belongs in each, and the one
-  invariant. Read first.
-- [[initialize-luma]] — initialize `.luma/` in a repository that has none.
-- [[migrate-into-luma]] — move an existing project's scattered material into it.
+- [[luma-directory-layout]] — the four tiers, what belongs in each, the one
+  invariant, and **how to resolve a location rather than hardcode one**.
+
+**One policy and nothing else.** Standing `.luma/` up and migrating into it are
+tool operations and moved to `luma-tools` in `0.13.0` — see below.
 
 ## Adopting this does not make it apply
 
@@ -47,6 +48,26 @@ alike. Adding a second axis means two questions deciding one location.
 can live here, two agents on two machines read different rules for the same
 project — a correctness failure in the one system whose job is saying what the
 rules are. Machine-local state lives in `~/.config/luma/`.
+
+
+## What this bundle does not own
+
+**The tools are `luma-tools`' subject.** This bundle says *where* things go;
+which program puts them there, how to install it and how to run it belong over
+there. Nothing here needs that bundle adopted.
+
+**This is the bundle other bundles point at.** A bundle that writes records names
+its kind — `records/audits/`, `records/incidents/` — and leaves where `records/`
+lives to this policy. **Six bundles currently hardcode the full path**, several
+hedging with *"or wherever this project keeps records"*, which is a promise with
+no mechanism behind it.
+
+**Citing it is depth, never capability.** Bundles cannot read each other, so a
+citation is prose and adoption cannot fail because of it. That works while every
+bundle agrees on the default, which today they do — **and stops working the first
+time a project configures a different root**, when every hardcoded path is
+silently wrong at once. That is the trigger for real resolution, and it is
+recognised here rather than solved early.
 
 ## Consumers
 
@@ -72,6 +93,54 @@ result. Neither is right today: `core` would promise the model this bundle does
 not contain, and an agent opening it for that would find a directory layout.
 
 ## Version
+
+`0.13.1` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+
+Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
+
+`0.13.0` — **this bundle becomes a foundation, and sheds the tool work.**
+`initialize-luma` and `migrate-into-luma` move to `luma-tools`. Both were
+tool-driving — `initialize-luma` is now little more than *run `luma-foreman
+init`* — and a bundle whose job is *where things go* should not also carry *how
+to run the program that puts them there*. Each bundle is now one verb.
+
+**And it gains the rule that made it a foundation in the first place: how to
+resolve a location rather than hardcode one.** Explicit path, then
+`config/<tool>.toml`, then the tier default. Six bundles were copying
+`.luma/records/…` because there was nothing to cite, and several hedged about
+configured locations without saying how anyone would find one. **The hedge was
+the tell** — an author knowing the decision was somebody else's and having
+nowhere to point.
+
+**What an adopter has to do:** if you adopted `0.12.0` or earlier for
+`initialize-luma` or `migrate-into-luma`, adopt `luma-tools` — that is where they
+are now. The layout policy is unchanged apart from gaining a section.
+
+Minor rather than major: pre-`1.0`, and the only adopter of either workflow is
+`luma-foreman`, which already holds both bundles.
+
+`0.12.0` — **`initialize-luma` is thin, and stops reproducing what `init` does.**
+It walked through hand-creating `.luma/PROJECT.md` and the config file, in almost
+the words of `luma-foreman init`'s own help text, and **never mentioned the
+command**. An agent following it built by hand what one line does.
+
+It now checks for an existing `.luma/`, gets foreman if missing, and runs
+`init` — sixty-eight lines down to fifty-nine, and the ten that went were the
+ten doing the tool's job. The install lines are repeated rather than referenced
+**so that this works without `luma-tools` adopted** — a bundle may reference
+another for depth, never for capability.
+
+**It also carried a retired namespace.** `luma-foreman get luma/<bundle>` — the
+form replaced on 2026-08-26 when a catalog's namespace became derived rather than
+declared (`RET-0005`). It was the only instance across every published bundle,
+and it was reaching every adopter.
+
+**And the boundary with `luma-tools` is now stated** rather than left for a
+reader to infer, which `organizing-a-bundle` asks for: a bundle should say what
+it does not own, so an omission reads as a boundary instead of a gap.
+
+Minor: no rule changed and the layout is untouched. What changed is a procedure
+that had drifted into reproducing a tool.
 
 `0.11.1` — **bundle IDs in this catalog gained their namespace.** A bundle here
 is `lumastack/luma-catalog/<name>` rather than `luma/<name>`, because the

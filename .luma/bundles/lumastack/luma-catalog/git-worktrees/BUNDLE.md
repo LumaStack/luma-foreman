@@ -1,9 +1,9 @@
 ---
 type: bundle
-version: 0.6.1
-published: 2026-08-26
+version: 0.6.2
+published: 2026-08-27
 consumers: [project]
-entry_point: policy/worktree-isolation
+entrypoint: policy/worktree-isolation
 description: Isolated worktrees for concurrent agents in one repository — where they live, what has to be provisioned, and how to tear them down without leaving wreckage.
 ---
 
@@ -101,6 +101,10 @@ writes the derived port with `cat >`, destroying the file it just copied. The
 failure looks exactly like the copy never happened. **Append.**
 
 ## Version
+
+`0.6.2` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+
+Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 
 `0.6.1` — **bundle IDs in this catalog gained their namespace.** A bundle here
 is `lumastack/luma-catalog/<name>` rather than `luma/<name>`, because the

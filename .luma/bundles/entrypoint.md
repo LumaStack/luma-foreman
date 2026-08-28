@@ -4,7 +4,7 @@
 
 Everything here is vendored under `.luma/bundles/` and is part of this repository. **Open one when the work matches its line, and not before.**
 
-### `lumastack/luma-catalog/audit-records` 0.7.1
+### `lumastack/luma-catalog/audit-records` 0.7.2
 
 Audits as records — findings written by one party, answered by another, closed by the first. The whole exchange lives in git.
 
@@ -15,7 +15,7 @@ In `.luma/bundles/lumastack/luma-catalog/audit-records/`:
 - `policy/writing-findings` (policy) — What makes a finding actionable rather than an opinion — the five parts, how to rate severity, and the failures that make audits get ignored.
   - matches: topic:writing a finding in an audit
 
-### `lumastack/luma-catalog/backlog-ideas` 0.11.1
+### `lumastack/luma-catalog/backlog-ideas` 0.11.2
 
 Ideas as individual files rather than one growing IDEAS.md — what earns a file, how capture stays fast, and how the list gets tended rather than accumulating.
 
@@ -28,7 +28,7 @@ In `.luma/bundles/lumastack/luma-catalog/backlog-ideas/`:
 - `policy/where-an-idea-lives` (policy) — Choosing the scope — project, department or organization — and the default that applies when it is unclear.
   - matches: topic:capturing an idea worth keeping
 
-### `lumastack/luma-catalog/bundle-manager` 0.10.3
+### `lumastack/luma-catalog/bundle-manager` 0.10.4
 
 Creating, updating, auditing, repairing, migrating and retiring bundles — the layout they use and which catalog they belong in.
 
@@ -41,7 +41,7 @@ In `.luma/bundles/lumastack/luma-catalog/bundle-manager/`:
 - `policy/where-a-bundle-belongs` (policy) — Which catalog a bundle goes in — universal, an organization's private one, or the project it was written in — and how it moves between them.
   - matches: topic:deciding which catalog a bundle belongs in
 
-### `lumastack/luma-catalog/decision-records` 0.9.1
+### `lumastack/luma-catalog/decision-records` 0.9.2
 
 Decisions recorded with their reasoning, deferred alternatives, and re-open triggers. Spent decisions are archived rather than deleted.
 
@@ -50,7 +50,7 @@ In `.luma/bundles/lumastack/luma-catalog/decision-records/`:
 - `policy/decision-guidelines` (policy) — When to record a decision, what makes one worth reading years later, and what you may edit once it is settled.
   - matches: topic:recording a decision, or deciding whether one is worth recording
 
-### `lumastack/luma-catalog/git-secrets` 0.5.0
+### `lumastack/luma-catalog/git-secrets` 0.5.1
 
 Keeping credentials and private identity out of a repository — names, personal addresses, home paths, machine names, tokens and key files. Prevention first, then audit.
 
@@ -61,7 +61,7 @@ In `.luma/bundles/lumastack/luma-catalog/git-secrets/`:
 - `policy/never-commit-private-identity` (policy) — Real names, personal emails, home paths and machine names must not appear in commits or tracked content. What to use instead, and why deletion does not undo it.
   - matches: command:git commit, command:git config, event:before-commit
 
-### `lumastack/luma-catalog/git-workflow` 0.5.0
+### `lumastack/luma-catalog/git-workflow` 0.5.1
 
 How changes get integrated — merge commits rather than squash or rebase, and the repository settings that make it true.
 
@@ -70,7 +70,7 @@ In `.luma/bundles/lumastack/luma-catalog/git-workflow/`:
 - `policy/merge-commits` (policy) — Pull requests are integrated with true merge commits. Squash and rebase merging are disabled at the forge, because they break the only reliable answer to "is this branch merged?"
   - matches: command:gh pr merge, command:git merge, event:before-merge
 
-### `lumastack/luma-catalog/git-worktrees` 0.6.1
+### `lumastack/luma-catalog/git-worktrees` 0.6.2
 
 Isolated worktrees for concurrent agents in one repository — where they live, what has to be provisioned, and how to tear them down without leaving wreckage.
 
@@ -79,7 +79,7 @@ In `.luma/bundles/lumastack/luma-catalog/git-worktrees/`:
 - `policy/worktree-isolation` (policy) — Where worktrees live, how they are named, and what is shared versus isolated — so concurrent agents in one repository can never collide.
   - matches: command:git worktree, topic:working in or creating a worktree
 
-### `lumastack/luma-catalog/github-release` 0.6.1
+### `lumastack/luma-catalog/github-release` 0.6.2
 
 Cutting and publishing GitHub releases — choosing the version, the changelog, release titles and contents, and the gh workflow.
 
@@ -92,7 +92,7 @@ In `.luma/bundles/lumastack/luma-catalog/github-release/`:
 - `policy/release-versions` (policy) — Which part to bump when cutting a release, and the two cases that must be said out loud in the notes. Enough to act; the reasoning lives in the versioning bundle.
   - matches: event:before-release, topic:choosing which part of a version to bump
 
-### `lumastack/luma-catalog/luma-config` 0.7.1
+### `lumastack/luma-catalog/luma-config` 0.7.2
 
 Where luma configuration lives, what is committed and what belongs to the machine, and the order in which layers win.
 
@@ -101,7 +101,7 @@ In `.luma/bundles/lumastack/luma-catalog/luma-config/`:
 - `policy/where-configuration-lives` (policy) — Two homes and one cache — what is committed, what belongs to the machine, and the test that tells them apart.
   - matches: path:.luma/config/**, topic:deciding where a setting belongs
 
-### `lumastack/luma-catalog/luma-layout` 0.11.1
+### `lumastack/luma-catalog/luma-layout` 0.13.1
 
 The .luma directory every luma tool writes into — the four tiers, what belongs in each, and the committed-only invariant that makes it trustworthy.
 
@@ -110,7 +110,7 @@ In `.luma/bundles/lumastack/luma-catalog/luma-layout/`:
 - `policy/luma-directory-layout` (policy) — The four directories every luma tool honours, what belongs in each, and the one invariant that makes the whole thing trustworthy.
   - matches: path:.luma/**
 
-### `lumastack/luma-catalog/luma-maintainers` 0.10.3
+### `lumastack/luma-catalog/luma-maintainers` 0.11.1
 
 Working on the luma tools themselves — the repositories and the boundary each defends, publishing to the universal catalog, and changing a type without making every tool upgrade at once.
 
@@ -119,9 +119,9 @@ In `.luma/bundles/lumastack/luma-catalog/luma-maintainers/`:
 - `policy/the-estate` (policy) — The six repositories, the boundary each one defends, and the rule that decides where a new thing goes. Read before adding anything to any of them.
   - matches: topic:deciding which repository a new thing belongs in
 
-### `lumastack/luma-catalog/luma-tools` 0.9.2
+### `lumastack/luma-catalog/luma-tools` 0.10.1
 
-Using the luma tools — which one does what, getting them onto a machine, and the get-then-apply loop that puts knowledge in front of an agent.
+Using the luma tools — which one does what, getting them onto a machine, standing a project up, and the get-then-apply loop that puts knowledge in front of an agent.
 
 In `.luma/bundles/lumastack/luma-catalog/luma-tools/`:
 
@@ -134,7 +134,7 @@ The type definitions more than one luma tool has to agree on — namespaced, ven
 
 Everything here arrives with `CLAUDE.md`. In `.luma/bundles/lumastack/luma-catalog/luma-types/`.
 
-### `lumastack/luma-catalog/project-documentation` 0.15.2
+### `lumastack/luma-catalog/project-documentation` 0.15.3
 
 The prose a repository publishes — where it lives, what a README is for, and which documents are worth having at all.
 
@@ -153,7 +153,7 @@ In `.luma/bundles/lumastack/luma-catalog/project-documentation/`:
 - `policy/writing-style` (policy) — How prose is written here — the conventions a reader should be able to rely on across every document. Read before writing or editing documentation.
   - matches: topic:writing or editing prose
 
-### `lumastack/luma-catalog/session-manager` 0.6.3
+### `lumastack/luma-catalog/session-manager` 0.6.4
 
 Ending an agent session without losing what it learned — checkpoint while working, hand off to a successor, or close for good, each writing for a different reader.
 
@@ -164,13 +164,13 @@ In `.luma/bundles/lumastack/luma-catalog/session-manager/`:
 - `policy/where-knowledge-goes` (policy) — How to find the durable home for something worth keeping, without this bundle containing the list — the resolution order, the kinds, and what to do when there is no destination.
   - matches: topic:deciding where something worth keeping belongs
 
-### `lumastack/luma-catalog/token-manager` 0.10.1
+### `lumastack/luma-catalog/token-manager` 0.10.2
 
 Where an agent session's tokens actually go — a paced tutorial on the mechanism and the fixes that follow from it, and an audit that measures a real setup instead of guessing at it.
 
 Everything here arrives with `CLAUDE.md`. In `.luma/bundles/lumastack/luma-catalog/token-manager/`.
 
-### `lumastack/luma-catalog/versioning` 0.5.0
+### `lumastack/luma-catalog/versioning` 0.5.1
 
 What a version number promises, when to bump which part, and the rules that get decided wrongly — for anything versioned, not only releases.
 

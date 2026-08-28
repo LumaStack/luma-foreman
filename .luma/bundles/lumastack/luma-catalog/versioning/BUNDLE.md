@@ -1,9 +1,9 @@
 ---
 type: bundle
-version: 0.5.0
-published: 2026-08-25
+version: 0.5.1
+published: 2026-08-27
 consumers: [project, organization]
-entry_point: policy/semantic-versioning
+entrypoint: policy/semantic-versioning
 description: What a version number promises, when to bump which part, and the rules that get decided wrongly — for anything versioned, not only releases.
 ---
 
@@ -54,6 +54,10 @@ catalog contents; a project versions its packages, schemas and bundles. The
 rules are identical.
 
 ## Version
+
+`0.5.1` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+
+Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 
 `0.5.0` — **`applies_to` is now `matches`.** The old name obliged an author to
 write a false sentence: `applies_to: everything` claims a rule governs
