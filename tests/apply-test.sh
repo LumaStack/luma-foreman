@@ -157,6 +157,7 @@ EOF
 
 CLAUDE=$PROJECT/CLAUDE.md
 RING=$PROJECT/.luma/bundles/entrypoint.md
+BRING=$PROJECT/.luma/bundles/rings/acme/rules.md
 SKILLS=$PROJECT/.claude/skills
 
 apply 'projects a bundle written in place' 0
@@ -180,16 +181,27 @@ grepped '@.luma/bundles/entrypoint.md' "$CLAUDE"
 
 grepped 'run-the-thing' "$SKILLS/run-the-thing/SKILL.md"
 ungrep 'run-the-thing' "$RING"
+ungrep 'run-the-thing' "$BRING"
 
-# --- standing: the one path to always-loaded ------------------------------------
+# --- 1-project names bundles; 2-bundle names what is inside one ------------------
 #
-# `mandatory` with no trigger is the only way a body reaches the session up
-# front, and it has to actually arrive rather than be recommended. A list of
-# paths under a heading saying "read these first" is a suggestion; delivery is
-# the claim `mandatory` makes.
+# A ring's map names the members of the next ring in. So the project ring names
+# the bundle and points at its ring, and says nothing about its contents — which
+# is what keeps standing cost per-bundle rather than per-document.
 
-grepped 'house-rules' "$CLAUDE"
-grepped '@.luma/bundles/acme/rules/policy/house-rules.md' "$CLAUDE"
+grepped 'acme/rules' "$RING"
+grepped '.luma/bundles/rings/acme/rules.md' "$RING"
+[ -f "$BRING" ] && ok || bad 'expected the bundle ring to be written'
+
+# --- always is scoped to its ring, not to the session ---------------------------
+#
+# `matches: always` is still the one route to arriving unasked, but it arrives
+# when its own ring is fired rather than in every session. A rule holding
+# throughout one bundle used to be charged to work that never touched it.
+
+grepped 'house-rules' "$BRING"
+ungrep 'house-rules' "$CLAUDE"
+ungrep '@.luma/bundles/acme/rules/policy/house-rules.md' "$CLAUDE"
 
 # --- advertised: named up front, body withheld ----------------------------------
 #
@@ -197,12 +209,11 @@ grepped '@.luma/bundles/acme/rules/policy/house-rules.md' "$CLAUDE"
 # touched, and cost nothing before then. Its description is the routing entry;
 # importing its body would charge every session for a rule most never hit.
 
-grepped 'stylesheets' "$RING"
+grepped 'stylesheets' "$BRING"
+ungrep 'stylesheets' "$RING"
 ungrep '@.luma/bundles/acme/rules/policy/stylesheets.md' "$CLAUDE"
-ungrep '@.luma/bundles/acme/rules/policy/stylesheets.md' "$RING"
-grepped 'no-credentials' "$RING"
-ungrep '@.luma/bundles/acme/rules/policy/no-credentials.md' "$CLAUDE"
-ungrep '@.luma/bundles/acme/rules/policy/no-credentials.md' "$RING"
+grepped 'no-credentials' "$BRING"
+ungrep 'no-credentials' "$RING"
 
 # --- on-demand background: not announced at all ---------------------------------
 #
@@ -213,6 +224,7 @@ ungrep '@.luma/bundles/acme/rules/policy/no-credentials.md' "$RING"
 
 ungrep 'why-widgets' "$CLAUDE"
 ungrep 'why-widgets' "$RING"
+ungrep 'why-widgets' "$BRING"
 
 # --- subordination, which is the leak this exists to close ----------------------
 #
@@ -223,8 +235,10 @@ ungrep 'why-widgets' "$RING"
 
 ungrep '01-first' "$CLAUDE"
 ungrep '01-first' "$RING"
+ungrep '01-first' "$BRING"
 ungrep '02-second' "$CLAUDE"
 ungrep '02-second' "$RING"
+ungrep '02-second' "$BRING"
 absent "$SKILLS/01-first"
 absent "$SKILLS/02-second"
 
@@ -321,11 +335,12 @@ EOF
 apply 'reports a bundle still using preload' 0
 case $LAST in *preload*) ok ;; *) bad "expected apply to report the legacy preload field: $LAST" ;; esac
 
-# It *is* imported — but not because `preload` was read. It says
-# `matches: always`, which is the one route to being loaded up front. The old
-# field is reported and otherwise ignored, so a half-migrated bundle cannot
-# behave correctly and stall there forever.
-grepped '@.luma/bundles/acme/rules/policy/legacy.md' "$CLAUDE"
+# It *does* reach the standing surface of its own ring — but not because
+# `preload` was read. It says `matches: always`, which is the one route to
+# arriving unasked. The old field is reported and otherwise ignored, so a
+# half-migrated bundle cannot behave correctly and stall there forever.
+
+grepped 'legacy' "$BRING"
 
 # --- a trigger nothing can honour fails loudly ----------------------------------
 #
@@ -373,6 +388,20 @@ EOF
 
 apply 'reports a trigger that matches nothing' 0
 case $LAST in *nowhere-at-all*) ok ;; *) bad "expected the inert trigger reported: $LAST" ;; esac
+
+# --- a ring for a bundle that left is worse than a missing one ------------------
+#
+# It names documents no longer on disk, and nothing about reading it says so.
+# Swept by the same rule as an orphaned skill, and the namespace directories it
+# leaves behind go with it — an empty directory is a question a reader has to
+# answer.
+
+[ -f "$BRING" ] && ok || bad 'expected the bundle ring before removal'
+rm -rf "$B"
+apply 'sweeps the ring of a bundle that left' 0
+[ -f "$BRING" ] && bad 'ring outlived its bundle' || ok
+[ -d "$PROJECT/.luma/bundles/rings/acme" ] && bad 'empty namespace left behind' || ok
+ungrep 'acme/rules' "$RING"
 
 printf '\n%s passed, %s failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ] || exit 1
