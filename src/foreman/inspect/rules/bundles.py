@@ -216,10 +216,15 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
             "syntax and parses as a nested array — no parser complains, and the link "
             "never resolves.")
 
-    entry = manifest.get("entry_point")
+    # `entry_point` was renamed to `entrypoint`, one word, so that the same word
+    # names the same thing at every ring. Both are read during the migration and
+    # the old one still fires this check — a reader that only knew the new name
+    # would go quiet against every bundle not yet republished, and a check that
+    # stops firing is indistinguishable from one that passes.
+    entry = manifest.get("entrypoint") or manifest.get("entry_point")
     if entry and entry not in docs:
-        bad("high", f"entry_point points at nothing: {entry}", [f"BUNDLE.md: {entry}"],
-            "entry_point carries a full Document ID — the path within the Bundle, "
+        bad("high", f"entrypoint points at nothing: {entry}", [f"BUNDLE.md: {entry}"],
+            "entrypoint carries a full Document ID — the path within the Bundle, "
             "without the .md suffix.")
 
     slugs = {k.rsplit("/", 1)[-1] for k in docs}
