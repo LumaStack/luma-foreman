@@ -34,6 +34,8 @@ Everything here is vendored under `.luma/bundles/` and is part of this repositor
   - ring: `.luma/bundles/rings/lumastack/luma-catalog/luma-types.md`
 - **`lumastack/luma-catalog/project-documentation`** 0.15.3 — The prose a repository publishes — where it lives, what a README is for, and which documents are worth having at all.
   - ring: `.luma/bundles/rings/lumastack/luma-catalog/project-documentation.md`
+- **`lumastack/luma-catalog/review-sweeps`** 0.6.1 — The review sweep — reading a whole codebase with an agent beside you, ordered and resumable, with the reader's own read as the thing being protected.
+  - ring: `.luma/bundles/rings/lumastack/luma-catalog/review-sweeps.md`
 - **`lumastack/luma-catalog/session-manager`** 0.6.4 — Ending an agent session without losing what it learned — checkpoint while working, hand off to a successor, or close for good, each writing for a different reader.
   - ring: `.luma/bundles/rings/lumastack/luma-catalog/session-manager.md`
 - **`lumastack/luma-catalog/token-manager`** 0.10.2 — Where an agent session's tokens actually go — a paced tutorial on the mechanism and the fixes that follow from it, and an audit that measures a real setup instead of guessing at it.
