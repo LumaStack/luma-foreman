@@ -112,23 +112,30 @@ all**, which is independent support for leaving them to `.claude/skills/`.
 **The trigger split, measured.** A rule may declare several, so these are trigger
 mentions across the 29:
 
-| trigger | mentions | evaluated by |
+| trigger | mentions | delivered by |
 | --- | --- | --- |
-| `topic:` | 20 | **the model only** |
-| `command:` | 10 | a hook, deterministically |
-| `event:` | 7 | a hook, deterministically |
-| `path:` | 7 | a hook, deterministically |
+| `topic:` | 20 | a `UserPromptSubmit` hook, which sees the prompt |
+| `command:` | 10 | a `PreToolUse` hook, before the tool runs |
+| `event:` | 7 | a `PreToolUse` hook, before the tool runs |
+| `path:` | 7 | a `PreToolUse` hook, before the tool runs |
 
-**By rule, which is what the design turns on: 9 are deliverable by hook alone; 20
-declare at least one `topic:`.** The nine are `never-commit-credentials`,
-`never-commit-private-identity`, `merge-commits`, `changelog`, `release-notes`,
-`luma-directory-layout`, `readme`, `the-project-descriptor` and
-`session-continuity`.
+**All twenty-nine are deliverable, and this entry said otherwise.** It claimed
+`topic:` was *"the model only"* and that roughly a third of the surface could be
+enforced and the rest could not — repeated across four pull requests before the
+decision-control table in `hooks.md` settled it. `UserPromptSubmit` accepts
+`additionalContext` **and** sees the prompt text, so a topic is matched and
+delivered by the same route as any other trigger.
 
-So roughly a third of the surface can be enforced and the rest cannot. `topic:`
-is a model judgement by construction — the design must say which rules are
-guaranteed and which are advisory, or a table that mixes them reads as though all
-29 are policed.
+*Corrected rather than rewritten: the wrong version is what four merged
+descriptions argued from, and a reader meeting them should find the claim and
+its retraction in the same place.*
+
+**The reason it was wrong is worth more than the fact.** The claim came from
+reading a rendered documentation page that truncates before the table, twice,
+and getting contradictory summaries — one of which invented the row it could not
+have read. The raw `.md` behind the same URL serves the table whole. **Ask for
+the source, not the rendering**, before concluding a platform fact is
+unavailable.
 
 **What the table is missing:** no `description` field, and no bundle-level rows
 at all. The project level needs bundle descriptions; a bundle's own level needs
