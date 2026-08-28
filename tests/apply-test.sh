@@ -156,9 +156,30 @@ Fields go here.
 EOF
 
 CLAUDE=$PROJECT/CLAUDE.md
+RING=$PROJECT/.luma/bundles/entrypoint.md
 SKILLS=$PROJECT/.claude/skills
 
 apply 'projects a bundle written in place' 0
+
+# --- the split: a ring, and an adapter that only points at it -------------------
+#
+# A ring is the same thing whatever reads it; a harness's file is not. So what
+# this project knows is written once, and CLAUDE.md carries a pointer. The
+# adapter staying small is the property under test: the moment it starts
+# restating the ring there are two copies of one fact.
+
+grepped 'entrypoint.md' "$CLAUDE"
+grepped '@.luma/bundles/entrypoint.md' "$CLAUDE"
+[ -f "$RING" ] && ok || bad 'expected the entrypoint to be written'
+
+# --- workflows are carried by skills, and are not named twice -------------------
+#
+# Claude Code loads every skill's name and description at session start. Listing
+# them in the ring as well is one fact rendered twice for one reader, which is
+# the adapter obligation this exists to enforce. They stay reachable by name.
+
+grepped 'run-the-thing' "$SKILLS/run-the-thing/SKILL.md"
+ungrep 'run-the-thing' "$RING"
 
 # --- standing: the one path to always-loaded ------------------------------------
 #
@@ -176,10 +197,12 @@ grepped '@.luma/bundles/acme/rules/policy/house-rules.md' "$CLAUDE"
 # touched, and cost nothing before then. Its description is the routing entry;
 # importing its body would charge every session for a rule most never hit.
 
-grepped 'stylesheets' "$CLAUDE"
+grepped 'stylesheets' "$RING"
 ungrep '@.luma/bundles/acme/rules/policy/stylesheets.md' "$CLAUDE"
-grepped 'no-credentials' "$CLAUDE"
+ungrep '@.luma/bundles/acme/rules/policy/stylesheets.md' "$RING"
+grepped 'no-credentials' "$RING"
 ungrep '@.luma/bundles/acme/rules/policy/no-credentials.md' "$CLAUDE"
+ungrep '@.luma/bundles/acme/rules/policy/no-credentials.md' "$RING"
 
 # --- on-demand background: not announced at all ---------------------------------
 #
@@ -189,6 +212,7 @@ ungrep '@.luma/bundles/acme/rules/policy/no-credentials.md' "$CLAUDE"
 # still listed — see below — because a rule nobody can see governs nothing.
 
 ungrep 'why-widgets' "$CLAUDE"
+ungrep 'why-widgets' "$RING"
 
 # --- subordination, which is the leak this exists to close ----------------------
 #
@@ -198,7 +222,9 @@ ungrep 'why-widgets' "$CLAUDE"
 # session before anybody noticed.
 
 ungrep '01-first' "$CLAUDE"
+ungrep '01-first' "$RING"
 ungrep '02-second' "$CLAUDE"
+ungrep '02-second' "$RING"
 absent "$SKILLS/01-first"
 absent "$SKILLS/02-second"
 

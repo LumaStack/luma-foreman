@@ -147,17 +147,24 @@ def applied(project: Path, bundle_id: str) -> bool:
     `luma-foreman apply --check` answers, and a second implementation of that
     comparison would be a second thing to keep true. This answers the cruder
     and more damaging question: has anybody ever seen this bundle.
+
+    Two files, and both have to be right. The adapter in ``CLAUDE.md`` is what
+    a harness loads; the ring is what names the bundle. Either one missing
+    means nothing reaches an agent, and checking only the ring would report
+    green for a project whose harness was never wired to read it.
     """
     from . import apply  # imported here: apply reads this module at import time
 
     claude = project / "CLAUDE.md"
-    if not claude.is_file():
+    ring = project / apply.ENTRYPOINT
+    if not claude.is_file() or not ring.is_file():
         return False
     try:
-        text = claude.read_text(encoding="utf-8")
+        adapter = claude.read_text(encoding="utf-8")
+        named = ring.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError):
         return False
-    return apply.BEGIN in text and bundle_id in text
+    return apply.BEGIN in adapter and bundle_id in named
 
 
 def state(project: Path, entry: Adopted) -> str:
