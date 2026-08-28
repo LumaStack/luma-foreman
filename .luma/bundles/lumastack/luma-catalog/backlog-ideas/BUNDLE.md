@@ -1,9 +1,9 @@
 ---
 type: bundle
-version: 0.11.1
-published: 2026-08-26
+version: 0.11.2
+published: 2026-08-27
 consumers: [project, organization]
-entry_point: policy/capturing-ideas
+entrypoint: policy/capturing-ideas
 description: Ideas as individual files rather than one growing IDEAS.md — what earns a file, how capture stays fast, and how the list gets tended rather than accumulating.
 ---
 
@@ -114,6 +114,10 @@ Both levels. An organization has ideas about how it works; a project has ideas
 about what it builds. The same shape holds, and `scope` records which.
 
 ## Version
+
+`0.11.2` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+
+Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 
 `0.11.1` — **bundle IDs in this catalog gained their namespace.** A bundle here
 is `lumastack/luma-catalog/<name>` rather than `luma/<name>`, because the

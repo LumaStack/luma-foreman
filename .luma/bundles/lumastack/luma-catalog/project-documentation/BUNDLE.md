@@ -1,9 +1,9 @@
 ---
 type: bundle
-version: 0.15.2
-published: 2026-08-26
+version: 0.15.3
+published: 2026-08-27
 consumers: [project]
-entry_point: policy/readme
+entrypoint: policy/readme
 description: The prose a repository publishes — where it lives, what a README is for, and which documents are worth having at all.
 ---
 
@@ -97,6 +97,10 @@ README, but what an organization publishes about itself is a different question
 from what a project publishes about its code.
 
 ## Version
+
+`0.15.3` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+
+Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 
 `0.15.2` — **bundle IDs in this catalog gained their namespace.** A bundle here
 is `lumastack/luma-catalog/<name>` rather than `luma/<name>`, because the

@@ -1,9 +1,9 @@
 ---
 type: bundle
-version: 0.6.3
-published: 2026-08-26
+version: 0.6.4
+published: 2026-08-27
 consumers: [project, organization]
-entry_point: policy/session-continuity
+entrypoint: policy/session-continuity
 description: Ending an agent session without losing what it learned — checkpoint while working, hand off to a successor, or close for good, each writing for a different reader.
 ---
 
@@ -171,6 +171,10 @@ of thing an organization has an opinion about, and `.luma/config/` will
 eventually let it hold one.
 
 ## Version
+
+`0.6.4` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+
+Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 
 `0.6.3` — **bundle IDs in this catalog gained their namespace.** A bundle here
 is `lumastack/luma-catalog/<name>` rather than `luma/<name>`, because the

@@ -1,10 +1,10 @@
 ---
 type: bundle
-version: 0.9.2
-published: 2026-08-26
+version: 0.10.1
+published: 2026-08-27
 consumers: [project, organization]
-entry_point: workflows/adopt-knowledge
-description: Using the luma tools — which one does what, getting them onto a machine, and the get-then-apply loop that puts knowledge in front of an agent.
+entrypoint: workflows/adopt-knowledge
+description: Using the luma tools — which one does what, getting them onto a machine, standing a project up, and the get-then-apply loop that puts knowledge in front of an agent.
 ---
 
 # Luma tools
@@ -28,6 +28,8 @@ repository that builds a tool adopts both, everywhere else adopts only this.
 
 - [[adopt-knowledge]] — the loop that matters: get, apply, verify.
 - [[install-the-tools]] — getting an engine onto a machine and wired up.
+- [[initialize-luma]] — standing `.luma/` up in a repository that has none.
+- [[migrate-into-luma]] — moving an existing project's scattered material in.
 
 ## Loading
 
@@ -55,6 +57,29 @@ which is the same gap adoption exists to close, left open in the one place it is
 most embarrassing.
 
 ## Version
+
+`0.10.1` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+
+Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
+
+`0.10.0` — **`initialize-luma` and `migrate-into-luma` arrive from
+`luma-layout`.** Both are tool operations: one is now little more than *run
+`luma-foreman init`*, and the other is a procedure somebody performs with the
+tools in hand.
+
+**The cut is by verb.** `luma-layout` says *where things go*; this bundle says
+*how to run the tools that put them there*. A bundle whose job needs two verbs
+is usually two bundles, and standing a directory up was the second verb over
+there.
+
+**Where the layout is concerned, this bundle points rather than restates.** The
+directory's tiers, the committed-only invariant, and how to resolve a configured
+location are `luma-directory-layout`'s in the `luma-layout` bundle. Nothing here
+requires it to be adopted — the paths these workflows use are the defaults, and
+the reference is depth.
+
+**What an adopter has to do:** nothing, unless you adopted `luma-layout` only for
+these two workflows, in which case adopt this instead.
 
 `0.9.2` — **bundle IDs in this catalog gained their namespace.** A bundle here
 is `lumastack/luma-catalog/<name>` rather than `luma/<name>`, because the

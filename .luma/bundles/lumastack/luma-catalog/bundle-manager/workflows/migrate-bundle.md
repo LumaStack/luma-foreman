@@ -38,7 +38,7 @@ is the path within the bundle.
 1. Move the files.
 2. Fix every inbound `[[wikilink]]` and every relative asset link — `../` means
    something different from a new depth.
-3. Update `entry_point` if the entry document moved; it carries the full ID.
+3. Update `entrypoint` if the entry document moved; it carries the full ID.
 4. Run [[audit-bundle]].
 5. **Version it as breaking**, or as a patch below `1.0.0` with that said out
    loud. Anyone who linked *into* the bundle by ID now has a broken link.

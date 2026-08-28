@@ -1,9 +1,9 @@
 ---
 type: bundle
-version: 0.10.1
-published: 2026-08-26
+version: 0.10.2
+published: 2026-08-27
 consumers: [project, organization]
-entry_point: workflows/token-tutorial
+entrypoint: workflows/token-tutorial
 description: Where an agent session's tokens actually go — a paced tutorial on the mechanism and the fixes that follow from it, and an audit that measures a real setup instead of guessing at it.
 ---
 
@@ -103,6 +103,10 @@ kind of thing an organization has an opinion about once rather than every person
 rediscovering at their own expense.
 
 ## Version
+
+`0.10.2` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+
+Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 
 `0.10.1` — **bundle IDs in this catalog gained their namespace.** A bundle here
 is `lumastack/luma-catalog/<name>` rather than `luma/<name>`, because the

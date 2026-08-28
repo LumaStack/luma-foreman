@@ -29,7 +29,7 @@ vX.Y.Z — what changed, in a few words
   sentence.
 
 ```
-v0.0.8 — preload and entry_point
+v0.0.8 — entrypoints and release titles
 v2.1.0 — retries are configurable per endpoint
 v3.0.0 — drops Node 18
 ```

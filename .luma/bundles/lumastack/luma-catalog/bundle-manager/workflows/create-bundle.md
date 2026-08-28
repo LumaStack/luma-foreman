@@ -32,7 +32,7 @@ directories that will have contents; an empty `policy/` is noise.
 type: bundle
 version: 0.1.0
 consumers: [project]
-entry_point: workflows/<the-way-in>
+entrypoint: workflows/<the-way-in>
 description: <one line — what this holds and who it is for>
 ```
 
@@ -41,7 +41,7 @@ description: <one line — what this holds and who it is for>
 - **`consumers`** — `project`, `organization`, or both. Both is right when the
   same content is wanted at either level by different adopters; that is not the
   publisher's call to force.
-- **`entry_point`** — the full Document ID of where a reader starts.
+- **`entrypoint`** — the full Document ID of where a reader starts.
 - **`description`** is what a consumer reads when deciding whether to adopt.
 
 ## 5. Write the entry point first

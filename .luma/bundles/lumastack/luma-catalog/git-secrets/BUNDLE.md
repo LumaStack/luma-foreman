@@ -1,9 +1,9 @@
 ---
 type: bundle
-version: 0.5.0
-published: 2026-08-25
+version: 0.5.1
+published: 2026-08-27
 consumers: [project, organization]
-entry_point: policy/never-commit-private-identity
+entrypoint: policy/never-commit-private-identity
 description: Keeping credentials and private identity out of a repository — names, personal addresses, home paths, machine names, tokens and key files. Prevention first, then audit.
 ---
 
@@ -72,6 +72,10 @@ are the same either way, which is why `consumers` names both levels rather than
 forcing the choice on whoever publishes.
 
 ## Version
+
+`0.5.1` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+
+Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 
 `0.5.0` — **`applies_to` is now `matches`.** The old name obliged an author to
 write a false sentence: `applies_to: everything` claims a rule governs

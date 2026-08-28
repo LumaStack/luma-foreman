@@ -11,7 +11,7 @@ type: bundle
 version: 0.1.0
 published: YYYY-MM-DD
 consumers: [project]
-entry_point: workflows/CHANGE-ME
+entrypoint: workflows/CHANGE-ME
 description: One line — what this holds and who it is for.
 ---
 ```
@@ -20,7 +20,7 @@ description: One line — what this holds and who it is for.
   claims the shape has stopped moving.
 - **`consumers`** — `project`, `organization`, or both. Both when the same
   content is wanted at either level by different adopters.
-- **`entry_point`** — the full Document ID, e.g. `workflows/create-bundle`.
+- **`entrypoint`** — the full Document ID, e.g. `workflows/create-bundle`.
 - **`description`** — what a consumer reads when deciding whether to adopt.
 
 ## Body

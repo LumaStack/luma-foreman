@@ -127,6 +127,46 @@ a default becomes a frozen override pinned to whatever it said the day the file
 was written. Where a reader needs to know what is settable, point at
 documentation or a command that reads the live values; a file cannot know them.
 
+## Finding a location, rather than hardcoding one
+
+**This is the rule other bundles need from this one**, and until it existed they
+were all copying a path instead.
+
+**Resolve in this order and take the first that answers:**
+
+1. **An explicit path**, if the work names one
+2. **`.luma/config/<tool>.toml`**, where a tool that owns a location declares it
+3. **The tier default** — `records/<kind>/`, `bundles/`, `backlog/`, `config/`
+
+**The default is the answer almost always, and that is the point.** A rule that
+resolves to the same place every time is not wasted ceremony; it is the reason a
+project *can* move a location later without every bundle being wrong at once.
+
+### Do not restate this rule; cite it
+
+**A bundle that writes records says its kind — `records/audits/`,
+`records/decisions/`, `records/incidents/` — and leaves the root to this
+policy.** Six bundles currently hardcode `.luma/records/…`, and several hedge
+with *"or wherever this project keeps records"*, which is a promise with no
+mechanism behind it. **The hedge is the tell**: an author knew the location was
+somebody else's to decide and had nowhere to point.
+
+**Naming the kind is not duplication.** `records/audits/` is `audit-records`'
+own business — it owns the audits. Where `records/` itself lives is not, and a
+bundle asserting the full path has taken a decision that was never its own.
+
+### The limit, and it is not solved here
+
+**Nothing enforces any of this.** Bundles cannot read each other, so a bundle
+citing this policy is citing prose — there is no resolver, and adopting this
+bundle is not required to act on the sentence.
+
+**That is tolerable exactly while every bundle agrees on the default**, which
+today they do. **It stops being tolerable the first time a project configures a
+different root**, because at that moment every bundle that hardcoded the path is
+silently wrong and nothing reports it. *That is the trigger for a real
+resolution mechanism, and recognising it is worth more than solving it early.*
+
 ## Everything in `.luma/` is committed. No exceptions.
 
 If uncommitted files can live here, a reader cannot distinguish an authoritative
