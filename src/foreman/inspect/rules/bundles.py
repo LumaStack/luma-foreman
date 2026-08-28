@@ -147,6 +147,8 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
     unknown_kind: list[str] = []
     unknown_event: list[str] = []
     always_on: list[str] = []
+    triggered: set[str] = set()
+    kinds: dict[str, str] = {}
     for doc_id, keys in docs.items():
         if doc_id == "BUNDLE":
             continue
@@ -165,6 +167,9 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
                 unknown_event.append(f"{doc_id}: {value}")
         if triggers == ("always",):
             always_on.append(doc_id)
+        if triggers:
+            triggered.add(doc_id)
+        kinds[doc_id] = str(keys.get("type", "")).strip()
 
     if unknown_kind:
         bad("high", f"{len(unknown_kind)} trigger(s) name something that is not a trigger",
@@ -185,13 +190,13 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
         notices.append(
             Notice(
                 rule=RULE,
-                summary=f"{label}: {len(always_on)} document(s) load in every session",
+                summary=f"{label}: {len(always_on)} document(s) load whenever this bundle opens",
                 evidence=tuple(sorted(always_on)),
                 remedy=(
-                    "matches: always asks for a permanent seat in every "
-                    "adopter's context, forever. Confirm it was meant: if the "
-                    "rule governs a particular activity, say so and it arrives "
-                    "when that activity does."
+                    "matches: always asks to arrive unasked every time this "
+                    "bundle is opened, in every adopter, forever. Confirm it "
+                    "was meant: if the rule governs a particular activity, say "
+                    "so and it arrives when that activity does."
                 ),
             )
         )
@@ -232,6 +237,7 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
     escaping: list[str] = []
     missing: list[str] = []
     linked: set[str] = set()
+    wiki_linked: set[str] = set()
 
     for rel in sorted(docs):
         path = root / f"{rel}.md"
@@ -248,8 +254,11 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
                 if value.startswith('"') or value.startswith("'"):
                     targets |= {m.group(1).strip() for m in WIKILINK.finditer(value)}
         for target in targets:
-            if target.rsplit("/", 1)[-1] not in slugs:
+            tail = target.rsplit("/", 1)[-1]
+            if tail not in slugs:
                 broken.append(f"{rel}.md -> [[{target}]]")
+            else:
+                wiki_linked.add(tail)
         for target in {m.group(1).strip() for m in MDLINK.finditer(_prose(body))}:
             if target.startswith(("http://", "https://", "#", "mailto:")):
                 continue
@@ -262,6 +271,59 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
             linked.add(inside)
             if not resolved.exists():
                 missing.append(f"{rel}.md -> {target}")
+
+    # **Nothing may exist that no transport can reach.** Three routes get a
+    # Document to a reader: it declares a trigger, it is named on its bundle's
+    # ring, or something reachable links to it. A Document with none is present,
+    # conformant, and invisible — and invisible is indistinguishable from
+    # absent, which is the one thing this whole design exists to end.
+    #
+    # **Depth is not the problem and is never reported.** Being reached through
+    # three hops is the intended outcome; being reached through none is not.
+    #
+    # A notice rather than a finding, because a tool cannot tell an orphan from
+    # something reached by a route it cannot model — a person typing a path, an
+    # agent browsing. The reader decides whether the indirect path is real.
+    def _owned(doc_id: str) -> bool:
+        """Is this reached through the Document owning its directory?
+
+        A tutorial's steps live under the workflow that runs them and are
+        reachable only through it, which is the intended shape rather than a
+        defect — twenty-one steps with no trigger apiece is the design working.
+        """
+        parts = doc_id.split("/")
+        return any("/".join(parts[:i]) in docs for i in range(1, len(parts)))
+
+    unreachable = sorted(
+        doc_id for doc_id in docs
+        if doc_id != "BUNDLE"
+        and doc_id != entry
+        and doc_id not in triggered
+        # A workflow reaches its harness as a skill, and a policy is named on
+        # its bundle's ring whatever its class — both are already routed.
+        and kinds.get(doc_id) not in ("workflow", "policy")
+        # A Type Definition is resolved by the format when writing a Document of
+        # its type. It is a contract consulted on demand, never reading material,
+        # and nothing should link to it to make it look reachable.
+        and not doc_id.startswith("_types/")
+        and not _owned(doc_id)
+        and doc_id.rsplit("/", 1)[-1] not in wiki_linked
+    )
+    if unreachable:
+        notices.append(
+            Notice(
+                rule=RULE,
+                summary=f"{label}: {len(unreachable)} document(s) nothing can reach",
+                evidence=tuple(unreachable),
+                remedy=(
+                    "No trigger, no line on this bundle's ring, and nothing "
+                    "links to it — so it is present and cannot be arrived at. "
+                    "Give it a matches, link it from something that is "
+                    "reachable, or delete it. Being buried is fine; being "
+                    "unreachable is not."
+                ),
+            )
+        )
 
     if broken:
         bad("medium", f"{len(broken)} wikilink(s) resolve to nothing", broken,
