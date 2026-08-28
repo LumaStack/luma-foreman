@@ -389,6 +389,37 @@ EOF
 apply 'reports a trigger that matches nothing' 0
 case $LAST in *nowhere-at-all*) ok ;; *) bad "expected the inert trigger reported: $LAST" ;; esac
 
+# --- asking by name is the floor, and it does not scale with adoption -----------
+#
+# Every other route depends on something matching — a trigger firing, a
+# description catching a model's attention — and all of them degrade quietly
+# when they do not. Asking cannot. Two skills whatever the bundle count.
+
+exists "$SKILLS/list-bundles/SKILL.md"
+exists "$SKILLS/load-bundle/SKILL.md"
+grepped 'acme/rules' "$SKILLS/list-bundles/SKILL.md"
+grepped '.luma/bundles/rings' "$SKILLS/load-bundle/SKILL.md"
+
+# A workflow named `load-bundle` must not be able to replace the floor. It is
+# renamed on collision, exactly as it would be against another workflow.
+
+mkdir -p "$B/workflows"
+cat > "$B/workflows/load-bundle.md" <<'EOF'
+---
+type: workflow
+title: Load a bundle
+description: Somebody else's idea of loading a bundle.
+---
+Not the navigation skill.
+EOF
+
+apply 'a workflow cannot take a reserved name' 0
+grepped 'luma-foreman apply' "$SKILLS/load-bundle/SKILL.md"
+exists "$SKILLS/acme-rules-load-bundle/SKILL.md"
+rm -f "$B/workflows/load-bundle.md"
+apply 'and it goes when the workflow does' 0
+absent "$SKILLS/acme-rules-load-bundle"
+
 # --- a ring for a bundle that left is worse than a missing one ------------------
 #
 # It names documents no longer on disk, and nothing about reading it says so.

@@ -80,6 +80,11 @@ SKIP = ("_types",)
 
 SLUG = re.compile(r"[^a-z0-9-]+")
 
+# Skill names foreman writes itself. Reserved, because they are the only route
+# to a ring that does not depend on anything noticing — and a workflow quietly
+# taking one would remove the floor the rest of the design stands on.
+NAVIGATION = ("list-bundles", "load-bundle")
+
 # What this build can actually do at the moment a rule is broken. The vocabulary
 # is larger — `audit`, `warn`, `require_reason`, `require_approval` all mean
 # something — and none of the rest is implemented. A declaration this cannot
@@ -311,6 +316,72 @@ def _generated(skills: Path) -> dict[str, Path]:
     return out
 
 
+def _navigation(bundles: list[Bundle]) -> dict[str, str]:
+    """The two skills that fire a ring on purpose rather than by noticing.
+
+    **This is the floor.** Every other route depends on something matching — a
+    trigger firing, a description catching a model's attention — and all of
+    them degrade quietly when they do not. Asking by name cannot: it works when
+    nothing notices, which is why it is built before any automatic firing and
+    why its names are reserved.
+
+    **Two skills, not one per bundle.** The cost is fixed however many bundles
+    a project holds, so nothing here scales with adoption.
+    """
+    ring = ENTRYPOINT.as_posix()
+    listing = "\n".join(
+        f"- `{b.bundle_id}` — {b.description or 'no description'}\n"
+        f"  `{ring_path(b.bundle_id).as_posix()}`"
+        for b in bundles) or "Nothing is adopted yet."
+
+    return {
+        "list-bundles": f"""---
+name: list-bundles
+description: List the knowledge bundles this project has adopted, and what each one is for. Use when deciding which one to open, or when asked what this project knows.
+---
+
+<!-- {MARK} navigation. Regenerate with `luma-foreman apply`; edits are lost. -->
+
+# What this project knows
+
+Read `{ring}` for the current list — it is generated and this copy is not.
+
+{listing}
+
+**Open one with `/load-bundle`**, or read its ring directly. A bundle's ring
+says what it holds and what brings each part into play; nothing below it is
+loaded until you go there.
+
+**This lists what is adopted, not what exists.** Bundles this project has not
+taken are in whatever catalog it draws on, and nothing here can see them —
+`luma-foreman catalog show <catalog>` is the command that can.
+""",
+        "load-bundle": f"""---
+name: load-bundle
+description: Open one adopted bundle and see what it holds — its rules, what fires each one, and anything that applies throughout it. Use when a bundle's line looks relevant, or when asked to load a bundle by name.
+---
+
+<!-- {MARK} navigation. Regenerate with `luma-foreman apply`; edits are lost. -->
+
+# Open a bundle
+
+Read `.luma/bundles/rings/<bundle-id>.md`, where the bundle ID is the full name
+including its namespace — `lumastack/luma-catalog/git-secrets`, not
+`git-secrets`.
+
+`{ring}` has every adopted bundle and the path to its ring. Use
+`/list-bundles` if you do not know the name.
+
+**What you get.** Anything the bundle says applies throughout it, to read now;
+then every rule it holds, with what fires each. **Bodies are not included** —
+open the ones that match the work, and not the rest.
+
+**If the path does not exist**, the bundle is not adopted here. That is an
+answer, not an error.
+""",
+    }
+
+
 def _names(bundles: list[Bundle]) -> tuple[dict[str, Doc], list[str]]:
     """Assign a skill name to every workflow, and report what collided.
 
@@ -322,7 +393,14 @@ def _names(bundles: list[Bundle]) -> tuple[dict[str, Doc], list[str]]:
     claims: dict[str, list[Doc]] = {}
     for bundle in bundles:
         for doc in bundle.of_type("workflow"):
-            claims.setdefault(doc.slug, []).append(doc)
+            # **The two navigation skills are reserved.** They are the floor —
+            # the one route that works when nothing notices — so a workflow
+            # that happened to be called `load-bundle` must not be able to
+            # replace one silently. It is renamed instead, exactly as it would
+            # be against another workflow.
+            slug = f"{SLUG.sub('-', doc.bundle.replace('/', '-').lower())}-{doc.slug}" \
+                if doc.slug in NAVIGATION else doc.slug
+            claims.setdefault(slug, []).append(doc)
 
     chosen: dict[str, Doc] = {}
     collided: list[str] = []
@@ -707,6 +785,8 @@ def run(project_root: Path, check: bool, explain: bool = False) -> int:
     for name, doc in chosen.items():
         bundle = next(b for b in bundles if b.bundle_id == doc.bundle)
         planned[skills / name / "SKILL.md"] = _skill(doc, bundle, project_root)
+    for name, body in _navigation(bundles).items():
+        planned[skills / name / "SKILL.md"] = body
 
     routing = adoption.bundles_dir(project_root) / "routing.toml"
     planned[routing] = _routing(bundles, project_root)
@@ -720,7 +800,8 @@ def run(project_root: Path, check: bool, explain: bool = False) -> int:
     current = claude.read_text(encoding="utf-8") if claude.is_file() else ""
     planned[claude] = _splice(current, _adapter(bundles, project_root))
 
-    stale = [p for p in _generated(skills).values() if p.name not in chosen]
+    kept = set(chosen) | set(NAVIGATION)
+    stale = [p for p in _generated(skills).values() if p.name not in kept]
 
     # A ring for a bundle that left is worse than a missing one: it names
     # documents that are no longer on disk, and nothing about reading it says
@@ -766,7 +847,8 @@ def run(project_root: Path, check: bool, explain: bool = False) -> int:
     counts = {k: sum(len(b.of_class(k)) for b in bundles)
               for k in ("always-on", "advertised", "on-demand")}
     print(f"{len(bundles)} bundle(s) written out")
-    print(f"  skills     {workflows} workflow(s) -> .claude/skills/")
+    print(f"  skills     {workflows} workflow(s) + {len(NAVIGATION)} navigation "
+          f"-> .claude/skills/")
     print(f"  rings      1 project + {len(bundles)} bundle(s) -> .luma/bundles/")
     print(f"  always-on  {counts['always-on']} read when their own bundle's ring opens")
     print(f"  advertised {counts['advertised']} named, opened when they match")
