@@ -516,6 +516,15 @@ case $LAST in *"$T/lfk"*) ok ;; *) bad 'refusal did not name what was asked for'
 grep -q "$T/lup" "$LIN/.luma/bundles/adopted.toml" \
   && ok || bad 'a refused switch changed the receipt'
 
+# A trailing slash is not a different catalog. The check compares origins rather
+# than strings, because the workaround for a false refusal is --force, and
+# --force performs the real switch too — teaching somebody to reach for it while
+# the check is pedantic is how they reach for it on the day it is right.
+LAST=$(cd "$LIN" && "$CLI" get widgets --from "$T/lup/" 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "a trailing slash read as a new lineage (exit $got): $LAST"
+grep -q "$T/lup" "$LIN/.luma/bundles/adopted.toml" \
+  && ok || bad 'the receipt moved for a cosmetic difference'
+
 # --force takes it, and reports a lineage change rather than a version event —
 # the version may not have moved at all.
 LAST=$(cd "$LIN" && "$CLI" get widgets --from "$T/lfk" --force 2>&1); got=$?
