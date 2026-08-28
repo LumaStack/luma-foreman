@@ -268,7 +268,7 @@ lacks 'rule=bundles'
 d=$(bundle alwayson)
 printf -- '---\ntype: policy\ntitle: T\nmatches: always\n---\nx\n' > "$d/b/p.md"
 run 'matches always is surfaced' 0 "$d"
-has 'every session'
+has 'whenever this bundle opens'
 # A notice, not a finding: the choice is legal and deliberate, so it is printed
 # as loudly as anything else and exits 0. Failing a build over a correct
 # decision is how a check gets switched off.
@@ -283,7 +283,7 @@ lacks 'LOW '
 d=$(bundle silentpolicy)
 printf -- '---\ntype: policy\ntitle: T\n---\nx\n' > "$d/b/p.md"
 run 'a policy that says nothing is quiet' 0 "$d"
-lacks 'every session'
+lacks 'whenever this bundle opens'
 
 # A notice never suppresses a finding, and a finding never demotes to a notice.
 # Both in one run: exit follows the finding alone.
@@ -341,6 +341,31 @@ run 'frontmatter without a type' 1 "$d"
 has 'no type'
 
 d=$(bundle bentry)
+# --- nothing may exist that no transport can reach ------------------------------
+#
+# Three routes get a Document to a reader: it declares a trigger, it is named on
+# its bundle's ring, or something reachable links to it. With none it is
+# present, conformant and invisible — and invisible cannot be told from absent,
+# which is the failure the whole design exists to end.
+#
+# Depth is never the complaint. Being reached through three hops is the intended
+# outcome; being reached through none is not.
+
+d=$(bundle reach)
+printf -- '---\ntype: bundle\nversion: 0.1.0\n---\nx\n' > "$d/b/BUNDLE.md"
+mkdir -p "$d/b/concepts"
+printf -- '---\ntype: document\ntitle: Adrift\n---\nNobody can get here.\n' \
+  > "$d/b/concepts/adrift.md"
+run 'a document nothing can reach' 0 "$d"
+has 'nothing can reach'
+
+# Linked from something reachable, it is reached. One hop or ten, the answer is
+# the same and the notice goes.
+printf -- '---\ntype: policy\ntitle: Rule\nmatches: always\n---\nSee [[adrift]].\n' \
+  > "$d/b/rule.md"
+run 'linked from something reachable' 0 "$d"
+lacks 'nothing can reach'
+
 printf -- '---\ntype: bundle\nversion: 0.1.0\nentrypoint: workflows/nope\n---\nx\n' > "$d/b/BUNDLE.md"
 run 'entrypoint resolves to nothing' 1 "$d"
 has 'entrypoint points at nothing'
