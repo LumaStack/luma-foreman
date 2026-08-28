@@ -81,7 +81,7 @@ cat > "$CATALOG/catalog/bundles/widgets/BUNDLE.md" <<'EOF'
 ---
 type: bundle
 version: 0.1.0
-entry_point: workflows/make-a-widget
+entrypoint: workflows/make-a-widget
 description: Everything about widgets.
 ---
 EOF

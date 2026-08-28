@@ -341,9 +341,16 @@ run 'frontmatter without a type' 1 "$d"
 has 'no type'
 
 d=$(bundle bentry)
+printf -- '---\ntype: bundle\nversion: 0.1.0\nentrypoint: workflows/nope\n---\nx\n' > "$d/b/BUNDLE.md"
+run 'entrypoint resolves to nothing' 1 "$d"
+has 'entrypoint points at nothing'
+
+# The old spelling is still read, and still fires. A reader that only knew the
+# new name would go quiet against every bundle not yet republished, and silence
+# is indistinguishable from a pass.
 printf -- '---\ntype: bundle\nversion: 0.1.0\nentry_point: workflows/nope\n---\nx\n' > "$d/b/BUNDLE.md"
-run 'entry_point resolves to nothing' 1 "$d"
-has 'entry_point points at nothing'
+run 'the old spelling still fires' 1 "$d"
+has 'entrypoint points at nothing'
 
 # Self-containment: a bundle must be copyable and still work.
 d=$(bundle bescape); mkdir -p "$d/elsewhere"; printf 'x\n' > "$d/elsewhere/x.md"
