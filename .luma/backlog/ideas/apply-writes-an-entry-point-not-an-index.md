@@ -173,9 +173,15 @@ commit rather than from the first `get`.
 It needs a network and a catalog at `init` time, there is no way to un-adopt what
 it installs — [[no-way-to-un-adopt]] — and naming a specific bundle compiles a
 catalog into the engine, which fails the estate's own test that an engine
-contains no knowledge of luma specifically. *What a new consumer begins with* is
-`starters` in `luma/catalog`, keyed on what the repository declares itself to be.
-An empty state that is rare is worse than one that is correct.
+contains no knowledge of luma specifically. And an empty state that is rare is
+worse than one that is correct — the path does not stop existing, it stops being
+tested.
+
+**Where *what a new consumer begins with* should be decided is a catalog's
+question rather than an engine's.** `starters` in `luma/catalog` is the current
+sketch of that, and it is only a sketch: declared in the type and in the live
+`CATALOG.md`, read by nothing, and it may not survive. **Nothing above rests on
+it** — the objections stand whether or not `starters` has legs.
 
 ## What is named where, and what is merely reachable — settled
 
