@@ -49,9 +49,9 @@ at the slice that produced it.
 
 **Everything structural in a sweep exists to make one claim true**: nothing was
 missed. The index, the order chosen on purpose, the estimate, the exclusions
-written down, *reviewed and clean* being a recordable result — none of it is
-about finding defects, and all of it is about being able to say afterwards that
-the whole territory was looked at.
+written down, *read with nothing found* being a recordable result — none of it
+is about finding defects, and all of it is about being able to say afterwards
+that the whole territory was looked at.
 
 **An audit needs none of that**, because it never has to prove it looked
 everywhere. It only has to say what it *did not* look at, which is one

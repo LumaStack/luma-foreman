@@ -1,6 +1,6 @@
 # luma-foreman
 
-> Every repository set up right, and kept that way.
+**Every repository set up right, and kept that way.**
 
 Knowledge about how a project should be run — its layout, its conventions, what
 an agent may do in it — usually lives in someone's head or in a document others

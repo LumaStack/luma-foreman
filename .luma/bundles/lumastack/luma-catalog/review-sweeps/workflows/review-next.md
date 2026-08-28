@@ -121,9 +121,14 @@ visible early: three slices running that turn up nothing related to the goal
 mean either the goal was wrong or the sweep has wandered, and both are worth
 raising rather than absorbing.
 
-Mark every file in the cluster reviewed, including the ones where nothing was
-found. **Reviewed and clean is a result**, and an index that records only
+Mark every file in the cluster, including the ones where nothing was found —
+**read with nothing found is a result**, and an index that records only
 problems has unexplained gaps in place of evidence.
+
+**`reviewed`** where the reader was satisfied; an agent may set this for
+itself. **`approved`** where a person signed off, and **only a person may give
+it**. Record what they say without argument — your own view lives in
+`reviewed`.
 
 ## 8. Commit the slice
 

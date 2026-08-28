@@ -18,6 +18,10 @@ fields:
     field_presence: required
     field_type: text
     desc: "the 12-character commit the index was last reconciled against"
+  pairing:
+    field_presence: required
+    field_type: text
+    desc: "who is in this sweep — human-agent, or agent-agent. Declared before the first slice"
   contributors:
     field_presence: recommended
     field_type: list of actor

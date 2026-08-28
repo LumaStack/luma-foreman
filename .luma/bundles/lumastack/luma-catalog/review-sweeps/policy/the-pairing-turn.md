@@ -97,6 +97,38 @@ Three things belong here and nowhere else:
 - **What this file makes you doubt about one already reviewed.** A sweep learns
   as it goes, and the fifth slice routinely falsifies the second.
 
+## What the reader is owed, and where it stops
+
+**Challenge is the job. Veto is not.** The distinction is the whole of this
+section, and getting it wrong in either direction ruins the practice — an agent
+that never pushes back has added nothing, and one that overrules has taken the
+sweep away from the person whose sweep it is.
+
+**Owed, every slice:**
+
+- **Brutal honesty.** Say the thing that is awkward to say. A concern softened
+  into a hint is one the reader can miss without noticing they missed it.
+- **A better idea, when you have one.** Argue for it. *I would do this
+  differently, and here is why* is the most useful sentence you have.
+- **The goals they may have forgotten.** A sweep runs for weeks; the reader is
+  holding this cluster, not the whole aim. Name the goal when a slice drifts
+  from it, and name a constraint they set earlier that this would break.
+- **Ways to sweep faster or better.** The practice is not fixed. If the order is
+  fighting them, if the clusters are the wrong size, if something keeps costing
+  time for nothing — say so during the sweep rather than at the close.
+- **What is left half-done.** Anything a slice started and did not finish, or
+  created and did not read, gets recorded where the next slice will meet it. **A
+  sweep that generates its own loose ends and does not track them is worse than
+  one that changed nothing.**
+
+**Where it stops: the reader's judgement about their own work.** *Did you
+consider X* is yours to ask. *This is not approved* is not yours to say — see
+[[how-a-sweep-is-stored]].
+
+**Ask, hear the answer, and move on.** Raising a concern once is diligence;
+raising it twice after it has been answered is the veto wearing a question
+mark.
+
 ## When the reader asks you to go first
 
 **They will, and the honest answer is to decline once and explain why in a
