@@ -48,20 +48,41 @@ Measured in this repository at 17 adopted bundles, 2026-08-27:
 Dropping it saves only the duplication — those 40 skills still load their names
 and descriptions at startup.
 
-## The shape
+## The shape — one rule, applied at every level
 
-| ring | content | present |
+The naive version is an index of everything, which is what exists today. The
+replacement is recursive: **each level carries what is always-on here, advertises
+what is reachable from here with enough detail to choose, and defers the rest.**
+
+The project's routing does that over bundles. A bundle's own routing does the
+same over its documents. Sections within a document would be the same rule again
+— the level `loading-mechanisms.md` calls unexplored, reachable only because the
+rule generalises.
+
+**Nothing new is declared. The three classes are already computed from
+`matches`:**
+
+| `matches` | class | what a router carries |
 | --- | --- | --- |
-| **0** | the adapter block in `CLAUDE.md` — rules, and how to reach the rest | always; written once, rewritten in place |
-| **1** | always-on policy bodies; bundle names and descriptions | always |
-| **2** | a bundle's documents, their descriptions and triggers | when that bundle is reached for |
+| `always` | **always-on** | the body, present here |
+| a list of triggers | **advertised** | the name and its triggers; the body arrives when one matches |
+| `nothing`, or absent | **on-demand** | reachable, and nothing is spent until something asks |
 
-**Workflows appear in none of them.** `.claude/skills/` already carries them.
+**Workflows appear at no level.** `.claude/skills/` already carries them.
 
-The CSS case is the test: nothing about a CSS bundle should be in context while
-nobody touches CSS, but enough must be present to reach for it when somebody
-does — and reaching for it loads that bundle's own routing, which loads what the
-rules say.
+**Depth is the design, not a defect.** A document may sit several hops in — the
+project names a bundle, the bundle's routing names some of its documents, one of
+those links to another. That is what makes standing cost per-bundle rather than
+per-document, and it is what the scale pressure demands.
+
+**The trade: cost stops being knowable in advance.** `CLAUDE.md` can be measured
+today and a session cost quoted. Under this, cost depends on the path walked — a
+large knowable number exchanged for a small path-dependent one. Measurement moves
+from *measure the artifact* to *measure a session*, which is a different
+discipline and probably a different tool.
+
+The CSS case is the test: nothing about a CSS bundle in context while nobody
+touches CSS, but enough present to reach for it when somebody does.
 
 ## Most of the runtime half already exists, and is asleep
 
@@ -74,25 +95,35 @@ trigger, with `bundle`, `document`, `title`, `path`, `on_violation` and
 reads only the rows that block; all 29 rows are `on_violation = "allow"`. So
 nothing reads this file in practice.
 
-**The trigger split, measured:**
+**All 29 rules are policies. No workflow in the catalog declares a trigger at
+all**, which is independent support for leaving them to `.claude/skills/`.
 
-| trigger | count | evaluated by |
+**The trigger split, measured.** A rule may declare several, so these are trigger
+mentions across the 29:
+
+| trigger | mentions | evaluated by |
 | --- | --- | --- |
-| `path:` | 6 | a hook, deterministically |
-| `command:` | 6 | a hook, deterministically |
-| `event:` | 2 | a hook, deterministically |
-| `topic:` | 15 | **the model only** |
+| `topic:` | 20 | **the model only** |
+| `command:` | 10 | a hook, deterministically |
+| `event:` | 7 | a hook, deterministically |
+| `path:` | 7 | a hook, deterministically |
 
-About half the routing surface is enforceable and half is not, and the half that
-is not is most of the policy triggers. `topic:` is a model judgement by
-construction — the design must say which rules are guaranteed and which are
-advisory, or a table that mixes them reads as though all 29 are policed.
+**By rule, which is what the design turns on: 9 are deliverable by hook alone; 20
+declare at least one `topic:`.** The nine are `never-commit-credentials`,
+`never-commit-private-identity`, `merge-commits`, `changelog`, `release-notes`,
+`luma-directory-layout`, `readme`, `the-project-descriptor` and
+`session-continuity`.
 
-**What the table is missing** for the rings above: no `description` field, and no
-bundle-level rows at all. Ring 1 needs bundle descriptions; ring 2 needs document
-descriptions. That is the concrete delta.
+So roughly a third of the surface can be enforced and the rest cannot. `topic:`
+is a model judgement by construction — the design must say which rules are
+guaranteed and which are advisory, or a table that mixes them reads as though all
+29 are policed.
 
-## Four ways ring 2 can load, and none of them is sufficient alone
+**What the table is missing:** no `description` field, and no bundle-level rows
+at all. The project level needs bundle descriptions; a bundle's own level needs
+document descriptions. That is the concrete delta.
+
+## Four ways a level below can load, and none is sufficient alone
 
 - **Prose the model follows.** Free, and degrades silently.
 - **A hook injects it.** Deterministic, but hooks fire on tool calls — nothing
@@ -135,6 +166,52 @@ contains no knowledge of luma specifically. *What a new consumer begins with* is
 `starters` in `luma/catalog`, keyed on what the repository declares itself to be.
 An empty state that is rare is worse than one that is correct.
 
+## What is named where, and what is merely reachable — settled
+
+`loading-mechanisms.md` holds that *existence is cheap and content is expensive,
+so every policy and workflow is named whatever its class*, reasoning that **a
+rule nobody can see governs nothing.** Read as *everything gets a line at the top
+level*, that is flat and per-document — which is what the same document's scale
+pressure kills. The tension is inside the settled position rather than between it
+and this one, and it resolves by separating loading from integrity.
+
+**Loading — a document is not hoisted merely because nothing else would deliver
+it.** Reached through a bundle, through a trigger, or through a link from a
+document that is itself reachable, it is properly reached however many hops that
+takes. Burying a document behind layers is the intended outcome, not a
+compromise.
+
+**Integrity — a document with no inbound path at all is a defect, and `inspect`
+reports it.** A reachability check over a graph foreman already holds:
+
+- **roots** — documents declaring `matches: always`, and every adopted bundle,
+  since `/list-bundles` and `/load-bundle` make each one reachable on request
+- **edges** — a bundle to the documents its routing names, a trigger to its
+  document, a document to whatever it links to
+
+Unreachable means no trigger, not named by its bundle's routing, and no inbound
+link from anything reachable. It belongs in `inspect/rules/bundles.py`, which
+already holds the nearest relative — *a `path:` glob matching nothing in this
+project*, reported because it parses, publishes and never fires. **A warning, not
+an error**, on the reasoning `vocabulary.py` already gives for its own rule: a
+tool cannot tell an orphan from something reached by a path it cannot model, so
+the reader decides whether an indirect path is acceptable.
+
+**Two consequences.**
+
+- **A broken wikilink changes severity.** `audit-bundle` treats one as a tidiness
+  defect. Once links are a delivery mechanism, a broken link is a document that
+  silently stopped being reachable.
+- **The check will pass on a hole it cannot see.** A `topic:` document is
+  reachable in the graph through its bundle, but that first edge is a model
+  judgement made from a bundle description. `capturing-ideas` declares
+  `topic:capturing an idea worth keeping` inside `backlog-ideas`; an idea
+  surfaces during unrelated work, nothing opens that bundle, the graph is intact,
+  and the document never arrives. Not an argument for hoisting it — an argument
+  that **bundle descriptions are load-bearing infrastructure**, and possibly a
+  second, softer rule: a bundle whose documents declare topics its own
+  description does not hint at.
+
 ## Open
 
 **What is a derived artifact's home?** `luma-leader`'s `DECISIONS.md` says
@@ -170,14 +247,6 @@ ever be.
 **Per-tool subsections in the adapter block: no, not yet.** One writer today, and
 structure is cheap to add later.
 
-**A conflict to settle before building.** `loading-mechanisms.md` settled that
-*existence is cheap and content is expensive, so every policy and workflow is
-named whatever its class* — everything gets a ring 1 line. The ring design above
-defers document names to ring 2. Those disagree about the same bytes. A possible
-reconciliation, since that position was reasoned from *a rule nobody can see
-governs nothing*: policies named at ring 1 always, workflows omitted entirely,
-background never named.
-
 ## Notes
 
 **No document in this repository declares `matches: always` today** — every
@@ -192,16 +261,19 @@ it would land in, with measurements, and it answers part of that entry's central
 question: the evaluator decides the form, and `routing.toml` is already the data
 half.
 
-**Extends [[preload-levels-collapse-into-emphasis]]**, which found that the three
-levels collapse when written into a harness and argued against inlining bodies
-into `CLAUDE.md`. That argument holds and this does not contradict it — the index
-stays an index; it moves and sheds what is duplicated.
+**Answers [[preload-levels-collapse-into-emphasis]]**, which found the declared
+levels collapse into emphasis once written into a harness, and left two readings
+open: the ladder is over-specified, or the harness is the limitation. **It was
+the mechanism.** A flat index has one delivery moment, so everything below
+always-on renders identically; a router at every level has as many delivery
+moments as it has levels, and the distinction lands. That entry's argument
+against inlining bodies is untouched and still holds.
 
-**Meets [[bundle-routines]] at ring 2.** That entry asks what a bundle exposes —
-named routines rather than one `entry_point`. This one asks what loads whichever
-of those a situation calls for. They should be designed together: *a bundle's own
-routing* here and *a folder of entry points* there are plausibly the same
-artifact under two names.
+**Meets [[bundle-routines]] where a bundle's own routing lives.** That entry asks
+what a bundle exposes — named routines rather than one `entry_point`. This one
+asks what loads whichever of those a situation calls for. They should be designed
+together: *a bundle's routing* here and *a folder of entry points* there are
+plausibly the same artifact under two names.
 
 **None of this reached `luma-leader` by any mechanism.** The `.luma/` tier
 question above belongs there and is recorded here because there is nowhere else
