@@ -334,11 +334,6 @@ def _navigation(bundles: list[Bundle]) -> dict[str, str]:
     a project holds, so nothing here scales with adoption.
     """
     ring = ENTRYPOINT.as_posix()
-    listing = "\n".join(
-        f"- `{b.bundle_id}` — {b.description or 'no description'}\n"
-        f"  `{ring_path(b.bundle_id).as_posix()}`"
-        for b in bundles) or "Nothing is adopted yet."
-
     return {
         "list-bundles": f"""---
 name: list-bundles
@@ -349,13 +344,14 @@ description: List the knowledge bundles this project has adopted, and what each 
 
 # What this project knows
 
-Read `{ring}` for the current list — it is generated and this copy is not.
+Read `{ring}`. It names every adopted bundle, what each is for, and the path to
+its ring.
 
-{listing}
-
-**Open one with `/load-bundle`**, or read its ring directly. A bundle's ring
-says what it holds and what brings each part into play; nothing below it is
-loaded until you go there.
+**It is not copied here on purpose.** That file already arrives at the start of
+a session, and rendering it a second time would charge twice for one list. What
+this skill is for is the moment it has fallen out of context and you need it
+back — so read the file, which is current, rather than a copy, which would not
+be.
 
 **This lists what is adopted, not what exists.** Bundles this project has not
 taken are in whatever catalog it draws on, and nothing here can see them —
@@ -370,16 +366,17 @@ description: Open one adopted bundle and see what it holds — its rules, what f
 
 # Open a bundle
 
-Read `.luma/bundles/rings/<bundle-id>.md`, where the bundle ID is the full name
-including its namespace — `lumastack/luma-catalog/git-secrets`, not
-`git-secrets`.
+Read `.luma/bundles/rings/<bundle-id>.md`.
 
-`{ring}` has every adopted bundle and the path to its ring. Use
-`/list-bundles` if you do not know the name.
+**The bundle ID carries its namespace** — `lumastack/luma-catalog/git-secrets`,
+never `git-secrets`. Guessing at one is the only way this fails, so take it from
+`{ring}`, which lists every adopted bundle beside the path to its ring. Use
+`/list-bundles` if you do not have a name at all.
 
 **What you get.** Anything the bundle says applies throughout it, to read now;
-then every rule it holds, with what fires each. **Bodies are not included** —
-open the ones that match the work, and not the rest.
+then every rule it holds, with what fires each, and a line naming anything that
+reaches you by another route. **Bodies are not included** — open the ones that
+match the work, and not the rest.
 
 **If the path does not exist**, the bundle is not adopted here. That is an
 answer, not an error.
@@ -568,9 +565,10 @@ def _bundle_ring(bundle: Bundle, project_root: Path) -> str:
     # so it earns a line at the top rather than a delivery of its own.
     entry = bundle.entrypoint
     if entry and any(d.doc_id == entry for d in bundle.docs):
-        doc = next(d for d in bundle.docs if d.doc_id == entry)
-        lines += [f"**Start at `{entry}`** — {doc.description or doc.title}".rstrip(" —"),
-                  ""]
+        # Named without its description, because the list below carries that and
+        # a ring is fifteen lines long — saying the same sentence twice in one is
+        # the sort of thing an author does not notice and a reader cannot miss.
+        lines += [f"**Start at `{entry}`.**", ""]
 
     always = bundle.of_class("always-on")
     if always:
@@ -601,6 +599,21 @@ def _bundle_ring(bundle: Bundle, project_root: Path) -> str:
              and d.klass != "always-on"
              and (d.klass == "advertised"
                   or (d.klass == "on-demand" and d.type == "policy"))]
+    # **Say what is not here, or the count is a lie.** A ring claims to say what a
+    # bundle holds. `git-secrets` holds five Documents, this named two, and the
+    # sentence explaining the other three lived only in the project ring — which
+    # a reader arriving by `/load-bundle` never opened. Reachable and invisible
+    # is the failure the whole design exists to end, and it was in the artifact
+    # built to end it.
+    workflows = bundle.of_type("workflow")
+    if workflows:
+        names = ", ".join(f"`{w.slug}`" for w in sorted(workflows, key=lambda d: d.slug))
+        lines += [
+            f"**{len(workflows)} workflow(s) here reach you as skills, not through "
+            f"this ring** — invoke by name: {names}.",
+            "",
+        ]
+
     if shown:
         lines += [f"In `{home}/`:", ""]
         for doc in sorted(shown, key=lambda d: (d.type, d.doc_id)):
@@ -611,7 +624,7 @@ def _bundle_ring(bundle: Bundle, project_root: Path) -> str:
             if when:
                 lines.append(f"  - matches: {when}")
         lines.append("")
-    elif not always:
+    elif not always and not workflows:
         lines += [f"Nothing here is named separately. In `{home}/`.", ""]
 
     return "\n".join(lines)

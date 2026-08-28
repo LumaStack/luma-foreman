@@ -182,7 +182,11 @@ grepped '@.luma/bundles/entrypoint.md' "$CLAUDE"
 
 grepped 'run-the-thing' "$SKILLS/run-the-thing/SKILL.md"
 ungrep 'run-the-thing' "$RING"
-ungrep 'run-the-thing' "$BRING"
+
+# Its *description* stays out of the ring — that is the duplication. Its name
+# stays in, because a ring that omits a document without saying so is claiming
+# the bundle holds less than it does.
+ungrep 'Run the thing. Use when' "$BRING"
 
 # --- a bundle's own answer to where to start ------------------------------------
 #
@@ -191,6 +195,21 @@ ungrep 'run-the-thing' "$BRING"
 # nothing consumed it, which is the same defect as a rule nobody can see.
 
 grepped 'Start at' "$BRING"
+
+# And it does not repeat what the list below already says. A ring is fifteen
+# lines; the same sentence twice in one is the sort of thing an author does not
+# notice and a reader cannot miss.
+[ "$(grep -c 'The rules that govern all work here' "$BRING")" -eq 1 ] \
+  && ok || bad 'entrypoint description repeated in the ring'
+
+# --- a ring says what it does not name -----------------------------------------
+#
+# A ring claims to say what a bundle holds. Workflows reach this harness as
+# skills and are correctly absent — the silence about them was the defect.
+# Reachable and invisible is the failure the whole design exists to end.
+
+grepped 'reach you as skills' "$BRING"
+grepped 'run-the-thing' "$BRING"
 
 # --- 1-project names bundles; 2-bundle names what is inside one ------------------
 #
@@ -406,8 +425,14 @@ case $LAST in *nowhere-at-all*) ok ;; *) bad "expected the inert trigger reporte
 
 exists "$SKILLS/list-bundles/SKILL.md"
 exists "$SKILLS/load-bundle/SKILL.md"
-grepped 'acme/rules' "$SKILLS/list-bundles/SKILL.md"
+# Neither copies the project ring. That file already arrives at the start of a
+# session, so rendering it again would charge twice for one list — the same
+# adapter obligation that keeps workflows out of it. They point instead, which
+# also means they cannot go stale.
+grepped 'entrypoint.md' "$SKILLS/list-bundles/SKILL.md"
+ungrep 'acme/rules' "$SKILLS/list-bundles/SKILL.md"
 grepped '.luma/bundles/rings' "$SKILLS/load-bundle/SKILL.md"
+ungrep 'acme/rules' "$SKILLS/load-bundle/SKILL.md"
 
 # A workflow named `load-bundle` must not be able to replace the floor. It is
 # renamed on collision, exactly as it would be against another workflow.

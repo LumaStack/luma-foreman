@@ -4,7 +4,9 @@
 
 Decisions recorded with their reasoning, deferred alternatives, and re-open triggers. Spent decisions are archived rather than deleted.
 
-**Start at `workflows/record-decision`** — Find or establish where this project keeps decisions, then write one. Use when a position is settled, when an irreversible change is proposed, or when asked where decisions live.
+**Start at `workflows/record-decision`.**
+
+**4 workflow(s) here reach you as skills, not through this ring** — invoke by name: `find-decision`, `migrate-decisions`, `prune-archived-decisions`, `record-decision`.
 
 In `.luma/bundles/lumastack/luma-catalog/decision-records/`:
 

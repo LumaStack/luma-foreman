@@ -4,7 +4,9 @@
 
 Creating, updating, auditing, repairing, migrating and retiring bundles — the layout they use and which catalog they belong in.
 
-**Start at `policy/organizing-a-bundle`** — The layout every bundle uses, what each directory is for, and the two rules that decide whether something is a document, an asset, or a type.
+**Start at `policy/organizing-a-bundle`.**
+
+**6 workflow(s) here reach you as skills, not through this ring** — invoke by name: `audit-bundle`, `create-bundle`, `delete-bundle`, `migrate-bundle`, `repair-bundle`, `update-bundle`.
 
 In `.luma/bundles/lumastack/luma-catalog/bundle-manager/`:
 

@@ -4,7 +4,9 @@
 
 How changes get integrated — merge commits rather than squash or rebase, and the repository settings that make it true.
 
-**Start at `policy/merge-commits`** — Pull requests are integrated with true merge commits. Squash and rebase merging are disabled at the forge, because they break the only reliable answer to "is this branch merged?"
+**Start at `policy/merge-commits`.**
+
+**1 workflow(s) here reach you as skills, not through this ring** — invoke by name: `configure-merge-settings`.
 
 In `.luma/bundles/lumastack/luma-catalog/git-workflow/`:
 

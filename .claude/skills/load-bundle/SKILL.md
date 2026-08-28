@@ -7,16 +7,17 @@ description: Open one adopted bundle and see what it holds — its rules, what f
 
 # Open a bundle
 
-Read `.luma/bundles/rings/<bundle-id>.md`, where the bundle ID is the full name
-including its namespace — `lumastack/luma-catalog/git-secrets`, not
-`git-secrets`.
+Read `.luma/bundles/rings/<bundle-id>.md`.
 
-`.luma/bundles/entrypoint.md` has every adopted bundle and the path to its ring. Use
-`/list-bundles` if you do not know the name.
+**The bundle ID carries its namespace** — `lumastack/luma-catalog/git-secrets`,
+never `git-secrets`. Guessing at one is the only way this fails, so take it from
+`.luma/bundles/entrypoint.md`, which lists every adopted bundle beside the path to its ring. Use
+`/list-bundles` if you do not have a name at all.
 
 **What you get.** Anything the bundle says applies throughout it, to read now;
-then every rule it holds, with what fires each. **Bodies are not included** —
-open the ones that match the work, and not the rest.
+then every rule it holds, with what fires each, and a line naming anything that
+reaches you by another route. **Bodies are not included** — open the ones that
+match the work, and not the rest.
 
 **If the path does not exist**, the bundle is not adopted here. That is an
 answer, not an error.
