@@ -101,6 +101,49 @@ available.**
 they are written and staler by the day, which matters most here: the gap is
 longest exactly where nobody human saw the file.
 
+## Declare the pairing before the first slice
+
+**In `sweep.md`, as a field a reader meets before any row.** A sweep that says
+who is in it can be judged; one that does not has to be reconstructed from the
+actor on each row, and nobody does that.
+
+| `pairing` | means |
+| --- | --- |
+| `human-agent` | a person reads, an agent orients and responds |
+| `agent-agent` | two agents, separate sessions. **No human vouches for anything** |
+
+**A slice may declare its own** where it differs — one cluster read by a second
+agent because the person was unavailable, one area they handed over by
+arrangement. The slice's declaration wins for its own rows, and the difference
+from the sweep's is the thing worth seeing.
+
+**The declaration is a claim about intent; the actors are what happened.** They
+come apart, and that gap is the most useful thing in the index: a sweep
+declared `human-agent` whose rows are all `agent:` is one that quietly became
+something else, and nobody decided it. **The close reports coverage by actor
+for exactly this reason.**
+
+### The actor cannot show two sessions of one model
+
+**`agent:opus-5` twice reads as one party, and independence rests on there
+being two.** The unit of independence is the session; the actor records the
+model. So the index cannot, on its own, distinguish the good-enough tier — same
+model, separate sessions — from the one that is not a sweep at all.
+
+**Nothing here solves it, deliberately.** `audit-records` reached the same wall
+and declined to invent a field in passing, on the grounds that a hasty field is
+worse than a stated gap. That reasoning holds here and no agent-agent sweep has
+run yet, so there is nothing to design against.
+
+**Until then it goes in the slice's prose**, the way any stated weakness does:
+*read by a second session of the same model*, or *both parts written in one
+session*, said plainly. **A reader can discount a disclosed weakness; an
+undisclosed one is the harder problem.**
+
+**The trigger for solving it properly** is a sweep where somebody needs to
+check the independence claim and cannot — not the first time somebody notices
+the gap.
+
 ## Say which arrangement it was
 
 In `sweep.md`, and in `contributors` on every slice.

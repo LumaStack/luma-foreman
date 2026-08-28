@@ -26,8 +26,9 @@ sometimes more — and survives every session boundary in between.
 
 **The tier is decided by lifecycle, and a sweep in progress is an intention.**
 It churns — the index is edited at every slice, files are added when the tree
-moves under it, units go from pending to reviewed. `records/` is append-only
-and never edited, so a sweep filed there would break the tier on its first day.
+moves under it, rows go from pending to reviewed or approved. `records/` is
+append-only and never edited, so a sweep filed there would break the tier on
+its first day.
 
 **A sweep evaporates; an audit settles.** That is the lifecycle half of a
 larger distinction — what each is complete against, which one puts somebody on
@@ -62,8 +63,8 @@ derivation.*
 ## Two units, and confusing them is the common failure
 
 **The unit of coverage is the file.** Every file in scope appears in the index,
-so *reviewed and clean* stays distinguishable from *never looked at*. A sweep
-that cannot tell those apart has produced confidence it did not earn.
+so *read with nothing found* stays distinguishable from *never looked at*. A
+sweep that cannot tell those apart has produced confidence it did not earn.
 
 **The unit of a slice is a cluster** — a module, an execution path, a directory
 that means something. You review six files together because they only make
@@ -101,6 +102,61 @@ the earlier slice named — never a row that quietly resets.
 same at 60% whether nothing drifted or half of it did. One that records
 re-coverings shows drift accumulating while there is still time to cut the
 scope.
+
+## Two ways a row finishes, and they are not the same claim
+
+| status | means | who may set it |
+| --- | --- | --- |
+| `reviewed` | read, and the reader is satisfied | **any party**, agent included |
+| `approved` | **signed off** | **a human only** |
+
+**Every row also records the actor** — `reviewed` by `agent:opus-5` and
+`reviewed` by `human:warden` are different facts, and the status alone cannot
+tell them apart.
+
+**Status and actor are not redundant.** The status says how strong the claim
+is; the actor says who made it. A person may legitimately mark a row `reviewed`
+rather than `approved` — *I have read this, it is fine for now, I am not
+signing off* — which is a real state an actor column alone cannot express.
+
+**`approved` is strictly stronger.** A row may go `reviewed` then `approved`,
+or straight to `approved` when a person read it themselves. Nothing requires
+the first before the second.
+
+**Both are needed because a sweep does not always have a human in it.**
+[[who-does-the-reading]] permits two agents, and a status only a person can set
+would leave such a sweep unable to finish a single row. **An agent must be able
+to say *I read this and it is fine*** — what it must not do is say *and that
+settles it*.
+
+**Neither party may withhold a status the other is entitled to set.** An agent
+records `approved` when the person gives it, whatever the agent thinks and
+however the file got that way — rewritten rather than examined, given without a
+full slice, given against the agent's advice. **The bundle exists to protect
+the reader's judgement and must never be turned against it.**
+
+**Challenge belongs before the status, never after it.** Ask what they made of
+it, name a goal they may have drifted from, say where you read it differently.
+Then record what they decide. [[the-pairing-turn]] draws that line.
+
+**The close reports both.** *Fifty-three approved, twelve reviewed and never
+signed off* is a true sentence about a sweep that ran out of the person's
+attention, and one status cannot say it.
+
+## Rows are independent
+
+**Approving a file makes no claim about anything it links to.** A document
+approved today may point at four that are still `pending`, and that is an
+ordinary state rather than an inconsistency.
+
+**The alternative is unbounded.** If a row could only be approved once
+everything it referenced was, then a project where things move — content split
+out, a document broken in two — becomes one where nothing can ever be approved,
+because every approval drags in more. **Coverage is per file, and the index is
+what holds it together.**
+
+**What a split does owe is a note**: the new rows exist, they are pending, and
+the slice that created them says so. That is bookkeeping, not a dependency.
 
 ## A slice is not an agent session
 

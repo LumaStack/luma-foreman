@@ -28,7 +28,7 @@ and the slice is what you came for.
 | **this is wrong, and I can see the fix** | the finding, **and the fix as a proposal** | the sweep's routing, below |
 | **this is wrong and I do not understand it yet** | the finding, without one | `backlog-ideas`, or `audit-records` |
 | **this is fine, but I had to work out why** | a decision record | `decision-records` |
-| **this is fine** | mark it reviewed and move on | the sweep index |
+| **this is fine** | the row is marked `reviewed`, or `approved` if a person signed off | the sweep index |
 
 *Those bundles are named rather than linked — they are separate and may not be
 adopted here. Where one is absent the destination is whatever this project
@@ -120,6 +120,26 @@ once the fixes are already in.**
 *How the fixing party works is not this bundle's to say.* What belongs here is
 the separation, and the record being good enough to act on without the sweep
 being in the room.
+
+## What the slice half-finished
+
+**A slice that creates work and does not record it is worse than one that
+changed nothing**, because the loose end is invisible and the index looks
+complete.
+
+Two shapes, and both are common:
+
+- **Content that moved.** A document split into four; a section lifted into its
+  own file. The new files are new rows, `pending`, and **the slice says which
+  approval created them** so the next slice knows where to look first.
+- **A change that was started and not finished.** A rename applied in three of
+  five places, a fix that needs one more decision. It goes wherever the project
+  tracks work, now, with what remains.
+
+**Neither blocks the row that produced it.** Approving a file makes no claim
+about what it spawned — see [[how-a-sweep-is-stored]]. Recording is
+bookkeeping, not a dependency, and conflating them is how a project that moves
+things becomes one where nothing can be approved.
 
 ## Nothing worth keeping stays in the sweep
 

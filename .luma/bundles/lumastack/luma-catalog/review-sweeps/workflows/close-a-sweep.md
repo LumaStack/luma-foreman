@@ -12,7 +12,8 @@ and archived as though it were finished is a lie the index will tell for years.
 
 ## 1. Check the coverage
 
-Every row in the index is `reviewed`, `skipped` with a reason, or `pending`.
+Every row in the index is `approved`, `reviewed`, `skipped` with a reason, or
+`pending`.
 
 **Pending rows at closing time are the point of this step.** Do not mark them
 anything. They stay pending, and the summary says how many there are — that is
@@ -37,7 +38,12 @@ away**, and doing that on purpose is fine while doing it by omission is not.
 In `sweep.md`, under the index. Short, and answering what somebody would ask a
 year later:
 
-- **coverage** — reviewed, skipped, pending, out of the total
+- **coverage** — approved, reviewed, skipped, pending, out of the total.
+  **Report approved and reviewed separately, and report coverage by actor**: a
+  row an agent was satisfied with and one a person signed off are different
+  claims, and merging them overstates the weaker. **A sweep declared
+  `human-agent` whose rows are all `agent:` quietly became something else** —
+  say so
 - **what it produced** — pull requests landed, ideas filed, decisions recorded,
   findings raised. Counts and where they went, not a restatement
 - **what it changed about how you see the system** — the part worth writing.
