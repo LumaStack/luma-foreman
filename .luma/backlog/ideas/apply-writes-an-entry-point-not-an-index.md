@@ -14,6 +14,17 @@ lifecycle_status: draft
 harness-neutral entry point that `CLAUDE.md` merely points at.** `CLAUDE.md`
 keeps a small generated block — the adapter — and nothing else.
 
+**The adapter block carries four things and no knowledge**, since everything it
+could state is already stated somewhere a reader can be sent:
+
+- where the entry point is, and that it should be read
+- that the block is generated, which command owns it, and that a hand edit is
+  discarded on the next run
+- how to reach always-on content immediately, rather than on a trigger
+- that `/list-bundles` and `/load-bundle` exist
+
+Anything beyond those four is content, and content is what this change moves out.
+
 **Wanted before adopting more bundles**, because every bundle added under the
 current shape makes the thing that has to be replaced larger.
 
@@ -202,6 +213,16 @@ the reader decides whether an indirect path is acceptable.
 - **A broken wikilink changes severity.** `audit-bundle` treats one as a tidiness
   defect. Once links are a delivery mechanism, a broken link is a document that
   silently stopped being reachable.
+- **A trigger edge is only real if something walks it.** The nine hook-deliverable
+  policies are deferred on the grounds that a hook will deliver them. Where no
+  gate is installed, nothing does — and the reachability check still passes,
+  because the edge exists in the graph whether or not anything traverses it.
+  **Whether a gate is wired up is machine-local state, so a repository cannot
+  answer it**, which is why this is not simply a stricter check. Two candidate
+  answers, neither taken: report it as a machine-scoped notice rather than a
+  repository finding, or have the adapter name hook-deliverable documents when it
+  can see no gate, so the saving is claimed only where the mechanism justifying
+  it exists.
 - **The check will pass on a hole it cannot see.** A `topic:` document is
   reachable in the graph through its bundle, but that first edge is a model
   judgement made from a bundle description. `capturing-ideas` declares
