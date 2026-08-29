@@ -391,3 +391,28 @@ because the proof was run and its output read rather than reported.
 *Written into `review-sweeps` 0.28.0. The check that caught the check was the
 check.*
 
+### How we work with git is not `review-sweeps`' concern
+
+**Said by the reader and written down before acting on it**, because the acting
+is a multi-bundle change and this is the sentence that would be lost in it.
+
+**`review-sweeps` 0.28.0 put git commands in a sweep workflow** — `git fetch`,
+`git log origin/<integration>..HEAD`, `git branch --no-merged`, `git worktree
+list`. **That is the wrong bundle.** How changes get integrated, what an
+integration branch is called, when a branch counts as landed, and how a worktree
+is checked belong to **`git-workflow`** and **`git-worktrees`**.
+
+**And they belong there for every bundle, not just this one.** Any bundle whose
+work can be stranded on a branch has the same problem, and each of them
+inventing its own commands produces a set of near-identical checks that drift.
+
+**So the split is the one this sweep keeps arriving at:** `review-sweeps` states
+the **obligation** — *a slice's record is landed, not merely committed, and it is
+proven rather than reported* — and cites how. **`git-workflow` owns the how**,
+including the stale-ref correction, which is a git fact and not a sweep fact.
+
+*`what-a-slice-produces` already ends with the right instinct: "How changes get
+integrated is not this bundle's to say — `git-workflow`, and whatever this
+project already does, own that." **0.28.0 walked straight past a sentence the
+bundle had already written.***
+
