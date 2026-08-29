@@ -42,6 +42,6 @@ for a person to apply.
 ## Status
 
 Early, and every command works — `init`, `get`, `apply`, `inspect`, `bundle`,
-`catalog` and `agent-permissions`. Python 3.11+, standard library only — see
-`docs/scope.md` for what the tool is for now that the catalog holds the
-knowledge the original command set was built on.
+`catalog` and `agent-permissions`. Python 3.11+, standard library only. The
+catalog now holds the knowledge the original command set was built on, which is
+what `owns` below is meant to state.

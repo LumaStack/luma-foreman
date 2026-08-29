@@ -94,8 +94,24 @@ wrong behaviour rather than merely old behaviour.
 That bundles stay dependency-free. `luma-leader/docs/bundle-dependencies.md`
 drafts the reversal, and adopting that draft is the re-open condition.
 
+## Why resolution is more dangerous for content than for code
+
+**Two versions of a library conflict and something crashes. Two versions of a
+policy conflict and nothing happens.** The failure is silent, and a resolver
+that quietly reconciles them makes it more silent still.
+
+**Declaring and detecting, rather than solving**, keeps real dependencies
+without a solver and keeps a conflict visible instead of reconciled. That is
+the shape any reversal should take before it takes any other.
+
+**And a resolver costs the promise.** The README offers no build step and
+nothing to install; semver range resolution is not worth hand-rolling, and the
+promise probably cannot survive taking a library to do it.
+
 ## References
 
 The layout and `adopted.toml` shape come from the `luma-layout` bundle,
-which specifies both. `docs/scope.md` carries the wider argument about declaring
-and detecting dependencies rather than solving them.
+which specifies both.
+
+**The argument above was absorbed from `docs/scope.md`** when that document was
+scattered on 2026-08-29; this record had cited it as the source.

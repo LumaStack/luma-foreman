@@ -2,10 +2,15 @@
 
 **Every repository set up right, and kept that way.**
 
-Knowledge about how a project should be run — its layout, its conventions, what
-an agent may do in it — usually lives in someone's head or in a document others
-forget to read. `luma-foreman` brings that knowledge into a repository, writes it
-where agents will actually use it correctly, and helps ensure it remains true.
+Foreman moves knowledge, policy and workflows to where they're needed, it wires
+up agents to use knowledge correctly, and verifies the knowledge remains true.
+
+## How it works with catalogs
+
+Everything a bundle *knows* — the layout a project should have, what tooling to
+install, what policy a project should follow — belongs in a catalog, unless it's
+truly specific to a single project. **A catalog holds knowledge; the foreman tool
+helps transfer and enforce that knowledge.**
 
 > **Status: early.** Getting, applying, inspecting and initializing work end to
 > end. Interfaces still move.
@@ -49,8 +54,6 @@ Everything is committed in git so agents can use history to learn and improve yo
   above for real.
 - **[Commands](docs/commands.md)** — every command, what it writes, and what it
   refuses to.
-- **[What foreman does](docs/scope.md)** — what is built, what is not, and what
-  each unbuilt thing would cost.
 - **[Architecture](docs/architecture.md)** — the invariants, and where state
   lives. Read before adding a capability.
 

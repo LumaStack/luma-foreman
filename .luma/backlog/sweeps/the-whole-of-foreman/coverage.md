@@ -1,7 +1,7 @@
 ---
 type: coverage
 title: Coverage — the whole of luma-foreman
-indexed_at: c143549bf859
+indexed_at: ccab53b1c9d7
 ---
 
 # Coverage
@@ -16,13 +16,13 @@ ages this file, and every slice brings it back.
 | --- | --- |
 | approved | 5 |
 | reviewed, not signed off | 1 |
-| with findings | 4 |
+| with findings | 5 |
 | skipped | 0 |
-| removed | 1 — `docs/inspect.md`, collapsed into `commands.md` |
-| pending | 80 |
+| removed | 2 — `docs/inspect.md` into `commands.md`, `docs/scope.md` scattered |
+| pending | 79 |
 | total rows | 87 |
 
-**Rate: two slices, seven files.** Too few to be a range yet, and slice 001 was
+**Rate: two slices, eight files.** Too few to be a range yet, and slice 001 was
 atypical — it built the practice while it ran, producing five releases of
 `review-sweeps`. **An outlier widens the range rather than being dropped from
 it**, so it counts, and the range will say so once there is one.
@@ -42,7 +42,7 @@ a known compromise rather than a shortfall. `.luma/PROJECT.md` is the first.
 | what it says it is | `README.md` | both | human:benlinton | human:benlinton | clean | 001 |
 | what it says it is | `CLAUDE.md` | both | human:benlinton | human:benlinton | clean | 002 |
 | what it says it is | `.luma/PROJECT.md` | both | human:benlinton |  | findings | 002 |
-| what it says it is | `docs/scope.md` | both |  |  |  |  |
+| what it says it is | ~~`docs/scope.md`~~ | both | human:benlinton |  | findings | 002 — scattered into eleven files, then deleted |
 | split from README | `docs/getting-started.md` | both | human:benlinton | human:benlinton | findings | 001 |
 | split from README | `docs/commands.md` | both | human:benlinton | human:benlinton | findings | 001 |
 | — | ~~`docs/inspect.md`~~ | — | | | | 001 — collapsed into `commands.md` |

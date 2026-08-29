@@ -11,9 +11,9 @@ lifecycle_status: draft
 # Which bundles this project should carry, and what decides it
 
 **Seventeen of the catalog's nineteen bundles are adopted here, and that is
-deliberate** — `docs/scope.md` names it as the open experiment: *"the way to find
-out is to keep adopting until it either stops being convenient or does not."*
-This asks whether it has, and finds that two do not earn their place.
+deliberate.** The open experiment is to keep adopting until it either stops
+being convenient or does not. This asks whether it has, and finds that two do
+not earn their place.
 
 ## Read by evidence, 2026-08-27
 
@@ -27,8 +27,9 @@ describe practice the repository actually follows.
 *follow* these, it *implements* them — `init` writes `type: luma/project`,
 `inspect` enforces the layout. Still worth having in front of an agent, but not
 for the reason `consumers` models, and worth noticing that the tool and the
-bundle encode the same knowledge. `docs/scope.md` has the live question that sits
-under this: *"Will anything ship natively in foreman, or is everything fetched?"*
+bundle encode the same knowledge. The live question sitting under this: **will
+anything ship natively in foreman, or is everything fetched?** It decides
+whether logging, for one, is a bundle.
 
 **`luma-maintainers` belongs here** — foreman is in the estate — **and is
 mis-tagged upstream** as `consumers: [organization]` while its own body says
@@ -41,9 +42,9 @@ estate repositories adopt it. A `luma-catalog` fix, not a foreman one.
   for creating, updating, deleting, migrating and repairing bundles, which is
   catalog-side work that does not happen in this repository.
 - **`token-manager`** — two workflows, both for measuring or teaching somebody
-  else's setup. `scope.md` names token management as something foreman should
-  eventually *build*, which makes it a design input rather than a practice this
-  repository keeps. It has produced nothing.
+  else's setup. Token management is something foreman should eventually
+  *build*, which makes this a design input rather than a practice the repository
+  keeps. It has produced nothing.
 
 **Marginal: `audit-records`.** `.luma/records/` holds only `decisions/` — no
 audit has been conducted here. `inspect` produces findings and one is plausible
@@ -93,7 +94,27 @@ Dropping a bundle is not a clean operation — [[no-way-to-un-adopt]]. Today it
 means deleting the directory, hand-editing `adopted.toml` whose header says not
 to, then running `apply`, which does correctly remove the orphaned skills.
 
+## The question underneath: does foreman consume the catalog it serves?
+
+**Foreman already records its own decisions through a bundle it took from the
+catalog.** If its release process, its versioning rules and its prose
+conventions go the same way, **foreman becomes a consumer of the catalog it was
+built to serve.**
+
+**Elegant, or a permanent headache for whoever maintains both ends?** Nobody
+knows, and the way to find out is the experiment above — keep adopting until it
+either stops being convenient or does not.
+
+**It is the same question as *ship natively or fetch everything*, from the other
+side.** One asks what foreman takes, the other what it carries; both are settled
+by the same answer, and neither is settled yet. [[distribution-beyond-clone-and-symlink]]
+depends on it, because a release process that lives in a bundle is a release
+process foreman has to adopt before it can cut a release.
+
 ## Notes
+
+**Absorbed from `docs/scope.md`** when that document was scattered on
+2026-08-29. It had held the standards question and this entry had only cited it.
 
 **Sequencing.** This is independent of the loading redesign and can happen before
 or after it. If after, re-read the weak two on relevance alone, since the cost

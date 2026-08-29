@@ -132,3 +132,19 @@ bundles and would function identically if they had never existed.
 It is in the same binary because it is the same operator working on the same
 repository — not because the two are one system. See
 [Agent permissions](claude-agent-permissions.md).
+
+## A regex that stops matching a command name fails open
+
+`agent_permissions/match.py` carries `CLI_WRITE` and `CLI_INVOCATION`, which
+recognise a `luma-foreman agent-permissions` invocation **in order to gate it**.
+Rename or restructure that command and the patterns stop matching — silently,
+and in the permissive direction. **The subsystem exists to prevent exactly
+that.**
+
+**Write the gating test before the change, so it fails first.** Anything that
+reads a command's own name to decide whether to gate it is in this category, and
+the failure never announces itself.
+
+The same shape applies to the config file: a `policy.toml` left by an older name
+is still read when `permissions.toml` is absent, because a permission file that
+quietly stops being read fails open too.

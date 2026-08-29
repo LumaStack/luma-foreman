@@ -109,3 +109,25 @@ survives at all.
 *Filed as an idea first and withdrawn — the shape is a direction rather than a
 task, and routing it prematurely is the failure this file exists to prevent. The
 close will promote it if it still warrants one.*
+
+**`docs/scope.md` was deleted, and the deletion needed a ledger.** The reader
+asked to be able to check afterwards that the right things survived and the
+outdated things did not — *"some of what's in scope is outdated, and I want to
+verify the correct stuff made it where it belongs."*
+
+**A diff alone does not answer that.** `git show` proves what moved; it cannot
+show what was dropped *on purpose* versus dropped by accident, and those look
+identical in a deletion. The slice record carries a per-line-range table with a
+verdict column for exactly that, and three rows say **dropped as false** or
+**dropped as unsourced** rather than naming a destination.
+
+**Worth promoting to the bundle if it holds.** `what-a-slice-produces` says a
+slice produces a record; it does not say a slice that removes a file owes a
+ledger of where the file went. **The obligation appears when the artifact stops
+existing** — nobody can re-derive the mapping from a file that is gone.
+
+**The transitional cluster half-collapsed.** `split from README` was declared
+transitional and expected to fold into `what it says it is` once read. All four
+of its rows are now closed, so it should fold at the next reconciliation — and
+`what it says it is` is closed too. **Two clusters are done and the charter
+still lists both**, which is the first thing reconciliation should tidy.
