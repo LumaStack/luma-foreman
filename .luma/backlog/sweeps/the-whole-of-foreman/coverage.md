@@ -1,7 +1,7 @@
 ---
 type: coverage
 title: Coverage — the whole of luma-foreman
-indexed_at: becb4ce15db1
+indexed_at: 398d84045cf9
 ---
 
 # Coverage
@@ -14,18 +14,19 @@ ages this file, and every slice brings it back.
 
 | | |
 | --- | --- |
-| approved | 5 |
+| approved | 6 |
 | reviewed, not signed off | 1 |
-| with findings | 6 |
+| with findings | 7 |
 | skipped | 74 — `docs/examples/`, the idea backlog, the agent-permissions subsystem, and all remaining code, all excluded by the reader |
 | removed | 3 — `docs/inspect.md`, `docs/scope.md`, `docs/standards.md` |
-| pending | 10 |
+| pending | 9 |
 | total rows | 93 |
 
-**Rate: three slices, nine files.** Too few to be a range yet, and slice 001 was
-atypical — it built the practice while it ran, producing five releases of
-`review-sweeps`. **An outlier widens the range rather than being dropped from
-it**, so it counts, and the range will say so once there is one.
+**Rate: five slices, eleven files** — and the spread is the finding rather than
+the average. Slice 001 built the practice while it ran; slice 005 spent itself
+on a single record and on two bundles in another repository. **One file in a
+slice is not a failure of pace, it is what a record costs when it is read
+properly**, and the four still pending should be budgeted the same way.
 
 ## The index
 
@@ -59,7 +60,7 @@ answers**, and the journal says which and why.
 | standards and permissions | `docs/examples/american-spelling.md` | — |  |  |  | skipped — reader excluded `docs/examples/` from this sweep |
 | standards and permissions | `docs/examples/design-first-working-mode.md` | — |  |  |  | skipped — reader excluded `docs/examples/` from this sweep |
 | standards and permissions | `docs/examples/no-competitor-names-in-committed-docs.md` | — |  |  |  | skipped — reader excluded `docs/examples/` from this sweep |
-| decisions | `.luma/records/decisions/ADR-0001-apply-writes-adapters-not-copies.md` | both |  |  |  |  |
+| decisions | `.luma/records/decisions/ADR-0001-apply-writes-adapters-not-copies.md` | both | human:benlinton | human:benlinton | findings | 005 |
 | decisions | `.luma/records/decisions/ADR-0002-adoption-copies-and-never-resolves.md` | both |  |  |  |  |
 | decisions | `.luma/records/decisions/ADR-0003-cli-speaks-convention-not-metaphor.md` | both |  |  |  |  |
 | decisions | `.luma/records/decisions/ADR-0004-refit-is-removed-not-renamed.md` | both |  |  |  |  |

@@ -416,3 +416,140 @@ integrated is not this bundle's to say — `git-workflow`, and whatever this
 project already does, own that." **0.28.0 walked straight past a sentence the
 bundle had already written.***
 
+
+## 2026-08-29 — during slice 005, `ADR-0001` resumed after a mid-slice clear
+
+**`index` was never retired, and that is the answer to the question slice 002
+parked.** The entry above guessed the word had been replaced by *entry point*
+and *routing* and that nothing enforced it. Checked against
+`.luma/config/luma-foreman.toml`: the retired list is `preload`, `projection`,
+`outfit`. **`index` is not on it.** The usage drifted toward *entry point* in
+practice — the file is literally `entrypoint.md` — and no decision was ever
+recorded, which is precisely the *"if it was never decided, that is why nothing
+caught it"* branch the earlier entry named.
+
+**`apply.py` uses `adapter` two incompatible ways and ships the losing one 43
+times.** `:19`'s table reserves the word for *"a block in `CLAUDE.md` that
+points at the entrypoint and carries nothing else"*, and `:25` leans on that
+narrowness. But `_skill()`'s docstring at `:273` opens *"One adapter: harness
+frontmatter, and where the real document is"*, and `:288` writes *"This is the
+adapter that makes it reachable from here"* into every generated skill.
+
+**The broad sense wins on the documents** — `README.md:45`,
+`docs/architecture.md:94`, `docs/commands.md:70`, `CHANGELOG.md:69` and
+`ADR-0001`'s own title all say *thin adapters* generically. The narrow sense has
+one table row and `docs/architecture.md:104`. **Taking the broad one costs a
+docstring fix; taking the narrow one costs 43 generated files, four documents
+and this record's title.**
+
+*Also at `apply.py:13`: "Two outputs, because a harness has two ways in", above
+a table with three rows.*
+
+**Both are code, and code left this sweep at slice 005.** They need a home that
+survives the close — the next sweep's charter, or a backlog idea — because a
+skipped row is not re-read.
+
+**`never copies of a document` was false the day it was written, and the rings
+are the proof.** Every ring `apply` generates copies the source document's
+`description` and `matches` verbatim — checked `rings/…/versioning.md` against
+`versioning/policy/semantic-versioning.md:4-7`. The record's `:33` already
+licensed it — *"Not a summary and not an excerpt — a line"* — so it is not a
+violation. **But `content` silently meant `body` and the record never said so**,
+which is what leaves the rings looking like a breach of the decision that
+authorises them. Narrowed in the Summary; **the title still says
+`copies of a document`**, and fixing that is a rename nobody has asked for.
+
+**A decision record owes an accurate description, and the way to keep one
+accurate is to say which parts are load-bearing.** That is the answer to the
+question slice 004 left open. `ADR-0001:33-35` described a mechanism that no
+longer existed because it stated decision and implementation in one voice.
+Separating them — *this is what was decided, this is where it currently lives* —
+is what stops the next relocation making the record false again.
+
+**The reader then went further: a decision record should not describe things
+that do not exist at all.** Every mention of `preload` came out, including the
+`Measured` table that was built on it. **The measurement is the record's only
+hard evidence**, so it was re-worded by behaviour rather than by field name —
+*"four of them declared to load in every session"*. Numbers, date and claim
+untouched. **A set described by what it does cannot rot when the field is
+renamed again, and that field has now been renamed twice.**
+
+**Two rules were already implemented and written down nowhere.** Both surfaced
+because the reader proposed them from intuition and the code turned out to
+agree:
+
+| the rule | already doing it |
+| --- | --- |
+| prefer a general form; reach for harness-specific only where required or better | `apply.py:25-27` — the ring is written once, each harness gets a pointer |
+| an adapter may carry harness-required content, and only the least that works | every skill's `description`, copied so Claude Code can route to it |
+| ...and the inverse: never render what the harness already carries | `apply.py:592-596` — workflows omitted from rings for exactly this reason |
+
+**A design position that only exists as code is one refactor from being lost**,
+and neither of these was in any document.
+
+**The exception bar matters more than the exception.** The reader's wording was
+*"the thinnest amount possible to get optimal behavior"*. **Optimal is arguable,
+and the argument that inlining the whole body is optimal is the one this record
+exists to refuse.** Written as *required, not better* — checkable by removing it
+and seeing whether the thing still works.
+
+**`.luma/config/luma-foreman.toml:46` now exempts `ADR-0001` for a word it no
+longer contains.** An exception permitting nothing is a rule weakened for free.
+Pending row in *plans, config, changelog*; not touched.
+
+**`inspect` caught the sweep's own charter.** `charter.md:180` calls the `apply`
+cluster *"the projection engine"*, and `projection` was retired by `ADR-0003`
+and `ADR-0005`. Written by the agent, in the file that defines this sweep's
+scope. **Out of scope is not a licence to use a retired word.**
+
+**And a standard nobody can comply with.** `docs/examples/american-spelling.md`
+says American spelling throughout the estate — *behavior, organization*. The
+corpus is 70 `behaviour` against 1 `behavior`, and 208 `organiz` against 1
+`organis`. **It is being followed for one word and ignored for the rest.**
+Worse, it is a worked example of `docs/standards.md`, which slice 003 deleted as
+superseded — so the standard it illustrates no longer exists and the example
+outlived it. `docs/examples/` is skipped, so nothing in this sweep will reach it.
+
+**Nothing checks that a record's citation into a bundle resolves.** `inspect`
+has five rules — `bundles`, `adoption`, `identity`, `secrets`, `vocabulary` —
+and none of them follows a reference from `.luma/records/` into
+`.luma/bundles/`. `ADR-0001`'s References section cited
+**`luma/bundle-manager`**, a namespace this repository has never had, and the
+sweep found it by reading rather than by running anything.
+
+**It is the same silent-by-construction shape as the XDG path defect**: a
+citation that resolves to nothing produces no error, no warning and no
+behaviour change. It is simply never followed, and the record keeps looking
+authoritative.
+
+**Cheap to check, because both halves are already structured.** A bundle id and
+a document id are exactly what `adopted.toml` and the vendored tree are keyed
+on, so the rule is a path existence test rather than a parse.
+
+**And it argues against the fix the reader first reached for.** Pinning a commit
+SHA into the record would not have caught the wrong namespace, would go stale on
+the next `get`, and would duplicate what `adopted.toml:commit` already holds.
+**Precision that a machine can check beats provenance nobody reconciles.**
+
+**Correction to the entry above: pinning a citation to a commit is right, and
+the argument against it was wrong.** The entry claimed a SHA duplicates
+`adopted.toml:commit`. **It does not.** `adopted.toml` records what this project
+carries *now* and is rewritten by every `get`; a reference in a record needs
+what was read *when the decision was taken*. Two different facts, so there was
+never a second copy.
+
+**The other two objections were weak on their own terms.** *It would not have
+caught the wrong namespace* is true and irrelevant — a pin prevents future rot
+rather than detecting past errors. *It pins to a version nobody uses* is the
+purpose of a permalink inside a dated document, not a cost of one.
+
+**`ADR-0001` now links the policy at the catalog commit it was read at**,
+verified to exist in `LumaStack/luma-catalog` at `7b2a0f6`.
+
+**The transferable part is not about SHAs.** The reader proposed a fix, the
+agent produced three objections, and the objections were reasoned rather than
+checked — the same failure the *report of completion* learning describes, in the
+register of argument rather than of status. **A confident objection is a claim,
+and claims in this sweep have been wrong at roughly the rate everything else
+has.** The one that mattered took thirty seconds to falsify by reading
+`adopted.toml` and asking what it is for.
