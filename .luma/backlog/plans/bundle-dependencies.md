@@ -130,6 +130,62 @@ the pair.
 `git-worktrees` for what to do about it. **A bundle that names another for depth
 is fine; one that needs another to function is the case this plan is about.***
 
+## A dependency is never conditional on the reader
+
+**This is the constraint that stops the audience rule turning into a
+combinatorial mess**, and it needs writing down before anything is built.
+
+**A bundle declares what it needs to do its own job.** Not what its reader might
+also want, and not what would be useful if they happen to work a particular way.
+
+**`review-sweeps` needs `git-workflow`** because its workflow cites
+`proving-work-landed` and **every sweep lands a record.** Unconditional.
+
+**It does not need `git-worktrees`**, even for a reader who runs sweeps in
+worktrees — **the sweep does not require worktrees to function.** That reader
+wants `git-worktrees` for reasons of their own, which is a different sentence.
+
+**So the test is: does the bundle stop working without it?**
+
+| | |
+| --- | --- |
+| **stops working** | a dependency. Declare it |
+| **works, and would be better** | a **recommendation** — and it belongs to the adopter's selection, not to this bundle |
+
+**If it varies by reader, it is not a dependency.** That is the whole answer to
+*what happens when my dependencies fork by audience*: **they do not.** A forked
+dependency is a recommendation that has been mislabelled, and labelling it
+correctly removes the fork.
+
+**`which-bundles-this-project-should-carry` already owns the other half** — *of
+what fits and is mine, what do I want in front of me* — and names it as the
+adopter's judgement with no mechanism. **That is the right place for it and it
+should stay unmechanised**; a bundle recommending bundles is how a dependency
+graph grows conditions.
+
+### The chain stays flat because citation is not dependency
+
+`review-sweeps` → **needs** → `git-workflow` → **cites for depth** →
+`git-worktrees`.
+
+**The second arrow is not a dependency and must never become one.**
+`proving-work-landed` mentions `git worktree list` and sends the reader to
+`git-worktrees` for what to do about it — **a reader with no worktrees reads that
+line and moves on.** Nothing is missing for them.
+
+**Flat, and one level, is not a simplification here — it is the property that
+keeps this tractable**, and it is what the design in `luma-leader` already
+chose.
+
+### If a bundle needs *either* A *or* B
+
+**It does not.** A bundle that would accept either of two others needs something
+neither provides — an interface, a shape, a guarantee — and **has no way to say
+so.**
+
+**Declare nothing and cite both.** An *or* dependency is where resolvers grow
+the machinery this estate has twice decided not to build.
+
 ## What to decide before building
 
 **1. What the field is called and what it means.** `depends_on`, `requires`,
