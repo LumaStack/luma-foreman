@@ -68,10 +68,10 @@ what it is for.>
   now nearly all of it, so *the reader's view is downstream of the agent's* is
   a larger concession than when it was agreed.
 
-### How to proceed
+### What's next
 
-- **Next slice — `entry and shared`, 7 files.** Code, so the agent reads and
-  you take a summary. Roughly a slice's worth.
+- **`entry and shared` — 7 files.** Code, so the agent reads and you take a
+  summary. Roughly a slice's worth.
 - **Revisit the read-by arrangement first.** One turn, and it changes how every
   remaining slice runs.
 - **Close the sweep.** Everything left is code and skipped rows; the close
@@ -80,15 +80,52 @@ what it is for.>
 <Each option gets its cost in a clause. A reader choosing between three
 unpriced options is guessing.>
 
-**Clearing is free here** — nothing exists only in this session. Type `/clear`,
-then paste:
+### Should you /clear          <whatever this harness calls it>
+
+<Weigh it. Do not assert it — the answer changes every time and a fixed one
+reads as boilerplate the moment it is wrong.>
+
+**Yes, and it is cheap.** The next slice is a different subsystem, so nothing
+loaded here carries over — and what is loaded is eight repositories the next
+cluster will never touch.
+
+**→ Type `/clear`, then paste this:**   <the same command, named again>
 
 ```
 Resume the review sweep in .luma/backlog/sweeps/the-whole-of-foreman/.
 Read charter.md and coverage.md, then invoke review-next.
-Next cluster: entry and shared.
+Ordering is led — ask me which cluster is next.
 ```
 ```
+
+## Two sections, because they are two questions
+
+**`What's next` is a report; `Should you /clear` asks for an answer.** Running
+them together buries the only part with an action in it, which is where a reader
+stops reading.
+
+**In that order, because clearing depends on what is next.** Same cluster means
+carry on; a different subsystem means clear. Asking first asks before the input
+exists.
+
+**Fill in the command this harness actually uses**, in the heading and again
+above the fence. `/clear` in Claude Code; whatever the equivalent is wherever
+this runs; and where a harness has none, drop to *start a fresh session* and
+keep the paste block, which is the part that carries the value.
+
+**The heading carries the literal command on purpose** — *should you clear* is a
+question about housekeeping, and *should you `/clear`* is a thing to type.
+
+## The paste block goes under a label, not after a paragraph
+
+**The instruction sits on its own line, immediately above the fence**, with
+nothing between them. A fence at the tail of a long message with its
+instruction buried mid-paragraph is a fence nobody notices.
+
+**A fenced block, never a blockquote.** A terminal renders a blockquote with a
+prefix character on every line, and the prefix comes along when the reader
+selects it. The fence is the copy-safe shape and terminals already render it as
+one.
 
 ## The row close and the slice close are two events
 
@@ -115,16 +152,26 @@ was never routed.
 **Three or four lines, in a fenced block.** The reader is going to select it
 with a mouse.
 
-## The three shapes the clear paragraph takes
+## Weigh it, do not assert it
 
-**Clearing is free.** Nothing exists only in the session and the next slice is
-elsewhere. The usual case, and the reason a slice boundary exists.
+**The answer is not always yes**, and a section that always says yes is one a
+reader stops reading.
 
-**Write something down first.** Something is still only in the session — that
-is a defect rather than a reason to hold the context. Name it, write it to the
-journal, then clear.
+**Both choices are taxed and the recommendation is the smaller tax** — the same
+rule `what-a-slice-produces` gives for fixing now versus routing, and it is not
+restated here. **What is specific to clearing is which taxes:** clearing costs a
+re-read of whatever the next slice needs and this session already holds;
+carrying on costs the irrelevant context, paid again on every remaining turn.
 
-**Carry on instead.** The next slice is the same cluster, so orientation
-carries over and clearing buys a re-read of files about to be discussed. **Say
-which of the three it is, and why, in a line** — then give the options above
-regardless, because *carry on* is still a choice between them.
+**So it turns on one question — how much of what is loaded does the next slice
+actually want?**
+
+- **A different subsystem, or anything after a detour** — almost none of it.
+  **Clearing is cheap, and it is the usual answer.**
+- **The same cluster, continued** — most of it. **Clearing buys a re-read of
+  files about to be discussed. Say so and carry on.**
+- **Something exists only in this session** — **a defect, not a cost.** Name it,
+  write it to the journal, then clear. Never a reason to hold context.
+
+**Say which of the three it is and why, in a sentence or two** — and give the
+options above regardless, because *carry on* is still a choice between them.

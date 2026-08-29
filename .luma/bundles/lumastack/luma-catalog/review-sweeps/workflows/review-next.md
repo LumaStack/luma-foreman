@@ -319,10 +319,10 @@ table.
 
 ## 11. Close out the slice
 
-**Four parts, in order, every time** — what just happened, where the sweep
-stands, what is worth their attention, and how to proceed. **[The status
-template](../templates/sweep-status.md) carries the shape**; what follows is
-why the last two are there at all.
+**Five parts, in order, every time** — what just happened, where the sweep
+stands, what is worth their attention, what is next, and whether to clear.
+**[The status template](../templates/sweep-status.md) carries the shape**; what
+follows is why the last two are there at all.
 
 **The same output opens a slice after a detour** — see step 2. One message, two
 moments, and the only difference is what triggers it: **a close is automatic
@@ -347,14 +347,28 @@ reader may want to act on and nobody is blocked on.
 take.** *Eleven rows sit under the reason you just gave and are still pending;
 not marked, your call* belongs somewhere a reader stops.
 
-### How to proceed is priced options, not prose
+### `What's next` and `Should you /clear` are two sections
+
+**One is a report and the other asks for an answer.** Run together, the only
+part with an action in it sits at the tail of a paragraph, which is where a
+reader stops reading.
+
+**In that order, because clearing depends on what is next.** Same cluster means
+carry on; a different subsystem means clear. Asking first asks before the input
+exists.
+
+**The heading carries the literal command.** *Should you clear* is a question
+about housekeeping; *should you `/clear`* is a thing to type. Name whatever
+this harness calls it.
+
+### `What's next` is priced options, not prose
 
 **Bullets, each with what it costs in a clause** — *seven files, roughly a
 slice's worth*; *one turn, and it changes how every remaining slice runs*. **A
 reader choosing between three unpriced options is guessing**, and the agent is
 the one who can price them.
 
-**Then the clear decision in a sentence, and the paste block.**
+**Then `Should you /clear`**: the answer in a sentence, and the paste block.
 
 ### Why a slice boundary is where a session gets cleared
 
@@ -394,6 +408,14 @@ session lives.*
 
 **Give the reader something to paste into the next session**, in a fenced
 block, three or four lines. They are going to select it with a mouse.
+
+**The instruction goes on its own line immediately above the fence**, with
+nothing between them. A fence at the tail of a long message with its
+instruction buried mid-paragraph is a fence nobody notices.
+
+**A fence, never a blockquote.** A terminal renders a blockquote with a prefix
+character on every line, and that prefix comes along when the reader selects
+it. The fence is the copy-safe shape and a terminal already renders it as one.
 
 **It carries what a fresh agent cannot read for itself and nothing else** — the
 sweep's path, which files to read, which workflow to invoke, where to resume.

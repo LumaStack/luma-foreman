@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.26.0
+version: 0.27.0
 published: 2026-08-29
 lifecycle: draft
 survival: experimental
@@ -131,6 +131,41 @@ call graph, and while a headquarters could be read the same way, nobody has —
 adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
+
+`0.27.0` — **`What's next` and `Should you /clear` are two sections.**
+
+They were one, and the clear decision sat at the tail of a paragraph — **the
+only part of the message with an action in it, in the place a reader stops
+reading.**
+
+**One is a report; the other asks for an answer**, and the heading says so by
+carrying the literal command. *Should you clear* is a question about
+housekeeping; *should you `/clear`* is a thing to type. **The command is filled
+in for whatever harness this runs in** — `/clear` in Claude Code, its
+equivalent elsewhere, and where a harness has none, *start a fresh session*
+with the paste block kept.
+
+**And the clear answer is weighed, never asserted.** *A section that always
+says yes is one a reader stops reading.*
+
+**The weighing rule is `what-a-slice-produces`' and is cited rather than
+restated** — both choices taxed, recommend the smaller. **What is specific here
+is which taxes:** clearing costs a re-read of whatever the next slice needs and
+this session already holds; carrying on costs the irrelevant context, paid again
+on every remaining turn. It turns on how much of what is loaded the next slice
+actually wants — almost none after a detour, most of it mid-cluster.
+
+*Something existing only in the session is a defect rather than a cost.* Write
+it down and then clear; it is never a reason to hold context.
+
+**`What's next` over `How to proceed`**, because it is the question readers
+actually ask.
+
+**And the paste block gets a label on its own line, immediately above the
+fence.** A fence at the tail of a long message with its instruction buried
+mid-paragraph is a fence nobody notices. **A fence and never a blockquote** — a
+terminal renders a blockquote with a prefix character on every line, and the
+prefix comes along when the reader selects it.
 
 `0.26.0` — **one status output, emitted at two moments.**
 
