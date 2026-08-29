@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.27.0
+version: 0.28.0
 published: 2026-08-29
 lifecycle: draft
 survival: experimental
@@ -132,6 +132,47 @@ adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
 
+`0.28.0` — **prove nothing is stranded; do not remember it — and `git-workflow`
+owns how.**
+
+The clear check asked *is anything left that exists only in this session?* and
+rested on a claim that **by the time a slice closes, everything worth keeping is
+on disk — the note, the index, the journal, the commit.**
+
+**A commit on an unmerged branch satisfies all of that and is still invisible.**
+A sweep lost forty-three skipped rows exactly that way: the slice was committed,
+no pull request was ever opened, a detour began with a branch switch, and the
+next slice branched from an integration branch that had never seen it. **The
+check passed honestly and the record was gone.**
+
+**So the question widens** — the session, the working tree, the branch, a
+worktree, anywhere work can be stranded — **and most of it is checkable rather
+than recalled.**
+
+**How to check it is not this bundle's business.** `git-workflow`'s
+`proving-work-landed` is the source of truth: the commands, the fetch, the
+remote ref, showing the output, and the two levels of gate. **Every bundle whose
+work can be stranded on a branch has the same problem**, and each inventing its
+own commands produces a set of near-identical checks that drift.
+
+*This bundle had already written the rule and walked past it —
+`what-a-slice-produces` ends "How changes get integrated is not this bundle's to
+say."*
+
+**What stays here is the obligation and where it falls**: at a slice's close,
+and again before the next branch is cut. Plus which sweep failures are worth a
+hook — losing a slice's record is; a misrouted finding or a stale count is not,
+because both are visible on the next read.
+
+**And step 10 is now *land the slice*, not *commit* it.** A record on a branch
+nobody merged is the same failure as one in a session nobody saved — one
+`checkout` instead of one restart.
+
+**The one thing no command reaches is the session.** You cannot grep for an
+observation you failed to write, so it stays a judgement — and it is the one
+that gets trusted. Making everything around it checkable leaves it standing
+alone and visible instead of hidden in a row of equally confident claims.
+
 `0.27.0` — **`What's next` and `Should you /clear` are two sections.**
 
 They were one, and the clear decision sat at the tail of a paragraph — **the
@@ -151,9 +192,9 @@ says yes is one a reader stops reading.*
 **The weighing rule is `what-a-slice-produces`' and is cited rather than
 restated** — both choices taxed, recommend the smaller. **What is specific here
 is which taxes:** clearing costs a re-read of whatever the next slice needs and
-this session already holds; carrying on costs the irrelevant context, paid again
-on every remaining turn. It turns on how much of what is loaded the next slice
-actually wants — almost none after a detour, most of it mid-cluster.
+this session already holds; carrying on costs the irrelevant context, paid
+again on every remaining turn. It turns on how much of what is loaded the next
+slice actually wants — almost none after a detour, most of it mid-cluster.
 
 *Something existing only in the session is a defect rather than a cost.* Write
 it down and then clear; it is never a reason to hold context.
