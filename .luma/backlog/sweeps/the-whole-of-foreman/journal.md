@@ -267,3 +267,36 @@ answered once for both rather than twice.
 **Routed rather than fixed**, at the reader's choice, so slice 004 stays about
 the document in front of it.
 
+**`ADR-0001:33-35` describes a mechanism that no longer exists.** It says **the
+`CLAUDE.md` block is an index** — one line per document, with `preload:
+mandatory` documents hoisted into a *read these first* section.
+
+**The block is four lines pointing at `.luma/bundles/entrypoint.md` and carries
+no index.** The index moved to the entrypoint, which lists one line per *bundle*
+rather than per document, and there is no hoisted section.
+
+**Two things make it more than a stale sentence.** `preload` is retired here and
+this file sits on the vocabulary rule's exception list, so **`inspect`
+deliberately does not flag it** — correctly, because a record may use a retired
+word to say what was decided at the time. **But the passage is present tense**,
+describing what the system does rather than what was decided on 2026-08-23.
+
+**Undecided, and the reader's to settle**: whether a decision record owes an
+accurate description of a mechanism at all. The *decision* — adapters, never
+copies — is still in force and still true. Only the description of how it was
+implemented has moved.
+
+**`:29` was verified exact** against `.claude/skills/create-bundle/SKILL.md`:
+harness frontmatter, a path to the real document, standing context, no body.
+
+**And an idea proposes what has already shipped.**
+`.luma/backlog/ideas/apply-writes-an-entry-point-not-an-index.md` opens *"`apply`
+**should** stop writing content into `CLAUDE.md` and start generating a
+harness-neutral entry point"* — which is what `apply` does today. **That row is
+skipped with the idea backlog, so nothing was going to catch it**, and a skipped
+row is not re-read at the close.
+
+*Written before clearing mid-slice at the reader's request. `ADR-0001` was
+presented and left open — its cross-check is above so the next session does not
+re-derive it.*
+
