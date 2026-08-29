@@ -4,11 +4,10 @@ title: The whole of luma-foreman
 created: 2026-08-28
 lifecycle_status: provisional
 survival: experimental
-goal: Nothing in this repository states something false — whether it drifted there or was written that way
+goal: Nothing in this repository states something false — whether it drifted there or was created that way
 scope: All tracked content except the generated .claude/ adapters and the vendored .luma/bundles/ copies
 ordering: led
 pairing: human-agent
-indexed_at: 52787ca6b968
 contributors:
   - human:benlinton
   - agent:opus-5
@@ -47,6 +46,16 @@ checked.
 what its live problems are. That is a second ask rather than the goal, recorded
 so it does not get lost — a sweep aimed only at churn would skip it.
 
+## Coverage lives beside this
+
+**[`coverage.md`](coverage.md)** carries every file in scope, its status, and who
+set it — plus `indexed_at`, the commit it was last reconciled against.
+
+**This file is authored; that one is derived.** Its rows are the scope rule below
+applied to the tree, and its statuses are what the slices record — delete it and
+it rebuilds exactly. Delete this one and the goal, the reasoning and the
+learnings exist nowhere else.
+
 ## Scope
 
 **In:** `README.md`, `CLAUDE.md`, `CHANGELOG.md`, `docs/`, `.luma/` excluding
@@ -60,10 +69,11 @@ vendored bundles, `src/`, `tests/`, `bin/`, `libexec/`. **81 files.**
   `luma-catalog`. Editing them here is drift by definition, so reading them here
   can produce nothing actionable.
 - **`.luma/backlog/sweeps/` — this sweep's own record.** A sweep reviewing the
-  file that records it is circular, and approving your own index proves nothing.
+  file that records it is circular, and approving your own coverage ledger
+  proves nothing about coverage.
   Added as an exclusion once the sweep's files appeared inside its own scope.
 
-## Who reads the source is not uniform, and the index says so
+## Who reads the source is not uniform, and `coverage.md` says so
 
 **Everything is read in full. What varies is who reads it.**
 
@@ -111,104 +121,8 @@ day, and the churn is ongoing rather than finishing.
 repository that changed completely underneath it. Days, not weeks — or slow the
 commits while it runs.
 
-*Replace this estimate with a measured rate after slice 002.*
-
-## Index
-
-`pending` · `reviewed` · `approved` · `skipped` **with a reason, always**
-
-**`reviewed`** — read and satisfactory; either party may set it. **`approved`** —
-signed off, and only a person gives it. The `by` column records who.
-
-| cluster | file | read by | status | by | slice |
-| --- | --- | --- | --- | --- | --- |
-| what it says it is | `README.md` | both | **approved** | `human:benlinton` | — |
-| what it says it is | `CLAUDE.md` | both | pending | | |
-| what it says it is | `.luma/PROJECT.md` | both | pending | | |
-| what it says it is | `docs/scope.md` | both | pending | | |
-| split from README | `docs/getting-started.md` | both | **approved** | `human:benlinton` | 001 |
-| split from README | `docs/commands.md` | both | **approved** | `human:benlinton` | 001 |
-| split from README | ~~`docs/inspect.md`~~ | both | **removed** | — | 001 — collapsed into `commands.md` |
-| split from README | `docs/architecture.md` | both | **approved** | `human:benlinton` | 001 |
-| standards and permissions | `docs/standards.md` | both | pending | | |
-| standards and permissions | `docs/claude-agent-permissions.md` | both | pending | | |
-| standards and permissions | `docs/examples/README.md` | both | pending | | |
-| standards and permissions | `docs/examples/american-spelling.md` | both | pending | | |
-| standards and permissions | `docs/examples/design-first-working-mode.md` | both | pending | | |
-| standards and permissions | `docs/examples/no-competitor-names-in-committed-docs.md` | both | pending | | |
-| decisions | `.luma/records/decisions/ADR-0001-apply-writes-adapters-not-copies.md` | both | pending | | |
-| decisions | `.luma/records/decisions/ADR-0002-adoption-copies-and-never-resolves.md` | both | pending | | |
-| decisions | `.luma/records/decisions/ADR-0003-cli-speaks-convention-not-metaphor.md` | both | pending | | |
-| decisions | `.luma/records/decisions/ADR-0004-refit-is-removed-not-renamed.md` | both | pending | | |
-| decisions | `.luma/records/decisions/ADR-0005-a-retired-word-is-released-when-its-referent-goes.md` | both | pending | | |
-| plans, config, changelog | `.luma/backlog/plans/hook-delivery.md` | both | pending | | |
-| plans, config, changelog | `.luma/backlog/plans/knowledge-delivery.md` | both | pending | | |
-| plans, config, changelog | `.luma/config/luma-foreman.toml` | both | pending | | |
-| plans, config, changelog | `CHANGELOG.md` | both | pending | | |
-| ideas A | `.luma/backlog/ideas/a-record-can-be-demoted.md` | both | pending | | |
-| ideas A | `.luma/backlog/ideas/a-reminder-needs-somewhere-to-live.md` | both | pending | | |
-| ideas A | `.luma/backlog/ideas/adopt-or-install-as-shorthand.md` | both | pending | | |
-| ideas A | `.luma/backlog/ideas/apply-writes-an-entry-point-not-an-index.md` | both | pending | | |
-| ideas A | `.luma/backlog/ideas/browsing-a-catalog-is-an-engines-job.md` | both | pending | | |
-| ideas A | `.luma/backlog/ideas/bundle-routines.md` | both | pending | | |
-| ideas A | `.luma/backlog/ideas/bundles-wanted-not-built.md` | both | pending | | |
-| ideas A | `.luma/backlog/ideas/committed-permission-floor.md` | both | pending | | |
-| ideas A | `.luma/backlog/ideas/declared-maturity-and-behaviour.md` | both | pending | | |
-| ideas A | `.luma/backlog/ideas/distribution-beyond-clone-and-symlink.md` | both | pending | | |
-| ideas A | `.luma/backlog/ideas/drive-an-incident.md` | both | pending | | |
-| ideas A | `.luma/backlog/ideas/edit-ceremony-should-key-on-citations.md` | both | pending | | |
-| ideas B | `.luma/backlog/ideas/bundles-declare-what-they-work-with.md` | both | pending | | |
-| ideas B | `.luma/backlog/ideas/never-derive-an-actor-from-the-os-user.md` | both | pending | | |
-| ideas B | `.luma/backlog/ideas/hook-against-leaking-internal-hq.md` | both | pending | | |
-| ideas B | `.luma/backlog/ideas/knowledge-reaching-agents-elsewhere.md` | both | pending | | |
-| ideas B | `.luma/backlog/ideas/named-permission-profiles.md` | both | pending | | |
-| ideas B | `.luma/backlog/ideas/new-repository-survey.md` | both | pending | | |
-| ideas B | `.luma/backlog/ideas/no-way-to-un-adopt.md` | both | pending | | |
-| ideas B | `.luma/backlog/ideas/personal-skill-selection-not-committed.md` | both | pending | | |
-| ideas B | `.luma/backlog/ideas/preload-levels-collapse-into-emphasis.md` | both | pending | | |
-| ideas B | `.luma/backlog/ideas/prose-conventions.md` | both | pending | | |
-| ideas B | `.luma/backlog/ideas/routers.md` | both | pending | | |
-| ideas B | `.luma/backlog/ideas/scan-history-not-just-the-working-tree.md` | both | pending | | |
-| ideas B | `.luma/backlog/ideas/which-bundles-this-project-should-carry.md` | both | pending | | |
-| ideas B | `.luma/backlog/ideas/workflows-invoking-workflows.md` | both | pending | | |
-| entry and shared | `bin/luma-foreman` | agent | pending | | |
-| entry and shared | `src/foreman/cli.py` | agent | pending | | |
-| entry and shared | `src/foreman/config.py` | agent | pending | | |
-| entry and shared | `src/foreman/project.py` | agent | pending | | |
-| entry and shared | `src/foreman/bundle.py` | agent | pending | | |
-| entry and shared | `src/foreman/lkf.py` | agent | pending | | |
-| entry and shared | `src/foreman/__init__.py` | agent | pending | | |
-| adoption path | `src/foreman/get.py` | agent | pending | | |
-| adoption path | `src/foreman/adoption.py` | agent | pending | | |
-| adoption path | `src/foreman/catalog.py` | agent | pending | | |
-| adoption path | `src/foreman/outdated.py` | agent | pending | | |
-| adoption path | `src/foreman/init.py` | agent | pending | | |
-| apply | `src/foreman/apply.py` | agent | pending | | |
-| inspect | `src/foreman/inspect/__init__.py` | agent | pending | | |
-| inspect | `src/foreman/inspect/registry.py` | agent | pending | | |
-| inspect | `src/foreman/inspect/finding.py` | agent | pending | | |
-| inspect | `src/foreman/inspect/report.py` | agent | pending | | |
-| inspect | `src/foreman/inspect/rules/__init__.py` | agent | pending | | |
-| inspect | `src/foreman/inspect/rules/bundles.py` | agent | pending | | |
-| inspect | `src/foreman/inspect/rules/adoption.py` | agent | pending | | |
-| inspect | `src/foreman/inspect/rules/identity.py` | agent | pending | | |
-| inspect | `src/foreman/inspect/rules/secrets.py` | agent | pending | | |
-| inspect | `src/foreman/inspect/rules/vocabulary.py` | agent | pending | | |
-| agent permissions | `src/foreman/agent_permissions/__init__.py` | agent | pending | | |
-| agent permissions | `src/foreman/agent_permissions/model.py` | agent | pending | | |
-| agent permissions | `src/foreman/agent_permissions/store.py` | agent | pending | | |
-| agent permissions | `src/foreman/agent_permissions/match.py` | agent | pending | | |
-| agent permissions | `src/foreman/agent_permissions/gate.py` | agent | pending | | |
-| agent permissions | `src/foreman/agent_permissions/commands.py` | agent | pending | | |
-| agent permissions | `src/foreman/agent_permissions/install.py` | agent | pending | | |
-| agent permissions | `src/foreman/agent_permissions/doctor.py` | agent | pending | | |
-| agent permissions | `libexec/permission-gate.py` | agent | pending | | |
-| tests | `tests/run` | agent | pending | | |
-| tests | `tests/adopt-test.sh` | agent | pending | | |
-| tests | `tests/agent-permissions-cli-test.sh` | agent | pending | | |
-| tests | `tests/apply-test.sh` | agent | pending | | |
-| tests | `tests/inspect-test.sh` | agent | pending | | |
-| tests | `tests/permission-gate-test.sh` | agent | pending | | |
+*The measured rate lives in [`coverage.md`](coverage.md) and is re-taken at
+every slice.*
 
 ## Half-finished, and where it came from
 
@@ -255,21 +169,6 @@ vendored dependency, a file in a language they do not read"* — one-off cases
 noticed in the moment. It has no shape for *the reader decides at the start that
 a whole area will be read for them*, which is what happened here and is probably
 the commoner arrangement. The index had to invent a column for it.
-
-## Progress
-
-| | |
-| --- | --- |
-| approved | 4 |
-| removed | 1 — `docs/inspect.md`, collapsed |
-| pending | 82 |
-| total rows | 87 |
-| slices | 1 |
-
-**Measured rate, replacing the estimate:** slice 001 covered four documents and
-produced four bundle releases. **That is not a rate to plan against** — the
-practice was being built while it ran, and later slices should not resemble it.
-Re-measure after 002.
 
 ## Closing summary
 

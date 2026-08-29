@@ -36,9 +36,25 @@ deserves.** Drop one that does not.
 | **churn** | recent movement, which is what most sweeps are aimed at |
 | **cross-check** | any claim in the file checked against the thing it describes |
 
-**`cross-check` is the row that repays the most.** A documented list against
-the code it lists, a count against what it counts, a flag against `--help`. It
-is where a stale document announces itself, and it costs one command.
+**`commits` decides which question to ask of the file.** A file with one commit
+cannot have drifted — so *did this rot* is unanswerable and *was this ever
+true* is the only question left. A file with forty commits has both available.
+**Sweeps aimed at churn quietly assume every file has a history, and new files
+are exactly where that assumption fails.**
+
+**`cross-check` repays the most, and it is a method rather than a habit.** A
+documented list against the code it lists, a count against what it counts, a
+flag against `--help`.
+
+**Prefer a check you can run over a claim you can only read.** In the first
+sweep ever conducted, **every mechanical finding came from executing the thing
+a document described** and none from reading it attentively — careful reading
+found only the claims nothing could verify. **A document is most confident
+exactly where nobody has checked it.**
+
+**So look for the runnable check first, and say when there was none.** *Two
+claims I could not verify* is itself a finding, about the file's checkability,
+and worth as much as the claims that were checked.
 
 **The block is not fixed.** These six are a starting set, not a contract — a
 sweep aimed at something else will want other rows, and finding them out is

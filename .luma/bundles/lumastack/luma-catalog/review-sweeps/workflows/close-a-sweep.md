@@ -10,10 +10,10 @@ description: Finish or abandon a sweep honestly — check coverage, confirm noth
 summary. A sweep stopped at 40% is an ordinary outcome; a sweep stopped at 40%
 and archived as though it were finished is a lie the index will tell for years.
 
-## 1. Check the coverage
+## 1. Check `coverage.md`
 
-Every row in the index is `approved`, `reviewed`, `skipped` with a reason, or
-`pending`.
+Every row in `coverage.md` is `approved`, `reviewed`, `skipped` with a reason,
+or `pending`.
 
 **Pending rows at closing time are the point of this step.** Do not mark them
 anything. They stay pending, and the summary says how many there are — that is

@@ -14,10 +14,6 @@ fields:
     field_presence: required
     field_type: text
     desc: "the order units are taken in: narrative, risk-weighted, dependency, directory, or led"
-  indexed_at:
-    field_presence: required
-    field_type: text
-    desc: "the 12-character commit the index was last reconciled against"
   pairing:
     field_presence: required
     field_type: text
@@ -87,12 +83,14 @@ Silently drifting from it is what the field exists to make visible.
 each slice is running a declared order and says so; the defect the field
 catches is a sweep claiming `narrative` while being led in practice.
 
-## `indexed_at` is what keeps the index honest
+## The index is not here
 
-The tree moves under a sweep — by the sweep's own fixes, if nothing else — so
-every slice reconciles the index from this commit to `HEAD` and then advances
-it. Without it, reconciliation is a guess about what has already been accounted
-for.
+**A sweep states what it is for; `coverage` records what has been covered.**
+The two have opposite lifecycles — this file is written once and rarely
+touched, while the index is edited at every slice — and keeping them together
+buries every change of reasoning under a hundred rows of bookkeeping.
+
+`indexed_at` goes with the index, because it is a fact about the index.
 
 ## No coverage field
 
