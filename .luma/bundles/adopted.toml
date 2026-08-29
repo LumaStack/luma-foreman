@@ -35,10 +35,10 @@ commit   = "8ec0cce285bb27f0b6c58bacb62d37bd62a702ee"
 checksum = "sha256:2eb6115374ff3202da0fccc0452e044f6011dde17948bef76df2ab56243ac72d"
 
 ["lumastack/luma-catalog/git-workflow"]
-version  = "0.5.1"
-source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "8ec0cce285bb27f0b6c58bacb62d37bd62a702ee"
-checksum = "sha256:051a3f483f0fdee9a1bd0ab5d408ba866819674a57c5c47899c514ea0aa8f3c5"
+version  = "0.6.0"
+source   = "https://github.com/LumaStack/luma-catalog"
+commit   = "0ea2719dcbb01b129fd563aa3003b5d83e379c46"
+checksum = "sha256:deff87383829daa01bd7560a98a8817e891d1d7aebc04d84fa4aa0739d88fc93"
 
 ["lumastack/luma-catalog/git-worktrees"]
 version  = "0.6.2"
@@ -89,10 +89,10 @@ commit   = "7b2a0f6f29f29155092a7e5a92023a09bd419cbd"
 checksum = "sha256:20a218419db27c2c010619971b2789332987468a1510817f6a2134945c40c7b6"
 
 ["lumastack/luma-catalog/review-sweeps"]
-version  = "0.27.0"
+version  = "0.28.0"
 source   = "https://github.com/LumaStack/luma-catalog"
-commit   = "618eae948676e77ec13ad60377a0d09c39aa4909"
-checksum = "sha256:57f743ac276da409a050f0c98d01e7621d6ca8a7c92bebd1f90cb4d50f5490af"
+commit   = "0ea2719dcbb01b129fd563aa3003b5d83e379c46"
+checksum = "sha256:31c0764829539698d6522a31afa06291fc349c0ead1be6591b53e6842fed26b0"
 
 ["lumastack/luma-catalog/session-manager"]
 version  = "0.7.0"

@@ -267,3 +267,152 @@ answered once for both rather than twice.
 **Routed rather than fixed**, at the reader's choice, so slice 004 stays about
 the document in front of it.
 
+**`ADR-0001:33-35` describes a mechanism that no longer exists.** It says **the
+`CLAUDE.md` block is an index** — one line per document, with `preload:
+mandatory` documents hoisted into a *read these first* section.
+
+**The block is four lines pointing at `.luma/bundles/entrypoint.md` and carries
+no index.** The index moved to the entrypoint, which lists one line per *bundle*
+rather than per document, and there is no hoisted section.
+
+**Two things make it more than a stale sentence.** `preload` is retired here and
+this file sits on the vocabulary rule's exception list, so **`inspect`
+deliberately does not flag it** — correctly, because a record may use a retired
+word to say what was decided at the time. **But the passage is present tense**,
+describing what the system does rather than what was decided on 2026-08-23.
+
+**Undecided, and the reader's to settle**: whether a decision record owes an
+accurate description of a mechanism at all. The *decision* — adapters, never
+copies — is still in force and still true. Only the description of how it was
+implemented has moved.
+
+**`:29` was verified exact** against `.claude/skills/create-bundle/SKILL.md`:
+harness frontmatter, a path to the real document, standing context, no body.
+
+**And an idea proposes what has already shipped.**
+`.luma/backlog/ideas/apply-writes-an-entry-point-not-an-index.md` opens *"`apply`
+**should** stop writing content into `CLAUDE.md` and start generating a
+harness-neutral entry point"* — which is what `apply` does today. **That row is
+skipped with the idea backlog, so nothing was going to catch it**, and a skipped
+row is not re-read at the close.
+
+*Written before clearing mid-slice at the reader's request. `ADR-0001` was
+presented and left open — its cross-check is above so the next session does not
+re-derive it.*
+
+## A model's report of completion is not evidence of it
+
+**Learning, and the most transferable thing this sweep has produced.**
+
+**An agent reports from intention, not from verification.** It committed the
+slice, so it says the slice is recorded. It ran the replace, so it says the
+rename is done. **Both reports are sincere and neither is a check** — the agent
+is describing what it meant to bring about, and the gap between that and what is
+true is invisible from the inside.
+
+**This sweep produced five instances in one day**, every one caught by running
+something rather than by reading or recalling:
+
+| claimed | actually |
+| --- | --- |
+| the slice is recorded | committed to a branch nobody merged; 43 skipped rows came back as unread |
+| `lifecycle_status` is renamed | three released changelog entries rewritten, making history false |
+| the golden file is updated | the field was renamed and the `hash` it computes was not |
+| eight bundles re-adopted | one of them had never been adopted here, and arrived as a side effect |
+| the bundles came from the catalog | `get --from <path>` copied the working tree, and an untracked file shipped |
+
+**Not one of these was found by thinking harder.** Each came from a command:
+`git log main..HEAD`, a line-boundary check, `go test`, `git diff adopted.toml`,
+`inspect`.
+
+### So the practice needs proof obligations, written as commands
+
+**"Verify it landed" is not an instruction** — it names a duty and leaves the
+agent to satisfy it from the same intention that produced the error. **The
+instruction has to be the command**, and the deliverable has to be its output.
+
+**Running the check privately and reporting *verified* is the same failure one
+level down.** The proof is the output in the message, where a reader can see
+that it was run and what it said.
+
+### And the proof has to be cheap, by design rather than by luck
+
+**An expensive proof is a skipped proof, and a skipped proof is worse than
+none** — it is assumed done, so nobody looks.
+
+**So cost is a design constraint on the check, not an afterthought.** The four
+that went into `review-sweeps` 0.28.0 — `git status --short`, `git log
+<integration>..HEAD`, `git branch --no-merged`, `git worktree list` — were
+chosen because they return in milliseconds and their output is two or three
+lines. **A check that needed a full test suite, or a fetch, or a read of ninety
+files would have been correct and unused.**
+
+**Where a cheap proof does not exist, say the claim is unverified** rather than
+inventing an expensive one or asserting it anyway.
+
+### The limit, and it is worth stating
+
+**Some claims have no mechanical proof.** *Nothing worth keeping exists only in
+this session* cannot be checked — you cannot grep for an observation you failed
+to write.
+
+**That one stays a judgement, and it is the one that gets trusted**, which is
+the wrong way round. **The response is not to trust it harder but to make
+everything adjacent to it checkable**, so the unverifiable claim stands alone
+and visible rather than hidden in a row of equally confident ones.
+
+*Slice 001 concluded that `cross-check` found every mechanical defect in a
+document while careful reading found none. This is the same finding turned on
+the agent: apply `cross-check` to its own reports, or they are the least
+verified claims in the sweep.*
+
+### The proof needs a gate, and the proof itself needed proving
+
+**Two additions to the learning above, both from the hour it was written in.**
+
+**A proof with nothing gated on it is a suggestion.** An unenforced check becomes
+a line the agent reports having performed — the same failure the check exists to
+catch, one level up. **Gate in prose by default** (*do not do X until the output
+above is shown*), placed where the violation happens rather than beside the rule.
+**Gate in a hook where the failure is both silent and expensive**, which losing a
+slice's record is and most sweep failures are not. A hook is machinery: installed,
+maintained, and met by somebody who has to understand it.
+
+**And the first proof was wrong, which is the strongest evidence for the whole
+learning.** `git log main..HEAD` and `git branch --no-merged main` reported
+fifteen unlanded commits and a merged branch as unmerged — **because the local
+integration ref was stale.** Against `origin/main` after a fetch: seven and none.
+
+**A false positive is worse than no check.** It teaches the reader that the check
+cries wolf, and the next real finding gets waved through. **So the commands fetch
+first and compare against the remote ref**, and that correction exists only
+because the proof was run and its output read rather than reported.
+
+*Written into `review-sweeps` 0.28.0. The check that caught the check was the
+check.*
+
+### How we work with git is not `review-sweeps`' concern
+
+**Said by the reader and written down before acting on it**, because the acting
+is a multi-bundle change and this is the sentence that would be lost in it.
+
+**`review-sweeps` 0.28.0 put git commands in a sweep workflow** — `git fetch`,
+`git log origin/<integration>..HEAD`, `git branch --no-merged`, `git worktree
+list`. **That is the wrong bundle.** How changes get integrated, what an
+integration branch is called, when a branch counts as landed, and how a worktree
+is checked belong to **`git-workflow`** and **`git-worktrees`**.
+
+**And they belong there for every bundle, not just this one.** Any bundle whose
+work can be stranded on a branch has the same problem, and each of them
+inventing its own commands produces a set of near-identical checks that drift.
+
+**So the split is the one this sweep keeps arriving at:** `review-sweeps` states
+the **obligation** — *a slice's record is landed, not merely committed, and it is
+proven rather than reported* — and cites how. **`git-workflow` owns the how**,
+including the stale-ref correction, which is a git fact and not a sweep fact.
+
+*`what-a-slice-produces` already ends with the right instinct: "How changes get
+integrated is not this bundle's to say — `git-workflow`, and whatever this
+project already does, own that." **0.28.0 walked straight past a sentence the
+bundle had already written.***
+

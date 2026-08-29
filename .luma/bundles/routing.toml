@@ -102,6 +102,14 @@ on_violation = "allow"
 matches = ["command:gh pr merge", "command:git merge", "event:before-merge"]
 
 [[rule]]
+bundle = "lumastack/luma-catalog/git-workflow"
+document = "policy/proving-work-landed"
+title = "Proving work has landed"
+path = ".luma/bundles/lumastack/luma-catalog/git-workflow/policy/proving-work-landed.md"
+on_violation = "allow"
+matches = ["topic:checking whether work has landed", "topic:finishing a piece of work"]
+
+[[rule]]
 bundle = "lumastack/luma-catalog/git-worktrees"
 document = "policy/worktree-isolation"
 title = "Worktree isolation"

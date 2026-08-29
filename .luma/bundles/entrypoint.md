@@ -16,7 +16,7 @@ Everything here is vendored under `.luma/bundles/` and is part of this repositor
   - ring: `.luma/bundles/rings/lumastack/luma-catalog/decision-records.md`
 - **`lumastack/luma-catalog/git-secrets`** 0.5.1 — Keeping credentials and private identity out of a repository — names, personal addresses, home paths, machine names, tokens and key files. Prevention first, then audit.
   - ring: `.luma/bundles/rings/lumastack/luma-catalog/git-secrets.md`
-- **`lumastack/luma-catalog/git-workflow`** 0.5.1 — How changes get integrated — merge commits rather than squash or rebase, and the repository settings that make it true.
+- **`lumastack/luma-catalog/git-workflow`** 0.6.0 — How changes get integrated — merge commits rather than squash or rebase, the repository settings that make it true, and how to prove a change actually landed.
   - ring: `.luma/bundles/rings/lumastack/luma-catalog/git-workflow.md`
 - **`lumastack/luma-catalog/git-worktrees`** 0.6.2 — Isolated worktrees for concurrent agents in one repository — where they live, what has to be provisioned, and how to tear them down without leaving wreckage.
   - ring: `.luma/bundles/rings/lumastack/luma-catalog/git-worktrees.md`
@@ -34,7 +34,7 @@ Everything here is vendored under `.luma/bundles/` and is part of this repositor
   - ring: `.luma/bundles/rings/lumastack/luma-catalog/luma-types.md`
 - **`lumastack/luma-catalog/project-documentation`** 0.16.0 — The prose a repository publishes — where it lives, what a README is for, and which documents are worth having at all.
   - ring: `.luma/bundles/rings/lumastack/luma-catalog/project-documentation.md`
-- **`lumastack/luma-catalog/review-sweeps`** 0.27.0 — The review sweep — reading a whole codebase with an agent beside you, ordered and resumable, with the reader's own read as the thing being protected.
+- **`lumastack/luma-catalog/review-sweeps`** 0.28.0 — The review sweep — reading a whole codebase with an agent beside you, ordered and resumable, with the reader's own read as the thing being protected.
   - ring: `.luma/bundles/rings/lumastack/luma-catalog/review-sweeps.md`
 - **`lumastack/luma-catalog/session-manager`** 0.7.0 — Ending an agent session without losing what it learned — checkpoint while working, hand off to a successor, or close for good, each writing for a different reader.
   - ring: `.luma/bundles/rings/lumastack/luma-catalog/session-manager.md`

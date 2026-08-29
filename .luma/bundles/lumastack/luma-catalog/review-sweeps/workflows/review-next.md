@@ -296,10 +296,15 @@ once, and the cost is only acceptable once — a second slice that produces as
 many changes to the bundle as findings about the code is a sweep that has
 stopped sweeping.
 
-## 10. Commit the slice
+## 10. Land the slice, not just commit it
 
 One commit for the slice note and the index. That is the sweep's record and it
 lands whether or not anything was fixed.
+
+**A commit on an unmerged branch is not a landed record.** It satisfies every
+sense of *written down* — the note exists, the index is right, the journal is
+current, git has all of it — and it is still **one `checkout` from invisible.**
+Land it however this project lands changes, and then prove it landed.
 
 **The fixes are on their own schedule** — batched by kind rather than by where
 they were found, and landed however this project lands changes. See
@@ -378,15 +383,44 @@ already been written to disk.** The slice note, the index, the journal, the
 routed findings, the commit. That is not luck — it is what steps 6 to 10 are
 for.
 
-**So it is a check rather than a judgement:** *is anything left that exists
-only in this session?*
+**So it is a check rather than a judgement:** *is anything left that would
+disappear if this went away?* Not the session alone — **the session, the
+working tree, the branch, a worktree, anywhere work can be stranded.**
 
-- **No.** Clearing costs nothing — **recommend it.** What the context mostly
-  holds is files still sitting on disk, and re-reading the two that matter next
-  is cheaper than carrying all of them through every remaining turn.
-- **Yes.** **That is a defect, not a reason to keep the context.** Write it down
-  and then clear. An observation surviving only in a session is one restart from
-  gone, and [[how-a-sweep-is-stored]] gives the journal for exactly this.
+### Prove it, do not remember it
+
+**The record is landed, not merely committed, and you show that it is.** A
+commit on an unmerged branch satisfies every sense of *written down* and is
+still one `checkout` from invisible — which is how a sweep lost forty-three
+skipped rows.
+
+**How to check that is `git-workflow`'s, not this bundle's.** Its
+`proving-work-landed` policy has the commands, why they run against the remote
+ref after a fetch, and why showing the output matters — and it is the source of
+truth for every bundle with the same problem, not just this one.
+
+**What is this bundle's is the obligation and where it falls**: at the close of
+a slice, and again before the next branch is cut.
+
+**The one thing no command reaches is the session.** *Is anything worth keeping
+only in this conversation?* cannot be checked — you cannot grep for an
+observation you failed to write. **It stays a judgement, and it is the one that
+gets trusted**, which is the wrong way round. Making everything around it
+checkable is what leaves it standing alone and visible instead of hidden in a
+row of equally confident claims.
+
+### A proof with nothing gated on it is a suggestion
+
+**The check has to block something**, or it becomes a line the agent reports
+having done. Two levels, and the second is not free.
+
+**The two levels are `git-workflow`'s to describe** — prose by default, a hook
+where the failure is both silent and expensive. **What this bundle says is
+which sweep failures qualify.**
+
+**Losing a slice's record does.** Nothing reported it, and it surfaced two
+slices later with forty-three rows wrong. **Most do not** — and a hook for them
+costs more than they do.
 
 **Recommend; do not decide.** The same shape as fix-now-or-route — you can see
 what the context costs and you cannot see whether they are mid-thought about

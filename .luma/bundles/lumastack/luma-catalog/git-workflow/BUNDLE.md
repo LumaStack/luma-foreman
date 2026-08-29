@@ -1,17 +1,16 @@
 ---
 type: bundle
-version: 0.5.1
-published: 2026-08-27
+version: 0.6.0
+published: 2026-08-28
 consumers: [project]
 entrypoint: policy/merge-commits
-description: How changes get integrated — merge commits rather than squash or rebase, and the repository settings that make it true.
+description: How changes get integrated — merge commits rather than squash or rebase, the repository settings that make it true, and how to prove a change actually landed.
 ---
 
 # Git workflow
 
-How changes land. Today that is one rule and the settings that enforce it;
-branching and commit-message conventions are the obvious siblings and are not
-here yet.
+How changes land, and how to know they did. Branching and commit-message
+conventions are the obvious siblings and are not here yet.
 
 **It prescribes no branching model.** Nothing here says trunk-based, gitflow, or
 anything between — only what happens at the moment a branch is integrated.
@@ -28,6 +27,9 @@ are for.
   that survives the objection everyone raises. Read first.
 - [[configure-merge-settings]] — disable squash and rebase at the forge, and
   verify they stayed disabled.
+- [[proving-work-landed]] — the commands that answer *is this landed* and *is
+  anything stranded*, why they run against the remote ref, and why a report is
+  not an answer.
 
 ## Why this is a policy and not a preference
 
@@ -52,7 +54,44 @@ this applies at.
 
 ## Version
 
-`0.5.1` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+`0.6.0` — **`proving-work-landed`: a commit is not a landed change, and the
+difference has to be checked rather than recalled.**
+
+**Whoever did the work is the worst witness to whether it landed.** They
+committed it, so they recall it as done — a sincere report of an intention
+rather than an observation of a state. **So the answer is a command's output**,
+and four of them cover it: uncommitted work, committed-but-not-landed, stranded
+branches, and another worktree holding something.
+
+**Fetch first and compare against the remote ref.** A local integration branch
+is stale the moment somebody else merges, and against a stale one both
+`git log main..HEAD` and `git branch --no-merged main` return false positives.
+**A false positive is worse than no check** — it teaches the reader the check
+cries wolf, and the next real finding gets waved through with the noise.
+
+**Show the output.** Running the check privately and saying *verified* puts the
+reader back to trusting a recollection, only now it is a recollection of having
+looked.
+
+**And a check with nothing gated on it is a suggestion.** Gate in prose by
+default, placed where the violation happens rather than beside the rule; gate in
+a hook where the failure is both silent and expensive, which most are not.
+
+**This is why ancestry has to work.** Every one of those commands is an ancestry
+question — the thing [[merge-commits]] exists to protect. Under squash or rebase
+merges the proof stops being a proof, and the only answer left is `git cherry`
+and patch-id comparison by hand.
+
+**Found by running it.** A review sweep committed a slice, never opened a pull
+request, switched branches for an unrelated task, and lost forty-three rows of
+its own record. The check written afterwards then reported a merged branch as
+unmerged, because it compared against a stale local ref.
+
+`0.5.2` — **references to the knowledge format name sections instead of numbering them.** The format removed section numbers, so every `§n` here pointed at a position that no longer exists — and a stale number resolves to the wrong section rather than to nothing, which is why none of them were reported. Decorative citations are dropped; the rest name what they meant.
+
+Patch: wording only. No rule, field or procedure changed.
+
+`0.5.1` — **`entry_point` is now `entrypoint`.** One word, so the same word names the same thing at every level it appears.
 
 Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 
