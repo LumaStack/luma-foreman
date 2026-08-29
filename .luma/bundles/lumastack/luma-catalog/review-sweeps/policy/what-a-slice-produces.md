@@ -166,6 +166,11 @@ it. A slice that ends with six observations in a note has produced nothing.
 the reasoning that made each one worth capturing is gone within a day, and what
 gets written a fortnight later is a shorter, worse version of it.
 
+**Where a sweep keeps a `journal.md`, a not-yet-conclusion goes there** —
+dated, with the slice it came from. **It is not a queue**: anything actionable
+still goes to its real destination at the slice that produced it, and an entry
+that sits there while being actionable was routed wrongly.
+
 **The one thing that legitimately waits is a conclusion the sweep has not
 reached yet** — a suspicion about the shape of the whole system needing three
 more slices before it can be stated. Write it as a suspicion, say what would

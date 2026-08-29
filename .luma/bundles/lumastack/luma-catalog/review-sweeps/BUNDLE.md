@@ -1,8 +1,9 @@
 ---
 type: bundle
-version: 0.12.0
+version: 0.14.0
 published: 2026-08-28
 lifecycle_status: draft
+survival: experimental
 consumers: [project]
 entrypoint: policy/how-a-sweep-is-stored
 description: The review sweep — reading a whole codebase with an agent beside you, ordered and resumable, with the reader's own read as the thing being protected.
@@ -60,8 +61,9 @@ and nothing about depth.
   look interchangeable.
 
 **Templates** — [a sweep](templates/sweep.md) · [its
-coverage](templates/coverage.md) · [a slice](templates/slice.md) · [presenting
-a file](templates/file-presentation.md)
+coverage](templates/coverage.md) · [its journal](templates/journal.md) · [a
+slice](templates/slice.md) · [presenting a
+file](templates/file-presentation.md)
 
 ## Worth knowing before reading further
 
@@ -128,6 +130,75 @@ call graph, and while a headquarters could be read the same way, nobody has —
 adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
+
+`0.14.0` — **the bundle declares `survival: experimental`.** Nobody has
+finished a sweep. The practice has been corrected at every turn by the one that
+is running, and the honest statement is that it may not earn its keep — LKF's
+`experimental` says exactly that: *no intentions, out in the world to find
+out.*
+
+`lifecycle_status: draft` was already saying half of it. **The two answer
+different questions** — draft says how settled the writing is, `experimental`
+says how much to expect it to last — and this bundle is genuinely both.
+
+*It is the first bundle in this catalog to declare `survival` at all, which is
+appropriate: it is the one with the least claim to permanence.*
+
+Plus **a sweep declares whether its own plan may move.** — **a sweep declares
+whether its own plan may move.**
+
+**`strict`** fixes the goal, scope and strategy for the duration.
+**`evolving`** expects them to move as the sweep learns. **Both record
+everything they find** — the difference is what they do about the findings that
+would rewrite the sweep itself.
+
+**A strict sweep is not a blind one.** It routes findings exactly as any sweep
+does; what it declines is redirecting itself. *That is a real observation and
+this is not the sweep for it* is a legitimate journal entry.
+
+**Choose `evolving` when the practice or the material is genuinely new, and
+expect to pay for it.** The first sweep ever run was evolving and produced
+**thirteen releases of this bundle while covering six files** — correct for a
+first sweep and ruinous for a tenth. **Most sweeps should be strict**: once
+neither the practice nor the material is new, evolving is a licence to be
+distracted by whatever is more interesting than the next file.
+
+**And it is declared, never drifted into.** A sweep that quietly starts
+rewriting its own goal was evolving all along and nobody said so — so nobody
+budgeted for it, and its estimate is wrong for a reason the record does not
+show.
+
+Minor: a new required field, a step in starting, and a line in the slice loop.
+
+`0.13.0` — **an optional `journal.md`, for the space between noticed and
+concluded.**
+
+**A finding routes out at the slice that produced it; a learning goes in the
+sweep once it is settled. Neither holds a suspicion that spans three slices and
+is not yet either** — a pattern starting to show, a term that may be retired
+with nothing enforcing it, a claim to verify when the right file comes up.
+
+**It is authored and spent, which is the third combination.** `sweep.md` is
+authored and kept. `coverage.md` is derived and spent *because it regenerates*.
+The journal is spent because **its contents graduate**: an entry that mattered
+became a finding, an idea or a learning, and one that did not was never worth
+keeping.
+
+**The failure to watch for is that it becomes a queue**, which is the exact
+pile [[what-a-slice-produces]] exists to prevent — *filed by nobody, because
+the reasoning that made each one worth capturing is gone within a day*. So:
+anything actionable goes to its real destination at the slice that produced it,
+and **an entry still sitting in the journal three slices later, while being
+actionable, was routed wrongly rather than journalled correctly.**
+
+**`close-a-sweep` reads it and empties it.** Its step for things trapped in
+notes is exactly this file: every entry leaves or is dropped deliberately, and
+the journal goes with the sweep either way.
+
+*Optional. A sweep that does not want one does not have one, and nothing here
+degrades without it.*
+
+Minor: a new optional file, its type and template, and one step in closing.
 
 `0.12.0` — **the index is derived *given the strategy*, and the strategy has to
 be written down.**
@@ -628,9 +699,10 @@ cluster has been read, argued about and routed — **never because a conversatio
 ended, and never held open because one is still going.** That is now stated
 where the units are defined.
 
-**`lifecycle_status: draft`**, which should have been there at `0.1.0`. Nothing
-has run a sweep; two of four flagged guesses have already been corrected by a
-single conversation, and a bundle changing that fast is not `provisional`.
+**`lifecycle_status: draft survival: experimental`**, which should have been
+there at `0.1.0`. Nothing has run a sweep; two of four flagged guesses have
+already been corrected by a single conversation, and a bundle changing that
+fast is not `provisional`.
 
 **Breaking**, shipped as minor under the pre-1.0 allowance: the type `sitting`
 is renamed, and `policy/what-a-sitting-produces` and `templates/sitting.md` are

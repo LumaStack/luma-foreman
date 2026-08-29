@@ -6,6 +6,7 @@ lifecycle_status: provisional
 survival: experimental
 goal: Nothing in this repository states something false — whether it drifted there or was created that way
 scope: All tracked content except the generated .claude/ adapters and the vendored .luma/bundles/ copies
+strictness: evolving
 ordering: led
 pairing: human-agent
 contributors:
@@ -46,10 +47,14 @@ checked.
 what its live problems are. That is a second ask rather than the goal, recorded
 so it does not get lost — a sweep aimed only at churn would skip it.
 
-## Coverage lives beside this
+## The other two files
 
 **[`coverage.md`](coverage.md)** carries every file in scope, its status, and who
 set it — plus `indexed_at`, the commit it was last reconciled against.
+
+**[`journal.md`](journal.md)** carries what was noticed along the way and is not
+yet a finding. Append-only, harvested at the close into backlog items and
+learnings, then discarded with the rest of the sweep.
 
 **This file is authored; that one is derived.** Its rows are the scope rule and
 the clustering strategy below applied to the tree, and its statuses are what the
@@ -132,6 +137,22 @@ directory and little else.
 here rather than improvising one in `coverage.md` — **the index applies this
 strategy and does not invent it**, which is what keeps the index derivable.
 Reconciliation places a new file by asking which of these it belongs to.
+
+## Strictness
+
+**`evolving`, and it has cost what evolving costs.** The practice was `draft`
+when this sweep started and has been corrected at every turn by it — thirteen
+releases of `review-sweeps` while six files were covered.
+
+**That was the right call and it does not stay right.** The bundle now says so
+itself: evolving is correct for a first sweep and ruinous for a tenth, and once
+neither the practice nor the material is new it becomes a licence to be
+distracted by whatever is more interesting than the next file.
+
+**Worth revisiting at slice 003.** The practice has largely stopped being new;
+the material has not been read. Switching to `strict` would mean findings about
+sweeping get journalled and left for a later sweep rather than turned into a
+release mid-slice.
 
 ## Order
 

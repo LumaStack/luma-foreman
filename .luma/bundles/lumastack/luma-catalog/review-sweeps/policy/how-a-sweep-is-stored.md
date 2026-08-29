@@ -18,35 +18,71 @@ sometimes more — and survives every session boundary in between.
 .luma/backlog/sweeps/the-cli-surface/
   sweep.md                    why it exists, what it is aimed at, how it is run
   coverage.md                 every file in scope, and what has happened to it
+  journal.md                  optional — what was noticed along the way
   slices/
     001-entrypoint-and-args.md
     002-the-permission-gate.md
 ```
 
-**One is authored and the other is derived**, and everything else follows from
-that.
+### The three files, side by side
 
-| | | |
-| --- | --- | --- |
-| **`sweep.md`** | **authored** | the goal, the scope rule, the order and why, what the sweep taught. **Derivable from nothing** — delete it and none of it exists anywhere else |
-| **`coverage.md`** | **derived** | the rows are the scope rule applied to the tree; the statuses are what the slices record. **Delete it and it can be rebuilt exactly** |
+| | **`sweep.md`** | **`coverage.md`** | **`journal.md`** |
+| --- | --- | --- | --- |
+| **what it holds** | the strategy, and what the sweep concluded | a point-in-time snapshot of what is covered and what remains | what was noticed along the way |
+| **how it changes** | edited when the strategy or a conclusion changes | **reconciled, repeatedly**, against a tree that keeps moving | **appended to, never revised** |
+| **its relation to truth** | should stay true, and get truer | **accurate at the moment of reconciliation, decaying immediately after** | true as of the moment each entry was written |
+| **at close** | kept | discarded | **harvested, then discarded** |
 
-**So they stand in opposite relations to the truth.** A derived thing lags by
-nature — every commit ages it, and reconciliation exists to bring it back. An
-authored thing only changes when its author changes their mind, and it should
-get *truer* as the sweep teaches something.
+**Drift is continuous; correction is periodic. They meet at each reconciliation
+and part at the next commit.** The index is exactly right the moment a slice
+reconciles it, and stays right until somebody commits — **which on a quiet
+repository can be days, and on a busy one is minutes.**
 
-**Staleness therefore means opposite things.** A stale `coverage.md` is the
-ordinary state between slices. **A stale `sweep.md` is a defect** — it says the
-sweep is aimed at something it is not.
+**How long they stay met is the churn rate**, which is why a sweep measures it
+at the start. A repository at thirteen commits a day has an index that is
+accurate for about as long as it takes to read the next file.
 
-**A derived file must not live inside an authored one.** Nobody can tell which
-half has gone off, a rebuild puts the reasoning in its blast radius, and a `git
-diff` of the sweep's thinking is buried under status changes.
+**Which is what `indexed_at` is for.** Not a bookmark for the next
+reconciliation, but the honest statement of when the two last met: *accurate as
+of this commit, and claiming nothing since.* A reader deciding whether to trust
+a row checks it against `HEAD` — and where nothing has moved, the answer is
+that the index is still exactly right.
+
+**The right-hand column is append-only, which is what makes it cheap.** Entries
+are added and never revised, so writing one costs nothing to maintain, and the
+chronology survives — *when did we start noticing this* is a question only an
+unedited log can answer.
+
+**Why they are separate files: one is authored, the other derived.**
+`coverage.md`'s rows are the scope rule and the clustering strategy applied to
+the tree, and its statuses are what the slices record — **delete it and it
+rebuilds exactly.** `sweep.md` is derivable from nothing: delete it and the
+goal, the reasoning and the learnings exist nowhere else.
+
+**That is why staleness means opposite things in them**, and why **a derived
+file must not live inside an authored one** — nobody could tell which half had
+gone off, a rebuild would put the reasoning in its blast radius, and a `git
+diff` of the sweep's thinking would be buried under status changes.
+
+**The journal is a third thing: authored, and temporary by design.** Nothing in
+it is meant to survive — **the close harvests it**, and every entry becomes a
+backlog item, a learning recorded in `sweep.md`, or a deliberate drop.
+
+**That is what makes the whole sweep disposable.** The rule that nothing worth
+keeping stays in a sweep needs somewhere cheap to put a half-formed thing in
+the meantime; without it an observation is routed prematurely, which files it
+badly, or lost. **The journal is how that rule is kept rather than an exception
+to it**, and a journal that was never harvested is a sweep that cannot safely
+be thrown away.
+
+**It is not a queue.** Anything already actionable goes to its real destination
+at the slice that produced it — the journal holds what is *not yet* actionable,
+and the harvest catches whatever became so along the way.
 
 **The test, where something is ambiguous:** *could this be rebuilt from the
 repository and the slices?* If yes it belongs in `coverage.md`. If losing it
-would lose something nothing else records, it belongs in `sweep.md`.
+would lose something nothing else records, it belongs in `sweep.md` — or, if it
+is a note you are not ready to act on, in the journal until the close.
 
 ### Derived *given the strategy*, which has to be written down
 

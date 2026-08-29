@@ -16,7 +16,7 @@ description: Settle what is being read and what is not, choose an order, and bui
 | *find out whether X is a problem* | a targeted audit. Answers one question, and somebody else can respond to it |
 | *I want to read this whole thing properly* | **a sweep** |
 
-**Say the cost out loud before agreeing** — see step 6 for how to arrive at it.
+**Say the cost out loud before agreeing** — see step 7 for how to arrive at it.
 Somebody who wanted an afternoon's reassurance should find out at the start
 rather than at file nine, and nobody is offended by being asked.
 
@@ -83,7 +83,30 @@ not.
 separating what they excluded from what you did. A sweep that does not say what
 it skipped cannot make its own coverage mean anything later.
 
-## 4. Choose an order and record why
+## 4. Decide whether the plan may move
+
+**`strict` or `evolving`, and it is a decision rather than a mood.**
+
+**`strict`** — the goal, scope and strategy are fixed for this sweep. Anything
+that would change them is **recorded and left for a later sweep**. This is not
+a blind sweep: it routes findings exactly as any sweep does, and *that is a
+real observation and this is not the sweep for it* is a legitimate journal
+entry.
+
+**`evolving`** — expect them to move, and budget for it. Right when the
+practice or the material is genuinely new, and **expensive**: the first sweep
+ever run was evolving and produced thirteen releases of this bundle while
+covering six files. Correct for a first sweep, ruinous for a tenth.
+
+**Most sweeps should be strict.** Once neither the practice nor the material is
+new, `evolving` is a licence to be distracted by whatever is more interesting
+than the next file.
+
+**Say which, in `sweep.md`.** A sweep that quietly starts rewriting its own
+goal was evolving all along and nobody said so — so nobody budgeted for it, and
+the estimate is wrong for a reason the record does not show.
+
+## 5. Choose an order and record why
 
 See [[choosing-an-order]]. Narrative is the usual answer for a first sweep;
 directory order is right more often than it sounds.
@@ -91,7 +114,7 @@ directory order is right more often than it sounds.
 **One sentence of reason is enough**, and it is what makes the order survive
 the slice where a different one would be more convenient.
 
-## 5. Build the index
+## 6. Build the index
 
 Enumerate every file in scope, in the chosen order, and record the commit you
 enumerated at.
@@ -122,7 +145,7 @@ Do not over-plan the membership: the first grouping is a guess and every slice
 will revise the one after it. It is the *strategy* that has to be stated, not
 the perfect answer.
 
-## 6. Say how long this will actually take
+## 7. Say how long this will actually take
 
 **Give a band, say it is a guess, and replace it with a measurement after two
 slices.** A number said at the start is what stops a sweep dying at 15% with
@@ -221,7 +244,7 @@ matter, finished, beats a sweep of everything, abandoned** — and cutting at th
 start is a scope decision anybody can see, while cutting by acceleration is one
 that only shows up as coverage nobody trusts.
 
-## 7. If this is a first sweep, say so
+## 8. If this is a first sweep, say so
 
 The practice itself is `draft`. **Keep a line in each slice note for where it
 fought you** — an order that stopped working, an estimate that was wrong by
@@ -231,7 +254,7 @@ That costs a sentence per slice and it is the only way the guesses get
 corrected. A sweep that ran fine and taught nobody anything about sweeping is a
 missed opportunity the second sweep pays for.
 
-## 8. Write `sweep.md` and `coverage.md`, and commit them
+## 9. Write `sweep.md` and `coverage.md`, and commit them
 
 [The sweep template](../templates/sweep.md) and [the coverage
 template](../templates/coverage.md) have the shapes. **Two files, because one
