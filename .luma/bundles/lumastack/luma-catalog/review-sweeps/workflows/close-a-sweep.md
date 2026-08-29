@@ -12,8 +12,8 @@ and archived as though it were finished is a lie the index will tell for years.
 
 ## 1. Check `coverage.md`
 
-Every row in `coverage.md` is `approved`, `reviewed`, `skipped` with a reason,
-or `pending`.
+Every row in `coverage.md` has been read, skipped with a reason, or is still
+empty — and empty rows are the point of this step.
 
 **Pending rows at closing time are the point of this step.** Do not mark them
 anything. They stay pending, and the summary says how many there are — that is
@@ -46,7 +46,13 @@ away**, and doing that on purpose is fine while doing it by omission is not.
 In `charter.md`, under the index. Short, and answering what somebody would ask
 a year later:
 
-- **coverage** — approved, reviewed, skipped, pending, out of the total.
+- **coverage** — approved, reviewed but never signed off, rows with findings,
+  skipped, and still empty, out of the total. **What unsigned rows mean depends on
+  `approval`**: a shortfall under `required`, a known compromise under
+  `recommended`, a description under `optional`, and not reported at all under
+  `prohibited`. Say which, because the same number means four different things.
+  **Under `prohibited`, report the reverse instead** — any row that carries a
+  signature, because this sweep ruled sign-off out and one arrived anyway
   **Report approved and reviewed separately, and report coverage by actor**: a
   row an agent was satisfied with and one a person signed off are different
   claims, and merging them overstates the weaker. **A sweep declared

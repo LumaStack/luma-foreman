@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.17.0
+version: 0.18.0
 published: 2026-08-28
 lifecycle_status: draft
 survival: experimental
@@ -87,11 +87,11 @@ third file and a response written by its own auditor.
 the index in `charter.md` is a cache of that. When they disagree, the slices
 win.
 
-**A row finishes two ways, and they are not the same claim.** `reviewed` means
-read and satisfactory and **any party may set it, agent included**; `approved`
-means signed off and **only a person may give it**. Both are needed, because a
-sweep does not always have a human in it — a status only a person could set
-would leave an agent-agent sweep unable to finish a single row.
+**A row records three separate facts.** `reviewed_by` — who read it, any party.
+`approved_by` — who signed it off, a human only. `outcome` — `clean` or
+`findings`, what the reading concluded. Both are needed, because a sweep does
+not always have a human in it — a status only a person could set would leave an
+agent-agent sweep unable to finish a single row.
 
 **Neither party may withhold a status the other is entitled to set**, and
 challenge is not veto. The agent's job before a status is to argue: say the
@@ -131,6 +131,56 @@ call graph, and while a headquarters could be read the same way, nobody has —
 adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
+
+`0.18.0` — **a row records three facts, not one status.**
+
+**Reading, sign-off and what was found are different things**, and one column
+could not carry them. `reviewed_by`, `approved_by`, `outcome` — **empty means
+it has not happened**, so there is no `pending` value able to drift out of step
+with the actors beside it.
+
+**It makes a common state visible that a single status hid.** `reviewed_by:
+agent:opus-5` with `approved_by: human:fsmith` is *an agent read the file and a
+person signed off without reading it* — which is the declared arrangement
+wherever a sweep says the reader takes a summary rather than the file. **Plain
+`approved` silently claimed the person read it.** The reverse matters too: read
+closely, approval withheld, is an ordinary and honest place for a row to stop.
+
+**`outcome` is past tense, deliberately.** *This reading found problems* stays
+true however often the file is fixed afterwards. A column describing present
+quality would have to be maintained as files are fixed — **coverage tracking
+fixing rather than reading** — and would duplicate what the backlog already
+holds.
+
+**Two values, and not a ladder.** Severity and what to do about it are the
+finding's job; `outcome` answers only *did this read produce anything*, which
+is the question a close needs and nothing else records in one place.
+
+**And the charter says how strongly sign-off is expected** — `approval:
+required | recommended | optional | prohibited`, RFC 2119's ladder borrowed
+whole, because a reader who has met must / should / may / must not anywhere
+else already knows what the rungs mean. **Not every sweep wants a signature**:
+an agent-agent sweep cannot have one, and one aimed at coverage rather than
+endorsement does not need one. **Assuming it is wanted turns every unsigned row
+into a shortfall nobody intended to fill.**
+
+The counts print under all four; what the field decides is whether *twelve
+reviewed and never signed off* is a failure, a known compromise or a plain
+fact. **Nothing is hidden by any value**, which is what makes a permissive
+default safe. `recommended` is that default, because wanting sign-off
+everywhere and not getting to all of it is the ordinary case for a sweep with a
+person in it.
+
+**`prohibited` is the one rung with a defect of its own.** Under it unsigned
+rows are the expectation met and go unreported, but **a signature that exists
+is reported at close as a defect** — somebody claimed an endorsement the sweep
+had ruled out. That is why it is not spelled `unused` or `excluded`: those
+describe a column nobody filled in, where this one says *do not sign these off*
+and means it.
+
+**Breaking**, shipped as minor under the pre-1.0 allowance: one column becomes
+three, and the charter gains a field. Every previous state remains expressible,
+plus one that was not.
 
 `0.17.0` — **`strictness` becomes three disciplines, and adaptive is the
 default.**

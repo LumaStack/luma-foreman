@@ -116,9 +116,22 @@ a property, not a failing**, and it is why the choice has to be deliberate.
 question is undrawable: every improvement feels warranted in the moment. The
 first is answerable before a single file is read.
 
-**Record all three in `charter.md`.** Absent, each defaults to `adaptive` —
-because that is what actually happens, and a default of `strict` would have
-sweeps sprawl anyway while the record claimed a discipline they never had.
+**Decide how strongly sign-off is expected**, and record it as `approval:` —
+`required`, `recommended`, `optional` or `prohibited` — RFC 2119's ladder, must
+through must not. Not every sweep wants a signature: an agent-agent sweep
+cannot have one, and a sweep aimed at coverage rather than endorsement does not
+need one.
+
+**Absent, it is `recommended`** — you would like to sign off on everything and
+will not get to all of it, which is the ordinary case for a sweep with a person
+in it. **Set `prohibited` for an agent-agent sweep**, where a human signature
+would not merely be unlikely but would misrepresent what happened; under it a
+signature that appears anyway is reported at close as a defect.
+
+**Record all three disciplines in `charter.md`.** Absent, each defaults to
+`adaptive` — because that is what actually happens, and a default of `strict`
+would have sweeps sprawl anyway while the record claimed a discipline they
+never had.
 
 ## 5. Choose an order and record why
 

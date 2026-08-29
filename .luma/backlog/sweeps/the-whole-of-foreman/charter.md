@@ -10,6 +10,7 @@ goal_discipline: exploratory
 scope_discipline: exploratory
 strategy_discipline: exploratory
 ordering: led
+approval: recommended
 pairing: human-agent
 contributors:
   - human:benlinton
@@ -51,15 +52,16 @@ so it does not get lost — a sweep aimed only at churn would skip it.
 
 ## The other two files
 
-**[`coverage.md`](coverage.md)** carries every file in scope, its status, and who
-set it — plus `indexed_at`, the commit it was last reconciled against.
+**[`coverage.md`](coverage.md)** carries every file in scope and three facts
+about each — who read it, who signed it off, and what the reading concluded —
+plus `indexed_at`, the commit it was last reconciled against.
 
 **[`journal.md`](journal.md)** carries what was noticed along the way and is not
 yet a finding. Append-only, harvested at the close into backlog items and
 learnings, then discarded with the rest of the sweep.
 
 **This file is authored; that one is derived.** Its rows are the scope rule and
-the clustering strategy below applied to the tree, and its statuses are what the
+the clustering strategy below applied to the tree, and what fills its rows is what the
 slices record — delete it and it rebuilds exactly, **which is only true because
 the strategy is written down here.** Delete this one and the goal, the reasoning and the
 learnings exist nowhere else.
@@ -159,6 +161,17 @@ itself against rather than repeat.
 while the material has not been read — which is the profile of a sweep that
 should move to **strict goals, strict scope, adaptive strategy**: do not wander,
 but do keep improving how you read.
+
+## Approval
+
+**`recommended`.** Sign-off is wanted on every row and some rows will not get
+it — which is the ordinary case and is neither `required`'s guilt nor
+`optional`'s indifference. **A row read and left unsigned is a known compromise
+here, named at the close rather than counted as a failure.**
+
+`.luma/PROJECT.md` is the first of them: read closely, findings recorded, and
+deliberately not signed off. **That is a finished row, not a stalled one** —
+coverage tracks reading, and the backlog tracks fixing.
 
 ## Order
 

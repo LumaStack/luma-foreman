@@ -26,6 +26,10 @@ fields:
     field_presence: required
     field_type: text
     desc: "the order units are taken in: narrative, risk-weighted, dependency, directory, or led"
+  approval:
+    field_presence: optional
+    field_type: enum
+    desc: "required | recommended | optional | prohibited — how strongly a person's sign-off is expected on each row. Default recommended"
   pairing:
     field_presence: required
     field_type: text
@@ -131,6 +135,48 @@ aspiration rather than behaviour is how a field stops being read.
 reflects where this practice currently is rather than where it should end up —
 **and it should flip once strict is the common case.** A change to make on
 evidence, not on principle.
+
+## `approval` says how strongly sign-off is expected
+
+**Not every sweep wants it.** An agent-agent sweep cannot have it; one aimed at
+coverage rather than endorsement does not need it. **Assuming it is wanted
+turns every unsigned row into a shortfall nobody ever intended to fill.**
+
+| | a signature is | unsigned rows at close are |
+| --- | --- | --- |
+| **`required`** | owed on every row — a row is unfinished without one | **a shortfall** — work the sweep set out to do and did not |
+| **`recommended`** *(default)* | wanted on every row, and a row may finish without it | **a known compromise**, named rather than glossed |
+| **`optional`** | welcome, and nobody is waiting for it | **a description** — how this sweep works, and nothing owed |
+| **`prohibited`** | **not to be given** — a signature here would claim something untrue | **not reported.** There is nothing to count |
+
+**This is RFC 2119's ladder** — must, should, may, must not — and it is
+borrowed on purpose. A reader who has met those four anywhere else already
+knows what the four rungs mean here.
+
+**`prohibited` is the only value with a defect of its own.** Unsigned rows are
+the expectation met, so they go unreported — but **a signature that exists is
+reported as a defect**, because somebody claimed an endorsement this sweep had
+ruled out. Every other value can be satisfied by doing nothing. This one can be
+violated.
+
+**Which is why it is not spelled `unused` or `excluded`.** Those describe a
+column nobody filled in. This one says *do not sign these off*, and means it.
+
+**The counts print under all four.** *Fifty-three approved, twelve reviewed and
+never signed off* is reported whatever the setting; what the field decides is
+whether that second number is a failure, a compromise or a fact. **Nothing is
+hidden by any value**, which is what makes a permissive default safe.
+
+**`recommended` is the default because it is honest for most sweeps with a
+person in them.** You would like to sign off on everything and you will not get
+to all of it — that is the ordinary case, and it deserves neither the guilt of
+`required` nor the indifference of `optional`.
+
+**`prohibited` is the honest value for an agent-agent sweep**, where a human
+signature would not merely be unlikely but would misrepresent what happened.
+Leaving it at `recommended` there would report a compromise against a standard
+that could never have been met; leaving it at `optional` would invite the very
+signature that makes the record false.
 
 ## `scope` must say what was left out
 

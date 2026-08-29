@@ -190,45 +190,82 @@ same at 60% whether nothing drifted or half of it did. One that records
 re-coverings shows drift accumulating while there is still time to cut the
 scope.
 
-## Two ways a row finishes, and they are not the same claim
+## A row records three separate facts
 
-| status | means | who may set it |
+**Reading, sign-off and what was found are three different things**, and one
+column cannot carry them. A file can be read by an agent and signed off by a
+person who never opened it; a person can read one closely and withhold
+approval. **Both are ordinary, and neither is expressible in a single status.**
+
+| column | holds | who fills it |
 | --- | --- | --- |
-| `reviewed` | read, and the reader is satisfied | **any party**, agent included |
-| `approved` | **signed off** | **a human only** |
+| **`reviewed_by`** | who read it | **any party**, agent included |
+| **`approved_by`** | who signed it off | **a human only** |
+| **`outcome`** | `clean` or `findings` — what the reading concluded | whoever read it |
 
-**Every row also records the actor** — `reviewed` by `agent:opus-5` and
-`reviewed` by `human:fsmith` are different facts, and the status alone cannot
-tell them apart.
+**Empty means it has not happened.** A row with neither actor is pending; no
+status value is needed to say so, and none can drift out of step with the
+actors.
 
-**Status and actor are not redundant.** The status says how strong the claim
-is; the actor says who made it. A person may legitimately mark a row `reviewed`
-rather than `approved` — *I have read this, it is fine for now, I am not
-signing off* — which is a real state an actor column alone cannot express.
+### The state that was previously invisible
 
-**`approved` is strictly stronger.** A row may go `reviewed` then `approved`,
-or straight to `approved` when a person read it themselves. Nothing requires
-the first before the second.
+`reviewed_by: agent:opus-5` with `approved_by: human:fsmith` is **an agent read
+the file and a person signed off without reading it** — which is the declared
+arrangement wherever a sweep says the reader takes a summary rather than the
+file. **A single `approved` silently claims the person read it.**
 
-**Both are needed because a sweep does not always have a human in it.**
-[[who-does-the-reading]] permits two agents, and a status only a person can set
-would leave such a sweep unable to finish a single row. **An agent must be able
-to say *I read this and it is fine*** — what it must not do is say *and that
-settles it*.
+The reverse matters too. `reviewed_by: human:fsmith` with `approved_by` empty
+is **a person read it closely and withheld approval** — *I am not happy with
+this and I am moving on* — which is an ordinary and honest place for a row to
+stop.
 
-**Neither party may withhold a status the other is entitled to set.** An agent
-records `approved` when the person gives it, whatever the agent thinks and
-however the file got that way — rewritten rather than examined, given without a
-full slice, given against the agent's advice. **The bundle exists to protect
-the reader's judgement and must never be turned against it.**
+### `outcome` is what the reading concluded, not what the file is now
 
-**Challenge belongs before the status, never after it.** Ask what they made of
-it, name a goal they may have drifted from, say where you read it differently.
-Then record what they decide. [[the-pairing-turn]] draws that line.
+**Past tense, deliberately.** *Slice 004 found problems here* stays true
+however many times the file is fixed afterwards. A column describing the file's
+current quality would have to be maintained — fix the file, and somebody must
+return and change the row — which is coverage tracking fixing rather than
+reading.
 
-**The close reports both.** *Fifty-three approved, twelve reviewed and never
-signed off* is a true sentence about a sweep that ran out of the person's
-attention, and one status cannot say it.
+**It is also derivable**, from the slice notes, which is why it belongs in the
+index at all.
+
+**Two values, and it is not a ladder.** Severity, urgency and what to do about
+it are the finding's job; `outcome` answers only *did this read produce
+anything*, which is the question a close needs and nothing else records in one
+place.
+
+**Neither party may withhold a fact the other is entitled to record.** An agent
+writes `approved_by` when the person gives it, whatever the agent thinks and
+however the file got that way. Its own view lives in `reviewed_by` and
+`outcome`, where it has no veto over anybody.
+
+**Challenge belongs before the row is filled, never after.** Ask what they made
+of it, name a goal they may have drifted from, say where you read it
+differently. Then record what they decide. [[the-pairing-turn]] draws that
+line.
+
+**The close reports all three.** *Fifty-three approved, twelve reviewed and
+never signed off, nine with findings* is a true sentence about a sweep, and one
+status column cannot say it.
+
+## Coverage tracks reading; the backlog tracks fixing
+
+**A row can be finished while the file is still wrong.** It closes when the
+reading is done and the findings are routed — not when the file is good. That
+is why [[what-a-slice-produces]] says a slice produces a record rather than a
+change.
+
+*I do not approve of what is in there, but I am moving on* is therefore an
+ordinary close, not an impasse: `reviewed_by` names who read it, `outcome` says
+`findings`, `approved_by` stays empty, and the defect lives in the backlog
+where somebody can act on it.
+
+**Nothing is lost by that split, and a great deal is protected.** A column for
+*has open findings* would be a second record of what the backlog already holds,
+and the two would drift the moment either was updated alone. The index answers
+*has this been read*; the backlog answers *is it fixed yet*. **Neither can
+answer the other's question, and neither should try.**
 
 ## Rows are independent
 

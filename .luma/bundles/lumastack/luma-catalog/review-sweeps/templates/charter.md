@@ -23,6 +23,7 @@ goal_discipline: strict | adaptive | exploratory       # default adaptive
 scope_discipline: strict | adaptive | exploratory      # default adaptive
 strategy_discipline: strict | adaptive | exploratory   # default adaptive
 ordering: narrative | risk-weighted | dependency | directory | led
+approval: required | recommended | optional | prohibited   # default recommended
 pairing: human-agent | agent-agent
 contributors:
   - human:fsmith      # or a second agent — the reader need not be a person

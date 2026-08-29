@@ -42,18 +42,19 @@ with how many there have been.>
 
 ## The index
 
-`pending` · `reviewed` · `approved` · `skipped` **with a reason, always**
+**Three separate facts per row.** `reviewed_by` — who read it, any party.
+`approved_by` — who signed it off, a human only. `outcome` — `clean` or
+`findings`, what the reading concluded. **Empty means it has not happened**;
+there is no `pending` value to keep in step.
 
-**`reviewed`** — read and satisfactory; either party may set it. **`approved`** —
-signed off, and only a person gives it. The `by` column records who.
-
-| cluster | file | read by | status | by | slice |
-| --- | --- | --- | --- | --- | --- |
-| entrypoint | `src/cli.py` | both | approved | human:fsmith | 001 |
-| entrypoint | `src/args.py` | agent | reviewed | agent:opus-5 | 001 |
-| gate | `src/gate.py` | both | pending | | |
-| — | ~~`src/old.py`~~ | — | removed | — | 001 — deleted |
-| — | `src/generated_api.py` | — | skipped — generated | | |
+| cluster | file | read by | reviewed_by | approved_by | outcome | slice |
+| --- | --- | --- | --- | --- | --- | --- |
+| entrypoint | `src/cli.py` | both | human:fsmith | human:fsmith | clean | 001 |
+| entrypoint | `src/args.py` | agent | agent:opus-5 | human:fsmith | findings | 001 |
+| gate | `src/gate.py` | both | human:fsmith | | findings | 002 |
+| gate | `src/lock.py` | both | | | | |
+| — | ~~`src/old.py`~~ | — | | | | 002 — deleted |
+| — | `src/generated.py` | — | | | | skipped — generated |
 
 <Every file in scope gets a row, including the boring ones. A file missing from
 here can never be shown to have been read.>
