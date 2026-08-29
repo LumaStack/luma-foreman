@@ -296,10 +296,38 @@ table.
 
 ## 11. Close out the slice
 
-**Three parts, in order, every time** — what this slice did, where the sweep
-stands, and whether to clear. **[The slice-close
+**Four parts, in order, every time** — what this slice did, where the sweep
+stands, what is worth their attention, and how to proceed. **[The slice-close
 template](../templates/slice-close.md) carries the shape**; what follows is why
-the third part is there at all.
+the last two are there at all.
+
+### The row close and the slice close are two events
+
+**Step 7d's line comes first, alone, with a rule under it** — the row closed,
+and by whom. Then the slice close.
+
+**They are not one announcement.** A file ended; the slice ended *because* it
+was the last one. Run together — *Slice 004 closed — `gate.md`, skipped* — and a
+reader cannot tell whether the slice was skipped, the file was, or both.
+
+### Everything that wants the reader gets a heading
+
+**A paragraph with no heading reads as commentary and gets skimmed past.** That
+is the opposite of what it is for — it holds the consequences, the ones a reader
+may want to act on and nobody is blocked on.
+
+**Put the decisions under it, including the ones you deliberately did not
+take.** *Eleven rows sit under the reason you just gave and are still pending;
+not marked, your call* belongs somewhere a reader stops.
+
+### How to proceed is priced options, not prose
+
+**Bullets, each with what it costs in a clause** — *seven files, roughly a
+slice's worth*; *one turn, and it changes how every remaining slice runs*.
+**A reader choosing between three unpriced options is guessing**, and the agent
+is the one who can price them.
+
+**Then the clear decision in a sentence, and the paste block.**
 
 ### Why a slice boundary is where a session gets cleared
 
@@ -334,3 +362,15 @@ discussed anyway. **Say so rather than recommending a clear out of habit.**
 
 *In Claude Code this is `/clear`; the reasoning is the same wherever the
 session lives.*
+
+### The paste block is a pointer, never a handoff note
+
+**Give the reader something to paste into the next session**, in a fenced block,
+three or four lines. They are going to select it with a mouse.
+
+**It carries what a fresh agent cannot read for itself and nothing else** — the
+sweep's path, which files to read, which workflow to invoke, where to resume.
+
+**If it needs to carry findings or context, something was not written down.**
+Same test as the clear decision above it, failing the same way: **an observation
+that survives only in a paste was never routed.**

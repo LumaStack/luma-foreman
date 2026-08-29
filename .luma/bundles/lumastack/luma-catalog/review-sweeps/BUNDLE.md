@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.23.0
+version: 0.24.0
 published: 2026-08-29
 lifecycle_status: draft
 survival: experimental
@@ -131,6 +131,39 @@ call graph, and while a headquarters could be read the same way, nobody has —
 adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
+
+`0.24.0` — **the slice close ends with priced options and something to paste.**
+
+**Two parts where there was one.** *Whether to clear* was a paragraph of prose
+carrying the only actionable content in the message, which is exactly where a
+reader stops reading.
+
+**And the row close is separated from the slice close.** They are two events —
+a file ended, and the slice ended *because* it was the last one. Step 7d's line
+stands alone with a rule under it; running them into one heading leaves a reader
+unable to tell whether the slice was skipped, the file was, or both.
+
+**What is worth the reader's attention gets a heading.** Consequences,
+observations, and decisions that are theirs — including the ones deliberately
+not taken. **An unheaded paragraph reads as commentary and gets skimmed**, which
+is the opposite of what it is for.
+
+**How to proceed is bullets with prices.** Each option gets its cost in a
+clause — *seven files, roughly a slice's worth*; *one turn, changes how every
+remaining slice runs*. **A reader choosing between three unpriced options is
+guessing**, and the agent is the one who can price them.
+
+**Then the clear decision in a sentence, and a paste block** — three or four
+lines in a fence, because the reader is going to select it with a mouse.
+
+**The paste is a pointer, never a handoff note:** the sweep's path, what to
+read, what to invoke, where to resume. **If it needs to carry findings,
+something was not written down** — the same test as the clear decision one line
+above it.
+
+**Found by running it.** A reader read a slice close, said the first two parts
+worked, and named the rest: the middle wanted a heading, and the actionable half
+was buried in a paragraph.
 
 `0.23.0` — **a slice has a close routine: what it did, where the sweep stands,
 and whether to clear.**
