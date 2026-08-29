@@ -5,7 +5,7 @@ created: { by: human:benlinton, at: 2026-08-09T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]
 horizon: someday
 scope: project
-lifecycle_status: draft
+lifecycle: draft
 ---
 
 # Drive an incident, and store it as markdown

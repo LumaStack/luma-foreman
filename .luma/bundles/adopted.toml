@@ -11,22 +11,22 @@ commit   = "8ec0cce285bb27f0b6c58bacb62d37bd62a702ee"
 checksum = "sha256:2a980d0ec32665420f602a07ea2a24784b8b6182cc8471bd182212a3b78146b5"
 
 ["lumastack/luma-catalog/backlog-ideas"]
-version  = "0.11.2"
-source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "8ec0cce285bb27f0b6c58bacb62d37bd62a702ee"
-checksum = "sha256:531249d356cd258ce7f921ad5206388d59282f2524ea792c104cad7e506f39e1"
+version  = "0.12.0"
+source   = "https://github.com/LumaStack/luma-catalog"
+commit   = "7b2a0f6f29f29155092a7e5a92023a09bd419cbd"
+checksum = "sha256:d78aefd5680637f84f2cf9cc737932cbf477aa5b0e541e9c5e3f7d262137004a"
 
 ["lumastack/luma-catalog/bundle-manager"]
-version  = "0.10.4"
-source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "8ec0cce285bb27f0b6c58bacb62d37bd62a702ee"
-checksum = "sha256:4ef086bfe2ac7d06984d38d576b0313af87cef6527da058b5f155dfeee2722a7"
+version  = "0.12.0"
+source   = "https://github.com/LumaStack/luma-catalog"
+commit   = "7b2a0f6f29f29155092a7e5a92023a09bd419cbd"
+checksum = "sha256:3c50ea95846a3b2192c7655684cb09f5c37b0cf278eb9f04f08fe2a8a29e3665"
 
 ["lumastack/luma-catalog/decision-records"]
-version  = "0.9.2"
-source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "8ec0cce285bb27f0b6c58bacb62d37bd62a702ee"
-checksum = "sha256:5a25c1de099855c23ee613759cd263f88a9848f584a325389ca38a2eb2df6e0c"
+version  = "0.10.0"
+source   = "https://github.com/LumaStack/luma-catalog"
+commit   = "7b2a0f6f29f29155092a7e5a92023a09bd419cbd"
+checksum = "sha256:477bb273012c27fc8244aec8f50c66c0fe443b49e78aa94cd0749005784f4bde"
 
 ["lumastack/luma-catalog/git-secrets"]
 version  = "0.5.1"
@@ -77,28 +77,28 @@ commit   = "8ec0cce285bb27f0b6c58bacb62d37bd62a702ee"
 checksum = "sha256:de0d7d6eed4454249d7a2c101b13fb63e98a623857255d49ca8be794798b4f04"
 
 ["lumastack/luma-catalog/luma-types"]
-version  = "0.10.1"
-source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "a48f0101354bebe13a196751bbee13375d0bfd1b"
-checksum = "sha256:955d3063df66834d621838f26ce6e4fe43329248c1936ff305cfb3f2cfc32715"
+version  = "0.12.0"
+source   = "https://github.com/LumaStack/luma-catalog"
+commit   = "7b2a0f6f29f29155092a7e5a92023a09bd419cbd"
+checksum = "sha256:8d6e7331097df16b5cd291cc974ba0670b2a521ac794219fa0d4a6b4c81bf760"
 
 ["lumastack/luma-catalog/project-documentation"]
-version  = "0.15.3"
-source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "8ec0cce285bb27f0b6c58bacb62d37bd62a702ee"
-checksum = "sha256:c6e5781a825c1f9671b26ce396fc4926b42de135b958922bce3c3ce4aca4b6fe"
+version  = "0.16.0"
+source   = "https://github.com/LumaStack/luma-catalog"
+commit   = "7b2a0f6f29f29155092a7e5a92023a09bd419cbd"
+checksum = "sha256:20a218419db27c2c010619971b2789332987468a1510817f6a2134945c40c7b6"
 
 ["lumastack/luma-catalog/review-sweeps"]
-version  = "0.21.0"
-source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "f784cfec67630e5dcca68e31f82936002c68113e"
-checksum = "sha256:da504ba4d5cb5ddf00d7893d79af432610f7ea80c12e6808cac1fe9b38ee48eb"
+version  = "0.25.0"
+source   = "https://github.com/LumaStack/luma-catalog"
+commit   = "7b2a0f6f29f29155092a7e5a92023a09bd419cbd"
+checksum = "sha256:f4c08580c397d4a2077dbe23e9a7e1cc12c20d58bd29ecad6650aaeba37e6d40"
 
 ["lumastack/luma-catalog/session-manager"]
-version  = "0.6.4"
-source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "8ec0cce285bb27f0b6c58bacb62d37bd62a702ee"
-checksum = "sha256:3f8b839fe2b8e0a70bf8a827fd9068e73125766402c120f15cd4d9eaeadf4eed"
+version  = "0.7.0"
+source   = "https://github.com/LumaStack/luma-catalog"
+commit   = "7b2a0f6f29f29155092a7e5a92023a09bd419cbd"
+checksum = "sha256:52bba9c56e142e674273fdd4798ef6233a6db4544037b6549f845f1f1452264f"
 
 ["lumastack/luma-catalog/token-manager"]
 version  = "0.10.2"

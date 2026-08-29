@@ -28,7 +28,7 @@ fields:
 - **`values`** — required when `field_type` is `enum`.
 
 **Do not redeclare core fields** — `title`, `description`, `created`,
-`modified`, `verified`, `lifecycle_status`. They arrive from the
+`modified`, `verified`, `lifecycle`. They arrive from the
 root, and inheritance is add-only, so a type cannot restate one to strengthen
 it.
 

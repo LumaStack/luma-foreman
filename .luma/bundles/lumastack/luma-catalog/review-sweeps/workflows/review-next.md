@@ -293,3 +293,84 @@ rewritten, dropped as duplicate, or **dropped as wrong with what it was checked
 against**. A deletion is the one thing a later reader cannot go and verify for
 themselves. [[what-a-slice-produces]] has the rule and the template has the
 table.
+
+## 11. Close out the slice
+
+**Four parts, in order, every time** — what this slice did, where the sweep
+stands, what is worth their attention, and how to proceed. **[The slice-close
+template](../templates/slice-close.md) carries the shape**; what follows is why
+the last two are there at all.
+
+### The row close and the slice close are two events
+
+**Step 7d's line comes first, alone, with a rule under it** — the row closed,
+and by whom. Then the slice close.
+
+**They are not one announcement.** A file ended; the slice ended *because* it
+was the last one. Run together — *Slice 004 closed — `gate.md`, skipped* — and a
+reader cannot tell whether the slice was skipped, the file was, or both.
+
+### Everything that wants the reader gets a heading
+
+**A paragraph with no heading reads as commentary and gets skimmed past.** That
+is the opposite of what it is for — it holds the consequences, the ones a reader
+may want to act on and nobody is blocked on.
+
+**Put the decisions under it, including the ones you deliberately did not
+take.** *Eleven rows sit under the reason you just gave and are still pending;
+not marked, your call* belongs somewhere a reader stops.
+
+### How to proceed is priced options, not prose
+
+**Bullets, each with what it costs in a clause** — *seven files, roughly a
+slice's worth*; *one turn, and it changes how every remaining slice runs*.
+**A reader choosing between three unpriced options is guessing**, and the agent
+is the one who can price them.
+
+**Then the clear decision in a sentence, and the paste block.**
+
+### Why a slice boundary is where a session gets cleared
+
+**It is the cheapest moment there will ever be to drop the context**, and for a
+structural reason: **by the time a slice closes, everything worth keeping has
+already been written to disk.** The slice note, the index, the journal, the
+routed findings, the commit. That is not luck — it is what steps 6 to 10 are
+for.
+
+**So it is a check rather than a judgement:** *is anything left that exists
+only in this session?*
+
+- **No.** Clearing costs nothing — **recommend it.** What the context mostly
+  holds is files still sitting on disk, and re-reading the two that matter next
+  is cheaper than carrying all of them through every remaining turn.
+- **Yes.** **That is a defect, not a reason to keep the context.** Write it down
+  and then clear. An observation surviving only in a session is one restart from
+  gone, and [[how-a-sweep-is-stored]] gives the journal for exactly this.
+
+**Recommend; do not decide.** The same shape as fix-now-or-route — you can see
+what the context costs and you cannot see whether they are mid-thought about
+something they have not said yet.
+
+**Never clear inside a slice.** [[the-pairing-turn]]'s order depends on both
+parties holding the same file. Halfway through, clearing makes the agent
+re-derive a read the reader has already answered, and their answers no longer
+attach to anything.
+
+**The one case for carrying on: the next slice is the same cluster.**
+Orientation carries over, and clearing buys a re-read of files about to be
+discussed anyway. **Say so rather than recommending a clear out of habit.**
+
+*In Claude Code this is `/clear`; the reasoning is the same wherever the
+session lives.*
+
+### The paste block is a pointer, never a handoff note
+
+**Give the reader something to paste into the next session**, in a fenced block,
+three or four lines. They are going to select it with a mouse.
+
+**It carries what a fresh agent cannot read for itself and nothing else** — the
+sweep's path, which files to read, which workflow to invoke, where to resume.
+
+**If it needs to carry findings or context, something was not written down.**
+Same test as the clear decision above it, failing the same way: **an observation
+that survives only in a paste was never routed.**

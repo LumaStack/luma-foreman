@@ -5,7 +5,7 @@ created: { by: human:benlinton, at: 2026-08-21T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]
 horizon: next
 scope: project
-lifecycle_status: draft
+lifecycle: draft
 ---
 
 # A shared language for workflows invoking other workflows
@@ -338,7 +338,7 @@ the levels, absence handling, install prompts, the `noop`, prose conditions — 
 it is work that happens here.
 
 **The precedent was already on disk.** `declared-maturity-and-behaviour.md`, filed
-here, is the same shape: the format supplies `lifecycle_status`, this repository
+here, is the same shape: the format supplies `lifecycle`, this repository
 supplies what to do about it, and the reason given was *a contract should be dumb
 about how things get used*. Checking the ideas already filed would have caught both
 wrong turns.

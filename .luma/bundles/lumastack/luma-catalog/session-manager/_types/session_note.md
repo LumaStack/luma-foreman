@@ -10,7 +10,7 @@ fields:
     desc: "which workflow wrote it, and therefore who it was written for"
   pinned:
     field_presence: recommended
-    desc: "the state of the world this note assumed — branch, commit, open pull requests. No field_type: it is a record, which §10.2 cannot yet express"
+    desc: "the state of the world this note assumed — branch, commit, open pull requests. No field_type: it is a record, which the format's field declarations cannot yet express"
 ---
 
 # session_note
@@ -69,12 +69,12 @@ before its reader arrives has nothing to decay. It is close to mandatory for
 
 ## `created` is required in practice
 
-The root declares `created` as `optional` and inheritance is add-only (§10.3),
+The root declares `created` as `optional` and inheritance is add-only,
 so this type cannot strengthen it. **Treat it as required.** Age is the primary
 input to how much a note should be trusted, and a note with no date forces a
 reader to either trust it completely or discard it — both of which are wrong.
 
-## It has no `lifecycle_status`
+## It has no `lifecycle`
 
 A note is live until it is consumed, and then it does not exist. There is no
 `archived` state, because an archived note is a note somebody kept — which

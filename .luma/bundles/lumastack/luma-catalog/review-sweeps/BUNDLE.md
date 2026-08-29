@@ -1,8 +1,8 @@
 ---
 type: bundle
-version: 0.21.0
+version: 0.25.0
 published: 2026-08-29
-lifecycle_status: draft
+lifecycle: draft
 survival: experimental
 consumers: [project]
 entrypoint: policy/how-a-sweep-is-stored
@@ -131,6 +131,137 @@ call graph, and while a headquarters could be read the same way, nobody has —
 adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
+
+`0.25.0` — **`lifecycle_status` is now `lifecycle`.**
+
+**Same values, same meaning, shorter name**, renamed in the knowledge format
+and carried here. The old name was chosen against `status` — so it never
+collided with a tool's own `todo | in-progress | done` — and **`lifecycle`
+avoids that collision equally well**, because the word at risk was `status` and
+this name does not contain it.
+
+**Breaking for an adopter**, shipped as minor under the pre-1.0 allowance:
+**every Document declaring the old key has to be renamed.** It fails visibly
+rather than quietly — `lifecycle` is unrecognised where `lifecycle_status` was
+expected, and an unrenamed Document reads as having no lifecycle declared at
+all.
+
+`0.24.1` — **the template starts a new Document at `draft`, not `provisional`.**
+
+**The example value in a template becomes the estate's default**, and this one
+was teaching every new Document to be born promoted. **The lifecycle ladder
+measures what a reader is owed when a Document changes**, and use by its own
+authors does not promote it — `provisional` begins when somebody who did not
+write it can rely on it, and promoting is the author's explicit act.
+
+`0.24.0` — **the slice close ends with priced options and something to paste.**
+
+**Two parts where there was one.** *Whether to clear* was a paragraph of prose
+carrying the only actionable content in the message, which is exactly where a
+reader stops reading.
+
+**And the row close is separated from the slice close.** They are two events —
+a file ended, and the slice ended *because* it was the last one. Step 7d's line
+stands alone with a rule under it; running them into one heading leaves a reader
+unable to tell whether the slice was skipped, the file was, or both.
+
+**What is worth the reader's attention gets a heading.** Consequences,
+observations, and decisions that are theirs — including the ones deliberately
+not taken. **An unheaded paragraph reads as commentary and gets skimmed**, which
+is the opposite of what it is for.
+
+**How to proceed is bullets with prices.** Each option gets its cost in a
+clause — *seven files, roughly a slice's worth*; *one turn, changes how every
+remaining slice runs*. **A reader choosing between three unpriced options is
+guessing**, and the agent is the one who can price them.
+
+**Then the clear decision in a sentence, and a paste block** — three or four
+lines in a fence, because the reader is going to select it with a mouse.
+
+**The paste is a pointer, never a handoff note:** the sweep's path, what to
+read, what to invoke, where to resume. **If it needs to carry findings,
+something was not written down** — the same test as the clear decision one line
+above it.
+
+**Found by running it.** A reader read a slice close, said the first two parts
+worked, and named the rest: the middle wanted a heading, and the actionable half
+was buried in a paragraph.
+
+`0.23.0` — **a slice has a close routine: what it did, where the sweep stands,
+and whether to clear.**
+
+**What it did** in three or four lines — not the slice note, which is the
+record, but the reader remembering what happened before choosing what is next.
+
+**Where the sweep stands**, as a table with four rows — **closed**,
+**skipped**, **open**, **untouched** — shown without being asked, because the
+reader has spent the slice inside one or two files and needs the whole thing
+back in front of them.
+
+**Names in the first three rows, groups in the last.** A reader wants to know
+which files are finished and roughly what is left; **ninety filenames under
+`untouched` is not a status, it is the index printed twice.**
+
+**The shape lives in `templates/slice-close.md`**, beside the presentation
+template it is modelled on — a message shape rather than a document, and the
+workflow points at it instead of carrying a second copy.
+
+**Derived and never stored.** It is rebuilt from `coverage.md` each time and
+discarded. Writing it into a file would be a third copy of what the index
+already holds — and it would start rotting immediately, which
+[[how-a-sweep-is-stored]] covers under counts.
+
+**And it is asked to draw its own conclusion**, in a line: *two clusters closed
+and none of `src/` reached* is the sentence the table exists to produce.
+
+**Whether to clear the context** is the third part, and **a slice boundary is
+the cheapest moment there will ever be to drop a session** — for a structural
+reason: by the time a slice closes, everything worth keeping is already on
+disk. That is what the preceding steps are for.
+
+**So it is a check, not a judgement:** *is anything left that exists only in
+this session?* If no, clearing is free and gets recommended. **If yes, that is
+a defect rather than a reason to keep the context** — write it down, then
+clear.
+
+**Never inside a slice**, because the turn order depends on both parties
+holding the same file. **And say so when the next slice is the same cluster**,
+where orientation carries over and holding is genuinely cheaper.
+
+**Found by running it.** A sweep produced this table once, unprompted, and the
+reader asked to see it after every slice. Nothing in the bundle had asked for
+it — which is the whole reason it only appeared once.
+
+`0.22.0` — **a count in the charter is almost always wrong to write.**
+
+**The charter is the file that should get truer, and a count never does.** It
+is right when written and wrong the moment anything changes, with **nothing to
+announce it** — a stale number reads exactly like a current one.
+
+**This is the authored-and-derived test applied to a sentence rather than a
+file.** The split decides which *file* something belongs in and is rarely asked
+of a paragraph, so an authored file fills with derived sentences that rot at a
+derived file's rate **with none of the reconciliation.** The test: *can this
+sentence go wrong without anybody editing this file?*
+
+**Point at the number, do not copy it.** Where one is already kept current —
+the index, a version history, the repository itself — cite that place. A copy
+is a second answer that goes wrong on its own.
+
+**Not banned, and the exception is said out loud.** Some count may genuinely
+earn its place, and forbidding all of them would be a guess about cases nobody
+has met. Where one is written anyway, **the reader is told as it is written**:
+that it is a count, that it will go stale, and why it is not in the index. **An
+exception nobody was told about is indistinguishable from an oversight**, which
+is how they accumulate — every one was written by somebody who thought that one
+was fine.
+
+**Dating it is not the fix.** *Forty-two files, as of slice 004* stops being
+wrong silently and still never gets truer.
+
+**Found by running it.** A sweep's charter accumulated eight counts, three
+already false within a day — including one claiming *seventeen releases, six
+files* when it was twenty-one and eight.
 
 `0.21.0` — **fix now or route it is the reader's call, and the recommendation
 is the agent's job.**

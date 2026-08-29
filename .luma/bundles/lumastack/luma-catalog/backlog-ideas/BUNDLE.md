@@ -1,7 +1,7 @@
 ---
 type: bundle
-version: 0.11.2
-published: 2026-08-27
+version: 0.12.0
+published: 2026-08-28
 consumers: [project, organization]
 entrypoint: policy/capturing-ideas
 description: Ideas as individual files rather than one growing IDEAS.md — what earns a file, how capture stays fast, and how the list gets tended rather than accumulating.
@@ -57,7 +57,7 @@ courteous.
 read an idea afterwards and vouched for it. An agent overseeing another agent's
 work is real and worth recording, and is still not a human having seen it.
 
-**Almost everything reuses a core field.** Growth stages are `lifecycle_status`
+**Almost everything reuses a core field.** Growth stages are `lifecycle`
 — seedling `draft`, budding `provisional`, evergreen `stable`, pruned
 `archived`. Dates and authorship are `created`. Human review is `verified`. The
 type declares only `horizon`, `scope`, `archived` and `contributors`, because
@@ -115,7 +115,25 @@ about what it builds. The same shape holds, and `scope` records which.
 
 ## Version
 
-`0.11.2` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+`0.12.0` — **`lifecycle_status` is now `lifecycle`.**
+
+**Same values, same meaning, shorter name**, renamed in the knowledge format
+and carried here. The old name was chosen against `status` — so it never
+collided with a tool's own `todo | in-progress | done` — and **`lifecycle`
+avoids that collision equally well**, because the word at risk was `status` and
+this name does not contain it.
+
+**Breaking for an adopter**, shipped as minor under the pre-1.0 allowance:
+**every Document declaring the old key has to be renamed.** It fails visibly
+rather than quietly — `lifecycle` is unrecognised where `lifecycle_status` was
+expected, and an unrenamed Document reads as having no lifecycle declared at
+all.
+
+`0.11.3` — **references to the knowledge format name sections instead of numbering them.** The format removed section numbers, so every `§n` here pointed at a position that no longer exists — and a stale number resolves to the wrong section rather than to nothing, which is why none of them were reported. Decorative citations are dropped; the rest name what they meant.
+
+Patch: wording only. No rule, field or procedure changed.
+
+`0.11.2` — **`entry_point` is now `entrypoint`.** One word, so the same word names the same thing at every level it appears.
 
 Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 

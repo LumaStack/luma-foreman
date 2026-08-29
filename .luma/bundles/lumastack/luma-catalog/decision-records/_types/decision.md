@@ -13,16 +13,16 @@ fields:
   superseded_by:
     field_presence: optional
     field_type: wikilink
-    desc: "the decision that replaced this one — quoted (§8); set together with lifecycle_status: archived"
+    desc: "the decision that replaced this one — quoted; set together with lifecycle: archived"
   archived:
     field_presence: recommended
     field_type: date
-    desc: "when this stopped being the answer. Set together with lifecycle_status: archived; the clock a retention period measures from"
+    desc: "when this stopped being the answer. Set together with lifecycle: archived; the clock a retention period measures from"
   archived_reason:
     field_presence: recommended
     field_type: enum
     values: [superseded, retired, invalidated, noise]
-    desc: "why it stopped being the answer. Set together with lifecycle_status: archived"
+    desc: "why it stopped being the answer. Set together with lifecycle: archived"
 ---
 
 # Decision
@@ -35,22 +35,22 @@ worth keeping, and borrowing an established convention costs nothing.
 
 ## The fields it does not declare
 
-`lifecycle_status`, `created`, `modified` and `verified` all arrive from the
+`lifecycle`, `created`, `modified` and `verified` all arrive from the
 root type, and between them they cover what an ADR calls *status*:
 
 | ADR status | here |
 | --- | --- |
-| proposed | `lifecycle_status: draft` or `provisional` |
-| accepted | `lifecycle_status: stable` |
-| superseded | `lifecycle_status: archived` plus `superseded_by` |
-| retired | `lifecycle_status: archived`, no `superseded_by` |
+| proposed | `lifecycle: draft` or `provisional` |
+| accepted | `lifecycle: stable` |
+| superseded | `lifecycle: archived` plus `superseded_by` |
+| retired | `lifecycle: archived`, no `superseded_by` |
 | **rejected** | **no distinct expression — see below** |
 
-Supersession is a **relationship, not a status** — §6 of the specification says
+Supersession is a **relationship, not a status** — the specification's lifecycle rules say
 so directly — which is why `superseded_by` is a wikilink rather than a state.
 That makes the successor reachable from the document a reader actually lands on.
 
-`lifecycle_status` also governs **what you may edit**, not only how settled the
+`lifecycle` also governs **what you may edit**, not only how settled the
 decision is. That ladder is in [[decision-guidelines]].
 
 ## Open: rejected has nowhere to live
@@ -67,7 +67,7 @@ distinction a reader needs first.
 
 Three ways out, none chosen:
 
-- A `rejected` value on `lifecycle_status`, which is a change to the format's
+- A `rejected` value on `lifecycle`, which is a change to the format's
   core rather than to this type.
 - A field on `decision` alone — cheap, and it means a general question gets a
   local answer that nothing else can reuse.
@@ -89,7 +89,7 @@ are frequently different and only one of them is the fact people cite.
 ceased to be. A decision settled in 2019 and retired last month was in force for
 six years, and no combination of the other fields can tell you that.
 
-**Set it whenever you set `lifecycle_status: archived`**, whether or not there is
+**Set it whenever you set `lifecycle: archived`**, whether or not there is
 a `superseded_by`. It costs one line at the moment the information is in front of
 you and is unrecoverable a year later, when the best available answer is whichever
 commit happened to touch the file.
@@ -106,7 +106,7 @@ what carries the fact, and the directory is what saves the context.
 
 ## `archived_reason` — why it stopped, in four values
 
-`lifecycle_status: archived` says a record is no longer the answer and nothing
+`lifecycle: archived` says a record is no longer the answer and nothing
 says why. That distinction is the one a reader needs first, and it is the one
 `archived` alone cannot carry.
 
@@ -192,7 +192,7 @@ sections below are the working shape rather than a mandated template:
 
 The distinction that matters most in practice, because getting it wrong destroys
 either the record or the reasoning. [[decision-guidelines]] covers what each
-`lifecycle_status` permits; this is the field mechanics.
+`lifecycle` permits; this is the field mechanics.
 
 **Correct in place when the *record* was wrong** — a mistaken rationale, a claim
 that does not hold, an example that was never true. The decision still stands;
@@ -235,17 +235,17 @@ one is not**, which is why the heavier mechanism is the one that protects the
 record.
 
 **Supersede when the *decision* changed.** Write a new record, set the old one's
-`lifecycle_status: archived` and point `superseded_by` at the replacement:
+`lifecycle: archived` and point `superseded_by` at the replacement:
 
 ```yaml
-lifecycle_status: archived
+lifecycle: archived
 superseded_by: "[[ADR-0012-catalogs-do-not-inherit]]"
 ```
 
 **Quote it.** `[[…]]` is YAML flow-sequence syntax, so an unquoted wikilink
 parses as a nested array rather than a string and no parser complains — the
-record stays valid and the redirect simply never resolves. §8 of the
-specification carries the warning; this is the field in this bundle most likely
+record stays valid and the redirect simply never resolves. The specification's rules on links
+carry the warning; this is the field in this bundle most likely
 to meet it.
 
 The old reasoning stays readable, which is what lets someone see why the

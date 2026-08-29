@@ -14,14 +14,14 @@ Guidance is in `../policy/decision-guidelines.md`; the field contract is in
 type: decision
 title: <short decision title, active voice>
 decided: YYYY-MM-DD
-lifecycle_status: provisional
+lifecycle: draft
 reopen_trigger: <what would make this worth revisiting>
 ---
 ```
 
 - **`decided`** — when the position became binding, **not** when the file was
   created. They are frequently different and only one is the fact people cite.
-- **`lifecycle_status`** — `draft` while arguing, `provisional` once acting on
+- **`lifecycle`** — `draft` while arguing, `provisional` once acting on
   it, `stable` when settled, `archived` when it is no longer the answer. It
   governs what you may edit; see the guidelines.
 - **`superseded_by`** — add when archiving in favour of a replacement, and

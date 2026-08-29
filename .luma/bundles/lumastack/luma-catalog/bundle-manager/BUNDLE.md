@@ -1,7 +1,7 @@
 ---
 type: bundle
-version: 0.10.4
-published: 2026-08-27
+version: 0.12.0
+published: 2026-08-28
 consumers: [project, organization]
 entrypoint: policy/organizing-a-bundle
 description: Creating, updating, auditing, repairing, migrating and retiring bundles — the layout they use and which catalog they belong in.
@@ -23,8 +23,8 @@ belongs in, and a procedure for each thing you do to a bundle over its life.
 
 - [[organizing-a-bundle]] — the layout, and the three rules that decide whether
   something is a document, an asset, or a type. Read first.
-- [[where-a-bundle-belongs]] — project, organization, or universal, and how a
-  bundle moves between them.
+- [[where-a-bundle-belongs]] — the four routes a bundle takes, when to start in
+  a project and when to start in a catalog, and the one bar that still binds.
 - [[an-index-of-what-exists]] — load the index, never the content. How a bundle
   stays large without being expensive, and why the alternative fails silently.
 
@@ -84,7 +84,57 @@ may later promote, and the procedure is the same at either end.
 
 ## Version
 
-`0.10.4` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears. The policy, the three workflows and the template all taught the old spelling, so each is corrected — a bundle that teaches a field name is wrong in a way that spreads.
+`0.12.0` — **`lifecycle_status` is now `lifecycle`.**
+
+**Same values, same meaning, shorter name**, renamed in the knowledge format
+and carried here. The old name was chosen against `status` — so it never
+collided with a tool's own `todo | in-progress | done` — and **`lifecycle`
+avoids that collision equally well**, because the word at risk was `status` and
+this name does not contain it.
+
+**Breaking for an adopter**, shipped as minor under the pre-1.0 allowance:
+**every Document declaring the old key has to be renamed.** It fails visibly
+rather than quietly — `lifecycle` is unrecognised where `lifecycle_status` was
+expected, and an unrenamed Document reads as having no lifecycle declared at
+all.
+
+`0.11.1` — **references to the knowledge format name sections instead of numbering them.** The format removed section numbers, so every `§n` here pointed at a position that no longer exists — and a stale number resolves to the wrong section rather than to nothing, which is why none of them were reported. Decorative citations are dropped; the rest name what they meant.
+
+Patch: wording only. No rule, field or procedure changed.
+
+`0.11.0` — **a bundle no longer has one correct starting place.** The rule said
+a bundle is born in the project that needed it and promoted from there, which
+made two ordinary things read as violations: writing a bundle straight into a
+catalog when you already know several projects want it, and copying one between
+a handful of repositories without standing up a catalog at all. Both happen, and
+both are fine.
+
+**Four routes are now named, none ranked** — project-then-catalog,
+project-then-project, catalog-first, and project-and-nowhere-else. The last was
+missing entirely, which quietly implied every bundle is on its way somewhere. It
+is the most common outcome and it is a destination.
+
+**What replaces the rule is guidance keyed on what you actually know**: how many
+adopters exist, and how long the bundle will live. Certainty makes catalog-first
+correct; uncertainty makes a project correct — **not because it is better, but
+because it is the cheaper mistake**, and that is the only preference left.
+
+**The one thing that still binds moved from the rung to the audience.** *Do not
+skip the middle* was the wrong test — it forbade starting in a catalog nobody
+outside your organization reads, where there is nobody to mislead. What matters
+is that a bundle in a catalog **strangers adopt from** should have been used by
+somebody, because publishing is the only signal those adopters get. An
+organization's catalog is still where vouching happens, and still worth using
+where it exists.
+
+The argument that catalog-first designs against an imagined consumer survives —
+demoted from a prohibition to a cost, with the way to manage it stated: say so
+in the manifest, then let first contact rewrite what it rewrites.
+
+Minor. Nothing an adopter must do has changed, and a bundle that followed the
+old rule is still following this one.
+
+`0.10.4` — **`entry_point` is now `entrypoint`.** One word, so the same word names the same thing at every level it appears. The policy, the three workflows and the template all taught the old spelling, so each is corrected — a bundle that teaches a field name is wrong in a way that spreads.
 
 Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 
