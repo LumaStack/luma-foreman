@@ -9,12 +9,12 @@ description: Six layers, and why the committed file appears twice. What a projec
 Lowest to highest. The last one to speak wins.
 
 ```
-1. built-in defaults                              in code
-2. ~/.config/<org>/<tool>/config.toml             yours, every project
-3. .luma/config/<tool>.toml   [defaults]          project suggests — overridable
-4. ~/.config/<org>/<tool>/projects/<id>.toml      yours, this project
-5. .luma/config/<tool>.toml   [require]           project mandates — not overridable
-6. environment variables and flags                this invocation only
+1. built-in defaults                                    in code
+2. ~/.config/<org>/<application>/config.toml            yours, every project
+3. .luma/config/<tool>.toml   [defaults]                project suggests — overridable
+4. ~/.config/<org>/<application>/projects/<id>.toml     yours, this project
+5. .luma/config/<tool>.toml   [require]                 project mandates — not overridable
+6. environment variables and flags                      this invocation only
 ```
 
 ## The committed file appears twice, on purpose
@@ -47,24 +47,24 @@ does not care very much.
 longer hold. If a value being changed locally would make two people on the same
 commit get different verdicts, it belongs here.
 
-**When in doubt, `[defaults]`.** Moving a value from `[defaults]` to `[require]`
-later tightens something nobody was relying on being loose. Going the other way
-loosens a rule people may have been relying on, silently.
+**When in doubt, `[defaults]`.** Moving a value from `[defaults]` to
+`[require]` later tightens something nobody was relying on being loose. Going
+the other way loosens a rule people may have been relying on, silently.
 
 ## Flags win, and never persist
 
-Layer 6 affects one invocation and writes nothing. A flag that quietly persisted
-would produce state nobody remembers setting — the worst kind, because the
-symptom appears long after the cause and in a different session.
+Layer 6 affects one invocation and writes nothing. A flag that quietly
+persisted would produce state nobody remembers setting — the worst kind,
+because the symptom appears long after the cause and in a different session.
 
 Keep the two acts distinct: **a command that writes configuration and a flag
-that overrides it for one run are different commands**, and naming them the same
-way invites exactly that confusion.
+that overrides it for one run are different commands**, and naming them the
+same way invites exactly that confusion.
 
 ## Read per invocation, never memoize
 
-Re-read the files every run. A short-lived process pays nothing for this, and it
-is what makes *"change it and the next command sees it"* true rather than
+Re-read the files every run. A short-lived process pays nothing for this, and
+it is what makes *"change it and the next command sees it"* true rather than
 approximately true.
 
 The cost only appears when something long-lived exists, and at that point it
@@ -77,6 +77,6 @@ Only one layer may exist today. Put the lookup behind a single resolution
 function anyway, so the rest slot in at one place rather than being threaded
 through everywhere a setting is read.
 
-**Reserving the shape is free. Building the whole chain before there is anything
-to resolve is not** — it is the same premature extraction that a shared package
-before a second consumer would be.
+**Reserving the shape is free. Building the whole chain before there is
+anything to resolve is not** — it is the same premature extraction that a
+shared package before a second consumer would be.

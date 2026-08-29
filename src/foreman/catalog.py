@@ -85,8 +85,19 @@ class Catalog:
 
 
 def _cache_dir() -> Path:
+    """Catalog checkouts, under ``~/.cache/<org>/<application>/``.
+
+    The application segment is ``luma-foreman`` in full and never shortened —
+    the shape ``luma-config`` gives, and the same one ``store.py`` uses for
+    config and data. It read ``~/.cache/luma/catalogs`` until 2026-08-29, which
+    put ``catalogs`` where the application name belongs, so nothing under
+    ``~/.cache/luma/`` mapped to a repository any more.
+
+    No migration is owed and none is offered: this is cache by that bundle's
+    own test, so the stale directory loses nothing and ``_clone`` refetches.
+    """
     base = os.environ.get("XDG_CACHE_HOME") or (Path.home() / ".cache")
-    return Path(base) / "luma" / "catalogs"
+    return Path(base) / "luma" / "luma-foreman" / "catalogs"
 
 
 def _clone(url: str) -> Path | None:

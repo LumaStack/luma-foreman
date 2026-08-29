@@ -34,32 +34,51 @@ own machines may version `~/.config/` in a dotfiles repository. That is their
 repository and their choice, and it does not make those settings part of any
 project.
 
-**What must never happen is the reverse** — something under `.luma/` that is not
-committed. Committed-but-personal is somebody's private business; uncommitted-
-but-in-the-project is two agents reading different rules for the same code.
+**What must never happen is the reverse** — something under `.luma/` that is
+not committed. Committed-but-personal is somebody's private business;
+uncommitted- but-in-the-project is two agents reading different rules for the
+same code.
 
 ## Machine-local paths follow XDG
 
-The [XDG Base Directory Specification][^xdg] is what decides these paths, and it
-is worth reading once rather than guessing:
+The [XDG Base Directory Specification][^xdg] is what decides these paths, and
+it is worth reading once rather than guessing:
 
 | | holds |
 | --- | --- |
-| `~/.config/<application>/` | **configuration** — things a person edits |
-| `~/.local/share/<application>/` | **data** — things a program installs and manages |
-| `~/.local/state/<application>/` | **state** — logs, history, work already done |
-| `~/.cache/<application>/` | **cache** — regenerable, safe to delete |
-| `~/.local/bin/` | executables |
+| `~/.config/<org>/<application>/` | **configuration** — things a person edits |
+| `~/.local/share/<org>/<application>/` | **data** — things a program installs and manages |
+| `~/.local/state/<org>/<application>/` | **state** — logs, history, work already done |
+| `~/.cache/<org>/<application>/` | **cache** — regenerable, safe to delete |
+| `~/.local/bin/` | **executables** — flat, because it has to be on `PATH` |
 
-### Nest under the organization, then the repository name
+**`<application>` is never truncated.** The name in full, prefix included —
+`~/.config/luma/luma-foreman/`, never `~/.config/luma/foreman/`. **A shortened
+segment is the tell that a path drifted**, and it is the only mistake this
+shape actually attracts.
 
-`~/.config/luma/luma-foreman/`. The second segment is **the repository name
-exactly**, prefix included, so a directory maps to a repository with nothing to
-translate.
+**`~/.local/bin/` is the one genuine exception and the reason is mechanical:**
+a binary nested under `~/.local/bin/<org>/<application>/` is not on `PATH` and
+does not run. Nothing else here has a reason to be flat.
+
+**State and cache are different tiers and folding them loses the test below.**
+Logs and history are state; anything regenerable is cache. *If deleting it
+loses a decision somebody made, it is not cache* — a rule that needs a cache
+tier to point at.
+
+### Why nest under the organization
+
+`~/.config/luma/luma-foreman/`, so a directory maps to a repository with
+nothing to translate.
 
 **The specification does not choose this for you.** It says
 `$XDG_CONFIG_HOME/subdir/filename` — generic placeholder language — and leaves
 naming and depth to the application. Both flat and nested conform.
+
+*This was argued more than once and settled on nesting. **What goes wrong in
+practice is truncation, not the shape** — `luma/foreman` written for
+`luma/luma-foreman` — and it goes wrong silently, because a path nobody wrote
+to before is created on demand and nothing reports the old one is now empty.*
 
 Flat is the common shape, but the tools usually cited for it are single-tool
 vendors with nothing to nest under, which makes them poor evidence either way.
@@ -72,21 +91,21 @@ JetBrains ships several tools and nests across config, data and cache alike.
 ```
 
 One entry per directory, no glob support required, and nothing to widen when a
-second tool arrives. **The organization directory is what matches, so repository
-names are free** — a tool called `atlas` lands at `~/.config/luma/atlas/` and is
-covered by the same rule.
+second tool arrives. **The organization directory is what matches, so
+application names are free** — a tool called `atlas` lands at
+`~/.config/luma/atlas/` and is covered by the same rule.
 
 The flat alternative needs one entry per application, or a `luma-*` wildcard
-that holds only while every tool happens to be named `luma-something`. That is a
-convention nobody commits to, and one product-named tool leaves no single rule
-to write.
+that holds only while every tool happens to be named `luma-something`. That is
+a convention nobody commits to, and one product-named tool leaves no single
+rule to write.
 
 This matters beyond tidiness because such a rule **fails open**: a pattern
 matching nothing produces no error and no warning.
 
 Shared configuration across tools is **its own repository** —
-`~/.config/luma/luma-shared/` — rather than something at the organization level,
-so `<org>/<repo>` holds without exception.
+`~/.config/luma/luma-shared/` — rather than something at the organization
+level, so `<org>/<application>` holds without exception.
 
 ### Choosing between config, data and state
 
@@ -147,16 +166,16 @@ concurrency, and whichever mode an operator prefers. They belong to a person on
 a machine rather than to the project, and they live under `~/.config/luma/`
 where no repository can see them.
 
-**Everything in `.luma/` is committed. No exceptions.** If uncommitted files can
-live there, a reader cannot distinguish an authoritative rule from somebody's
-local tweak, and two agents on two machines read different rules for the same
-project — a correctness failure in the one place whose job is saying what the
-rules are.
+**Everything in `.luma/` is committed. No exceptions.** If uncommitted files
+can live there, a reader cannot distinguish an authoritative rule from
+somebody's local tweak, and two agents on two machines read different rules for
+the same project — a correctness failure in the one place whose job is saying
+what the rules are.
 
-*The tempting alternative is a gitignored `foreman.local.toml` sitting beside the
-committed one, which several tools do and which is more ergonomic. It is not
-taken here for exactly the reason above: an uncommitted file inside `.luma/`
-breaks the promise the directory exists to make.*
+*The tempting alternative is a gitignored `foreman.local.toml` sitting beside
+the committed one, which several tools do and which is more ergonomic. It is
+not taken here for exactly the reason above: an uncommitted file inside
+`.luma/` breaks the promise the directory exists to make.*
 
 ## Machine-local settings are keyed by an identifier, not a path
 
@@ -167,12 +186,12 @@ id = "8f2c1e9a"
 
 A checkout path breaks the moment a repository moves or somebody makes a second
 clone. A remote URL breaks for repositories that have none, or that get
-migrated. **The identifier is the only durable key**, so it is generated once and
-committed.
+migrated. **The identifier is the only durable key**, so it is generated once
+and committed.
 
-**Committing an identifier is not committing the settings.** The identifier says
-*which project this is*; what a particular operator chose for it stays on their
-machine.
+**Committing an identifier is not committing the settings.** The identifier
+says *which project this is*; what a particular operator chose for it stays on
+their machine.
 
 ## Name files for the tool that reads them
 

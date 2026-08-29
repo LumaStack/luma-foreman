@@ -97,7 +97,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 
 ### Fixed
 - **`policy install` printed a deny rule that did not match what it installs.** The help text told users to add `Edit(~/.config/luma/**)` while the snippet emitted `Edit(~/.config/luma-foreman/**)`. Fixed by the move above, which makes both correct.
-- **`policy doctor` told you to delete a legacy directory before the wiring had moved**, contradicting the migration rule in `docs/standards.md` — the old location may still be referenced by `settings.json`, and removing it first leaves the session unguarded. It now gives the order: install, apply the printed settings changes, then delete.
+- **`policy doctor` told you to delete a legacy directory before the wiring had moved**, contradicting the migration rule then in `docs/standards.md`, now in the adopted `luma-config` bundle — the old location may still be referenced by `settings.json`, and removing it first leaves the session unguarded. It now gives the order: install, apply the printed settings changes, then delete.
 
 
 Everything so far. Foreman has not cut a release; `main` is the current state.

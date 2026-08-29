@@ -22,7 +22,7 @@ Everything here is vendored under `.luma/bundles/` and is part of this repositor
   - ring: `.luma/bundles/rings/lumastack/luma-catalog/git-worktrees.md`
 - **`lumastack/luma-catalog/github-release`** 0.6.2 — Cutting and publishing GitHub releases — choosing the version, the changelog, release titles and contents, and the gh workflow.
   - ring: `.luma/bundles/rings/lumastack/luma-catalog/github-release.md`
-- **`lumastack/luma-catalog/luma-config`** 0.7.2 — Where luma configuration lives, what is committed and what belongs to the machine, and the order in which layers win.
+- **`lumastack/luma-catalog/luma-config`** 0.8.0 — Where luma configuration lives, what is committed and what belongs to the machine, and the order in which layers win.
   - ring: `.luma/bundles/rings/lumastack/luma-catalog/luma-config.md`
 - **`lumastack/luma-catalog/luma-layout`** 0.13.1 — The .luma directory every luma tool writes into — the four tiers, what belongs in each, and the committed-only invariant that makes it trustworthy.
   - ring: `.luma/bundles/rings/lumastack/luma-catalog/luma-layout.md`

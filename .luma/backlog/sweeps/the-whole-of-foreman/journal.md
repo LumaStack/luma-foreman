@@ -131,3 +131,62 @@ transitional and expected to fold into `what it says it is` once read. All four
 of its rows are now closed, so it should fold at the next reconciliation — and
 `what it says it is` is closed too. **Two clusters are done and the charter
 still lists both**, which is the first thing reconciliation should tidy.
+
+**Scope as data and scope as prose is an anti-pattern, and this sweep proved it
+on itself.** The `sweep` type requires `scope:` as a field — a rule — and the
+charter template asks for scope prose beneath it. This charter's prose
+*enumerated the included paths*, which is the rule copied by hand.
+
+**It disagreed within two slices.** `.gitignore` is tracked, is not `.claude/`
+and is not a vendored bundle, so the rule always included it; the list never
+named it, so it never got a row. Reconciliation at slice 003 found the file with
+nowhere to go.
+
+**The fix is not to drop one of them — they hold different facts.** The field
+states the rule. The prose states **what the rule excluded and who decided**,
+given or chosen, which no field can carry. **What the prose must never do is
+enumerate what is in**, because that is derivable and `coverage.md` already
+derives it.
+
+**For the bundle**: `_types/sweep.md` says `scope` must say what was left out.
+It does not say the body must not restate what was left *in*, and the template
+invites exactly that. Both want the rule. Batched rather than taken — step 8.
+
+*The same shape as `.luma/PROJECT.md`'s `owns`, found in slice 002, running the
+other way: there, prose was treated as data; here, data was restated as prose.
+**One fact, two records, and the copy is always the half that rots.***
+
+**One wrong table produced three wrong paths in three repositories.**
+`luma-config`'s XDG table gave `~/.config/<application>/` and put the
+organization segment in a subsection below it. **A table is what a reader takes
+as canonical**, so `catalog.py` wrote `~/.cache/luma/catalogs`,
+`session-manager` wrote `~/.local/state/luma/sessions`, and this repository's
+gate tests wrote `~/.config/luma/foreman`.
+
+**None was reported by anything**, and the reason is worth keeping: a path
+nobody has written to before is created on demand, so the wrong path works
+perfectly. Nothing notices the right one is empty. **A path defect is silent by
+construction** — unlike a wrong command name, which fails the moment somebody
+runs it.
+
+**`session-manager` is upstream and out of scope.** Six documents, a
+`luma-catalog` fix, recorded here rather than taken because vendored bundles are
+excluded and fixing one in place is drift by definition.
+
+**`CHANGELOG.md:96` says `policy doctor` and `policy install`.** Both retired;
+the command is `agent-permissions`. Found while checking whether the changelog
+held the reversal note — it does, at `:92-93`, and more fully than
+`docs/standards.md` did. **`CHANGELOG.md` is a pending row in cluster *plans,
+config, changelog* and this is waiting for it.**
+
+**A changelog is the one document where a stale name may be correct**, because
+it records what was true when written. `:96` is not that case — it is migration
+instructions telling somebody to run a command that no longer exists.
+
+**The check no earlier slice ran: does an adopted bundle already cover this
+document?** `docs/standards.md` read as reasonable prose and nothing in it
+announced that `luma-config` had taken the subject. **Being superseded is not
+visible from inside a file.** Slices 001 and 002 read four documents without
+asking, and at least `docs/architecture.md` overlaps `luma-layout`. Worth a pass
+before slice 004 rather than after the sweep.
+

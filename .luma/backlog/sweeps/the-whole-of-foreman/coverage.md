@@ -1,7 +1,7 @@
 ---
 type: coverage
 title: Coverage — the whole of luma-foreman
-indexed_at: ccab53b1c9d7
+indexed_at: 207907a28845
 ---
 
 # Coverage
@@ -16,13 +16,13 @@ ages this file, and every slice brings it back.
 | --- | --- |
 | approved | 5 |
 | reviewed, not signed off | 1 |
-| with findings | 5 |
-| skipped | 0 |
-| removed | 2 — `docs/inspect.md` into `commands.md`, `docs/scope.md` scattered |
-| pending | 79 |
-| total rows | 87 |
+| with findings | 6 |
+| skipped | 4 — `docs/examples/`, excluded by the reader |
+| removed | 3 — `docs/inspect.md`, `docs/scope.md`, `docs/standards.md` |
+| pending | 80 |
+| total rows | 93 |
 
-**Rate: two slices, eight files.** Too few to be a range yet, and slice 001 was
+**Rate: three slices, nine files.** Too few to be a range yet, and slice 001 was
 atypical — it built the practice while it ran, producing five releases of
 `review-sweeps`. **An outlier widens the range rather than being dropped from
 it**, so it counts, and the range will say so once there is one.
@@ -43,16 +43,16 @@ a known compromise rather than a shortfall. `.luma/PROJECT.md` is the first.
 | what it says it is | `CLAUDE.md` | both | human:benlinton | human:benlinton | clean | 002 |
 | what it says it is | `.luma/PROJECT.md` | both | human:benlinton |  | findings | 002 |
 | what it says it is | ~~`docs/scope.md`~~ | both | human:benlinton |  | findings | 002 — scattered into eleven files, then deleted |
-| split from README | `docs/getting-started.md` | both | human:benlinton | human:benlinton | findings | 001 |
-| split from README | `docs/commands.md` | both | human:benlinton | human:benlinton | findings | 001 |
+| what it says it is | `docs/getting-started.md` | both | human:benlinton | human:benlinton | findings | 001 |
+| what it says it is | `docs/commands.md` | both | human:benlinton | human:benlinton | findings | 001 |
 | — | ~~`docs/inspect.md`~~ | — | | | | 001 — collapsed into `commands.md` |
-| split from README | `docs/architecture.md` | both | human:benlinton | human:benlinton | findings | 001 |
-| standards and permissions | `docs/standards.md` | both |  |  |  |  |
+| what it says it is | `docs/architecture.md` | both | human:benlinton | human:benlinton | findings | 001 |
+| standards and permissions | ~~`docs/standards.md`~~ | both | human:benlinton |  | findings | 003 — dropped, superseded by the adopted `luma-config` bundle |
 | standards and permissions | `docs/claude-agent-permissions.md` | both |  |  |  |  |
-| standards and permissions | `docs/examples/README.md` | both |  |  |  |  |
-| standards and permissions | `docs/examples/american-spelling.md` | both |  |  |  |  |
-| standards and permissions | `docs/examples/design-first-working-mode.md` | both |  |  |  |  |
-| standards and permissions | `docs/examples/no-competitor-names-in-committed-docs.md` | both |  |  |  |  |
+| standards and permissions | `docs/examples/README.md` | — |  |  |  | skipped — reader excluded `docs/examples/` from this sweep |
+| standards and permissions | `docs/examples/american-spelling.md` | — |  |  |  | skipped — reader excluded `docs/examples/` from this sweep |
+| standards and permissions | `docs/examples/design-first-working-mode.md` | — |  |  |  | skipped — reader excluded `docs/examples/` from this sweep |
+| standards and permissions | `docs/examples/no-competitor-names-in-committed-docs.md` | — |  |  |  | skipped — reader excluded `docs/examples/` from this sweep |
 | decisions | `.luma/records/decisions/ADR-0001-apply-writes-adapters-not-copies.md` | both |  |  |  |  |
 | decisions | `.luma/records/decisions/ADR-0002-adoption-copies-and-never-resolves.md` | both |  |  |  |  |
 | decisions | `.luma/records/decisions/ADR-0003-cli-speaks-convention-not-metaphor.md` | both |  |  |  |  |
@@ -62,32 +62,38 @@ a known compromise rather than a shortfall. `.luma/PROJECT.md` is the first.
 | plans, config, changelog | `.luma/backlog/plans/knowledge-delivery.md` | both |  |  |  |  |
 | plans, config, changelog | `.luma/config/luma-foreman.toml` | both |  |  |  |  |
 | plans, config, changelog | `CHANGELOG.md` | both |  |  |  |  |
+| plans, config, changelog | `.gitignore` | both |  |  |  |  |
 | ideas A | `.luma/backlog/ideas/a-record-can-be-demoted.md` | both |  |  |  |  |
 | ideas A | `.luma/backlog/ideas/a-reminder-needs-somewhere-to-live.md` | both |  |  |  |  |
 | ideas A | `.luma/backlog/ideas/adopt-or-install-as-shorthand.md` | both |  |  |  |  |
 | ideas A | `.luma/backlog/ideas/apply-writes-an-entry-point-not-an-index.md` | both |  |  |  |  |
 | ideas A | `.luma/backlog/ideas/browsing-a-catalog-is-an-engines-job.md` | both |  |  |  |  |
 | ideas A | `.luma/backlog/ideas/bundle-routines.md` | both |  |  |  |  |
+| ideas A | `.luma/backlog/ideas/bundles-declare-what-they-work-with.md` | both |  |  |  |  |
 | ideas A | `.luma/backlog/ideas/bundles-wanted-not-built.md` | both |  |  |  |  |
 | ideas A | `.luma/backlog/ideas/committed-permission-floor.md` | both |  |  |  |  |
 | ideas A | `.luma/backlog/ideas/declared-maturity-and-behaviour.md` | both |  |  |  |  |
-| ideas A | `.luma/backlog/ideas/distribution-beyond-clone-and-symlink.md` | both |  |  |  |  |
-| ideas A | `.luma/backlog/ideas/drive-an-incident.md` | both |  |  |  |  |
-| ideas A | `.luma/backlog/ideas/edit-ceremony-should-key-on-citations.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/bundles-declare-what-they-work-with.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/never-derive-an-actor-from-the-os-user.md` | both |  |  |  |  |
+| ideas B | `.luma/backlog/ideas/distribution-beyond-clone-and-symlink.md` | both |  |  |  |  |
+| ideas B | `.luma/backlog/ideas/drive-an-incident.md` | both |  |  |  |  |
+| ideas B | `.luma/backlog/ideas/edit-ceremony-should-key-on-citations.md` | both |  |  |  |  |
+| ideas B | `.luma/backlog/ideas/feedback-and-learning.md` | both |  |  |  |  |
 | ideas B | `.luma/backlog/ideas/hook-against-leaking-internal-hq.md` | both |  |  |  |  |
+| ideas B | `.luma/backlog/ideas/independent-of-the-harness.md` | both |  |  |  |  |
 | ideas B | `.luma/backlog/ideas/knowledge-reaching-agents-elsewhere.md` | both |  |  |  |  |
 | ideas B | `.luma/backlog/ideas/named-permission-profiles.md` | both |  |  |  |  |
+| ideas B | `.luma/backlog/ideas/never-derive-an-actor-from-the-os-user.md` | both |  |  |  |  |
 | ideas B | `.luma/backlog/ideas/new-repository-survey.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/no-way-to-un-adopt.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/personal-skill-selection-not-committed.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/preload-levels-collapse-into-emphasis.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/prose-conventions.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/routers.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/scan-history-not-just-the-working-tree.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/which-bundles-this-project-should-carry.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/workflows-invoking-workflows.md` | both |  |  |  |  |
+| ideas C | `.luma/backlog/ideas/no-format-for-non-procedural-knowledge.md` | both |  |  |  |  |
+| ideas C | `.luma/backlog/ideas/no-way-to-un-adopt.md` | both |  |  |  |  |
+| ideas C | `.luma/backlog/ideas/personal-skill-selection-not-committed.md` | both |  |  |  |  |
+| ideas C | `.luma/backlog/ideas/preload-levels-collapse-into-emphasis.md` | both |  |  |  |  |
+| ideas C | `.luma/backlog/ideas/prose-conventions.md` | both |  |  |  |  |
+| ideas C | `.luma/backlog/ideas/routers.md` | both |  |  |  |  |
+| ideas C | `.luma/backlog/ideas/the-gate-test-does-not-test-the-gate.md` | both |  |  |  |  |
+| ideas C | `.luma/backlog/ideas/scan-history-not-just-the-working-tree.md` | both |  |  |  |  |
+| ideas C | `.luma/backlog/ideas/verification-beyond-inspect.md` | both |  |  |  |  |
+| ideas C | `.luma/backlog/ideas/which-bundles-this-project-should-carry.md` | both |  |  |  |  |
+| ideas C | `.luma/backlog/ideas/workflows-invoking-workflows.md` | both |  |  |  |  |
 | entry and shared | `bin/luma-foreman` | agent |  |  |  |  |
 | entry and shared | `src/foreman/cli.py` | agent |  |  |  |  |
 | entry and shared | `src/foreman/config.py` | agent |  |  |  |  |
