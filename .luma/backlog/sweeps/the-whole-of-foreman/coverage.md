@@ -1,7 +1,7 @@
 ---
 type: coverage
 title: Coverage — the whole of luma-foreman
-indexed_at: c19bdc853dbc
+indexed_at: cf8f7143fbbd
 ---
 
 # Coverage
@@ -17,9 +17,9 @@ ages this file, and every slice brings it back.
 | approved | 5 |
 | reviewed, not signed off | 1 |
 | with findings | 6 |
-| skipped | 36 — `docs/examples/`, `.luma/backlog/ideas/`, and `docs/claude-agent-permissions.md`, all excluded by the reader |
+| skipped | 47 — `docs/examples/`, the idea backlog, and the whole agent-permissions subsystem, all excluded by the reader |
 | removed | 3 — `docs/inspect.md`, `docs/scope.md`, `docs/standards.md` |
-| pending | 48 |
+| pending | 37 |
 | total rows | 93 |
 
 **Rate: three slices, nine files.** Too few to be a range yet, and slice 001 was
@@ -123,18 +123,18 @@ answers**, and the journal says which and why.
 | inspect | `src/foreman/inspect/rules/identity.py` | agent |  |  |  |  |
 | inspect | `src/foreman/inspect/rules/secrets.py` | agent |  |  |  |  |
 | inspect | `src/foreman/inspect/rules/vocabulary.py` | agent |  |  |  |  |
-| agent permissions | `src/foreman/agent_permissions/__init__.py` | agent |  |  |  |  |
-| agent permissions | `src/foreman/agent_permissions/model.py` | agent |  |  |  |  |
-| agent permissions | `src/foreman/agent_permissions/store.py` | agent |  |  |  |  |
-| agent permissions | `src/foreman/agent_permissions/match.py` | agent |  |  |  |  |
-| agent permissions | `src/foreman/agent_permissions/gate.py` | agent |  |  |  |  |
-| agent permissions | `src/foreman/agent_permissions/commands.py` | agent |  |  |  |  |
-| agent permissions | `src/foreman/agent_permissions/install.py` | agent |  |  |  |  |
-| agent permissions | `src/foreman/agent_permissions/doctor.py` | agent |  |  |  |  |
-| agent permissions | `libexec/permission-gate.py` | agent |  |  |  |  |
+| agent permissions | `src/foreman/agent_permissions/__init__.py` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
+| agent permissions | `src/foreman/agent_permissions/model.py` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
+| agent permissions | `src/foreman/agent_permissions/store.py` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
+| agent permissions | `src/foreman/agent_permissions/match.py` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
+| agent permissions | `src/foreman/agent_permissions/gate.py` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
+| agent permissions | `src/foreman/agent_permissions/commands.py` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
+| agent permissions | `src/foreman/agent_permissions/install.py` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
+| agent permissions | `src/foreman/agent_permissions/doctor.py` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
+| agent permissions | `libexec/permission-gate.py` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
 | tests | `tests/run` | agent |  |  |  |  |
 | tests | `tests/adopt-test.sh` | agent |  |  |  |  |
-| tests | `tests/agent-permissions-cli-test.sh` | agent |  |  |  |  |
+| tests | `tests/agent-permissions-cli-test.sh` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
 | tests | `tests/apply-test.sh` | agent |  |  |  |  |
 | tests | `tests/inspect-test.sh` | agent |  |  |  |  |
-| tests | `tests/permission-gate-test.sh` | agent |  |  |  |  |
+| tests | `tests/permission-gate-test.sh` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |

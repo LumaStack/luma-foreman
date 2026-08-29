@@ -88,8 +88,13 @@ suites that exercise them. **If the subsystem is out of MVP, the reason given
 here applies to all of them** — and leaving them pending claims the sweep
 intends to reach them.
 
-**Not assumed and not marked.** The reader gave a reason for one row; extending
-it to eleven is exactly the inference `review-sweeps` 0.20.0 exists to stop.
+**Raised, then marked on the reader's agreement.** Extending a reason from one
+row to eleven without asking is exactly the inference `review-sweeps` 0.20.0
+exists to stop; asking cost one line.
+
+**Skipping a row does not cancel work already routed out of it.** `doctor.py`'s
+heading shape and the renderer split are in the journal and stay there — the
+skip says the sweep will not read the file, not that nothing was found in it.
 
 **It also changes what a finding there would be worth.**
 [[the-gate-test-does-not-test-the-gate]] is a real defect in a subsystem nobody
