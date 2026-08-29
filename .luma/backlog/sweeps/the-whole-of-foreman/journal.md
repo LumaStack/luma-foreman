@@ -229,3 +229,41 @@ names as one thing.
 signed-off row to `skipped` on the agent's reasoning is the defect the entry
 above is about. It belongs in the close, or in the next sweep's charter, where
 the exclusion can be written once and correctly.
+
+**`doctor`'s section headings run into the checks above them and read as
+wrapped text.** Noticed by the reader from real output during slice 004.
+`doctor.py:202` prints the section name with no blank line before it; there is
+one `print()` at `:195` and that is the only separator in the whole report.
+
+**Decided shape: a blank line, and the section name in capitals.**
+
+```
+INSTALLATION
+  ok    gate installed at ~/.local/share/luma/luma-foreman/permission-gate.sh
+
+CLAUDE CODE WIRING
+  ok    settings found at ~/.claude/settings.json
+```
+
+**Capitals rather than `--` or `##` because it is not a new convention.**
+`inspect` already puts uppercase keywords in a left column — `NOTICE`,
+`SKIPPED` — and separates its blocks with blank lines. Taking its shape means
+the two commands stop looking like different tools.
+
+**Ruled out: colour.** There is no ANSI, no `isatty`, and no `NO_COLOR`
+handling anywhere in `src/`. Bold or dim would be a new convention with terminal
+detection attached, which is far more than this needs.
+
+**Ruled out: a rule line under the heading.** Clearer in isolation, but it is
+decoration nothing else uses and it needs a width to size against.
+
+**The finding underneath is larger than the newline: two commands in one binary
+render structured results two different ways**, and neither shares a renderer
+with the other. `inspect` has `inspect/report.py`; `doctor` has a `Report` class
+of its own at `doctor.py:27`. **Whether that wants unifying is a question for
+`doctor.py`'s row and `inspect/report.py`'s**, both pending, and it should be
+answered once for both rather than twice.
+
+**Routed rather than fixed**, at the reader's choice, so slice 004 stays about
+the document in front of it.
+
