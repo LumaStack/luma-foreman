@@ -18,7 +18,9 @@ The code moved since the index was built — by your own fixes, if nothing else.
 git diff --name-status <indexed_at>..HEAD
 ```
 
-- **Added** files in scope get rows, marked pending.
+- **Added** files in scope get rows, marked pending, **placed by the sweep's
+  clustering strategy**. Where none of its clusters fits, add one to `sweep.md`
+  rather than inventing a name here.
 - **Deleted** files are struck through rather than removed, so the index still
   explains itself.
 - **Renamed** files keep their status. A move is not a reason to re-read

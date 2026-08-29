@@ -48,6 +48,26 @@ diff` of the sweep's thinking is buried under status changes.
 repository and the slices?* If yes it belongs in `coverage.md`. If losing it
 would lose something nothing else records, it belongs in `sweep.md`.
 
+### Derived *given the strategy*, which has to be written down
+
+**The index is only rebuildable if the rules that produced it are stated.**
+Scope decides which files have rows; who-reads-what decides a column; **and the
+clustering strategy decides which cluster each row lands in.** Leave any of
+those in somebody's head and the index stops being derivable — it becomes a
+record of judgements nothing else holds, sitting in the file that was supposed
+to be the cache.
+
+**Clusters are the one people leave unstated**, because grouping feels obvious
+while doing it. It is not derivable from paths: a cluster groups what must be
+understood together, which is routinely not what sits together. Four documents
+in three directories may answer one question, and one directory may hold three
+clusters that share nothing but a path.
+
+**So the sweep names its clusters and says what each is about**, and **a file
+that fits none of them means the strategy is incomplete.** Add the cluster to
+the sweep rather than improvising one in the index — improvising is how the
+index quietly becomes authored.
+
 **The scope rule stays in `sweep.md`; the enumeration goes in `coverage.md`.**
 *Everything tracked except the generated adapters and the vendored bundles*
 does not change when a file is added. The list of eighty-seven rows does, and

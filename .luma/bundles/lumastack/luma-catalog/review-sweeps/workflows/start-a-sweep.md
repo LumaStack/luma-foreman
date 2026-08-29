@@ -106,9 +106,21 @@ coverage ledger — a file left out of it is a file nobody can later prove was
 read or not read, and the ones omitted for being trivial are exactly where a
 stale copy of something hides.
 
-**Group the rows into the clusters you expect to review together**, but do not
-over-plan it: the clustering is a first guess and every slice will revise the
-one after it.
+**Name the clusters in `sweep.md`, and say what each one is about.** Group by
+what must be read together — a subsystem, an execution path, a set of documents
+answering one question — which is routinely not what shares a directory.
+
+**Cap a cluster at one slice's worth**, split an oversized one in path order,
+and give a file big enough to be a slice on its own its own cluster.
+
+**The naming is not decoration.** `coverage.md` is only derivable if the rules
+that produced it are written down, and clustering is the one people leave in
+their heads. **A file that fits no cluster means the strategy is incomplete** —
+add the cluster to the sweep rather than improvising one in the index.
+
+Do not over-plan the membership: the first grouping is a guess and every slice
+will revise the one after it. It is the *strategy* that has to be stated, not
+the perfect answer.
 
 ## 6. Say how long this will actually take
 
