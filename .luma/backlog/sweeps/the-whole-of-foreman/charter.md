@@ -115,6 +115,10 @@ that will disagree with itself, and the copy is the half that goes wrong.
   file that records it is circular, and approving your own coverage ledger
   proves nothing about coverage.
   Added as an exclusion once the sweep's files appeared inside its own scope.
+- **`.luma/backlog/ideas/`. Given, at slice 004.** The reader excluded the
+  idea backlog. It is the largest cluster in scope and the least likely to hold
+  a false claim — an idea is a proposal, so *"this might work"* cannot rot the
+  way *"this is how it works"* can. **The goal barely applies to it.**
 - **`docs/examples/`. Given, at slice 003.** The reader excluded them
   rather than the sweep reasoning its way there, which is the distinction this
   list exists to keep. They are worked examples of the standards in
