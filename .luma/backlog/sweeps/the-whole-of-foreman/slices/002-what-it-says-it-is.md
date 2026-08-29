@@ -67,37 +67,41 @@ diff; this table says what to look for in it.
 
 | lines | what it held | verdict | where it went |
 | --- | --- | --- | --- |
-| 12–21 | status table of the six commands | **dropped** | superseded by `docs/commands.md` |
-| 18 | *an index in `CLAUDE.md`* | **dropped as false** | contradicted by `apply.py:19`. Carried nowhere |
-| 19 | `inspect`'s rules, four of five | **dropped as stale** | `vocabulary.py` was missing from the list |
-| 23–26 | *`agent-permissions` is unrelated* | **dropped** | already near-verbatim at `architecture.md:128` |
+| 12–21 | status table of the six commands | **dropped as duplicate** | superseded by `docs/commands.md` |
+| 18 | *an index in `CLAUDE.md`* | **dropped as wrong** | contradicted by `apply.py:19`. Carried nowhere |
+| 19 | `inspect`'s rules, four of five | **dropped as wrong** | `vocabulary.py` was missing from the list |
+| 23–26 | *`agent-permissions` is unrelated* | **dropped as duplicate** | already near-verbatim at `architecture.md:128` |
 | 32–33 | share more than skills; resolve dependencies | rewritten | `independent-of-the-harness`, ADR-0002 |
 | 35 | be independent of Claude Code | rewritten | **new** `independent-of-the-harness` |
-| 39–44 | select at write time, load/unload skills | **dropped** | already at `personal-skill-selection:37` |
+| 39–44 | select at write time, load/unload skills | **dropped as duplicate** | already at `personal-skill-selection:37` |
 | 45 | frontmatter that enforces governance | rewritten | **new** `verification-beyond-inspect` |
-| 49–52 | routing bullets | **dropped** | already at `routers:94` |
+| 49–52 | routing bullets | **dropped as duplicate** | already at `routers:94` |
 | 54–65 | routing is the mechanism, tokens the objective | **moved** | `apply-writes-an-entry-point-not-an-index` |
 | 69–73 | verification — compliance, mandates, rot, audit | rewritten | **new** `verification-beyond-inspect` |
 | 77–78 | feedback — alerts, learn and improve | rewritten | **new** `feedback-and-learning` |
-| 84–88 | mid-session swapping needs cooperation | **dropped** | already at `personal-skill-selection:44` |
+| 84–88 | mid-session swapping needs cooperation | **dropped as duplicate** | already at `personal-skill-selection:44` |
 | 92–99 | do luma's own standards live outside luma tooling | **moved** | `which-bundles-this-project-should-carry` |
-| 100–101 | ship natively, or fetch everything | **dropped** | already at `which-bundles:30` |
-| 105–108 | routing: prose or data | **dropped** | already at `routers:94`, reframed better there |
+| 100–101 | ship natively, or fetch everything | **dropped as duplicate** | already at `which-bundles:30` |
+| 105–108 | routing: prose or data | **dropped as duplicate** | already at `routers:94`, reframed better there |
 | 109–114 | two policies conflict and nothing happens | **moved** | ADR-0002, which had cited this as its source |
-| 115–117 | the no-build-step promise | **dropped** | already at `distribution:28` |
+| 115–117 | the no-build-step promise | **dropped as duplicate** | already at `distribution:28` |
 | 121–123 | rot is mechanical and not | **moved** | **new** `verification-beyond-inspect` |
 | 124 | learn and improve | **moved** | **new** `feedback-and-learning` |
 | 125–127 | tooling and hooks may not be foreman's | **moved** | `plans/hook-delivery` |
-| 129–142 | a regex that fails open | **moved verbatim** | `docs/architecture.md` |
+| 129–142 | a regex that fails open | **moved** | `docs/architecture.md` |
 | 148–150 | `SKILL.md` is a standard; adapters are for hooks | rewritten | `plans/hook-delivery` |
-| 148 | *"read by 40+ agents"* | **dropped as unsourced** | a count with no source. Carried nowhere |
+| 148 | *"read by 40+ agents"* | **dropped as wrong** | a count with no source. Carried nowhere |
 | 151–156 | Claude Code plugins are a real package manager | **moved** | `distribution-beyond-clone-and-symlink` |
 | 157–160 | nobody has a format for non-procedural knowledge | **moved** | **new** `no-format-for-non-procedural-knowledge` |
 | 161–163 | plugins cache uncommitted; no offline reproduce | **moved** | `distribution`, and it is ADR-0002's evidence |
 
-**Three claims were dropped as wrong rather than moved** — `:18`, `:19` and the
-`40+` count. **Nothing false was carried forward**, which is the thing this
-table exists to let somebody check.
+**Three rows say `dropped as wrong` and name no destination** — `:18`, `:19` and
+the `40+` count — and each names what it was checked against, so the judgement
+can be re-run rather than trusted. **Nothing false was carried forward**, which
+is the thing this table exists to let somebody check.
+
+*The verdict vocabulary was ratified afterwards as `review-sweeps` 0.19.0, out
+of this slice. The table was written first and normalised to it.*
 
 ## Where it went
 

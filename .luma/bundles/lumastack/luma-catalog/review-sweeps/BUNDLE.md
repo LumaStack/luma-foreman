@@ -1,7 +1,7 @@
 ---
 type: bundle
-version: 0.18.0
-published: 2026-08-28
+version: 0.19.0
+published: 2026-08-29
 lifecycle_status: draft
 survival: experimental
 consumers: [project]
@@ -131,6 +131,32 @@ call graph, and while a headquarters could be read the same way, nobody has —
 adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
+
+`0.19.0` — **a slice that removes a document owes a ledger.**
+
+**A removed file cannot be re-read**, so what a slice concluded about it is the
+only surviving record of what it held. Everything else a slice produces can be
+checked against its source; this cannot.
+
+**Two rules.** The removal and every destination its content reached land in
+**one commit**, so the diff is the whole story rather than two diffs that do
+not mention each other — and it fails safely, because a half-landed scatter
+leaves live references pointing at a file that is already gone.
+
+**And every range of the removed file gets a verdict**: moved, rewritten,
+dropped as duplicate, or **dropped as wrong**. That last one carries no
+destination on purpose, and **a diff cannot tell it from content lost by
+accident** — both are red lines with nothing corresponding anywhere. The ledger
+is the only thing that separates them, which is what lets somebody trust a
+removal they did not perform. A *dropped as wrong* row names what it was
+checked against, so the reader can go and look rather than take your word.
+
+**Proportional to what was removed**, not to the sweep: a stub nobody cited
+needs a line; a document eleven files point at needs every range accounted for.
+
+**Found by running it.** A sweep deleted its own repository's first document,
+and the reader asked to be able to verify afterwards that the right things
+survived — which a diff alone cannot answer.
 
 `0.18.0` — **a row records three facts, not one status.**
 
