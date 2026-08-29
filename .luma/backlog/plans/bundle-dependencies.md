@@ -62,9 +62,16 @@ common case to skim past the uncommon one to be sure it does not apply to them.
 leak into a bundle other people might take. That is not a split criterion so
 much as a placement one, and `where-a-bundle-belongs` already owns it.
 
-## Decision: `git-workflow` and `git-worktrees` stay separate
+## Decided: `git-workflow` and `git-worktrees` stay separate
 
-**Recommended, and not for the reason they were first split.**
+**Agreed by the reader on 2026-08-29**, and not for the reason they were first
+split — the token argument that motivated the original cut is largely dissolved
+by rings, and this rests on condition, audience and replaceability instead.
+
+**Recorded here rather than as a decision record**, because it is one line of
+catalog structure settled inside a plan. **If the splitting rule is ever written
+into `bundle-manager`, this is the case it should cite** — and at that point it
+probably earns a record of its own.
 
 **Everyone integrates changes. Only some people run concurrent agents in
 worktrees.** That is one condition versus another, not one depth versus another
