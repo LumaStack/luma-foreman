@@ -58,6 +58,32 @@ been reaching for and has not written down.
 usually two conditions wearing one manifest — and it forces every reader of the
 common case to skim past the uncommon one to be sure it does not apply to them.
 
+### Until the two conditions share substance
+
+**Then splitting does not remove a cost, it chooses one.** Two conditions that
+share policy, templates or types cannot be cleanly cut: **either the shared
+material is duplicated into both bundles, or one bundle needs the other.**
+
+**Duplication is the worse of the two, and it is the one that looks free.** Two
+copies of a policy diverge silently and nothing reports it — the failure this
+estate has found repeatedly, in a stale template, in a workflow describing a
+retired status, in a count nobody re-checked.
+
+**A dependency is at least declarable.** It can be written down, printed at
+`get`, and noticed by `inspect`. **That is most of the argument for the rest of
+this plan**: not that dependencies are good, but that the alternative fails
+quietly and this one can be made to fail loudly.
+
+**So the test has two halves.** Split when the conditions differ **and** the
+material separates. **Where conditions differ and the material is shared, decide
+which cost to pay and say which** — and prefer the dependency, because it is the
+one that can be checked.
+
+*`git-workflow` and `git-worktrees` pass both halves: different conditions, and
+almost nothing shared — merge policy and worktree provisioning are separate
+material. **`review-sweeps` and `git-workflow` pass only the first**, which is
+exactly why the split produced a dependency rather than a clean cut.*
+
 **A fourth reason is ours alone:** what is specific to this estate should not
 leak into a bundle other people might take. That is not a split criterion so
 much as a placement one, and `where-a-bundle-belongs` already owns it.
