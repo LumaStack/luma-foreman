@@ -54,9 +54,22 @@ now a much weaker reason than it was when the bundles were first cut.
 **One bundle, one condition, one audience.** That is the rule this estate has
 been reaching for and has not written down.
 
-**Options inside a bundle are the smell.** *Use it this way, or that way* is
-usually two conditions wearing one manifest — and it forces every reader of the
-common case to skim past the uncommon one to be sure it does not apply to them.
+**Many workflows are not the smell.** `git-worktrees` has four — create,
+remove, recover, repair — and `review-sweeps` has three. Each is a choice and
+none is a problem: **they are moments in one job**, and a reader who is doing
+that job will reach most of them eventually.
+
+**The smell is a fork in the audience**: a bundle where the reader must first
+work out **which variant of it applies to them**, and one variant is permanently
+not theirs. *Use it with worktrees, or without.* *Read this half if you are an
+author, that half if you are an adopter.*
+
+**The test is what happens after the first read.** Having read it once, is any
+part of it **permanently** not yours? Then that part answers a different
+condition, and it is costing you the attention it took to establish that.
+
+*Choosing which workflow to invoke is navigation. Deciding which kind of reader
+you are is a fork, and a bundle should not ask.*
 
 ### Until the two conditions share substance
 
