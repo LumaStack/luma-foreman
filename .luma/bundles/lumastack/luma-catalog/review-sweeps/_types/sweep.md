@@ -178,6 +178,13 @@ Leaving it at `recommended` there would report a compromise against a standard
 that could never have been met; leaving it at `optional` would invite the very
 signature that makes the record false.
 
+## Counts belong in the index, not here
+
+**A count in this file goes stale and nothing announces it.** Strong advice
+rather than a rule — see [[how-a-sweep-is-stored]], which gives the test and
+what to do when one earns its place anyway. **Point at a number that is kept
+current rather than copying it.**
+
 ## `scope` must say what was left out
 
 The half people skip, and the one that decides whether finished coverage means

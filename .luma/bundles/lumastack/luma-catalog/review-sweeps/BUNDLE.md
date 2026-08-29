@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.21.0
+version: 0.22.0
 published: 2026-08-29
 lifecycle_status: draft
 survival: experimental
@@ -131,6 +131,37 @@ call graph, and while a headquarters could be read the same way, nobody has —
 adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
+
+`0.22.0` — **a count in the charter is almost always wrong to write.**
+
+**The charter is the file that should get truer, and a count never does.** It
+is right when written and wrong the moment anything changes, with **nothing to
+announce it** — a stale number reads exactly like a current one.
+
+**This is the authored-and-derived test applied to a sentence rather than a
+file.** The split decides which *file* something belongs in and is rarely asked
+of a paragraph, so an authored file fills with derived sentences that rot at a
+derived file's rate **with none of the reconciliation.** The test: *can this
+sentence go wrong without anybody editing this file?*
+
+**Point at the number, do not copy it.** Where one is already kept current —
+the index, a version history, the repository itself — cite that place. A copy
+is a second answer that goes wrong on its own.
+
+**Not banned, and the exception is said out loud.** Some count may genuinely
+earn its place, and forbidding all of them would be a guess about cases nobody
+has met. Where one is written anyway, **the reader is told as it is written**:
+that it is a count, that it will go stale, and why it is not in the index. **An
+exception nobody was told about is indistinguishable from an oversight**, which
+is how they accumulate — every one was written by somebody who thought that one
+was fine.
+
+**Dating it is not the fix.** *Forty-two files, as of slice 004* stops being
+wrong silently and still never gets truer.
+
+**Found by running it.** A sweep's charter accumulated eight counts, three
+already false within a day — including one claiming *seventeen releases, six
+files* when it was twenty-one and eight.
 
 `0.21.0` — **fix now or route it is the reader's call, and the recommendation
 is the agent's job.**

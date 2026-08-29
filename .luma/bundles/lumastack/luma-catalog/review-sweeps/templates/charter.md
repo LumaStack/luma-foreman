@@ -9,6 +9,13 @@ Copy the blocks to `.luma/backlog/sweeps/<slug>/charter.md`. **Copy the blocks,
 not this file** — this file has no frontmatter of its own on purpose, so
 nothing reads it as a real sweep.
 
+**No counts in the body unless one truly earns it.** *Forty-two files*, *twelve
+slices*, *nineteen days* — each is right when written and wrong silently
+afterwards, and this is the file that is supposed to get truer. Point at
+[`coverage.md`](coverage.md) or at whatever else is kept current. Where one
+earns its place, **say in the same sentence that it is a count and will go
+stale** — see [[how-a-sweep-is-stored]].
+
 ## Frontmatter
 
 ```yaml
