@@ -53,3 +53,17 @@ the format's section numbering changed. **A descriptor that does not move while
 its subject does is where drift accumulates unseen** — and it had drifted, at
 `:5`. Worth checking whether anything else in `.luma/` has the same quiet
 profile.
+
+## 2026-08-29 — during slice 002
+
+**Sweeps might become how code reviews are formalised.** Raised while adding
+strictness to the bundle, and explicitly *not a bridge to cross yet*.
+
+Worth noting what the sweep already has that a code review wants: coverage that
+can be proven rather than claimed, a reader whose independent judgement is
+protected, statuses that record who signed off, and a record that says what was
+*not* looked at. What it lacks is a diff — a sweep is aimed at a repository, and
+a review is aimed at a change.
+
+**Not actionable.** Harvest as an idea against `review-sweeps` at the close, or
+drop it if it still looks premature then.
