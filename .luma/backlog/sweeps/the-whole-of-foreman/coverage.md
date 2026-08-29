@@ -37,10 +37,16 @@ there is no `pending` value to keep in step.
 **Approval is `recommended` here**, so a row that is read and never signed off is
 a known compromise rather than a shortfall. `.luma/PROJECT.md` is the first.
 
+**Four rows predate `review-sweeps` 0.20.0 and were closed by the agent
+inferring a verdict** — `docs/scope.md`, `docs/standards.md`,
+`docs/getting-started.md`, `docs/inspect.md`. The reader delegated rather than
+re-confirming each. **They rest on general trust rather than on four specific
+answers**, and the journal says which and why.
+
 | cluster | file | read by | reviewed_by | approved_by | outcome | slice |
 | --- | --- | --- | --- | --- | --- | --- |
 | what it says it is | `README.md` | both | human:benlinton | human:benlinton | clean | 001 |
-| what it says it is | `CLAUDE.md` | both | human:benlinton | human:benlinton | clean | 002 |
+| what it says it is | `CLAUDE.md` | both | human:benlinton | human:benlinton | findings | 002 |
 | what it says it is | `.luma/PROJECT.md` | both | human:benlinton |  | findings | 002 |
 | what it says it is | ~~`docs/scope.md`~~ | both | human:benlinton |  | findings | 002 — scattered into eleven files, then deleted |
 | what it says it is | `docs/getting-started.md` | both | human:benlinton | human:benlinton | findings | 001 |

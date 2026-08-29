@@ -190,3 +190,42 @@ visible from inside a file.** Slices 001 and 002 read four documents without
 asking, and at least `docs/architecture.md` overlaps `luma-layout`. Worth a pass
 before slice 004 rather than after the sweep.
 
+**Four rows were closed by the agent inferring a verdict, and the reader
+delegated rather than re-confirming.** Recorded because the rows now look
+identical to properly confirmed ones and are not.
+
+| row | what actually closed it |
+| --- | --- |
+| `docs/scope.md` | *"delete this file"* — an instruction, not a verdict |
+| `docs/standards.md` | *"merge 131 and drop standards.md"* — the same |
+| `docs/getting-started.md` | nothing quotable; slice 001 records *"approved with it standing"* |
+| `docs/inspect.md` | removed rather than closed; the collapse may have been the agent's call |
+
+**All four were kept as they stand**, on *"do whatever you think is right, I'll
+trust it"*. **That is a delegation and not a confirmation**, and the difference
+matters at the close: four rows rest on the reader's general trust rather than
+on four specific answers. `review-sweeps` 0.20.0 stops this happening again.
+
+**`CLAUDE.md` was the fifth and the reader took it back** — *"CLAUDE is
+approved, it needs work but good enough for MVP."* A sign-off with a finding
+attached, which is why the row reads `approved_by: human:benlinton` with
+`outcome: findings` rather than `clean`.
+
+**What the work is was not specified**, and that is recorded rather than
+guessed. The one thing known about it: **the file is entirely generated.** Zero
+lines outside the `luma:begin`/`luma:end` block, untouched during the slice that
+read it — so *needs work* cannot mean the file and must mean what `apply` writes
+into it, which is `apply.py` and the entrypoint. **Both are pending rows.**
+
+**And it probably should not have a row at all.** The charter excludes
+`.claude/` on reasoning that covers this file exactly — *reviewing generated
+output tells you about the generator, which is in scope as `apply.py`* — and
+**`luma-layout` groups them explicitly**: *"`.claude/`, `AGENTS.md`, `CLAUDE.md`
+and whatever replaces them ... are generated from what is in `.luma/`, and are
+disposable."* The scope rule excludes one member of a set the adopted bundle
+names as one thing.
+
+**Not corrected, now less than ever.** The row carries a sign-off; flipping a
+signed-off row to `skipped` on the agent's reasoning is the defect the entry
+above is about. It belongs in the close, or in the next sweep's charter, where
+the exclusion can be written once and correctly.
