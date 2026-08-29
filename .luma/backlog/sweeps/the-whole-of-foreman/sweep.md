@@ -51,9 +51,10 @@ so it does not get lost — a sweep aimed only at churn would skip it.
 **[`coverage.md`](coverage.md)** carries every file in scope, its status, and who
 set it — plus `indexed_at`, the commit it was last reconciled against.
 
-**This file is authored; that one is derived.** Its rows are the scope rule below
-applied to the tree, and its statuses are what the slices record — delete it and
-it rebuilds exactly. Delete this one and the goal, the reasoning and the
+**This file is authored; that one is derived.** Its rows are the scope rule and
+the clustering strategy below applied to the tree, and its statuses are what the
+slices record — delete it and it rebuilds exactly, **which is only true because
+the strategy is written down here.** Delete this one and the goal, the reasoning and the
 learnings exist nowhere else.
 
 ## Scope
@@ -94,6 +95,43 @@ is the harder problem.
 
 **Where the summary raises something, the reader can always go to the file.**
 The arrangement is a default for pace, not a rule against reading.
+
+## How files are grouped into clusters
+
+**Clusters are authored, not derived from paths.** They group what has to be
+understood together, which is often not what sits together: `README.md`,
+`CLAUDE.md`, `.luma/PROJECT.md` and `docs/scope.md` live in three directories and
+answer one question, while `src/foreman/` holds three clusters that share a
+directory and little else.
+
+**Three rules produced the ones below:**
+
+1. **Group by what must be read together** — a subsystem, an execution path, a
+   set of documents answering one question. Not by directory.
+2. **Cap a cluster at one slice's worth**, and split in path order when it
+   exceeds that. `ideas A` and `ideas B` are one directory split on size alone.
+3. **A file big enough to be a slice on its own gets its own cluster.** `apply`
+   is one file of 947 lines.
+
+| cluster | what it is |
+| --- | --- |
+| what it says it is | the documents that tell a newcomer what this project is |
+| split from README | created when `README.md` was thinned. **Transitional** — folds into the others once read |
+| standards and permissions | the standards documents and their worked examples |
+| decisions | the decision records |
+| plans, config, changelog | project state that is neither a decision nor an idea |
+| ideas A · ideas B | the idea backlog, split on size |
+| entry and shared | the command-line entry point and the modules everything uses |
+| adoption path | `get`, `init`, adoption, catalog, outdated |
+| apply | the projection engine |
+| inspect | the checker and its rules |
+| agent permissions | the gate, its model, and its command surface |
+| tests | the suites |
+
+**A file that fits no cluster means this list is incomplete.** Add the cluster
+here rather than improvising one in `coverage.md` — **the index applies this
+strategy and does not invent it**, which is what keeps the index derivable.
+Reconciliation places a new file by asking which of these it belongs to.
 
 ## Order
 

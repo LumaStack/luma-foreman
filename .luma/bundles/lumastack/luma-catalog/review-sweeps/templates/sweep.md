@@ -49,6 +49,20 @@ above should have narrowed this.>
 **Not included:** <the half people skip. Without it, finished coverage means
 nothing. Say which exclusions you were given and which you chose.>
 
+## Clusters
+
+<Named here, because they are authored. Group by what must be read together — a
+subsystem, an execution path, a set of documents answering one question — which
+is routinely not what shares a directory.>
+
+| cluster | what it is |
+| --- | --- |
+| | |
+
+<A file that fits none of these means this list is incomplete. Add a cluster
+here rather than improvising one in coverage.md — the index applies this
+strategy and does not invent it, which is what keeps it derivable.>
+
 ## Order
 
 **<the order>** — <one sentence of why. This is what the slice consults when

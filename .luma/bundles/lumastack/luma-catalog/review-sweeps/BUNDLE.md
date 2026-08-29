@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.11.2
+version: 0.12.0
 published: 2026-08-28
 lifecycle_status: draft
 consumers: [project]
@@ -128,6 +128,31 @@ call graph, and while a headquarters could be read the same way, nobody has —
 adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
+
+`0.12.0` — **the index is derived *given the strategy*, and the strategy has to
+be written down.**
+
+**`0.11.0` claimed `coverage.md` rebuilds exactly. It does not, unless the
+rules that produced it are stated** — and one of them routinely is not. Scope
+decides which files get rows and who-reads-what decides a column, but
+**clustering decides which cluster a row lands in, and it usually lives in
+somebody's head.**
+
+**Clusters are not derivable from paths**, which is why they get left unstated:
+grouping feels obvious while you do it. A cluster groups **what must be
+understood together**, and that is routinely not what sits together — four
+documents in three directories may answer one question, and one directory may
+hold three clusters sharing nothing but a path. Found by checking a real
+sweep's clusters against the tree and watching a directory rule fail on every
+one.
+
+**So a sweep names its clusters and says what each is about**, and **a file
+that fits none of them means the strategy is incomplete.** Add the cluster to
+the sweep rather than improvising one in the index — improvising is how an
+index quietly stops being a cache and becomes a record of judgements nothing
+else holds.
+
+Minor: new content in the layout policy, both workflows and the sweep template.
 
 `0.11.2` — **retention is stated, and why it is safe.** An audit is kept
 indefinitely because the exchange *is* what it produced — discard it and
