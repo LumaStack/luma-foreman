@@ -300,3 +300,69 @@ row is not re-read at the close.
 presented and left open — its cross-check is above so the next session does not
 re-derive it.*
 
+## A model's report of completion is not evidence of it
+
+**Learning, and the most transferable thing this sweep has produced.**
+
+**An agent reports from intention, not from verification.** It committed the
+slice, so it says the slice is recorded. It ran the replace, so it says the
+rename is done. **Both reports are sincere and neither is a check** — the agent
+is describing what it meant to bring about, and the gap between that and what is
+true is invisible from the inside.
+
+**This sweep produced five instances in one day**, every one caught by running
+something rather than by reading or recalling:
+
+| claimed | actually |
+| --- | --- |
+| the slice is recorded | committed to a branch nobody merged; 43 skipped rows came back as unread |
+| `lifecycle_status` is renamed | three released changelog entries rewritten, making history false |
+| the golden file is updated | the field was renamed and the `hash` it computes was not |
+| eight bundles re-adopted | one of them had never been adopted here, and arrived as a side effect |
+| the bundles came from the catalog | `get --from <path>` copied the working tree, and an untracked file shipped |
+
+**Not one of these was found by thinking harder.** Each came from a command:
+`git log main..HEAD`, a line-boundary check, `go test`, `git diff adopted.toml`,
+`inspect`.
+
+### So the practice needs proof obligations, written as commands
+
+**"Verify it landed" is not an instruction** — it names a duty and leaves the
+agent to satisfy it from the same intention that produced the error. **The
+instruction has to be the command**, and the deliverable has to be its output.
+
+**Running the check privately and reporting *verified* is the same failure one
+level down.** The proof is the output in the message, where a reader can see
+that it was run and what it said.
+
+### And the proof has to be cheap, by design rather than by luck
+
+**An expensive proof is a skipped proof, and a skipped proof is worse than
+none** — it is assumed done, so nobody looks.
+
+**So cost is a design constraint on the check, not an afterthought.** The four
+that went into `review-sweeps` 0.28.0 — `git status --short`, `git log
+<integration>..HEAD`, `git branch --no-merged`, `git worktree list` — were
+chosen because they return in milliseconds and their output is two or three
+lines. **A check that needed a full test suite, or a fetch, or a read of ninety
+files would have been correct and unused.**
+
+**Where a cheap proof does not exist, say the claim is unverified** rather than
+inventing an expensive one or asserting it anyway.
+
+### The limit, and it is worth stating
+
+**Some claims have no mechanical proof.** *Nothing worth keeping exists only in
+this session* cannot be checked — you cannot grep for an observation you failed
+to write.
+
+**That one stays a judgement, and it is the one that gets trusted**, which is
+the wrong way round. **The response is not to trust it harder but to make
+everything adjacent to it checkable**, so the unverifiable claim stands alone
+and visible rather than hidden in a row of equally confident ones.
+
+*Slice 001 concluded that `cross-check` found every mechanical defect in a
+document while careful reading found none. This is the same finding turned on
+the agent: apply `cross-check` to its own reports, or they are the least
+verified claims in the sweep.*
+
