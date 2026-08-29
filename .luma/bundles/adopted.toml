@@ -89,10 +89,10 @@ commit   = "7b2a0f6f29f29155092a7e5a92023a09bd419cbd"
 checksum = "sha256:20a218419db27c2c010619971b2789332987468a1510817f6a2134945c40c7b6"
 
 ["lumastack/luma-catalog/review-sweeps"]
-version  = "0.25.0"
+version  = "0.27.0"
 source   = "https://github.com/LumaStack/luma-catalog"
-commit   = "7b2a0f6f29f29155092a7e5a92023a09bd419cbd"
-checksum = "sha256:f4c08580c397d4a2077dbe23e9a7e1cc12c20d58bd29ecad6650aaeba37e6d40"
+commit   = "618eae948676e77ec13ad60377a0d09c39aa4909"
+checksum = "sha256:57f743ac276da409a050f0c98d01e7621d6ca8a7c92bebd1f90cb4d50f5490af"
 
 ["lumastack/luma-catalog/session-manager"]
 version  = "0.7.0"
