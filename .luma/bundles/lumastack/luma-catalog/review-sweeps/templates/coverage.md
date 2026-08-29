@@ -4,9 +4,9 @@ Copy the blocks to `.luma/backlog/sweeps/<slug>/coverage.md`. **Copy the
 blocks, not this file.**
 
 **This is the index, and nothing else.** Why the sweep exists, what it is aimed
-at and what it taught live in `sweep.md` beside it — they are written once and
-this is edited at every slice, and keeping them together buries one under the
-other.
+at and what it taught live in `charter.md` beside it — they are written once
+and this is edited at every slice, and keeping them together buries one under
+the other.
 
 ## Frontmatter
 

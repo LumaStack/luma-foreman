@@ -8,7 +8,7 @@ matches:
 
 # Choosing an order
 
-**Decided once, at the start, and recorded in `sweep.md` with the reason.**
+**Decided once, at the start, and recorded in `charter.md` with the reason.**
 
 Not because one order is right — none is — but because an unrecorded order is
 not an order. It becomes *whatever seemed next*, which drifts toward the files
@@ -55,7 +55,8 @@ are still fresh — which is a real preference, just a rarer one than it sounds.
 
 **Every file in scope is covered whatever order you chose.** An order that
 quietly drops files is a scope decision pretending to be an ordering one, and
-scope belongs in `sweep.md` under what was excluded, where a reader can see it.
+scope belongs in `charter.md` under what was excluded, where a reader can see
+it.
 
 **Narrative order needs a final pass** for everything no entrypoint reaches —
 utilities, generated files, dead code. That pass is where dead code is found,

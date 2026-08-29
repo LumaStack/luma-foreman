@@ -103,9 +103,9 @@ longest exactly where nobody human saw the file.
 
 ## Declare the pairing before the first slice
 
-**In `sweep.md`, as a field a reader meets before any row.** A sweep that says
-who is in it can be judged; one that does not has to be reconstructed from the
-actor on each row, and nobody does that.
+**In `charter.md`, as a field a reader meets before any row.** A sweep that
+says who is in it can be judged; one that does not has to be reconstructed from
+the actor on each row, and nobody does that.
 
 | `pairing` | means |
 | --- | --- |
@@ -146,7 +146,7 @@ the gap.
 
 ## Say which arrangement it was
 
-In `sweep.md`, and in `contributors` on every slice.
+In `charter.md`, and in `contributors` on every slice.
 
 **A reader can discount a stated weakness; an undisclosed one is the harder
 problem**, because nothing tells them to look. A sweep that does not say who

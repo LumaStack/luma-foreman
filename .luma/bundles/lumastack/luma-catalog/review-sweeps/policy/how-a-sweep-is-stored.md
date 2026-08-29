@@ -16,7 +16,7 @@ sometimes more — and survives every session boundary in between.
 
 ```
 .luma/backlog/sweeps/the-cli-surface/
-  sweep.md                    why it exists, what it is aimed at, how it is run
+  charter.md                  why it exists, what it is aimed at, how it is run
   coverage.md                 every file in scope, and what has happened to it
   journal.md                  optional — what was noticed along the way
   slices/
@@ -26,7 +26,7 @@ sometimes more — and survives every session boundary in between.
 
 ### The three files, side by side
 
-| | **`sweep.md`** | **`coverage.md`** | **`journal.md`** |
+| | **`charter.md`** | **`coverage.md`** | **`journal.md`** |
 | --- | --- | --- | --- |
 | **what it holds** | the strategy, and what the sweep concluded | a point-in-time snapshot of what is covered and what remains | what was noticed along the way |
 | **how it changes** | edited when the strategy or a conclusion changes | **reconciled, repeatedly**, against a tree that keeps moving | **appended to, never revised** |
@@ -56,7 +56,7 @@ unedited log can answer.
 **Why they are separate files: one is authored, the other derived.**
 `coverage.md`'s rows are the scope rule and the clustering strategy applied to
 the tree, and its statuses are what the slices record — **delete it and it
-rebuilds exactly.** `sweep.md` is derivable from nothing: delete it and the
+rebuilds exactly.** `charter.md` is derivable from nothing: delete it and the
 goal, the reasoning and the learnings exist nowhere else.
 
 **That is why staleness means opposite things in them**, and why **a derived
@@ -66,7 +66,7 @@ diff` of the sweep's thinking would be buried under status changes.
 
 **The journal is a third thing: authored, and temporary by design.** Nothing in
 it is meant to survive — **the close harvests it**, and every entry becomes a
-backlog item, a learning recorded in `sweep.md`, or a deliberate drop.
+backlog item, a learning recorded in `charter.md`, or a deliberate drop.
 
 **That is what makes the whole sweep disposable.** The rule that nothing worth
 keeping stays in a sweep needs somewhere cheap to put a half-formed thing in
@@ -81,8 +81,8 @@ and the harvest catches whatever became so along the way.
 
 **The test, where something is ambiguous:** *could this be rebuilt from the
 repository and the slices?* If yes it belongs in `coverage.md`. If losing it
-would lose something nothing else records, it belongs in `sweep.md` — or, if it
-is a note you are not ready to act on, in the journal until the close.
+would lose something nothing else records, it belongs in `charter.md` — or, if
+it is a note you are not ready to act on, in the journal until the close.
 
 ### Derived *given the strategy*, which has to be written down
 
@@ -104,10 +104,10 @@ that fits none of them means the strategy is incomplete.** Add the cluster to
 the sweep rather than improvising one in the index — improvising is how the
 index quietly becomes authored.
 
-**The scope rule stays in `sweep.md`; the enumeration goes in `coverage.md`.**
-*Everything tracked except the generated adapters and the vendored bundles*
-does not change when a file is added. The list of eighty-seven rows does, and
-is supposed to.
+**The scope rule stays in `charter.md`; the enumeration goes in
+`coverage.md`.** *Everything tracked except the generated adapters and the
+vendored bundles* does not change when a file is added. The list of
+eighty-seven rows does, and is supposed to.
 
 ## It is backlog, not a record
 

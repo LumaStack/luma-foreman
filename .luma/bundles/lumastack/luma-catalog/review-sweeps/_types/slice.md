@@ -23,7 +23,7 @@ the time rather than living here.
 
 ## `covers` is the source of coverage
 
-The index in `sweep.md` is a cache of these lists. That is the whole reason
+The index in `charter.md` is a cache of these lists. That is the whole reason
 this field is required and the whole reason it is paths rather than prose: a
 cache that cannot be rebuilt is a source, and this one has to be rebuildable
 because it is edited at every slice.

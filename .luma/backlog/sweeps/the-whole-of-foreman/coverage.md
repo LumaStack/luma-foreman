@@ -6,7 +6,7 @@ indexed_at: 52787ca6b968
 
 # Coverage
 
-**Derived, and expected to lag.** The rows are [the sweep](sweep.md)'s scope rule
+**Derived, and expected to lag.** The rows are [the charter](charter.md)'s scope rule
 applied to the tree; the statuses are what the slices record. Every commit ages
 this file, and every slice brings it back.
 

@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.14.0
+version: 0.17.0
 published: 2026-08-28
 lifecycle_status: draft
 survival: experimental
@@ -60,7 +60,7 @@ and nothing about depth.
   rigours of the same one. Read when deciding which you want, or when the two
   look interchangeable.
 
-**Templates** — [a sweep](templates/sweep.md) · [its
+**Templates** — [a charter](templates/charter.md) · [its
 coverage](templates/coverage.md) · [its journal](templates/journal.md) · [a
 slice](templates/slice.md) · [presenting a
 file](templates/file-presentation.md)
@@ -84,7 +84,8 @@ fixing. Filing a sweep as an audit produces a commit pin that is false by the
 third file and a response written by its own auditor.
 
 **Coverage is derived, not stored.** Each slice says which files it covered;
-the index in `sweep.md` is a cache of that. When they disagree, the slices win.
+the index in `charter.md` is a cache of that. When they disagree, the slices
+win.
 
 **A row finishes two ways, and they are not the same claim.** `reviewed` means
 read and satisfactory and **any party may set it, agent included**; `approved`
@@ -130,6 +131,90 @@ call graph, and while a headquarters could be read the same way, nobody has —
 adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
+
+`0.17.0` — **`strictness` becomes three disciplines, and adaptive is the
+default.**
+
+`strictness: adaptive` said the strictness was adaptive, which is nonsense —
+**a field names the thing being held fixed, not the value.** And one flag was
+too coarse: **goals, scope and strategy move independently.** The common mature
+configuration is **strict goals, strict scope, adaptive strategy** — do not
+wander, but do improve how you read.
+
+So: `goal_discipline`, `scope_discipline`, `strategy_discipline`, each
+`strict`, `adaptive` or `exploratory`.
+
+**The three values are a ladder of what you already know**, which is the only
+line that holds — *how much change feels warranted* is undrawable, because
+every improvement feels warranted in the moment. `strict`: you know what you
+are doing, so do not touch it. `adaptive`: you know the shape, so refine and
+tune it. **`exploratory`: you do not know the shape yet, so go and find what it
+should be.**
+
+**`exploratory` cannot be estimated**, and that is a property rather than a
+failing: a sweep still working out what it is has nothing to estimate against,
+and a number produced anyway was never true. Disregard for time is the
+consequence of not knowing, not the definition.
+
+**Three flat fields rather than one nested record**, so each can declare a
+`field_type` and be validated. A record would have to say `field_type` cannot
+express it, which is a known gap in the format and not worth inheriting where
+the shape does not require it.
+
+**Absent means `adaptive`, on every axis, because that is what actually
+happens.** A sweep that has not thought about this will adapt — and a default
+of `strict` would have sweeps sprawl anyway while the record claimed a
+discipline they never had. **An honest record of sprawl is worth more than a
+flattering one.**
+
+**Most *mature* sweeps should be strict on goals and scope**, and the default
+should flip once that is the common case. Until then it describes behaviour
+rather than aspiration, which is the only way a field stays worth reading.
+
+**Breaking**, shipped as minor under the pre-1.0 allowance: one field becomes
+three. Nothing else changes.
+
+`0.16.0` — **the authored file is `charter.md`, not `sweep.md`.**
+
+**A filename outlives the vocabulary around it.** It is linked, bookmarked,
+cited in commit messages and pasted into conversations, so it is the part of a
+practice most expensive to rename later — and *sweep* is a word this bundle may
+well abandon.
+
+**`charter` names what the file actually is**: a written statement of the aims
+and principles of an undertaking. It begins as intent — goal, scope, strategy,
+strictness — and ends as account, carrying the learnings and the closing
+summary. **Nothing else in the world records either half.**
+
+*`README.md` was the most legible candidate and was rejected*: this estate
+already says never make a README load-bearing, because people edit them without
+knowing rules exist. Overriding that for one directory needs a bigger
+conversation than a filename.
+
+**The type stays `sweep`.** It names the practice, and if the practice is
+renamed the type goes with it — which is fine and expected. The filename is the
+cheaper thing to make durable.
+
+**Breaking**, shipped as minor under the pre-1.0 allowance: an existing sweep
+renames one file. Nothing inside it changes.
+
+`0.15.0` — **`evolving` becomes `adaptive`.**
+
+**`evolving` was compatible with the failure the rule forbids.** Things evolve
+on their own, over time, without anybody deciding — which is drift, and
+`0.14.0` says two paragraphs later that a sweep must never drift into moving
+its own goal. The word permitted what the rule prohibited.
+
+**`adaptive` implies adapting *to* something.** The plan moves because the
+sweep learned, not because time passed. It also pairs with `strict`: both are
+adjectives describing a posture a sweep is declared to have.
+
+*`adapting` was considered and rejected — a participle describes an activity in
+progress, and this field declares a disposition chosen before anything has
+adapted.*
+
+Minor: one enum value renamed, shipped as minor under the pre-1.0 allowance. A
+sweep declaring `evolving` reads correctly to a person; nothing parses it yet.
 
 `0.14.0` — **the bundle declares `survival: experimental`.** Nobody has
 finished a sweep. The practice has been corrected at every turn by the one that

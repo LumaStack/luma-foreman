@@ -27,7 +27,7 @@ reads as an oversight forever.
 
 **Harvest `journal.md` first if there is one** — it is the file this step
 exists for, and the reason the sweep can be thrown away at all. **Every entry
-becomes a backlog item, a learning in `sweep.md`, or a deliberate drop.**
+becomes a backlog item, a learning in `charter.md`, or a deliberate drop.**
 Nothing in a journal was ever meant to survive it.
 
 **A journal that was never harvested is a sweep that cannot safely be
@@ -43,8 +43,8 @@ away**, and doing that on purpose is fine while doing it by omission is not.
 
 ## 3. Write the closing summary
 
-In `sweep.md`, under the index. Short, and answering what somebody would ask a
-year later:
+In `charter.md`, under the index. Short, and answering what somebody would ask
+a year later:
 
 - **coverage** — approved, reviewed, skipped, pending, out of the total.
   **Report approved and reviewed separately, and report coverage by actor**: a
@@ -70,7 +70,7 @@ year later:
 git mv .luma/backlog/sweeps/<slug> .luma/backlog/sweeps/archived/<slug>
 ```
 
-Set `lifecycle_status: archived` and the `archived` date in `sweep.md`.
+Set `lifecycle_status: archived` and the `archived` date in `charter.md`.
 
 **The slices go with it.** They are working notes whose value decays, and their
 content has already been routed out — what remains is the trail, and git keeps
