@@ -23,7 +23,7 @@ stale** — see [[how-a-sweep-is-stored]].
 type: sweep
 title: <what is being read, in a few words>
 created: YYYY-MM-DD
-lifecycle_status: provisional
+lifecycle: draft
 goal: <what you want to be true afterwards, stated so it can be checked>
 scope: <one line — and say what is excluded in the body>
 goal_discipline: strict | adaptive | exploratory       # default adaptive
@@ -37,6 +37,12 @@ contributors:
   - agent:opus-5
 ---
 ```
+
+**A new one starts at `draft`.** The lifecycle ladder measures what a reader is
+owed when a Document changes, and **use by its own authors does not promote
+it** — that is what a draft is for. `provisional` begins when somebody who did
+not write it can rely on it, and **promoting is the author's explicit act**,
+never something that happens because the thing is being used.
 
 ## Body
 

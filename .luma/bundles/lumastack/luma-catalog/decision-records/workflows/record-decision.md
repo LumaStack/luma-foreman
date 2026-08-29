@@ -74,7 +74,7 @@ renumbering breaks inbound links exactly as any rename does.
 so the most relevant thing is not at the end of a growing document.
 
 Either way, the content is the same, and it is `type: decision` — see that type
-for what a record carries and how status maps onto `lifecycle_status`.
+for what a record carries and how status maps onto `lifecycle`.
 
 ## 4. Decide whether this is even a decision
 
@@ -128,7 +128,7 @@ decisions directory:
 Four things happen together, and doing one without the others is the common
 mistake:
 
-1. `lifecycle_status: archived`, and `superseded_by` where something replaced it
+1. `lifecycle: archived`, and `superseded_by` where something replaced it
 2. `archived: YYYY-MM-DD` — the date it stopped being the answer
 3. `archived_reason` — `superseded`, `retired`, `invalidated` or `noise`
 4. The file moves

@@ -32,7 +32,7 @@ created: { by: human:<id>, at: 2026-08-20T09:00:00Z }
 contributors: [agent:<model>]
 horizon: next | later | someday
 scope: project | department | organization
-lifecycle_status: draft
+lifecycle: draft
 archived: 2026-11-04              # only when pruning
 ---
 ```

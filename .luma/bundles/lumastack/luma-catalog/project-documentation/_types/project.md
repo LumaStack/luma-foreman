@@ -11,12 +11,12 @@ fields:
   description:
     field_presence: recommended
     field_type: text
-    desc: "when somebody should open this repository. Strengthened from the root's optional (§10.3) — the field this type exists to carry"
-  lifecycle_status:
+    desc: "when somebody should open this repository. Strengthened from the root's optional — the field this type exists to carry"
+  lifecycle:
     field_presence: recommended
     field_type: enum
     values: [draft, provisional, stable, archived]
-    desc: "how mature the repository is. Strengthened from the root's optional (§10.3); absent means nobody has said"
+    desc: "how mature the repository is. Strengthened from the root's optional; absent means nobody has said"
   disclosure_level:
     field_presence: recommended
     field_type: enum
@@ -69,19 +69,19 @@ only this sentence? If two would read the same, it is not specific enough.
 
 ## Inherited fields that are strengthened
 
-Permitted by §10.3, which allows a subtype to raise an inherited obligation and
+Permitted by the format's inheritance rules, which allow a subtype to raise an inherited obligation and
 never to lower one.
 
 **`description` moves `optional` → `recommended`** because a consumer reads it to
 decide whether to load this at all, before anything else about the repository is
 fetched. A project descriptor without one has no reason to exist.
 
-**`lifecycle_status` moves `optional` → `recommended`** because how mature a
+**`lifecycle` moves `optional` → `recommended`** because how mature a
 repository is changes how everything inside it should be treated — a position
 recorded in a two-week-old repository binds differently from the same position in
 a five-year-old one, and nothing else in the descriptor says which this is.
 
-**Absent means nobody has said.** §6 gives `lifecycle_status` a default of
+**Absent means nobody has said.** The format gives `lifecycle` a default of
 `provisional`, and that default answers *what is the value*. It does not answer
 *may I act on it*: anything making a consequential choice on the strength of
 maturity should require an explicit declaration, because **a default is not a

@@ -2,7 +2,7 @@
 type: sweep
 title: The whole of luma-foreman
 created: 2026-08-28
-lifecycle_status: provisional
+lifecycle: provisional
 survival: experimental
 goal: Nothing in this repository states something false — whether it drifted there or was created that way
 scope: All tracked content except the generated .claude/ adapters and the vendored .luma/bundles/ copies

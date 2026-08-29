@@ -2,7 +2,7 @@
 type: decision
 title: Apply writes adapters, never copies of a document
 decided: 2026-08-23
-lifecycle_status: draft
+lifecycle: draft
 reopen_trigger: A harness appears that cannot follow a file path from a skill body, or measurement shows the extra read costs more than the duplication would.
 ---
 

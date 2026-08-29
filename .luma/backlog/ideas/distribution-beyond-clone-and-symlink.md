@@ -5,7 +5,7 @@ created: { by: human:benlinton, at: 2026-08-17T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]
 horizon: later
 scope: project
-lifecycle_status: draft
+lifecycle: draft
 ---
 
 # Distribution — foreman installs by clone and symlink

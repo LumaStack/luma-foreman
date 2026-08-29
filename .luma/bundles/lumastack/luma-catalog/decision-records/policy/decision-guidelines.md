@@ -123,10 +123,10 @@ nothing is being authorised, so a nudge that misfires costs a sentence.
 
 ## What you may edit depends on how settled it is
 
-`lifecycle_status` is a **mutability ladder**, not just a label. It says how
+`lifecycle` is a **mutability ladder**, not just a label. It says how
 settled the decision is *and* what you are permitted to change.
 
-| `lifecycle_status` | means | what you may edit |
+| `lifecycle` | means | what you may edit |
 | --- | --- | --- |
 | `draft` | proposed, under discussion, not yet decided | anything — nothing is binding, and citing one is discouraged |
 | `provisional` | decided and in force, but on trial | the explanation, freely and in place. No approval needed. **Still not the decision** |
@@ -146,10 +146,10 @@ still there.
 actually changes, do not rewrite the old text:
 
 - **A different decision replaces it** — write a new record, set the old one to
-  `lifecycle_status: archived`, `archived_reason: superseded`, and point
+  `lifecycle: archived`, `archived_reason: superseded`, and point
   `superseded_by` at the replacement.
 - **It reached its planned end** — a stopgap whose re-open condition fired —
-  `lifecycle_status: archived`, `archived_reason: retired`, and a short dated
+  `lifecycle: archived`, `archived_reason: retired`, and a short dated
   closing note.
 
 ## An ADR number promises the position never moved

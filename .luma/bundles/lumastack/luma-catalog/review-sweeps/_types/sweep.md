@@ -55,7 +55,7 @@ edited at every slice, and there is no commit pinning what the sweep is true of
 carry is enough to resume it and enough to check its coverage.
 
 *Only what the format does not already have is declared here.* `created`,
-`lifecycle_status` and `title` are core fields and are used as they come.
+`lifecycle` and `title` are core fields and are used as they come.
 
 ## `goal` is what the sweep is checked against
 

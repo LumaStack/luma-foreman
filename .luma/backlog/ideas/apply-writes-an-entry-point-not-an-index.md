@@ -5,7 +5,7 @@ created: { by: human:benlinton, at: 2026-08-27T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]
 horizon: next
 scope: project
-lifecycle_status: draft
+lifecycle: draft
 ---
 
 # `apply` writes an entry point, not an index into `CLAUDE.md`
