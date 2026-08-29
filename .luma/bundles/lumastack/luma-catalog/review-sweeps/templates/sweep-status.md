@@ -1,12 +1,22 @@
-# Closing a slice
+# Where the sweep stands
 
-Copy the block below when a slice ends. **Copy the block, not this file** — it
-is a message shape, like [the presentation template](file-presentation.md).
+Copy the block below. **Copy the block, not this file** — it is a message shape,
+like [the presentation template](file-presentation.md).
 
-**Four parts, in order:** what the slice did, where the sweep stands, what is
-worth the reader's attention, and how to proceed. The reasoning — why a slice
-boundary is the cheapest moment to clear, and when not to — is in step 11 of the
-`review-next` workflow.
+**One output, two moments.** It is the same message either way; only what
+triggers it differs.
+
+| moment | trigger |
+| --- | --- |
+| **a slice ends** | **automatic and unprompted**, every time |
+| **a slice starts** | **only after a detour** — and then only when the reader asks to get back on track, or you recommend it |
+
+**Back-to-back slices get it once, at the close.** Saying it again immediately
+is the same message twice with nothing between them to have changed it.
+
+**After a detour it is owed**, because the reader has lost the thread and will
+not think to ask for it back. See step 2 and step 11 of the `review-next`
+workflow.
 
 ## The block
 
@@ -15,12 +25,13 @@ boundary is the cheapest moment to clear, and when not to — is in step 11 of t
 
 ---
 
-## Slice NNN closed
+## Slice NNN closed          <or: Starting slice NNN>
 
-### What this slice did
+### What just happened
 
-<Three or four lines. Not the slice note, which is the record — this is the
-reader remembering what just happened before they choose what is next.>
+<Three or four lines. At a close: what the slice did — not the slice note,
+which is the record, but the reader remembering it before they choose what is
+next. After a detour: what the detour was, in the same three or four lines.>
 
 - `args.py` closed — reviewed by human:fsmith, findings, not signed off
 - `flags.py` closed — approved

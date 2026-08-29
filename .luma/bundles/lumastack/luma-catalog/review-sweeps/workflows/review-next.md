@@ -60,6 +60,29 @@ one convenient slice at a time.
 **Three to eight files.** Fewer means a file read without its collaborators;
 more means a skim.
 
+### After a detour, say where the sweep stands before picking anything
+
+**The same output a slice ends with** — [the status
+template](../templates/sweep-status.md). Not a variant of it: **one message,
+emitted at two moments.**
+
+**Only after a detour**, and then only when the reader asks to get back on
+track or you recommend it. **Back-to-back slices get it once, at the close** —
+saying it again immediately is the same message twice with nothing between them
+to have changed it.
+
+**A detour is the strongest case for clearing there is.** It loads context
+built for something else, and none of it helps read the next file. **A close
+asks whether the session still has value; after a detour the answer is already
+known** — whatever it loaded, the next cluster does not want it.
+
+**And *what is next* is not answered by naming the next cluster.** *Prose, ten
+files, cheapest available* is half of it; *and you can clear first, here is the
+paste* is the half that saves the reader something.
+
+**Not mid-slice** — [[the-pairing-turn]]'s order depends on both parties
+holding the same file, and a slice already underway has one open.
+
 ## 3. Orient — one file at a time
 
 > **Gate. Do not present a file until the previous one is closed.**
@@ -296,10 +319,14 @@ table.
 
 ## 11. Close out the slice
 
-**Four parts, in order, every time** — what this slice did, where the sweep
-stands, what is worth their attention, and how to proceed. **[The slice-close
-template](../templates/slice-close.md) carries the shape**; what follows is why
-the last two are there at all.
+**Four parts, in order, every time** — what just happened, where the sweep
+stands, what is worth their attention, and how to proceed. **[The status
+template](../templates/sweep-status.md) carries the shape**; what follows is
+why the last two are there at all.
+
+**The same output opens a slice after a detour** — see step 2. One message, two
+moments, and the only difference is what triggers it: **a close is automatic
+and unprompted; a start is asked for or recommended.**
 
 ### The row close and the slice close are two events
 
@@ -307,14 +334,14 @@ the last two are there at all.
 and by whom. Then the slice close.
 
 **They are not one announcement.** A file ended; the slice ended *because* it
-was the last one. Run together — *Slice 004 closed — `gate.md`, skipped* — and a
-reader cannot tell whether the slice was skipped, the file was, or both.
+was the last one. Run together — *Slice 004 closed — `gate.md`, skipped* — and
+a reader cannot tell whether the slice was skipped, the file was, or both.
 
 ### Everything that wants the reader gets a heading
 
 **A paragraph with no heading reads as commentary and gets skimmed past.** That
-is the opposite of what it is for — it holds the consequences, the ones a reader
-may want to act on and nobody is blocked on.
+is the opposite of what it is for — it holds the consequences, the ones a
+reader may want to act on and nobody is blocked on.
 
 **Put the decisions under it, including the ones you deliberately did not
 take.** *Eleven rows sit under the reason you just gave and are still pending;
@@ -323,9 +350,9 @@ not marked, your call* belongs somewhere a reader stops.
 ### How to proceed is priced options, not prose
 
 **Bullets, each with what it costs in a clause** — *seven files, roughly a
-slice's worth*; *one turn, and it changes how every remaining slice runs*.
-**A reader choosing between three unpriced options is guessing**, and the agent
-is the one who can price them.
+slice's worth*; *one turn, and it changes how every remaining slice runs*. **A
+reader choosing between three unpriced options is guessing**, and the agent is
+the one who can price them.
 
 **Then the clear decision in a sentence, and the paste block.**
 
@@ -365,12 +392,12 @@ session lives.*
 
 ### The paste block is a pointer, never a handoff note
 
-**Give the reader something to paste into the next session**, in a fenced block,
-three or four lines. They are going to select it with a mouse.
+**Give the reader something to paste into the next session**, in a fenced
+block, three or four lines. They are going to select it with a mouse.
 
 **It carries what a fresh agent cannot read for itself and nothing else** — the
 sweep's path, which files to read, which workflow to invoke, where to resume.
 
 **If it needs to carry findings or context, something was not written down.**
-Same test as the clear decision above it, failing the same way: **an observation
-that survives only in a paste was never routed.**
+Same test as the clear decision above it, failing the same way: **an
+observation that survives only in a paste was never routed.**

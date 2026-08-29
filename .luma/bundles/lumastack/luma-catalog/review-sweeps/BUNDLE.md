@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.25.0
+version: 0.26.0
 published: 2026-08-29
 lifecycle: draft
 survival: experimental
@@ -132,6 +132,38 @@ adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
 
+`0.26.0` — **one status output, emitted at two moments.**
+
+Where things stand, how to proceed, and whether to clear were written into the
+close and **fired only at a close**. **It is the same message at the start of a
+slice** — not a variant, not a subset — and the only difference is what
+triggers it:
+
+| moment | trigger |
+| --- | --- |
+| **a slice ends** | **automatic and unprompted**, every time |
+| **a slice starts** | **only after a detour**, and then only when the reader asks to get back on track or you recommend it |
+
+**Back-to-back slices get it once, at the close.** Saying it again immediately
+is the same message twice with nothing between them to have changed it.
+
+**`templates/slice-close.md` is now `templates/sweep-status.md`**, named for
+the output rather than for one of the two moments that produce it. Its first
+section is *what just happened* — the slice at a close, the detour at a start.
+
+**A detour is the strongest case for clearing there is.** It loads context
+built for something else, and none of it helps read the next file. **A close
+asks whether the session still has value; the start of a slice already knows**
+— whatever the detour loaded, the next cluster does not want it.
+
+**And *what is next* is not answered by naming the next cluster.** *Prose, ten
+files, cheapest available* is half of it; *and you can clear first, here is the
+paste* is the half that saves the reader something.
+
+**Found by running it.** A sweep spent hours on an unrelated estate-wide
+rename, returned, and offered the next cluster with no mention of clearing —
+having written the rule for exactly that situation four releases earlier.
+
 `0.25.0` — **`lifecycle_status` is now `lifecycle`.**
 
 **Same values, same meaning, shorter name**, renamed in the knowledge format
@@ -146,7 +178,8 @@ rather than quietly — `lifecycle` is unrecognised where `lifecycle_status` was
 expected, and an unrenamed Document reads as having no lifecycle declared at
 all.
 
-`0.24.1` — **the template starts a new Document at `draft`, not `provisional`.**
+`0.24.1` — **the template starts a new Document at `draft`, not
+`provisional`.**
 
 **The example value in a template becomes the estate's default**, and this one
 was teaching every new Document to be born promoted. **The lifecycle ladder
@@ -162,13 +195,13 @@ reader stops reading.
 
 **And the row close is separated from the slice close.** They are two events —
 a file ended, and the slice ended *because* it was the last one. Step 7d's line
-stands alone with a rule under it; running them into one heading leaves a reader
-unable to tell whether the slice was skipped, the file was, or both.
+stands alone with a rule under it; running them into one heading leaves a
+reader unable to tell whether the slice was skipped, the file was, or both.
 
 **What is worth the reader's attention gets a heading.** Consequences,
 observations, and decisions that are theirs — including the ones deliberately
-not taken. **An unheaded paragraph reads as commentary and gets skimmed**, which
-is the opposite of what it is for.
+not taken. **An unheaded paragraph reads as commentary and gets skimmed**,
+which is the opposite of what it is for.
 
 **How to proceed is bullets with prices.** Each option gets its cost in a
 clause — *seven files, roughly a slice's worth*; *one turn, changes how every
@@ -184,8 +217,8 @@ something was not written down** — the same test as the clear decision one lin
 above it.
 
 **Found by running it.** A reader read a slice close, said the first two parts
-worked, and named the rest: the middle wanted a heading, and the actionable half
-was buried in a paragraph.
+worked, and named the rest: the middle wanted a heading, and the actionable
+half was buried in a paragraph.
 
 `0.23.0` — **a slice has a close routine: what it did, where the sweep stands,
 and whether to clear.**
