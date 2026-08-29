@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.11.1
+version: 0.11.2
 published: 2026-08-28
 lifecycle_status: draft
 consumers: [project]
@@ -128,6 +128,23 @@ call graph, and while a headquarters could be read the same way, nobody has —
 adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
+
+`0.11.2` — **retention is stated, and why it is safe.** An audit is kept
+indefinitely because the exchange *is* what it produced — discard it and
+nothing else records that anybody was accountable for anything. A sweep is
+**spent**: everything worth keeping left at the slice that produced it, so what
+remains is bookkeeping, and it is archived then deleted like anything else in a
+backlog.
+
+**A sweep still holding something worth keeping has failed to route it**, which
+is a defect in the sweep rather than a reason to preserve it.
+
+It is the same test that separates `sweep.md` from `coverage.md`: could this be
+rebuilt, or would losing it lose something nothing else records? **An audit
+fails that test by design; a sweep is built to pass it.**
+
+Patch: background only. It sharpens a claim `0.1.0` already made — *churns,
+then evaporates* — and obliges nothing new.
 
 `0.11.1` — **progress goes above the index in `coverage.md`.** The summary a
 reader wants is *how far along*, and a table of every file in scope should not

@@ -26,6 +26,7 @@ sells.**
 | **the second party is** | accountable for the thing being examined | a collaborator trying to understand the same thing |
 | **pinned to** | one commit | nothing — it spans weeks and the code moves |
 | **lifecycle** | `records/` — append-only, settles | `backlog/` — churns, then evaporates |
+| **retention** | **kept indefinitely** | **archived, then discarded**, like anything else in a backlog |
 | **usually** | demanded | chosen |
 
 ## Obligation is the one to remember
@@ -42,8 +43,30 @@ understand it.
 
 That is also why the two lifecycles differ. An exchange somebody owes an answer
 to has to be append-only and has to settle. A pile of observations nobody owes
-anything on can churn and then evaporate, because everything worth keeping left
-at the slice that produced it.
+anything on can churn and then evaporate.
+
+## One is kept; the other is spent
+
+**An audit is kept indefinitely, because the exchange is what it produced.** A
+finding, a position taken on it, a verification closing it — discard that and
+you have discarded the audit itself. Nothing else records that anybody was ever
+accountable for anything, and a year later the exchange is the only evidence a
+disagreement was had and settled.
+
+**A sweep is spent.** Everything worth keeping left it at the slice that
+produced it: the fix landed, the idea was filed, the decision was recorded, the
+finding was raised as an audit. What remains is bookkeeping — which files were
+read, by whom, in what order.
+
+**So it is archived and eventually deleted, like anything else in a backlog.**
+Not as a concession and not because sweeps matter less. **A sweep still holding
+something worth keeping has failed to route it**, and that is a defect in the
+sweep rather than a reason to preserve it.
+
+**It is the same test that separates the two files inside a sweep:** could this
+be rebuilt, or would losing it lose something nothing else records? **An audit
+fails that test by design. A sweep is built to pass it**, which is what makes
+it safe to throw away.
 
 ## Coverage is what the machinery is for
 
