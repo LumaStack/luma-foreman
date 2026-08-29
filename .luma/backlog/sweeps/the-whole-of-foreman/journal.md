@@ -67,3 +67,12 @@ a review is aimed at a change.
 
 **Not actionable.** Harvest as an idea against `review-sweeps` at the close, or
 drop it if it still looks premature then.
+
+**Correction to the entry above** — the scope is *within the catalog*, not code
+review generally. Sweeps as how the estate formalises its own reviews, rather
+than a claim about the practice at large. Narrower, and considerably more
+plausible: the estate already runs on bundles, coverage and routed findings, so
+a sweep aimed at a change rather than a repository is a smaller step than it
+looked a paragraph ago.
+
+*Appended rather than edited. A view that has moved on gets a new entry.*
