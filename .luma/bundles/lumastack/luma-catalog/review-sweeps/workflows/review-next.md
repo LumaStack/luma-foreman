@@ -125,9 +125,13 @@ a *proposal*. See [[what-a-slice-produces]].
 **Write the reasoning, not just the diff.** A proposal is stale from the moment
 it is written; the reasoning survives being stale and the diff does not.
 
-**A fix may land now only if a person is in the sweep and says so.** With
-nobody human here, nothing lands during the slice — a third party works from
-the record afterwards, and the gap is where the findings get checked as a set.
+**A fix may land now only if a person is in the sweep and says so — and you
+recommend before they choose.** Now if it needs only context already loaded and
+lands in about a turn; routed if it needs more than two turns or files nobody
+has opened, since that load happens either way. **One sentence saying which and
+why**, then it is theirs. See [[what-a-slice-produces]]. With nobody human
+here, nothing lands during the slice — a third party works from the record
+afterwards, and the gap is where the findings get checked as a set.
 
 **Propose before applying, always.** A change the reader has not seen turns
 their review into a diff review of yours. And a yes to one fix is not a yes to
@@ -205,7 +209,8 @@ off."*
 
 **This is the check that makes the rest hard to skip.** A row closed by
 inference produces a sentence with nobody in it, and that sentence is
-unwritable before it is noticed. Then update `coverage.md` and return to step 3.
+unwritable before it is noticed. Then update `coverage.md` and return to step
+3.
 
 ### 7e. Returning to a file re-opens it
 

@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.20.0
+version: 0.21.0
 published: 2026-08-29
 lifecycle_status: draft
 survival: experimental
@@ -132,6 +132,61 @@ adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
 
+`0.21.0` — **fix now or route it is the reader's call, and the recommendation
+is the agent's job.**
+
+**Both choices are taxed, and the call is which tax is smaller.** Doing it now
+taxes the session: context that does not belong to this file enters it and
+stays, and **a slice that keeps paying that stops being about anything.** Doing
+it later taxes the finding twice over — **the code moves**, so the note may
+describe a version nobody can find, and **the context is gone**, because
+framing rots faster than facts and a successor can re-derive *what was wrong*
+but not *why it mattered here*.
+
+**The economy decides between them.** A fix needing only what is on screen
+costs one turn now against a full reload later plus the risk of rot. A fix
+needing files nobody has opened costs that load whenever it happens — **paying
+it here buys nothing and pollutes the slice for free.**
+
+**Two turns is where the saving generally disappears** — a heuristic, not a
+line. One turn is the fix, two is the fix and the check; past that you are
+usually loading new context mid-slice, which is the *while I'm here* failure
+wearing an efficiency argument. **The count is a proxy** for whether the fix
+needs context nobody has loaded, and where the two disagree the context wins: a
+three-turn fix inside an open file is still cheap, and a one-turn fix in an
+unread subsystem is not.
+
+**Never just ask.** *Fix it now, or route it?* with no recommendation hands the
+reader an accounting problem they have no numbers for — **they cannot see what
+the fix would cost and the agent can.**
+
+**Two forces, and only one is the agent's to weigh.** Token economy is
+computable — what the fix would load against what deferring would reload.
+**Cohesion is not.** A slice holds together because it is about one thing, and
+so does a reader's attention; whether they want to be pulled sideways right now
+changes by the hour and nothing in the sweep can see it.
+
+**And the strongest reason to overrule the economy is the reader's own
+clarity** — *I understand this now and I will not understand it as well in a
+fortnight* is a direct read on the rot tax, and only they can take it.
+
+**That is a rational trade rather than an indulgence.** Tokens are renewable: a
+session can be re-run and a context rebuilt, at a price that is only time and
+money. **A reader's understanding right now is not** — it exists in one head at
+one moment, and unwritten it is not recoverable at any price. **Spending tokens
+to keep knowledge that would otherwise be forgotten is the economy working.**
+The recommendation prices the context and cannot price the thing being bought.
+
+So: **make the call on the numbers, hand it over, and do not argue the
+preference.**
+
+**One case overrides the economy: a fix that edits the file under review.**
+Until it is shown and re-confirmed, the reader is holding a verdict on a state
+of the file they have not read.
+
+**And routing defers the fix, never the record.** The finding is written either
+way; it was never part of the choice.
+
 `0.20.0` — **a file closes on a verdict, never on momentum.**
 
 **An instruction to act is not a verdict on the row.** *Drop it. Fix that.
@@ -141,19 +196,19 @@ how a file gets marked by the agent with the reader believing they never said
 so. **Three things close a row**: a sign-off, a statement that the reading is
 done, or a skip with a reason.
 
-**The per-file loop is step 7, written as a gate rather than as advice.**
-Show what changed and how to check it, ask for what this sweep's `approval`
-calls for, wait, then say out loud who closed the row and with what. **A
-re-opened file needs all of it again** — it is not still closed from before,
-because whatever brought the reader back may change what they want it to say.
+**The per-file loop is step 7, written as a gate rather than as advice.** Show
+what changed and how to check it, ask for what this sweep's `approval` calls
+for, wait, then say out loud who closed the row and with what. **A re-opened
+file needs all of it again** — it is not still closed from before, because
+whatever brought the reader back may change what they want it to say.
 
 **Two mechanisms rather than an argument**, because prose that argues is what
 kept getting drifted from. **The gate is repeated at step 3**, where the
 violation actually happens: presenting the next file is the act, so the check
 sits there and not only beside the rule it enforces. **And closing a row
 requires stating who closed it and with what** — a row closed by inference
-produces a sentence with nobody in it, and that sentence is unwritable before it
-is noticed.
+produces a sentence with nobody in it, and that sentence is unwritable before
+it is noticed.
 
 **Step 7c lists what is not a confirmation**, by the words readers actually
 use: *proceed*, *next*, *drop it*, *merge it*, *agreed*. Every one leaves the
