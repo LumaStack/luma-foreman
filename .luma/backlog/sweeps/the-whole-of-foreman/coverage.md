@@ -1,7 +1,7 @@
 ---
 type: coverage
 title: Coverage — the whole of luma-foreman
-indexed_at: 207907a28845
+indexed_at: e995f61d9b69
 ---
 
 # Coverage
