@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.19.0
+version: 0.20.0
 published: 2026-08-29
 lifecycle_status: draft
 survival: experimental
@@ -131,6 +131,48 @@ call graph, and while a headquarters could be read the same way, nobody has —
 adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
+
+`0.20.0` — **a file closes on a verdict, never on momentum.**
+
+**An instruction to act is not a verdict on the row.** *Drop it. Fix that.
+Next. Proceed.* Every one is direction about the work and none says what the
+index should record — and acting on the instruction while inferring the row is
+how a file gets marked by the agent with the reader believing they never said
+so. **Three things close a row**: a sign-off, a statement that the reading is
+done, or a skip with a reason.
+
+**The per-file loop is step 7, written as a gate rather than as advice.**
+Show what changed and how to check it, ask for what this sweep's `approval`
+calls for, wait, then say out loud who closed the row and with what. **A
+re-opened file needs all of it again** — it is not still closed from before,
+because whatever brought the reader back may change what they want it to say.
+
+**Two mechanisms rather than an argument**, because prose that argues is what
+kept getting drifted from. **The gate is repeated at step 3**, where the
+violation actually happens: presenting the next file is the act, so the check
+sits there and not only beside the rule it enforces. **And closing a row
+requires stating who closed it and with what** — a row closed by inference
+produces a sentence with nobody in it, and that sentence is unwritable before it
+is noticed.
+
+**Step 7c lists what is not a confirmation**, by the words readers actually
+use: *proceed*, *next*, *drop it*, *merge it*, *agreed*. Every one leaves the
+row open. Ambiguous wording is not a confirmation either — **guessing right
+nine times does not make the tenth safe.**
+
+**A diff command has to run from where the reader is standing**, unmodified,
+and the writer runs it first. A command that needs repairing is worse than
+none: they discover it was wrong only after deciding to trust it. Reflowed
+prose wants `--word-diff`, or a line diff shows every paragraph that moved and
+buries the words that changed.
+
+**Also: step 8 still described `reviewed` and `approved` as statuses**, which
+0.18.0 replaced with three columns four releases ago. The workflow was telling
+a reader to write a shape the type no longer has.
+
+**Found by running it.** A sweep dropped a document on the instruction *"drop
+standards.md"*, and the agent set the row itself without ever asking what it
+should say.
 
 `0.19.0` — **a slice that removes a document owes a ledger.**
 

@@ -62,6 +62,17 @@ more means a skim.
 
 ## 3. Orient — one file at a time
 
+> **Gate. Do not present a file until the previous one is closed.**
+>
+> A file is closed when the reader has given a sign-off, said the reading is
+> done, or skipped it with a reason — **and you have written that into
+> `coverage.md`.** Nothing else closes a file.
+>
+> **If the previous file is not closed, go to step 7 and close it.** Presenting
+> the next one is the violation; noticing here is the last chance to catch it.
+>
+> *First file of the slice: nothing is open, proceed.*
+
 **[[presenting-a-file]] gives the shape**: the data block, a summary of what
 the file is, what you make of it, then open it for them. One file, not the
 cluster.
@@ -124,7 +135,94 @@ the same fix in four other places.
 
 Nothing worth keeping stays in the slice note.
 
-## 7. Write the slice and update `coverage.md`
+## 7. Close the file
+
+**Steps 3 to 7 are one file, and one file is open at a time.** Work through
+this in order. Do not start step 3 again until this file is closed.
+
+### 7a. If anything was edited, show what and how to check it
+
+Skip only if nothing changed at all.
+
+**Say what changed** — a table, a list, or a sentence, whichever is fastest to
+read. The reader is about to sign something; they should not have to
+reconstruct what.
+
+**Give a diff command, and run it yourself before offering it.** It must work
+pasted straight in, unmodified, from the directory the reader is standing in.
+**A command they have to repair is worse than none** — they find out it was
+wrong only after deciding to trust it.
+
+- Wrong repository, wrong branch, a path that does not exist from here: run it
+  and you will know.
+- Reflowed prose: use `--word-diff`. A line diff of rewrapped markdown shows
+  every paragraph that moved and buries the words that changed.
+
+**Then stop and let them respond to it.** A file edited during its own review
+has not been reviewed in the state it is now in.
+
+### 7b. Ask for the confirmation this sweep's `approval` calls for
+
+**One sentence.** They have been reading; do not hand them a menu.
+
+| `approval` | ask for |
+| --- | --- |
+| `required` · `recommended` | **sign-off.** Say what withholding it means: `reviewed_by` filled, `approved_by` empty, which is an ordinary close and not a failure |
+| `optional` · `prohibited` | **that the reading is done** — reviewed, or skipped with a reason |
+
+### 7c. Wait. These are not confirmations
+
+**An instruction to act is not a verdict on the row.** Acting on one and
+inferring the row is how a file gets marked by the agent while the reader
+believes they never said so.
+
+| they say | it means | the row is |
+| --- | --- | --- |
+| *proceed*, *next*, *go on*, *ok* | carry on working | **still open** |
+| *drop it*, *fix that*, *change it* | do the work | **still open** |
+| *merge it*, *commit that*, *ship it* | land the change | **still open** |
+| *yes*, *agreed*, *good point* | they agree with a claim | **still open** |
+| silence, or a move to another subject | nothing | **still open** |
+
+**Three things close a row, and nothing else does:**
+
+1. **A sign-off** — approved, signed off, looks good
+2. **The reading is done** — reviewed, covered, I have read it, move on from it
+3. **A skip, with a reason**
+
+**Ask even when the answer looks obvious.** It costs one line, and a reader who
+has just told you to delete a file may still want the row to say `findings`
+rather than nothing. **Only they know.**
+
+**Where the wording is ambiguous, it is not a confirmation.** Ask which of the
+three it was. Guessing right nine times does not make the tenth safe.
+
+### 7d. Say what closed it, then write it down
+
+**Before opening the next file, state in one line who closed this one and with
+what.** *"`src/args.py` — reviewed by `human:fsmith`, `findings`, not signed
+off."*
+
+**This is the check that makes the rest hard to skip.** A row closed by
+inference produces a sentence with nobody in it, and that sentence is
+unwritable before it is noticed. Then update `coverage.md` and return to step 3.
+
+### 7e. Returning to a file re-opens it
+
+A reader may come back to anything at any time, and a later file routinely
+changes what an earlier one meant — that compounding is why the order was
+chosen.
+
+**A re-opened row is open. It needs 7a to 7d again.** It is not still closed
+from before: whatever brought them back may change what they want it to say.
+
+### If you have already broken this
+
+**Say so, name the row, and ask for the confirmation you skipped.** Do not
+quietly correct `coverage.md` — the reader is the only one who can say what the
+row should have held, and a silently fixed row is the same defect twice.
+
+## 8. Write the slice and update `coverage.md`
 
 [The slice template](../templates/slice.md). It is a working note, not a report
 — what was covered, what was concluded, what left the sweep and where it went.
@@ -150,12 +248,14 @@ Mark every file in the cluster, including the ones where nothing was found —
 **read with nothing found is a result**, and an index that records only
 problems has unexplained gaps in place of evidence.
 
-**`reviewed`** where the reader was satisfied; an agent may set this for
-itself. **`approved`** where a person signed off, and **only a person may give
-it**. Record what they say without argument — your own view lives in
-`reviewed`.
+**Fill the three columns from what they actually said.** `reviewed_by` — who
+read it, an agent included. `approved_by` — who signed off, **a person only**.
+`outcome` — `clean` or `findings`, what the reading concluded.
 
-## 8. Batch what the practice taught; do not stop for it
+**Record it without argument.** Your own view lives in `reviewed_by` and
+`outcome`, where it has no veto over anybody.
+
+## 9. Batch what the practice taught; do not stop for it
 
 **A slice that keeps pausing to fix the practice is not running.** Where the
 sweep exposes something wrong with sweeping — an order that fails, a
@@ -168,7 +268,7 @@ once, and the cost is only acceptable once — a second slice that produces as
 many changes to the bundle as findings about the code is a sweep that has
 stopped sweeping.
 
-## 9. Commit the slice
+## 10. Commit the slice
 
 One commit for the slice note and the index. That is the sweep's record and it
 lands whether or not anything was fixed.
