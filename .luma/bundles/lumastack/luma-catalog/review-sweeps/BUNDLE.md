@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.9.1
+version: 0.11.0
 published: 2026-08-28
 lifecycle_status: draft
 consumers: [project]
@@ -59,8 +59,9 @@ and nothing about depth.
   rigours of the same one. Read when deciding which you want, or when the two
   look interchangeable.
 
-**Templates** — [a sweep](templates/sweep.md) · [a slice](templates/slice.md) ·
-[presenting a file](templates/file-presentation.md)
+**Templates** — [a sweep](templates/sweep.md) · [its
+coverage](templates/coverage.md) · [a slice](templates/slice.md) · [presenting
+a file](templates/file-presentation.md)
 
 ## Worth knowing before reading further
 
@@ -128,6 +129,91 @@ adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
 
+`0.11.0` — **the index moves out of `sweep.md` into `coverage.md`.**
+
+**One is authored and the other is derived**, and everything else follows.
+`coverage.md`'s rows are the scope rule applied to the tree and its statuses
+are what the slices record — **delete it and it rebuilds exactly.** `sweep.md`
+is derivable from nothing: delete it and the goal, the reasoning and the
+learnings exist nowhere else.
+
+**So they lag differently.** A derived thing ages with every commit, which is
+what reconciliation is for; an authored thing changes only when its author
+changes their mind, and should get *truer* as the sweep teaches something. **A
+stale index is ordinary. A stale sweep is a defect** — it says the sweep is
+aimed at something it is not.
+
+**A derived file must not live inside an authored one**, or nobody can tell
+which half has gone off. **The test, where something is ambiguous:** could this
+be rebuilt from the repository and the slices? If yes it is coverage; if losing
+it would lose something nothing else records, it is the sweep.
+
+The practical annoyances follow from that rather than motivating it: a `git
+diff` of the sweep's thinking buried under status changes, and a rebuild of the
+index putting the reasoning in its blast radius.
+
+**The scope rule stays with the sweep; the enumeration goes with the index.**
+*Everything tracked except the generated adapters and the vendored bundles*
+does not change when a file is added — the list of rows does, and is supposed
+to.
+
+**`indexed_at` moves too**, because it is a fact about the index. `sweep` now
+carries no commit at all, which is right: a sweep is true of a moving target by
+construction.
+
+**Breaking**, shipped as minor under the pre-1.0 allowance: an existing sweep
+has to split its file in two and move `indexed_at`. The rows move verbatim.
+
+`0.10.0` — **what the first slice taught, once it had run.**
+
+**`cross-check` is a method rather than a habit.** In the first sweep ever
+conducted, **every mechanical finding came from executing the thing a document
+described** — `--help`, the rules on disk, the code behind a claim about it —
+and none from reading attentively. Careful reading found only the claims
+nothing could verify. **A document is most confident exactly where nobody has
+checked it.** So: prefer a check you can run over a claim you can only read,
+and say when there was none, because *I could not verify this* is a finding
+about the file's checkability.
+
+**`commits` decides which question to ask.** A file with one commit cannot have
+drifted, so *did this rot* is unanswerable and *was this ever true* is all that
+is left. **Sweeps aimed at churn quietly assume every file has a history**, and
+new files are exactly where that fails — three of the first slice's four files
+would have been out of scope under its original goal.
+
+**Which is why correcting the goal is a legitimate outcome of a slice.** A goal
+is written before anything has been read; the early slices are the first
+evidence it was aimed correctly. Change it in the sweep, say what the slice
+found, and **say how many of that slice's files would have been out of scope
+under the old goal** — that is the measure of how wrong it was.
+
+**A sweep does not review its own record.** A scope of *everything under
+`.luma/`* grows the sweep's own index and slice notes inside itself, and
+**approving your own coverage ledger proves nothing about coverage.** It
+appears mid-sweep rather than at the start, so reconciliation adds those files
+as ordinary pending rows without noticing what they are.
+
+**Progress counts are derived, never typed.** A wrong number in a progress
+table is precisely the rot the writing conventions warn about, and it is the
+one table a reader trusts without checking.
+
+**And the practice gets fixed in batches, never mid-slice.** The first slice
+spent its first three files on presentation rather than on documents. **That is
+what a `draft` practice costs once**, and only once — a second slice producing
+as many changes to this bundle as findings about the code is a sweep that has
+stopped sweeping.
+
+**And the rate is re-measured at every slice rather than once.** It costs a
+count of rows, so the only argument for waiting was that an early number is
+noisy — which is a reason to present it honestly, not to withhold it. **A range
+with the number of slices behind it, never a point estimate**: *three slices,
+four to nine files each* is honest at small samples where *2.1 files per slice*
+is false precision a reader will plan against. **Slices that measured something
+else are discarded and said to be** — a first slice of a `draft` practice
+measures the practice, not the material.
+
+Minor: new content, and one workflow step added.
+
 `0.9.1` — **examples name a fictional person, not a real one.**
 
 `templates/sweep.md` and [[how-a-sweep-is-stored]] carried a real workstation
@@ -135,8 +221,8 @@ account, taken from a filesystem path. The catalog already had a convention for
 this — `human:fsmith`, used across five bundles — and it was missed.
 
 **Two faults, and they are separate.** Naming a real person in a published
-example is a **disclosure**, and in some organizations a workstation username is
-secret. And the value came from the **OS user** rather than a git or forge
+example is a **disclosure**, and in some organizations a workstation username
+is secret. And the value came from the **OS user** rather than a git or forge
 identity, which is wrong provenance anywhere: the logged-in account is not
 necessarily who acted.
 

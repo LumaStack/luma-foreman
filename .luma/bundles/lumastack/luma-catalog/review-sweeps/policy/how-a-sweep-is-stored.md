@@ -16,11 +16,42 @@ sometimes more — and survives every session boundary in between.
 
 ```
 .luma/backlog/sweeps/the-cli-surface/
-  sweep.md                    scope, exclusions, the order chosen, the index
+  sweep.md                    why it exists, what it is aimed at, how it is run
+  coverage.md                 every file in scope, and what has happened to it
   slices/
     001-entrypoint-and-args.md
     002-the-permission-gate.md
 ```
+
+**One is authored and the other is derived**, and everything else follows from
+that.
+
+| | | |
+| --- | --- | --- |
+| **`sweep.md`** | **authored** | the goal, the scope rule, the order and why, what the sweep taught. **Derivable from nothing** — delete it and none of it exists anywhere else |
+| **`coverage.md`** | **derived** | the rows are the scope rule applied to the tree; the statuses are what the slices record. **Delete it and it can be rebuilt exactly** |
+
+**So they stand in opposite relations to the truth.** A derived thing lags by
+nature — every commit ages it, and reconciliation exists to bring it back. An
+authored thing only changes when its author changes their mind, and it should
+get *truer* as the sweep teaches something.
+
+**Staleness therefore means opposite things.** A stale `coverage.md` is the
+ordinary state between slices. **A stale `sweep.md` is a defect** — it says the
+sweep is aimed at something it is not.
+
+**A derived file must not live inside an authored one.** Nobody can tell which
+half has gone off, a rebuild puts the reasoning in its blast radius, and a `git
+diff` of the sweep's thinking is buried under status changes.
+
+**The test, where something is ambiguous:** *could this be rebuilt from the
+repository and the slices?* If yes it belongs in `coverage.md`. If losing it
+would lose something nothing else records, it belongs in `sweep.md`.
+
+**The scope rule stays in `sweep.md`; the enumeration goes in `coverage.md`.**
+*Everything tracked except the generated adapters and the vendored bundles*
+does not change when a file is added. The list of eighty-seven rows does, and
+is supposed to.
 
 ## It is backlog, not a record
 
@@ -46,9 +77,9 @@ restructure the sweep.*
 
 ## The slices are the source; the index is a cache
 
-`sweep.md` carries a table of every in-scope file and its status. **That table
-is an index and can be rebuilt** — the truth is in the slices, each of which
-says which files it covered.
+`coverage.md` carries a table of every in-scope file and its status. **That
+table is an index and can be rebuilt** — the truth is in the slices, each of
+which says which files it covered.
 
 This matters the first time the table and the notes disagree, which they will.
 A slice note is written once and never revised; a table cell is edited every
@@ -179,6 +210,21 @@ only thing that marks files off the index.
 this bundle's. A sweep needs little of it: the index and the notes are
 committed, so a half-finished slice costs a paragraph to resume rather than a
 handover.*
+
+## A sweep does not review its own record
+
+**Exclude `sweeps/` from any scope that would otherwise contain it.** A sweep
+whose scope is *everything under `.luma/`* will grow its own index and its own
+slice notes inside that scope, and reviewing them is circular — **approving
+your own coverage ledger proves nothing about coverage.**
+
+**It appears mid-sweep rather than at the start**, which is why it needs
+stating: the directory does not exist when the scope is settled, and
+reconciliation adds its files as ordinary pending rows without noticing what
+they are.
+
+*Another sweep may review this one's records. That is an ordinary sweep of
+somebody else's work, and its findings are worth something.*
 
 ## Naming
 

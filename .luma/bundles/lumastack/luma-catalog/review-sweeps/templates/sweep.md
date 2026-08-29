@@ -1,5 +1,10 @@
 # Sweep template
 
+**This file is why the sweep exists and how it is being run.** The index of
+what has been covered lives beside it in `coverage.md` — see [the coverage
+template](coverage.md). This one is written once and rarely edited; that one
+changes at every slice.
+
 Copy the blocks to `.luma/backlog/sweeps/<slug>/sweep.md`. **Copy the blocks,
 not this file** — this file has no frontmatter of its own on purpose, so
 nothing reads it as a real sweep.
@@ -16,7 +21,6 @@ goal: <what you want to be true afterwards, stated so it can be checked>
 scope: <one line — and say what is excluded in the body>
 ordering: narrative | risk-weighted | dependency | directory | led
 pairing: human-agent | agent-agent
-indexed_at: <12-character commit the index was last reconciled against>
 contributors:
   - human:fsmith      # or a second agent — the reader need not be a person
   - agent:opus-5
@@ -59,34 +63,20 @@ exists to make visible.>
 count — prose and dense logic differ by more than an order of magnitude. Split
 it where the scope is several kinds of thing.>
 
-<Replace this with a measured rate after the second slice, and say what the
-rate was. That number is worth more than any care taken over this one.>
+<Replaced by measurement, re-taken at every slice. A range with the number of
+slices behind it, never a point estimate. Every slice counts — an odd one widens
+the range, which is the signal.>
 
 **Expected drift:** <how much of the scope changed in a window the length of the
 estimate, and which parts — churn concentrates, so name the hot areas rather
 than giving one percentage. Say whether that churn is finishing or ongoing;
 only the owner knows. Compare against it at close.>
 
-## Index
+## Learnings
 
-<Every file in scope. Grouped into the clusters expected to be reviewed
-together. A file missing from here can never be shown to have been read.>
-
-| cluster | file | status | by | slice |
-| --- | --- | --- | --- | --- |
-| entrypoint | `src/cli.py` | approved | human:fsmith | 001 |
-| entrypoint | `src/args.py` | reviewed | agent:opus-5 | 001 |
-| gate | `src/gate.py` | pending | | |
-| — | `src/generated_api.py` | skipped — generated | | |
-
-`pending` · `reviewed` · `approved` · `skipped` **with a reason, always**
-
-<`reviewed` — read and satisfactory; any party may set it, agent included.
-`approved` — signed off, and only a person may give it. Report the two
-separately at close: they are different claims.>
-
-<Strike a deleted file through rather than removing the row, so the index still
-explains itself.>
+<What running this sweep taught — about the material, and about sweeping.
+Written as it happens, not reconstructed at the close. This is the section a
+second sweep reads first.>
 
 ## Closing summary
 
