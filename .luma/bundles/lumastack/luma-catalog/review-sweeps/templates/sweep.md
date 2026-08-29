@@ -18,8 +18,8 @@ ordering: narrative | risk-weighted | dependency | directory | led
 pairing: human-agent | agent-agent
 indexed_at: <12-character commit the index was last reconciled against>
 contributors:
-  - human:<id>        # or agent:<model> — the reader need not be a person
-  - agent:<model>
+  - human:fsmith      # or a second agent — the reader need not be a person
+  - agent:opus-5
 ---
 ```
 
@@ -74,7 +74,7 @@ together. A file missing from here can never be shown to have been read.>
 
 | cluster | file | status | by | slice |
 | --- | --- | --- | --- | --- |
-| entrypoint | `src/cli.py` | approved | human:warden | 001 |
+| entrypoint | `src/cli.py` | approved | human:fsmith | 001 |
 | entrypoint | `src/args.py` | reviewed | agent:opus-5 | 001 |
 | gate | `src/gate.py` | pending | | |
 | — | `src/generated_api.py` | skipped — generated | | |

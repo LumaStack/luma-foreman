@@ -111,7 +111,7 @@ scope.
 | `approved` | **signed off** | **a human only** |
 
 **Every row also records the actor** — `reviewed` by `agent:opus-5` and
-`reviewed` by `human:warden` are different facts, and the status alone cannot
+`reviewed` by `human:fsmith` are different facts, and the status alone cannot
 tell them apart.
 
 **Status and actor are not redundant.** The status says how strong the claim

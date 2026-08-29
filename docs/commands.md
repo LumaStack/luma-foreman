@@ -1,11 +1,15 @@
 # Commands
 
-Four verbs that act, two nouns that only report, and one subsystem that shares
+Verbs that act, nouns that only report, and a permissions subsystem that shares
 none of their machinery.
 
-Every command takes `--to <project>` to work on a repository other than the
-current one. Exit codes are consistent: **0 fine, 1 something is wrong or
-behind, 2 could not run.**
+Most commands take `--to <project>` to work on a repository other than the
+current one — `inspect` takes a positional path instead, and
+`agent-permissions` takes neither.
+
+**Exit code 0 means fine and 2 means the command could not run.** What 1 means
+is the command's own: refused, stale, behind, or findings present. Each section
+below says.
 
 ## init — stand `.luma/` up
 
@@ -31,22 +35,21 @@ Idempotent: run it again and it adds what is missing.
 ```bash
 luma-foreman get lumastack/luma-catalog/decision-records \
   --from https://github.com/LumaStack/luma-catalog
-luma-foreman get <bundle> --force       # overwrite a copy edited here
+luma-foreman get <bundle> --force       # replace a copy that no longer matches
 ```
 
 `--from` takes a catalog checkout or a git URL, and defaults to `[catalog]
 source` in the project config.
 
-**A directory copy with a receipt.** The bundle lands in
+**A fetch with a receipt.** The bundle lands in
 `.luma/bundles/<org>/<name>/`, and `adopted.toml` records the version, origin,
 catalog commit, and a checksum of exactly what landed.
 
-**Nothing resolves and nothing is fetched later.** Bundles depend on nothing,
-which is what keeps this a copy rather than an install. Commit it — a fresh
-clone with no network then reproduces the project exactly.
+**Nothing is fetched later.** Commit the copy — a fresh clone with no network
+then reproduces the project exactly.
 
-**An edited copy is never silently overwritten**, and a bundle with no version
-cannot be adopted at all.
+**A bundle with no version cannot be adopted at all**, because a project holding
+one could say nothing honest about what it has.
 
 **The namespace is the catalog's**, derived from where it lives:
 `github.com/LumaStack/luma-catalog` becomes `lumastack/luma-catalog`, unless
@@ -57,7 +60,7 @@ anybody arranging it.
 
 ```bash
 luma-foreman apply
-luma-foreman apply --check       # report what would change, write nothing
+luma-foreman apply --check       # is anything stale? exit 1 if so, write nothing
 luma-foreman apply --explain     # what each Document derives to, and from what
 ```
 
@@ -71,23 +74,48 @@ adopted, and a managed block in `CLAUDE.md` pointing at it.
 so a hand-written file keeps the rest. Everything written is generated and
 disposable — commit it or gitignore it, but regenerate rather than edit.
 
-`--check` exits 1 on staleness, which is what makes it usable as a gate.
+**`--check` answers *is this stale*, not *what would change*.** It writes
+nothing and exits 1 when a regenerate is due, which is what makes it a gate — the
+same sense `black`, `prettier` and `rustfmt` give the flag, rather than Ansible's
+dry run.
 
 ## inspect — check the project
 
 ```bash
-luma-foreman inspect
-luma-foreman inspect --json
+luma-foreman inspect                # 0 nothing found, 1 findings, 2 could not run
+luma-foreman inspect --json         # machine-readable, for continuous integration
 luma-foreman inspect --rule adoption
 ```
 
 Checks a repository against the baseline and reports where it falls short.
-**Works in a bare clone with no configuration**, and a check that cannot run is
-reported as skipped, never as a pass.
+**Every check works in a bare clone with no configuration.**
 
-**See [Inspect](inspect.md)** for what each rule catches, and for the third
-outcome — a *notice*, which prints as loudly as a finding and never changes the
-exit code.
+### What each rule catches
+
+| rule | catches |
+| --- | --- |
+| **identity** | personal information published through git — machine-derived author identities, malformed addresses, home directory paths in tracked content |
+| **secrets** | provider-issued credentials in tracked content, and files that normally hold them. Findings never quote the secret, because they end up in continuous integration logs |
+| **vocabulary** | words this project retired, still in use. Notices only — see below |
+| **bundles** | dangling links, unquoted wikilinks in frontmatter, templates carrying live frontmatter. **A bundle with any of these still validates**, so nothing else reports it and the defect travels to every adopter |
+| **adoption** | a bundle edited in place, missing from disk, or **adopted and never written anywhere an agent reads**. The last passes every other check: present, checksum matching, nothing edited, and no agent has seen a line of it |
+
+### Notices
+
+**A notice is worth a reader's judgement without being a defect.** It prints as
+loudly as a finding and **never changes the exit code**, so a check that cannot
+be certain can speak without blocking a merge — which is what stops somebody
+disabling it.
+
+**`vocabulary` emits nothing else.** A grep cannot tell a revival from an
+ordinary use of the same word, so it hands over the term, what replaced it,
+where that was decided, and the line. Nothing is retired by default.
+
+### Skipped checks never pass
+
+**An inspection that reads clean while silently skipping half
+its checks is worse than no inspection**, because it manufactures confidence
+nobody earned.
 
 ## bundle — what this project holds
 
@@ -98,7 +126,7 @@ luma-foreman bundle outdated         # which have a newer version published
 ```
 
 **`list` and `show` read committed state and work offline. `outdated` reaches
-each bundle's catalog and does not.**
+each bundle's catalog and needs a network.**
 
 ## catalog — where knowledge comes from
 
@@ -121,17 +149,25 @@ luma-foreman agent-permissions doctor       # ...and confirm it is actually work
 luma-foreman agent-permissions install      # install or update the gate
 ```
 
-Per-project control over what Claude Code may do. **Claude Code's own permission
-rules are global; this adds a per-project layer**, so loosening a rule for one
-repository does not loosen it everywhere.
+Per-project control over what an agent may do, changed by command rather than by
+editing configuration.
 
-**Changes take effect on the next tool call** — no session restart, because the
-hook re-reads these files each time it runs. Hook *wiring* is the exception and
-needs a restart.
+**Claude Code already has per-project permission rules.** What this adds is
+decisions those rules cannot express, because they match a command string and
+this reasons about one:
 
-**This shares no machinery with adoption** and would work identically if bundles
-had never existed. It is in the same binary because it is the same operator
-working on the same repository.
+| | |
+| --- | --- |
+| **a floor that survives bypass** | `always` prompts in every mode, `bypassPermissions` included. A skip-permissions run cannot lift it |
+| **rules that read the command** | `safe` on `curl`/`wget` allows a plain fetch and prompts when the command writes to disk, uploads a body, or pipes into an interpreter |
+| **rules that consult a list** | `trusted` on `ssh` allows a host in `ssh_hosts` and prompts for everything else |
+| **a mode** | `trust: full` silences every `ask` at once, without touching each key |
+
+`allow` means *no opinion* — the normal Claude Code flow decides. `deny` refuses
+outright in every mode.
+
+**Changes take effect on the next tool call**, because the hook re-reads these
+files each time it runs. Hook *wiring* is the exception and needs a restart.
 
 **See [Agent permissions](claude-agent-permissions.md)** for the model, the keys,
 and how the gate decides.

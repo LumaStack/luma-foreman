@@ -231,6 +231,14 @@ matches = ["topic:running or resuming a review sweep", "path:.luma/backlog/sweep
 
 [[rule]]
 bundle = "lumastack/luma-catalog/review-sweeps"
+document = "policy/presenting-a-file"
+title = "Presenting a file"
+path = ".luma/bundles/lumastack/luma-catalog/review-sweeps/policy/presenting-a-file.md"
+on_violation = "allow"
+matches = ["topic:showing a file to somebody during a review"]
+
+[[rule]]
+bundle = "lumastack/luma-catalog/review-sweeps"
 document = "policy/the-pairing-turn"
 title = "The pairing turn"
 path = ".luma/bundles/lumastack/luma-catalog/review-sweeps/policy/the-pairing-turn.md"
