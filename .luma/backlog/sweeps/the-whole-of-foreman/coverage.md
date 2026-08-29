@@ -1,7 +1,7 @@
 ---
 type: coverage
 title: Coverage — the whole of luma-foreman
-indexed_at: 207907a28845
+indexed_at: 5ffff5a0b272
 ---
 
 # Coverage
@@ -17,9 +17,9 @@ ages this file, and every slice brings it back.
 | approved | 5 |
 | reviewed, not signed off | 1 |
 | with findings | 6 |
-| skipped | 4 — `docs/examples/`, excluded by the reader |
+| skipped | 35 — `docs/examples/` and `.luma/backlog/ideas/`, both excluded by the reader |
 | removed | 3 — `docs/inspect.md`, `docs/scope.md`, `docs/standards.md` |
-| pending | 80 |
+| pending | 49 |
 | total rows | 93 |
 
 **Rate: three slices, nine files.** Too few to be a range yet, and slice 001 was
@@ -69,37 +69,37 @@ answers**, and the journal says which and why.
 | plans, config, changelog | `.luma/config/luma-foreman.toml` | both |  |  |  |  |
 | plans, config, changelog | `CHANGELOG.md` | both |  |  |  |  |
 | plans, config, changelog | `.gitignore` | both |  |  |  |  |
-| ideas A | `.luma/backlog/ideas/a-record-can-be-demoted.md` | both |  |  |  |  |
-| ideas A | `.luma/backlog/ideas/a-reminder-needs-somewhere-to-live.md` | both |  |  |  |  |
-| ideas A | `.luma/backlog/ideas/adopt-or-install-as-shorthand.md` | both |  |  |  |  |
-| ideas A | `.luma/backlog/ideas/apply-writes-an-entry-point-not-an-index.md` | both |  |  |  |  |
-| ideas A | `.luma/backlog/ideas/browsing-a-catalog-is-an-engines-job.md` | both |  |  |  |  |
-| ideas A | `.luma/backlog/ideas/bundle-routines.md` | both |  |  |  |  |
-| ideas A | `.luma/backlog/ideas/bundles-declare-what-they-work-with.md` | both |  |  |  |  |
-| ideas A | `.luma/backlog/ideas/bundles-wanted-not-built.md` | both |  |  |  |  |
-| ideas A | `.luma/backlog/ideas/committed-permission-floor.md` | both |  |  |  |  |
-| ideas A | `.luma/backlog/ideas/declared-maturity-and-behaviour.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/distribution-beyond-clone-and-symlink.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/drive-an-incident.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/edit-ceremony-should-key-on-citations.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/feedback-and-learning.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/hook-against-leaking-internal-hq.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/independent-of-the-harness.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/knowledge-reaching-agents-elsewhere.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/named-permission-profiles.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/never-derive-an-actor-from-the-os-user.md` | both |  |  |  |  |
-| ideas B | `.luma/backlog/ideas/new-repository-survey.md` | both |  |  |  |  |
-| ideas C | `.luma/backlog/ideas/no-format-for-non-procedural-knowledge.md` | both |  |  |  |  |
-| ideas C | `.luma/backlog/ideas/no-way-to-un-adopt.md` | both |  |  |  |  |
-| ideas C | `.luma/backlog/ideas/personal-skill-selection-not-committed.md` | both |  |  |  |  |
-| ideas C | `.luma/backlog/ideas/preload-levels-collapse-into-emphasis.md` | both |  |  |  |  |
-| ideas C | `.luma/backlog/ideas/prose-conventions.md` | both |  |  |  |  |
-| ideas C | `.luma/backlog/ideas/routers.md` | both |  |  |  |  |
-| ideas C | `.luma/backlog/ideas/the-gate-test-does-not-test-the-gate.md` | both |  |  |  |  |
-| ideas C | `.luma/backlog/ideas/scan-history-not-just-the-working-tree.md` | both |  |  |  |  |
-| ideas C | `.luma/backlog/ideas/verification-beyond-inspect.md` | both |  |  |  |  |
-| ideas C | `.luma/backlog/ideas/which-bundles-this-project-should-carry.md` | both |  |  |  |  |
-| ideas C | `.luma/backlog/ideas/workflows-invoking-workflows.md` | both |  |  |  |  |
+| ideas A | `.luma/backlog/ideas/a-record-can-be-demoted.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas A | `.luma/backlog/ideas/a-reminder-needs-somewhere-to-live.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas A | `.luma/backlog/ideas/adopt-or-install-as-shorthand.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas A | `.luma/backlog/ideas/apply-writes-an-entry-point-not-an-index.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas A | `.luma/backlog/ideas/browsing-a-catalog-is-an-engines-job.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas A | `.luma/backlog/ideas/bundle-routines.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas A | `.luma/backlog/ideas/bundles-declare-what-they-work-with.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas A | `.luma/backlog/ideas/bundles-wanted-not-built.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas A | `.luma/backlog/ideas/committed-permission-floor.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas A | `.luma/backlog/ideas/declared-maturity-and-behaviour.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas B | `.luma/backlog/ideas/distribution-beyond-clone-and-symlink.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas B | `.luma/backlog/ideas/drive-an-incident.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas B | `.luma/backlog/ideas/edit-ceremony-should-key-on-citations.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas B | `.luma/backlog/ideas/feedback-and-learning.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas B | `.luma/backlog/ideas/hook-against-leaking-internal-hq.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas B | `.luma/backlog/ideas/independent-of-the-harness.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas B | `.luma/backlog/ideas/knowledge-reaching-agents-elsewhere.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas B | `.luma/backlog/ideas/named-permission-profiles.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas B | `.luma/backlog/ideas/never-derive-an-actor-from-the-os-user.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas B | `.luma/backlog/ideas/new-repository-survey.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas C | `.luma/backlog/ideas/no-format-for-non-procedural-knowledge.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas C | `.luma/backlog/ideas/no-way-to-un-adopt.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas C | `.luma/backlog/ideas/personal-skill-selection-not-committed.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas C | `.luma/backlog/ideas/preload-levels-collapse-into-emphasis.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas C | `.luma/backlog/ideas/prose-conventions.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas C | `.luma/backlog/ideas/routers.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas C | `.luma/backlog/ideas/the-gate-test-does-not-test-the-gate.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas C | `.luma/backlog/ideas/scan-history-not-just-the-working-tree.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas C | `.luma/backlog/ideas/verification-beyond-inspect.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas C | `.luma/backlog/ideas/which-bundles-this-project-should-carry.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
+| ideas C | `.luma/backlog/ideas/workflows-invoking-workflows.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
 | entry and shared | `bin/luma-foreman` | agent |  |  |  |  |
 | entry and shared | `src/foreman/cli.py` | agent |  |  |  |  |
 | entry and shared | `src/foreman/config.py` | agent |  |  |  |  |
