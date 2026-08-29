@@ -1,7 +1,7 @@
 ---
 type: coverage
 title: Coverage — the whole of luma-foreman
-indexed_at: 5ffff5a0b272
+indexed_at: c19bdc853dbc
 ---
 
 # Coverage
@@ -17,9 +17,9 @@ ages this file, and every slice brings it back.
 | approved | 5 |
 | reviewed, not signed off | 1 |
 | with findings | 6 |
-| skipped | 35 — `docs/examples/` and `.luma/backlog/ideas/`, both excluded by the reader |
+| skipped | 36 — `docs/examples/`, `.luma/backlog/ideas/`, and `docs/claude-agent-permissions.md`, all excluded by the reader |
 | removed | 3 — `docs/inspect.md`, `docs/scope.md`, `docs/standards.md` |
-| pending | 49 |
+| pending | 48 |
 | total rows | 93 |
 
 **Rate: three slices, nine files.** Too few to be a range yet, and slice 001 was
@@ -54,7 +54,7 @@ answers**, and the journal says which and why.
 | — | ~~`docs/inspect.md`~~ | — | | | | 001 — collapsed into `commands.md` |
 | what it says it is | `docs/architecture.md` | both | human:benlinton | human:benlinton | findings | 001 |
 | standards and permissions | ~~`docs/standards.md`~~ | both | human:benlinton |  | findings | 003 — dropped, superseded by the adopted `luma-config` bundle |
-| standards and permissions | `docs/claude-agent-permissions.md` | both |  |  |  |  |
+| standards and permissions | `docs/claude-agent-permissions.md` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
 | standards and permissions | `docs/examples/README.md` | — |  |  |  | skipped — reader excluded `docs/examples/` from this sweep |
 | standards and permissions | `docs/examples/american-spelling.md` | — |  |  |  | skipped — reader excluded `docs/examples/` from this sweep |
 | standards and permissions | `docs/examples/design-first-working-mode.md` | — |  |  |  | skipped — reader excluded `docs/examples/` from this sweep |
