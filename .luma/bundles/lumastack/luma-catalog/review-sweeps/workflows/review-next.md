@@ -19,7 +19,7 @@ git diff --name-status <indexed_at>..HEAD
 ```
 
 - **Added** files in scope get rows, marked pending, **placed by the sweep's
-  clustering strategy**. Where none of its clusters fits, add one to `sweep.md`
+  clustering strategy**. Where none of its clusters fits, add one to `charter.md`
   rather than inventing a name here.
 - **Deleted** files are struck through rather than removed, so the index still
   explains itself.
@@ -54,7 +54,7 @@ change, or too much is being fixed mid-sweep.
 ## 2. Pick the next cluster
 
 Follow the recorded order. **If the recorded order is not working, change it
-deliberately** — a dated line in `sweep.md` saying what changed and why. Not
+deliberately** — a dated line in `charter.md` saying what changed and why. Not
 one convenient slice at a time.
 
 **Three to eight files.** Fewer means a file read without its collaborators;
@@ -132,9 +132,9 @@ Nothing worth keeping stays in the slice note.
 **Correcting the goal is a legitimate outcome of a slice, not a failure of
 one.** A goal is written before anything has been read, so the first slices are
 the first evidence it was aimed correctly. Where it was not, change it in
-`sweep.md` with what the slice found and why — and say how many of this slice's
-files would have been out of scope under the old one, because that is the
-measure of how wrong it was.
+`charter.md` with what the slice found and why — and say how many of this
+slice's files would have been out of scope under the old one, because that is
+the measure of how wrong it was.
 
 **Say whether the slice served the goal.** One clause. It is how drift becomes
 visible early: three slices running that turn up nothing related to the goal

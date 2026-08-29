@@ -6,15 +6,18 @@ lifecycle_status: provisional
 survival: experimental
 goal: Nothing in this repository states something false — whether it drifted there or was created that way
 scope: All tracked content except the generated .claude/ adapters and the vendored .luma/bundles/ copies
-strictness: evolving
+goal_discipline: exploratory
+scope_discipline: exploratory
+strategy_discipline: exploratory
 ordering: led
+approval: recommended
 pairing: human-agent
 contributors:
   - human:benlinton
   - agent:opus-5
 ---
 
-# Sweep: the whole of luma-foreman
+# The whole of luma-foreman
 
 ## Goal
 
@@ -49,15 +52,16 @@ so it does not get lost — a sweep aimed only at churn would skip it.
 
 ## The other two files
 
-**[`coverage.md`](coverage.md)** carries every file in scope, its status, and who
-set it — plus `indexed_at`, the commit it was last reconciled against.
+**[`coverage.md`](coverage.md)** carries every file in scope and three facts
+about each — who read it, who signed it off, and what the reading concluded —
+plus `indexed_at`, the commit it was last reconciled against.
 
 **[`journal.md`](journal.md)** carries what was noticed along the way and is not
 yet a finding. Append-only, harvested at the close into backlog items and
 learnings, then discarded with the rest of the sweep.
 
 **This file is authored; that one is derived.** Its rows are the scope rule and
-the clustering strategy below applied to the tree, and its statuses are what the
+the clustering strategy below applied to the tree, and what fills its rows is what the
 slices record — delete it and it rebuilds exactly, **which is only true because
 the strategy is written down here.** Delete this one and the goal, the reasoning and the
 learnings exist nowhere else.
@@ -138,21 +142,36 @@ here rather than improvising one in `coverage.md` — **the index applies this
 strategy and does not invent it**, which is what keeps the index derivable.
 Reconciliation places a new file by asking which of these it belongs to.
 
-## Strictness
+## Discipline
 
-**`evolving`, and it has cost what evolving costs.** The practice was `draft`
-when this sweep started and has been corrected at every turn by it — thirteen
-releases of `review-sweeps` while six files were covered.
+**`exploratory` on all three axes**, which is what this sweep has actually been.
+The practice was `draft` when it started and nobody knew what a sweep was — so
+the goal moved, the scope gained exclusions mid-flight, and the strategy went
+from unstated judgement to written rule. **That is discovery, not indiscipline.**
 
-**That was the right call and it does not stay right.** The bundle now says so
-itself: evolving is correct for a first sweep and ruinous for a tenth, and once
-neither the practice nor the material is new it becomes a licence to be
-distracted by whatever is more interesting than the next file.
+**It cannot be estimated, and that is a property rather than a failing.** A sweep
+still working out what it is has nothing to estimate against; the estimate below
+is honest about being abandoned rather than revised.
 
-**Worth revisiting at slice 003.** The practice has largely stopped being new;
-the material has not been read. Switching to `strict` would mean findings about
-sweeping get journalled and left for a later sweep rather than turned into a
-release mid-slice.
+**It has cost seventeen releases of `review-sweeps` while covering six files.**
+That is what discovery costs, and it is the number the next sweep should compare
+itself against rather than repeat.
+
+**Worth revisiting at slice 003.** The practice has largely stopped being new
+while the material has not been read — which is the profile of a sweep that
+should move to **strict goals, strict scope, adaptive strategy**: do not wander,
+but do keep improving how you read.
+
+## Approval
+
+**`recommended`.** Sign-off is wanted on every row and some rows will not get
+it — which is the ordinary case and is neither `required`'s guilt nor
+`optional`'s indifference. **A row read and left unsigned is a known compromise
+here, named at the close rather than counted as a failure.**
+
+`.luma/PROJECT.md` is the first of them: read closely, findings recorded, and
+deliberately not signed off. **That is a finished row, not a stalled one** —
+coverage tracks reading, and the backlog tracks fixing.
 
 ## Order
 

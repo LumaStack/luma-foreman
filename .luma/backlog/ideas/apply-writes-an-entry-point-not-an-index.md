@@ -314,6 +314,26 @@ asks what loads whichever of those a situation calls for. They should be designe
 together: *a bundle's routing* here and *a folder of entry points* there are
 plausibly the same artifact under two names.
 
+## Routing is the mechanism; token management is the objective
+
+**And it is the only goal here with a hard success metric.** You can count
+tokens. *Is this project in compliance* needs a judgement, and *is the knowledge
+reaching the agent* needs one too — this one does not. **That makes it the
+easiest thing to know you got right**, and worth building against a measured
+baseline rather than an intuition.
+
+**Three things already point at it and were not framed this way.** `preload:
+mandatory` is a context budget decision wearing an obligation's clothes.
+Selecting what gets written out is the largest saving available. And the
+compact-plus-full split — every rule with a one-clause reason, the full argument
+deferred — was deferred for want of evidence that context was tight.
+**Measurement is that evidence**, which makes it the thing to build first rather
+than the thing to justify afterwards.
+
+*Absorbed from `docs/scope.md` when that document was scattered on 2026-08-29.*
+
+## Notes
+
 **None of this reached `luma-leader` by any mechanism.** The `.luma/` tier
 question above belongs there and is recorded here because there is nowhere else
 to put it.

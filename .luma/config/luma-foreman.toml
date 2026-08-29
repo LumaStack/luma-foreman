@@ -44,7 +44,6 @@ except = [
   "tests/apply-test.sh",        # ...and this one pins the message
   "CHANGELOG.md",               # records what was true when written
   ".luma/records/decisions/ADR-0001-apply-writes-adapters-not-copies.md",  # ...as does a record
-  "docs/scope.md",              # argues about the shape of the field it replaced
   ".luma/backlog/ideas/preload-levels-collapse-into-emphasis.md",   # is the retirement
   ".luma/backlog/ideas/routers.md",                                 # ...and these three
   ".luma/backlog/ideas/bundle-routines.md",                         # ...argue about it

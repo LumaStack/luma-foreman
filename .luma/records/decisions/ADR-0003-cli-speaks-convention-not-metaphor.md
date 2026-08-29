@@ -267,5 +267,7 @@ outdated` answers what has moved past it. Two questions, two commands.
 ## References
 
 The vocabulary change from *jobs* to *commands* shipped ahead of the rest, in
-`Subcommands are commands, not jobs`. `docs/scope.md` carries the argument that
-the original command set was defined by knowledge the catalog has since taken.
+`Subcommands are commands, not jobs`. **The original command set was defined by
+knowledge the catalog has since taken** — the argument for that lived in
+`docs/scope.md`, which was scattered on 2026-08-29; `.luma/PROJECT.md` carries
+what survived of it.

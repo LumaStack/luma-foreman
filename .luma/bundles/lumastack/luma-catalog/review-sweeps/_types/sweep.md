@@ -6,10 +6,18 @@ fields:
     field_presence: required
     field_type: text
     desc: "what the sweep is for — what you want to be true afterwards, stated so it can be checked against"
-  strictness:
-    field_presence: required
+  goal_discipline:
+    field_presence: optional
     field_type: enum
-    desc: "strict — the goal, scope and strategy are fixed for this sweep. evolving — expect them to move as the sweep learns"
+    desc: "strict | adaptive | exploratory — how freely the aim may move. Default adaptive"
+  scope_discipline:
+    field_presence: optional
+    field_type: enum
+    desc: "strict | adaptive | exploratory — how freely the boundary may move. Default adaptive"
+  strategy_discipline:
+    field_presence: optional
+    field_type: enum
+    desc: "strict | adaptive | exploratory — how freely the method may move. Default adaptive"
   scope:
     field_presence: required
     field_type: text
@@ -18,6 +26,10 @@ fields:
     field_presence: required
     field_type: text
     desc: "the order units are taken in: narrative, risk-weighted, dependency, directory, or led"
+  approval:
+    field_presence: optional
+    field_type: enum
+    desc: "required | recommended | optional | prohibited — how strongly a person's sign-off is expected on each row. Default recommended"
   pairing:
     field_presence: required
     field_type: text
@@ -64,36 +76,107 @@ for them, silently.
 turn up nothing related to the goal mean the goal was wrong or the sweep has
 wandered — and neither shows without this field.
 
-## `strictness` decides whether the plan may move
+## The three disciplines say which parts of the plan may move
 
-**Not whether the sweep may notice things — whether it may change its own
-terms.** Both kinds record everything they find; they differ in what they do
-about the ones that would rewrite the sweep.
+**Three fields, because they move independently.**
 
-| | **`strict`** | **`evolving`** |
+```yaml
+goal_discipline: strict
+scope_discipline: strict
+strategy_discipline: adaptive
+```
+
+| | `strict` | `adaptive` *(default)* | `exploratory` |
+| --- | --- | --- | --- |
+| **`goal_discipline`** | the aim is fixed | the aim is known — **sharpen it** as slices show what it really meant | **the aim is not known yet** — find out what the sweep should be for |
+| **`scope_discipline`** | what is in and out is settled | the boundary is roughly right — **adjust it** where a slice shows it was drawn wrongly | **the boundary is not known yet** — absorb what turns out to belong |
+| **`strategy_discipline`** | clustering, order and who-reads-what are fixed | the method works — **tune it** where it demonstrably fought you | **the method is not known yet** — build it while you use it |
+
+### The ladder is about what you know, not about how much you spend
+
+**That is the line, and it is the only one that holds.** *How much change feels
+warranted* is undrawable — every improvement feels warranted in the moment.
+*What do we already know* is answerable before the sweep starts.
+
+| | you know | so you |
 | --- | --- | --- |
-| the goal, scope and strategy | **fixed for this sweep** | **expected to move** |
-| something that would change them | recorded, and left for a later sweep | acted on, and the sweep says what changed and why |
-| drifting from the goal | **a defect** — the sweep has wandered | ordinary, and a reason to re-aim |
-| what it costs | things you noticed wait | **velocity** — every change is time not spent reading |
+| `strict` | what you are doing | do not touch it |
+| `adaptive` | the shape | **refine and tune** |
+| `exploratory` | **that you do not know the shape** | **go and find what it should be** |
 
-**A strict sweep is not a blind one.** It routes findings exactly as any sweep
-does; what it declines is redirecting itself. *That is a real observation and
-this is not the sweep for it* is a legitimate thing to write in a journal.
+**`adaptive` is enhancement.** The goal, the boundary and the method are all
+roughly right, and slices sand them down. A change owes a line saying what
+moved and why, and the estimate is revised rather than abandoned.
 
-**Choose `evolving` when the practice or the material is genuinely new**, and
-expect to pay for it. The first sweep ever run was `evolving` and produced
-thirteen releases of this bundle while covering six files — **correct for a
-first sweep, and ruinous for a tenth.**
+**`exploratory` is discovery.** You are not refining a thing, you are working
+out what the thing is — so you add whatever you find, and the shape gets bigger
+as you learn what belongs in it. **The estimate is abandoned rather than
+revised**, because there is nothing yet to estimate against.
 
-**Most sweeps should be `strict`.** Once neither the practice nor the material
-is new, `evolving` is a licence to be distracted by whatever is more
-interesting than the next file.
+**Disregard for time and budget is the consequence, not the definition.** It
+follows from not knowing what you are looking for, which is why `exploratory`
+is a legitimate choice rather than an excuse: **a sweep that does not know its
+own shape cannot be estimated, and pretending otherwise produces a number that
+was never true.**
 
-**It is declared, not drifted into.** A sweep that quietly starts rewriting its
-own goal was `evolving` all along and nobody said so — which means nobody
-budgeted for it, and the estimate is now wrong for a reason the record does not
-show.
+*The first sweep ever run was exploratory on all three axes, and correctly so —
+nobody knew what a sweep was. It produced seventeen releases of this bundle
+while covering six files, which is what discovery costs.*
+
+### Absent means adaptive, on every axis
+
+**Because that is what actually happens.** A sweep that has not thought about
+this will adapt — and if the default were `strict`, sweeps would sprawl anyway
+while the record claimed a discipline they never had. **An honest record of
+sprawl is worth more than a flattering one**, and a default describing an
+aspiration rather than behaviour is how a field stops being read.
+
+**Most *mature* sweeps should be strict on goals and scope.** The default
+reflects where this practice currently is rather than where it should end up —
+**and it should flip once strict is the common case.** A change to make on
+evidence, not on principle.
+
+## `approval` says how strongly sign-off is expected
+
+**Not every sweep wants it.** An agent-agent sweep cannot have it; one aimed at
+coverage rather than endorsement does not need it. **Assuming it is wanted
+turns every unsigned row into a shortfall nobody ever intended to fill.**
+
+| | a signature is | unsigned rows at close are |
+| --- | --- | --- |
+| **`required`** | owed on every row — a row is unfinished without one | **a shortfall** — work the sweep set out to do and did not |
+| **`recommended`** *(default)* | wanted on every row, and a row may finish without it | **a known compromise**, named rather than glossed |
+| **`optional`** | welcome, and nobody is waiting for it | **a description** — how this sweep works, and nothing owed |
+| **`prohibited`** | **not to be given** — a signature here would claim something untrue | **not reported.** There is nothing to count |
+
+**This is RFC 2119's ladder** — must, should, may, must not — and it is
+borrowed on purpose. A reader who has met those four anywhere else already
+knows what the four rungs mean here.
+
+**`prohibited` is the only value with a defect of its own.** Unsigned rows are
+the expectation met, so they go unreported — but **a signature that exists is
+reported as a defect**, because somebody claimed an endorsement this sweep had
+ruled out. Every other value can be satisfied by doing nothing. This one can be
+violated.
+
+**Which is why it is not spelled `unused` or `excluded`.** Those describe a
+column nobody filled in. This one says *do not sign these off*, and means it.
+
+**The counts print under all four.** *Fifty-three approved, twelve reviewed and
+never signed off* is reported whatever the setting; what the field decides is
+whether that second number is a failure, a compromise or a fact. **Nothing is
+hidden by any value**, which is what makes a permissive default safe.
+
+**`recommended` is the default because it is honest for most sweeps with a
+person in them.** You would like to sign off on everything and you will not get
+to all of it — that is the ordinary case, and it deserves neither the guilt of
+`required` nor the indifference of `optional`.
+
+**`prohibited` is the honest value for an agent-agent sweep**, where a human
+signature would not merely be unlikely but would misrepresent what happened.
+Leaving it at `recommended` there would report a compromise against a standard
+that could never have been met; leaving it at `optional` would invite the very
+signature that makes the record false.
 
 ## `scope` must say what was left out
 

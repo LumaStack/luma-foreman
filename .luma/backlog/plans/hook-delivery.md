@@ -106,3 +106,29 @@ list only because it was on it.*
 **`on_violation` stays where it is.** Blocking is the gate's job at `PreToolUse`
 and is already built; this adds delivery alongside it. Two fields, two jobs, one
 event — and a rule that both blocks and teaches should do both in one place.
+
+## Why hooks are the only place an adapter is owed
+
+**`SKILL.md` is an open standard and many agents read it, so skill distribution
+is solved and not worth competing on** — one output written to the standard,
+rather than an adapter per harness.
+
+**Hooks have no standard**, which is what makes them the exception. Every
+harness that fires them fires them its own way, so a per-harness adapter is the
+only shape available. **That is the argument for this plan existing separately
+from knowledge delivery at all**, and it is worth stating because the obvious
+symmetry — *skills get adapters, so hooks get adapters* — has the reasoning
+backwards.
+
+## And this may not be foreman's job
+
+**Both *set up tooling so projects stay in compliance* and *load and unload
+hooks* imply foreman writing configuration it invented**, which puts it back to
+knowing things — the boundary
+[architecture](../../../docs/architecture.md) draws. **They may instead be
+bundles carrying config that adoption copies**, in which case foreman builds the
+copying and nothing else. Worth settling before building the second half of
+this plan rather than after.
+
+*Both absorbed from `docs/scope.md` when that document was scattered on
+2026-08-29.*

@@ -91,12 +91,12 @@ above, which is another reason that question comes first.
 Migrated from `docs/IDEAS.md` on 2026-08-21. `created.at` is a day-level
 estimate from git history.
 
-**The central design question has been partly answered elsewhere since this was
-written.** `docs/scope.md` lists routing under *needs a decision before it can be
-built*, and adds a conditional this entry does not have: *"If `apply` must
-evaluate a router to decide what to write, it has to be **data** — a tool cannot
-follow prose."* That reframes *prose or data?* as *who evaluates it?*, which is
-the more tractable question and probably where a design should start.
+**The central design question has been partly answered since this was written,
+and the answer is a conditional this entry did not have.** **If `apply` must
+evaluate a router to decide what to write, it has to be data — a tool cannot
+follow prose.** That reframes *prose or data?* as **who evaluates it?**, which
+is the more tractable question and probably where a design should start.
+Absorbed from `docs/scope.md` when that document was scattered on 2026-08-29.
 
 **Filed here against the entry's own argument, and the disagreement is recorded
 rather than settled.** The entry argues for the knowledge format, since `preload`
@@ -108,9 +108,8 @@ with the consumer, even when the field is the format's. **If the answer turns ou
 to be a `preload_when` on the existing field rather than a new document type, the
 format is the right home and this should move.**
 
-**Nothing else anywhere mentions routers** — not `luma-leader/docs/DECISIONS.md`, not
-any of the fifteen catalog bundles. This entry and that one line in `scope.md`
-are the whole record.
+**Nothing else anywhere mentions routers** — not `luma-leader/docs/DECISIONS.md`,
+not any of the catalog's bundles. This entry is the whole record.
 
 **One adjacent decision not to collide with.** `luma-leader/docs/DECISIONS.md` defers
 letting adopters override `preload` per document, because "the author renames a

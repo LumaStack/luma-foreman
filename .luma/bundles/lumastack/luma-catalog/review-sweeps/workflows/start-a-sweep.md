@@ -83,28 +83,55 @@ not.
 separating what they excluded from what you did. A sweep that does not say what
 it skipped cannot make its own coverage mean anything later.
 
-## 4. Decide whether the plan may move
+## 4. Decide which parts of the plan may move
 
-**`strict` or `evolving`, and it is a decision rather than a mood.**
+**Three axes, each a ladder of what you already know.** They move
+independently, and each is a decision rather than a mood.
 
-**`strict`** — the goal, scope and strategy are fixed for this sweep. Anything
-that would change them is **recorded and left for a later sweep**. This is not
-a blind sweep: it routes findings exactly as any sweep does, and *that is a
-real observation and this is not the sweep for it* is a legitimate journal
+| | you know | so you |
+| --- | --- | --- |
+| `strict` | what you are doing | do not touch it |
+| `adaptive` | the shape | **refine and tune** |
+| `exploratory` | **that you do not know the shape** | **go and find what it should be** |
+
+**`goal_discipline`, `scope_discipline`, `strategy_discipline`.** The common
+mature setting is **strict, strict, adaptive** — do not wander, but do improve
+how you read.
+
+**`strict` is not blind.** Anything that would change the sweep is **recorded
+and left for a later sweep**; findings route exactly as they always do. *That
+is a real observation and this is not the sweep for it* is a legitimate journal
 entry.
 
-**`evolving`** — expect them to move, and budget for it. Right when the
-practice or the material is genuinely new, and **expensive**: the first sweep
-ever run was evolving and produced thirteen releases of this bundle while
-covering six files. Correct for a first sweep, ruinous for a tenth.
+**`adaptive` is enhancement.** The shape is roughly right and slices sand it
+down. Every change owes a line saying what moved and why, and **the estimate is
+revised rather than abandoned.**
 
-**Most sweeps should be strict.** Once neither the practice nor the material is
-new, `evolving` is a licence to be distracted by whatever is more interesting
-than the next file.
+**`exploratory` is discovery, and it cannot be estimated.** You are not
+refining a thing, you are working out what the thing is — so there is nothing
+yet to estimate against, and a number produced anyway was never true. **That is
+a property, not a failing**, and it is why the choice has to be deliberate.
 
-**Say which, in `sweep.md`.** A sweep that quietly starts rewriting its own
-goal was evolving all along and nobody said so — so nobody budgeted for it, and
-the estimate is wrong for a reason the record does not show.
+**Ask what you already know, not how much change feels acceptable.** The second
+question is undrawable: every improvement feels warranted in the moment. The
+first is answerable before a single file is read.
+
+**Decide how strongly sign-off is expected**, and record it as `approval:` —
+`required`, `recommended`, `optional` or `prohibited` — RFC 2119's ladder, must
+through must not. Not every sweep wants a signature: an agent-agent sweep
+cannot have one, and a sweep aimed at coverage rather than endorsement does not
+need one.
+
+**Absent, it is `recommended`** — you would like to sign off on everything and
+will not get to all of it, which is the ordinary case for a sweep with a person
+in it. **Set `prohibited` for an agent-agent sweep**, where a human signature
+would not merely be unlikely but would misrepresent what happened; under it a
+signature that appears anyway is reported at close as a defect.
+
+**Record all three disciplines in `charter.md`.** Absent, each defaults to
+`adaptive` — because that is what actually happens, and a default of `strict`
+would have sweeps sprawl anyway while the record claimed a discipline they
+never had.
 
 ## 5. Choose an order and record why
 
@@ -129,7 +156,7 @@ coverage ledger — a file left out of it is a file nobody can later prove was
 read or not read, and the ones omitted for being trivial are exactly where a
 stale copy of something hides.
 
-**Name the clusters in `sweep.md`, and say what each one is about.** Group by
+**Name the clusters in `charter.md`, and say what each one is about.** Group by
 what must be read together — a subsystem, an execution path, a set of documents
 answering one question — which is routinely not what shares a directory.
 
@@ -211,8 +238,8 @@ git log --since="6 weeks ago" --name-only --pretty=format: -- <paths> \
 ```
 
 Against the file count in scope, that is a rough *expect this much to move
-while you sweep*. Record it in `sweep.md` beside the estimate, so the close can
-compare what actually happened.
+while you sweep*. Record it in `charter.md` beside the estimate, so the close
+can compare what actually happened.
 
 **Name the hot files, not just the percentage.** Churn concentrates — the usual
 shape is one subsystem moving and everything else sitting still — and a single
@@ -254,9 +281,9 @@ That costs a sentence per slice and it is the only way the guesses get
 corrected. A sweep that ran fine and taught nobody anything about sweeping is a
 missed opportunity the second sweep pays for.
 
-## 9. Write `sweep.md` and `coverage.md`, and commit them
+## 9. Write `charter.md` and `coverage.md`, and commit them
 
-[The sweep template](../templates/sweep.md) and [the coverage
+[The charter template](../templates/charter.md) and [the coverage
 template](../templates/coverage.md) have the shapes. **Two files, because one
 should stay true as the work proceeds and the other is expected to go false and
 be brought back** — see [[how-a-sweep-is-stored]].

@@ -34,19 +34,21 @@ compose at write time.
 
 Captured 2026-08-21, during the migration of `docs/IDEAS.md`.
 
-**The writing-out half is already scoped and is not what this idea is for.**
-`docs/scope.md` lists *"load and unload skills — possibly by symlink, possibly
-another mechanism"*, and *"select at write time which subset of adopted content
-is written — including by symlink"*, which it calls unbuilt because nothing yet
-decides the subset.
-This file is titled on the part that has no home.
+**The writing-out half is a separate unbuilt thing and is not what this idea is
+for.** *Selecting at write time which subset of adopted content gets written —
+including by symlink* is unbuilt because **nothing yet decides the subset**.
+This file is titled on the part that has no home: what the subset is decided
+*from*.
 
-**Mid-session swapping is blocked, and not by us.** `docs/scope.md` records that
-loading and unloading mid-session *"needs cooperation that does not exist"* —
-Agent Skills loads every skill's name and description at startup and the body on
-description match, with no hook for *conditions changed, drop these*. Between
-sessions is achievable; during one is not, in any harness. Worth knowing before
-anyone promises "change them quickly".
+**Mid-session swapping is blocked, and not by us.** Agent Skills' progressive
+disclosure loads every skill's name and description at startup and the body on
+description match, **with no hook for *conditions changed, drop these***.
+Between sessions is achievable; during one is not, in any harness. **Selecting
+at write time gets most of the value**, which is the reason to build that and
+stop. Worth knowing before anyone promises "change them quickly".
+
+*Both absorbed from `docs/scope.md` when that document was scattered on
+2026-08-29; this entry had cited it for each.*
 
 **The same shape appears twice.** The open question left by `agent-permissions`
 — whether foreman writes *committed* per-project Claude Code settings as a shared

@@ -1,11 +1,11 @@
-# Sweep template
+# Charter template
 
 **This file is why the sweep exists and how it is being run.** The index of
 what has been covered lives beside it in `coverage.md` — see [the coverage
 template](coverage.md). This one is written once and rarely edited; that one
 changes at every slice.
 
-Copy the blocks to `.luma/backlog/sweeps/<slug>/sweep.md`. **Copy the blocks,
+Copy the blocks to `.luma/backlog/sweeps/<slug>/charter.md`. **Copy the blocks,
 not this file** — this file has no frontmatter of its own on purpose, so
 nothing reads it as a real sweep.
 
@@ -19,8 +19,11 @@ created: YYYY-MM-DD
 lifecycle_status: provisional
 goal: <what you want to be true afterwards, stated so it can be checked>
 scope: <one line — and say what is excluded in the body>
-strictness: strict | evolving
+goal_discipline: strict | adaptive | exploratory       # default adaptive
+scope_discipline: strict | adaptive | exploratory      # default adaptive
+strategy_discipline: strict | adaptive | exploratory   # default adaptive
 ordering: narrative | risk-weighted | dependency | directory | led
+approval: required | recommended | optional | prohibited   # default recommended
 pairing: human-agent | agent-agent
 contributors:
   - human:fsmith      # or a second agent — the reader need not be a person
@@ -31,7 +34,7 @@ contributors:
 ## Body
 
 ```markdown
-# Sweep: <what is being read>
+# <what is being read>
 
 ## Goal
 
@@ -64,11 +67,16 @@ is routinely not what shares a directory.>
 here rather than improvising one in coverage.md — the index applies this
 strategy and does not invent it, which is what keeps it derivable.>
 
-## Strictness
+## Discipline
 
-<strict — the goal, scope and strategy are fixed; anything that would change
-them is recorded and left for a later sweep. evolving — expect them to move, and
-budget for it. Most sweeps should be strict.>
+<A ladder of what you know. strict — you know what you are doing, so do not
+touch it. adaptive — you know the shape, so refine and tune it. exploratory — you
+do not know the shape yet, so go and find what it should be.
+
+Absent, every axis is adaptive. The common mature configuration is strict goals,
+strict scope, adaptive strategy: do not wander, but do improve how you read. A
+first sweep of a new practice is exploratory on all three, and costs what
+discovery costs.>
 
 ## Order
 

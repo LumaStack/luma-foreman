@@ -33,6 +33,21 @@ It is a fact about the index rather than about the sweep: the commit this table
 was last reconciled against, advanced every time a slice reconciles. **The
 sweep has no commit** and deliberately so — it is true of a moving target.
 
+## Three facts per row, not one status
+
+`reviewed_by`, `approved_by` and `outcome` are separate because they vary
+separately. A file may be read by an agent and signed off by a person who never
+opened it; a person may read one closely and withhold approval. **A single
+status column can express neither.**
+
+**Empty means it has not happened**, so there is no `pending` value able to
+drift out of step with the actors beside it.
+
+**`outcome` is past tense** — `clean` or `findings`, what the reading
+concluded. A column describing the file's present quality would have to be
+maintained as files are fixed, which is coverage tracking fixing rather than
+reading.
+
 ## Progress goes above the index
 
 **The summary a reader wants is *how far along*, and eighty-seven rows should
