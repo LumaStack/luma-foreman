@@ -176,6 +176,65 @@ reached yet** — a suspicion about the shape of the whole system needing three
 more slices before it can be stated. Write it as a suspicion, say what would
 confirm it, and let a later slice settle it.
 
+## When a slice removes a document, it owes a ledger
+
+**A slice that deletes a file has produced something no other slice does: an
+absence.** Everything else a slice produces can be checked against the file it
+came from. **A removed file cannot be re-read**, so what the slice concluded
+about it is the only remaining record of what it held.
+
+**Two obligations follow, and neither is optional.**
+
+### The removal and every destination land in one commit
+
+**So the diff is the whole story** — every deletion and every insertion side by
+side, in one `git show`. Split across commits, a reader watches content vanish
+in one place and appear in another with nothing tying them together, and has to
+reconstruct the mapping by hand from two diffs that do not mention each other.
+
+**It also fails safely.** A half-landed scatter leaves live references pointing
+at a file that is already gone. One commit either lands or does not.
+
+**This does not make a slice a pull request boundary** — the section below
+still holds. **The unit here is one removal**, which is usually smaller than a
+slice and occasionally spans two.
+
+### A verdict for every part of what was removed
+
+A table in the slice record: each range of the removed document, and what
+became of it.
+
+| lines | what it held | verdict | where it went |
+| --- | --- | --- | --- |
+
+**The verdict column is the one that matters**, and it has to separate four
+outcomes:
+
+| verdict | means |
+| --- | --- |
+| **moved** | carried to a destination, substantially as it was |
+| **rewritten** | the substance survived; the words did not |
+| **dropped as duplicate** | already recorded elsewhere — and *where* is the destination |
+| **dropped as wrong** | false, stale or unsourced. **No destination, deliberately** |
+
+**A diff cannot make that last distinction.** Content discarded on purpose and
+content lost by accident look identical in a deletion — both are red lines with
+nothing corresponding anywhere. **The ledger is the only thing that separates
+them**, and it is what lets somebody trust a removal they did not perform.
+
+**Name what each *dropped as wrong* row was checked against.** *Dropped as
+wrong* on its own asks the reader to take your word for it. *Contradicted by
+`apply.py:19`* lets them go and look. This is `cross-check` doing the work it
+already does, written down where it can be audited.
+
+**Write it while removing, not afterwards.** The reason for dropping a claim is
+available for as long as you are holding the claim and not much longer, and a
+ledger reconstructed a week later is a guess wearing a table's clothes.
+
+**It is proportional to what was removed, not to the sweep.** Deleting a stub
+nobody cited needs a line. Dismantling a document eleven files point at needs
+every range accounted for, because eleven readers will arrive expecting it.
+
 ## Landing whatever does get fixed
 
 **A slice is not a pull request boundary.** Most slices produce no change at
@@ -195,6 +254,10 @@ learns: slice 009 routinely reveals that 003 and 005 had the same problem.
 unlanded fixes into the next slice — reading with a big uncommitted diff
 underneath you means reviewing your own work in progress, and the sweep starts
 chasing itself.
+
+**The exception is a removal**, which lands whole or not at all — see above.
+That is a constraint on one commit's contents rather than on how commits are
+grouped, so it sits alongside batching rather than against it.
 
 *How changes get integrated is not this bundle's to say — `git-workflow`, and
 whatever this project already does, own that.*

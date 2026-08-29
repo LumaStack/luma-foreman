@@ -68,6 +68,23 @@ deleted.>
 diff. Whoever applies it re-derives first, because it is stale from the moment
 it is written.>
 
+## The ledger
+
+<Only when this slice removed a document. Every range of it, and what became of
+it — see [[what-a-slice-produces]]. Land the removal and every destination in
+one commit, so this table and the diff describe the same thing.>
+
+| lines | what it held | verdict | where it went |
+| --- | --- | --- | --- |
+| 12-21 | the status table | **dropped as duplicate** | superseded by `docs/commands.md` |
+| 18 | *"every command takes `--to`"* | **dropped as wrong** | contradicted by `--help`. Carried nowhere |
+| 54-65 | why the cache is keyed on the raw path | **moved** | ADR-0012, which had cited this file for it |
+| 69-73 | the unbuilt verification work | rewritten | idea — `.luma/backlog/ideas/verification-beyond-the-linter.md` |
+
+<Say what each **dropped as wrong** row was checked against. A diff cannot tell
+deliberate discarding from accidental loss; this column is the only thing that
+can.>
+
 ## Still open
 
 <Only a conclusion the sweep genuinely has not reached yet — a suspicion needing

@@ -177,7 +177,7 @@ the perfect answer.
 **Give a band, say it is a guess, and replace it with a measurement after two
 slices.** A number said at the start is what stops a sweep dying at 15% with
 somebody concluding they were slow rather than that it was long. A number said
-*confidently* at the start is usually wrong.
+*confidently* at the start is almost always wrong.
 
 ### Estimate from the material, never from the file count
 

@@ -180,3 +180,11 @@ they were found, and landed however this project lands changes. See
 **The one thing to watch is staleness.** If a large pile of unlanded fixes is
 building up, land it before the next slice; otherwise you are reading your own
 work in progress.
+
+**If this slice removed a document, that is the exception.** The removal and
+every destination its content went to land in **one commit**, and the slice
+note carries a ledger giving every range of the removed file a verdict — moved,
+rewritten, dropped as duplicate, or **dropped as wrong with what it was checked
+against**. A deletion is the one thing a later reader cannot go and verify for
+themselves. [[what-a-slice-produces]] has the rule and the template has the
+table.
