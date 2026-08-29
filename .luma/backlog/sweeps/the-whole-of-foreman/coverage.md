@@ -1,7 +1,7 @@
 ---
 type: coverage
 title: Coverage — the whole of luma-foreman
-indexed_at: c61d53e93d15
+indexed_at: becb4ce15db1
 ---
 
 # Coverage
@@ -17,9 +17,9 @@ ages this file, and every slice brings it back.
 | approved | 5 |
 | reviewed, not signed off | 1 |
 | with findings | 6 |
-| skipped | 47 — `docs/examples/`, the idea backlog, and the whole agent-permissions subsystem, all excluded by the reader |
+| skipped | 74 — `docs/examples/`, the idea backlog, the agent-permissions subsystem, and all remaining code, all excluded by the reader |
 | removed | 3 — `docs/inspect.md`, `docs/scope.md`, `docs/standards.md` |
-| pending | 37 |
+| pending | 10 |
 | total rows | 93 |
 
 **Rate: three slices, nine files.** Too few to be a range yet, and slice 001 was
@@ -100,29 +100,29 @@ answers**, and the journal says which and why.
 | ideas C | `.luma/backlog/ideas/verification-beyond-inspect.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
 | ideas C | `.luma/backlog/ideas/which-bundles-this-project-should-carry.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
 | ideas C | `.luma/backlog/ideas/workflows-invoking-workflows.md` | — |  |  |  | skipped — reader excluded the idea backlog from this sweep |
-| entry and shared | `bin/luma-foreman` | agent |  |  |  |  |
-| entry and shared | `src/foreman/cli.py` | agent |  |  |  |  |
-| entry and shared | `src/foreman/config.py` | agent |  |  |  |  |
-| entry and shared | `src/foreman/project.py` | agent |  |  |  |  |
-| entry and shared | `src/foreman/bundle.py` | agent |  |  |  |  |
-| entry and shared | `src/foreman/lkf.py` | agent |  |  |  |  |
-| entry and shared | `src/foreman/__init__.py` | agent |  |  |  |  |
-| adoption path | `src/foreman/get.py` | agent |  |  |  |  |
-| adoption path | `src/foreman/adoption.py` | agent |  |  |  |  |
-| adoption path | `src/foreman/catalog.py` | agent |  |  |  |  |
-| adoption path | `src/foreman/outdated.py` | agent |  |  |  |  |
-| adoption path | `src/foreman/init.py` | agent |  |  |  |  |
-| apply | `src/foreman/apply.py` | agent |  |  |  |  |
-| inspect | `src/foreman/inspect/__init__.py` | agent |  |  |  |  |
-| inspect | `src/foreman/inspect/registry.py` | agent |  |  |  |  |
-| inspect | `src/foreman/inspect/finding.py` | agent |  |  |  |  |
-| inspect | `src/foreman/inspect/report.py` | agent |  |  |  |  |
-| inspect | `src/foreman/inspect/rules/__init__.py` | agent |  |  |  |  |
-| inspect | `src/foreman/inspect/rules/bundles.py` | agent |  |  |  |  |
-| inspect | `src/foreman/inspect/rules/adoption.py` | agent |  |  |  |  |
-| inspect | `src/foreman/inspect/rules/identity.py` | agent |  |  |  |  |
-| inspect | `src/foreman/inspect/rules/secrets.py` | agent |  |  |  |  |
-| inspect | `src/foreman/inspect/rules/vocabulary.py` | agent |  |  |  |  |
+| entry and shared | `bin/luma-foreman` | — |  |  |  | skipped — code is a separate sweep |
+| entry and shared | `src/foreman/cli.py` | — |  |  |  | skipped — code is a separate sweep |
+| entry and shared | `src/foreman/config.py` | — |  |  |  | skipped — code is a separate sweep |
+| entry and shared | `src/foreman/project.py` | — |  |  |  | skipped — code is a separate sweep |
+| entry and shared | `src/foreman/bundle.py` | — |  |  |  | skipped — code is a separate sweep |
+| entry and shared | `src/foreman/lkf.py` | — |  |  |  | skipped — code is a separate sweep |
+| entry and shared | `src/foreman/__init__.py` | — |  |  |  | skipped — code is a separate sweep |
+| adoption path | `src/foreman/get.py` | — |  |  |  | skipped — code is a separate sweep |
+| adoption path | `src/foreman/adoption.py` | — |  |  |  | skipped — code is a separate sweep |
+| adoption path | `src/foreman/catalog.py` | — |  |  |  | skipped — code is a separate sweep |
+| adoption path | `src/foreman/outdated.py` | — |  |  |  | skipped — code is a separate sweep |
+| adoption path | `src/foreman/init.py` | — |  |  |  | skipped — code is a separate sweep |
+| apply | `src/foreman/apply.py` | — |  |  |  | skipped — code is a separate sweep |
+| inspect | `src/foreman/inspect/__init__.py` | — |  |  |  | skipped — code is a separate sweep |
+| inspect | `src/foreman/inspect/registry.py` | — |  |  |  | skipped — code is a separate sweep |
+| inspect | `src/foreman/inspect/finding.py` | — |  |  |  | skipped — code is a separate sweep |
+| inspect | `src/foreman/inspect/report.py` | — |  |  |  | skipped — code is a separate sweep |
+| inspect | `src/foreman/inspect/rules/__init__.py` | — |  |  |  | skipped — code is a separate sweep |
+| inspect | `src/foreman/inspect/rules/bundles.py` | — |  |  |  | skipped — code is a separate sweep |
+| inspect | `src/foreman/inspect/rules/adoption.py` | — |  |  |  | skipped — code is a separate sweep |
+| inspect | `src/foreman/inspect/rules/identity.py` | — |  |  |  | skipped — code is a separate sweep |
+| inspect | `src/foreman/inspect/rules/secrets.py` | — |  |  |  | skipped — code is a separate sweep |
+| inspect | `src/foreman/inspect/rules/vocabulary.py` | — |  |  |  | skipped — code is a separate sweep |
 | agent permissions | `src/foreman/agent_permissions/__init__.py` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
 | agent permissions | `src/foreman/agent_permissions/model.py` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
 | agent permissions | `src/foreman/agent_permissions/store.py` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
@@ -132,9 +132,9 @@ answers**, and the journal says which and why.
 | agent permissions | `src/foreman/agent_permissions/install.py` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
 | agent permissions | `src/foreman/agent_permissions/doctor.py` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
 | agent permissions | `libexec/permission-gate.py` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
-| tests | `tests/run` | agent |  |  |  |  |
-| tests | `tests/adopt-test.sh` | agent |  |  |  |  |
+| tests | `tests/run` | — |  |  |  | skipped — code is a separate sweep |
+| tests | `tests/adopt-test.sh` | — |  |  |  | skipped — code is a separate sweep |
 | tests | `tests/agent-permissions-cli-test.sh` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
-| tests | `tests/apply-test.sh` | agent |  |  |  |  |
-| tests | `tests/inspect-test.sh` | agent |  |  |  |  |
+| tests | `tests/apply-test.sh` | — |  |  |  | skipped — code is a separate sweep |
+| tests | `tests/inspect-test.sh` | — |  |  |  | skipped — code is a separate sweep |
 | tests | `tests/permission-gate-test.sh` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |

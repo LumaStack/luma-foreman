@@ -115,6 +115,11 @@ that will disagree with itself, and the copy is the half that goes wrong.
   file that records it is circular, and approving your own coverage ledger
   proves nothing about coverage.
   Added as an exclusion once the sweep's files appeared inside its own scope.
+- **All code — `src/`, `tests/`, `bin/`. Given, at slice 005.** The reader
+  excluded it to finish this sweep and read the code in a separate one. **That
+  is a scope change large enough to be worth naming as one**: this sweep is now
+  about the prose, and the summary it produces should say so rather than reading
+  as though the code was covered.
 - **`.luma/backlog/ideas/`. Given, at slice 004.** The reader excluded the
   idea backlog. It is the largest cluster in scope and the least likely to hold
   a false claim — an idea is a proposal, so *"this might work"* cannot rot the
@@ -239,7 +244,8 @@ code orientation cheap.
 
 ## Size
 
-**Prose at a cluster a slice; code at a subsystem a slice.** That is the shape
+**Prose at a cluster a slice.** *The code half of this estimate was removed
+from the sweep at slice 005 and never tested.* That is the shape
 the estimate assumed, and the shape is what survives — the totals it produced
 were a guess made before anything had been read, and
 [`coverage.md`](coverage.md) carries the measured rate that replaced them.
