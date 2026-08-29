@@ -26,7 +26,7 @@ has been decided here* — where a directory means listing and reading *n* files
 to answer the same question.
 
 That advantage shrinks as the file grows and disappears once anything generates
-an index (§11), so treat this as the starting shape rather than a choice
+an index, so treat this as the starting shape rather than a choice
 between equals.
 
 ## Graduating

@@ -2,7 +2,7 @@
 type: decision
 title: Adoption copies a directory and never resolves anything
 decided: 2026-08-23
-lifecycle_status: draft
+lifecycle: draft
 reopen_trigger: Bundle dependencies are adopted as a design, at which point something has to decide what a bundle's declared needs mean at `get` time.
 ---
 

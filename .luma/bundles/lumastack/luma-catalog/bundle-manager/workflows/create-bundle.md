@@ -17,8 +17,10 @@ two bundles that need each other cannot say so.
 
 ## 2. Decide where it belongs
 
-See [[where-a-bundle-belongs]]. The short version: start in the project that
-needed it, and promote when a second consumer actually appears.
+See [[where-a-bundle-belongs]]. The short version: a project and a catalog are
+both valid first homes, and which is right depends on how many adopters you
+already know about. **When you cannot tell, start in the project** — not because
+it is better, but because it is the cheaper mistake to correct.
 
 ## 3. Scaffold
 

@@ -44,7 +44,7 @@ knowledge-format built-in.
 
 `horizon`, `scope`, `archived` and `contributors` are the only things the format
 does not already supply. Dates and authorship are `created`, growth stages are
-`lifecycle_status`, who was involved is `contributors`, and who vouched for it
+`lifecycle`, who was involved is `contributors`, and who vouched for it
 is `verified`.
 
 `archived` earns its place because `modified` advances on every edit and so
@@ -99,7 +99,7 @@ never happened — and it can attach them to a undesirable outcome they had no p
 ## `verified` is separate, and open to agents
 
 Confirmation is not contribution. Whoever reads an idea afterwards and vouches
-for it files a `verified` event (§7.2):
+for it files a `verified` event:
 
 ```yaml
 contributors: [agent:opus-5]
@@ -112,10 +112,10 @@ questions stay answerable because they are asked of different fields.
 
 ## `created` still applies, and is not the signal
 
-The root's `created` records who authored the document and when (§7.1). Leave it
+The root's `created` records who authored the document and when. Leave it
 meaning that.
 
-`created` is `optional` at the root and inheritance is add-only (§10.3), so this
+`created` is `optional` at the root and inheritance is add-only, so this
 type cannot strengthen it. **Treat it as required in practice** — an idea with no
 date cannot be tended, because tending reads how long something has been sitting.
 
@@ -137,11 +137,11 @@ this type most needs to avoid.
 **Absent means `someday`** — honest, and it costs nothing to leave off at
 capture.
 
-## Growth stages use `lifecycle_status`
+## Growth stages use `lifecycle`
 
 The gardening ladder is already the root type's:
 
-| garden | `lifecycle_status` | means |
+| garden | `lifecycle` | means |
 | --- | --- | --- |
 | **seedling** | `draft` | captured, not yet thought about |
 | **budding** | `provisional` | revisited at least once, taking shape |

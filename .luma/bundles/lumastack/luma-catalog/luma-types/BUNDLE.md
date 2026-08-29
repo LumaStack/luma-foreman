@@ -1,7 +1,7 @@
 ---
 type: bundle
-version: 0.10.1
-published: 2026-08-26
+version: 0.12.0
+published: 2026-08-28
 consumers: [project, organization]
 description: The type definitions more than one luma tool has to agree on — namespaced, vendored, and deliberately not built into the knowledge format.
 ---
@@ -9,8 +9,8 @@ description: The type definitions more than one luma tool has to agree on — na
 # luma types
 
 **Type Definitions that more than one luma tool needs to agree on.** Copy the
-`_types/*.md` you want into your own bundle — that is what §10.4 of the knowledge
-format means by vendoring, and it is the only sharing mechanism the format has.
+`_types/*.md` you want into your own bundle — that is what the knowledge format's resolution and namespacing
+rules mean by vendoring, and it is the only sharing mechanism the format has.
 
 ## What is here
 
@@ -118,7 +118,7 @@ because it looks additive.
 **Tools should be field-tolerant rather than version-aware** — and have no
 choice, since a document never records which type version it was written
 against. *Read `responsibilities`, or if absent, `owns`* is the whole of what
-absorbing a new type means, and §4's tolerance makes it free.
+absorbing a new type means, and the format's conformance tolerance makes it free.
 
 **Two hops, and only one of them is expensive.** Updating a vendored copy is
 mechanical and happens per bundle. Migrating *records already written* happens
@@ -137,6 +137,45 @@ A collector should read the version each project declares and say so, rather tha
 presenting a mixed set as though it were uniform.
 
 ## Version
+
+`0.12.0` — **`lifecycle_status` is now `lifecycle`.**
+
+**Same values, same meaning, shorter name**, renamed in the knowledge format
+and carried here. The old name was chosen against `status` — so it never
+collided with a tool's own `todo | in-progress | done` — and **`lifecycle`
+avoids that collision equally well**, because the word at risk was `status` and
+this name does not contain it.
+
+**Breaking for an adopter**, shipped as minor under the pre-1.0 allowance:
+**every Document declaring the old key has to be renamed.** It fails visibly
+rather than quietly — `lifecycle` is unrecognised where `lifecycle_status` was
+expected, and an unrenamed Document reads as having no lifecycle declared at
+all.
+
+`0.11.1` — **references to the knowledge format name sections instead of numbering them.** The format removed section numbers, so every `§n` here pointed at a position that no longer exists — and a stale number resolves to the wrong section rather than to nothing, which is why none of them were reported. Decorative citations are dropped; the rest name what they meant.
+
+Patch: wording only. No rule, field or procedure changed.
+
+`0.11.0` — **`starters` is withdrawn from `luma/catalog`** *(breaking)*. It
+was written before anything could use it: a starter keys on what kind of
+consumer is adopting, and no consumer declares its kind — so the lists sat
+in a published catalog describing a bootstrap nothing performed. Nothing
+read them, and a declared mechanism nobody consumes is worse than a missing
+one, because it looks like an answer and stops anybody building the thing
+that would be one.
+
+**It also kept being cited as though it were built**, three times in one
+day's design work, including as an argument against a competing proposal.
+An unbuilt sketch that wins arguments is doing damage rather than waiting.
+
+`requires`, `tags` and `upstream` are untouched. The asymmetry that only
+`starters` could subtract goes with it, so both remaining lists merge
+additively and the resolution table says so.
+
+Minor with the removal stated outright, per pre-1.0: a catalog still
+declaring `starters` is declaring a field the type no longer defines, which
+The format says a consumer tolerates and must not reject. What it was, and what
+would earn it back, is archived in `luma-leader`.
 
 `0.10.1` — **bundle IDs in this catalog gained their namespace.** A bundle here
 is `lumastack/luma-catalog/<name>` rather than `luma/<name>`, because the

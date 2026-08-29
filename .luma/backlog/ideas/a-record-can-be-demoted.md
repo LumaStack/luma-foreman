@@ -5,12 +5,12 @@ created: { by: human:benlinton, at: 2026-08-26T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]
 horizon: next
 scope: organization
-lifecycle_status: draft
+lifecycle: draft
 ---
 
 # A record sometimes has to come back down
 
-`decision-guidelines` describes `lifecycle_status` as a mutability ladder and
+`decision-guidelines` describes `lifecycle` as a mutability ladder and
 every transition in it climbs: `draft` becomes `provisional` becomes `stable`,
 and `archived` is the exit. **Nothing describes going the other way.**
 

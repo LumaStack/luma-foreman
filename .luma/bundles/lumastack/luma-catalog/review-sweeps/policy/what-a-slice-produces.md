@@ -116,10 +116,11 @@ worked. Past that you are usually loading new context — and new context loaded
 mid-slice is the *while I'm here* failure below wearing an efficiency argument.
 
 ***Generally*, because the count is a proxy.** What actually decides it is
-whether the fix needs context nobody has loaded, and turns are only the cheapest
-way to estimate that in advance. **A three-turn fix inside a file already open
-is still cheap**; a one-turn fix in a subsystem nobody has read is not. Where
-the proxy and the thing it stands for disagree, **the context wins.**
+whether the fix needs context nobody has loaded, and turns are only the
+cheapest way to estimate that in advance. **A three-turn fix inside a file
+already open is still cheap**; a one-turn fix in a subsystem nobody has read is
+not. Where the proxy and the thing it stands for disagree, **the context
+wins.**
 
 **Say which it is and why, in one sentence, then let them choose.**
 

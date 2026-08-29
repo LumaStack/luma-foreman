@@ -147,6 +147,56 @@ does not reach here: it forces somebody to edit a document they did not write.
 A sweep has one writer. The prohibition is about authorship, not about
 derivation.*
 
+## A count in the charter is almost always wrong to write
+
+**The charter is the file that should get truer. A count never does.** It is
+right at the moment of writing and wrong the moment anything changes, and
+**nothing announces the change** — a stale number reads exactly like a current
+one.
+
+**This is the authored-and-derived test applied to a sentence rather than a
+file.** The split above decides which *file* something belongs in; it is rarely
+asked of a paragraph, so an authored file quietly fills with derived sentences.
+Those rot at a derived file's rate **with none of the reconciliation**, because
+nobody reconciles the authored one.
+
+**The test:** *can this sentence go wrong without anybody editing this file?*
+If yes, it is derived, whatever file it is sitting in.
+
+### Point at the number; do not copy it
+
+Where a count exists somewhere already kept current — the index, a version
+history, the repository itself — **cite that place instead.** Copying it here
+creates a second answer that goes wrong on its own, and a reader then has two
+numbers and no way to tell which is live.
+
+### Not banned, and the exception is said out loud
+
+**Some count may genuinely earn its place**, and a rule forbidding all of them
+would be a guess about cases nobody has met. So this is strong advice, not a
+prohibition.
+
+**Where one is written anyway, tell the reader as you write it** — that it is a
+count, that it will go stale, and why it is here rather than in the index. **An
+exception nobody was told about is indistinguishable from an oversight**, which
+is precisely how they accumulate: every count in a charter was written by
+somebody who thought that one was fine.
+
+**Dating it is not the fix.** *Forty-two files, as of slice 004* stops being
+wrong silently, and still never gets truer. It is a smaller failure of the same
+kind.
+
+### What this looks like when it goes wrong
+
+The first sweep to run this practice accumulated eight counts in its charter —
+file counts in the scope exclusions, a release-and-files cost, slice totals in
+the estimate, the repository's age and commit rate. **Three were already false
+within a day**, including one that had moved from *seventeen releases, six
+files* to *twenty-one and eight* while the charter still claimed the first.
+
+**None was reported by anything**, and none could have been: they were fluent,
+plausible sentences in a document nobody had reason to re-check.
+
 ## Two units, and confusing them is the common failure
 
 **The unit of coverage is the file.** Every file in scope appears in the index,

@@ -55,7 +55,7 @@ edited at every slice, and there is no commit pinning what the sweep is true of
 carry is enough to resume it and enough to check its coverage.
 
 *Only what the format does not already have is declared here.* `created`,
-`lifecycle_status` and `title` are core fields and are used as they come.
+`lifecycle` and `title` are core fields and are used as they come.
 
 ## `goal` is what the sweep is checked against
 
@@ -177,6 +177,13 @@ signature would not merely be unlikely but would misrepresent what happened.
 Leaving it at `recommended` there would report a compromise against a standard
 that could never have been met; leaving it at `optional` would invite the very
 signature that makes the record false.
+
+## Counts belong in the index, not here
+
+**A count in this file goes stale and nothing announces it.** Strong advice
+rather than a rule — see [[how-a-sweep-is-stored]], which gives the test and
+what to do when one earns its place anyway. **Point at a number that is kept
+current rather than copying it.**
 
 ## `scope` must say what was left out
 

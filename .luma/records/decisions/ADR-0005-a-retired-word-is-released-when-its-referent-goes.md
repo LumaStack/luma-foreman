@@ -2,7 +2,7 @@
 type: decision
 title: A retired word is released when its referent goes, not when time passes
 decided: 2026-08-26
-lifecycle_status: draft
+lifecycle: draft
 reopen_trigger: Evidence that reinvention does decay — a word retired here, absent for a long stretch, and then plausibly unreinventable by somebody arriving cold. Nothing has run long enough to say.
 ---
 

@@ -5,7 +5,7 @@ created: { by: human:benlinton, at: 2026-08-29T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]
 horizon: next
 scope: project
-lifecycle_status: draft
+lifecycle: draft
 ---
 
 # Nobody has a format for knowledge that is not a procedure

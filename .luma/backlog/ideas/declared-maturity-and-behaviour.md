@@ -5,7 +5,7 @@ created: { by: human:benlinton, at: 2026-08-19T00:00:00Z }
 contributors: [human:benlinton]
 horizon: someday
 scope: project
-lifecycle_status: draft
+lifecycle: draft
 ---
 
 # Declared maturity, and behaviour that respects it
@@ -29,7 +29,7 @@ Migrated from `luma-leader/IDEAS.md` on 2026-08-21. `created.at` is a day-level
 estimate.
 
 **Added at migration — the document-level half already exists.** The knowledge
-format defines `lifecycle_status` as a core field, `draft | provisional | stable
+format defines `lifecycle` as a core field, `draft | provisional | stable
 | archived`, defaulting to `provisional` when absent. That answers *"we need to
 provide a list of maturities"*, and the entry's own guess that it might already
 be there was right.

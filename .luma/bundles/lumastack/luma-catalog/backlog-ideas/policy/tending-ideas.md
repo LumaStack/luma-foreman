@@ -17,7 +17,7 @@ becomes a compost heap that everyone stops opening.[^digital-gardens]
 
 ## The growth stages
 
-Recorded in `lifecycle_status`, not a field of their own:
+Recorded in `lifecycle`, not a field of their own:
 
 | garden | status | what changed |
 | --- | --- | --- |
@@ -67,7 +67,7 @@ Prune when any of these is true:
 
 **Archiving needs nobody's permission. Deleting needs the person's.**
 
-Set `lifecycle_status: archived` and date `archived`. The idea stops competing
+Set `lifecycle: archived` and date `archived`. The idea stops competing
 for attention and stays readable, which is the entire point: *we thought about
 this and set it aside* is worth more than silence, and it stops the same idea
 being captured again in four months.

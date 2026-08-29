@@ -1,7 +1,7 @@
 ---
 type: type_definition
 defines: luma/catalog
-version: "0.2.0"
+version: "0.3.0"
 extends: document
 fields:
   namespace:
@@ -11,10 +11,7 @@ fields:
   tags:
     field_presence: recommended
     field_type: list of text
-    desc: "the vocabulary a consumer may declare about itself, which starters and requires key on"
-  starters:
-    field_presence: optional
-    desc: "named lists of Bundles a new consumer begins with — see below"
+    desc: "the vocabulary a consumer may declare about itself, which requires keys on"
   requires:
     field_presence: optional
     desc: "obligations, with optional version constraints, deadlines and tags — see below"
@@ -39,7 +36,7 @@ the catalog rather than to the Bundle.** `lumastack/luma-catalog/decision-record
 into another organization's catalog is that organization's to name.
 
 **Without it a catalog cannot be addressed by a tool.** A catalog that writes
-`lumastack/luma-catalog/git-secrets` in its own `starters` is naming a prefix nothing in the file
+`lumastack/luma-catalog/git-secrets` in its own `requires` is naming a prefix nothing in the file
 declares, so anything adopting from it has to be told out of band what to call
 what it just took — and a name learned out of band is a name that gets typed
 wrongly.
@@ -66,19 +63,19 @@ perfectly usable from a git URL or a tarball.
 would give Bundles dependencies, which alters what a catalog resolves. Were this
 built in, adopting that draft would mean releasing the format.
 
-So it is namespaced and vendored instead — the sharing mechanism §10.4 already
+So it is namespaced and vendored instead — the sharing mechanism the format already
 describes. The prefix is what makes anyone else's `catalog` possible.
 
 ## Declaring a field without a `field_type`, deliberately
 
-`starters` and `requires` are nested records, and §10.2 has no user-definable
-object shape — `actor_event` is a fixed built-in, not a pattern to follow.
-Declaring them without describing their shape is legal and buys the half that
-matters: discovery. The shapes are documented below instead.
+`requires` is a nested record, and the format's field declarations have no user-definable object shape —
+`actor_event` is a fixed built-in, not a pattern to follow. Declaring it without
+describing its shape is legal and buys the half that matters: discovery. The
+shape is documented below instead.
 
 ## `tags`
 
-A consumer states what it is; both `starters` and `requires` key on those values.
+A consumer states what it is, and `requires` keys on those values.
 
 **The vocabulary is published rather than free-form for one reason.** If one
 repository declares `infra` and another `infrastructure`, a requirement silently
@@ -92,35 +89,6 @@ answer is a new tag the consumer declares, not a boolean the catalog evaluates �
 that way the composite category acquires a name, someone must claim it in a
 committed file, and it can be argued with.
 
-## `starters`
-
-Named lists, conventionally one per kind of consumer the catalog serves, matching
-the values a Bundle may declare in `consumers` (§11.1).
-
-```yaml
-starters:
-  project:
-    extends: upstream/project
-    adds:
-      - bundle: acme/deploy-checks
-        version: "0.2.3"
-      - bundle: acme/incident-response
-    excludes:
-      - upstream/adr-workflow
-```
-
-**Starters are never retroactive.** Changing one changes what the *next* thing
-begins with and touches nothing that already exists. That is what lets an
-organization evolve its defaults freely, and it is why anything meant to reach
-existing consumers belongs in `requires` instead.
-
-They are called starters rather than defaults for that reason: a default is an
-ongoing fallback consulted every time, and this fires once.
-
-**Pins are optional and unpinned is the common case.** An entry with no version
-takes the latest at the moment of bootstrap, and the adopting consumer records
-what it got.
-
 ## `requires`
 
 ```yaml
@@ -132,7 +100,7 @@ requires:
     tags: [infrastructure]
 ```
 
-`obligation` reuses the format's own field ladder (§5) rather than inventing a
+`obligation` reuses the format's own field ladder rather than inventing a
 parallel vocabulary — the same question, *how strongly is this expected*, asked
 about a Bundle instead of a field:
 
@@ -146,7 +114,7 @@ about a Bundle instead of a field:
 A Bundle may appear more than once. Every entry whose tags match applies, and the
 strongest obligation among them is in force — so *mandatory for infrastructure,
 recommended for everyone else* is two entries rather than a conditional. That is
-the same most-restrictive-wins rule §10.3 uses for inherited field obligations.
+the same most-restrictive-wins rule inheritance uses for inherited field obligations.
 
 ### `requires` does not say "if you take A, take B"
 
@@ -179,11 +147,10 @@ speak at once differs by list:
 | --- | --- |
 | `tags` | union — extra tags are inert |
 | `requires` | most-restrictive-wins |
-| `starters` | explicit `extends` / `adds` / `excludes` |
 
-Only starters need declaring, because they are the only list where subtracting is
-a legitimate act. Merge additively where more is safe; require explicit
-inheritance where subtraction is legitimate.
+Both merge additively, which is safe: more tags are inert and the strongest
+obligation wins. **Nothing here subtracts**, and a list that needed to would
+need explicit inheritance rather than a merge rule.
 
 ## No version
 

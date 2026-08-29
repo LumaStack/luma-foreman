@@ -5,7 +5,7 @@ created: { by: human:benlinton, at: 2026-08-26T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]
 horizon: next
 scope: project
-lifecycle_status: draft
+lifecycle: draft
 ---
 
 # A promotion reminder needs somewhere to live

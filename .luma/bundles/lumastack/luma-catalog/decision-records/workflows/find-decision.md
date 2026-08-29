@@ -131,7 +131,7 @@ Check three fields before using anything from `archived/`:
 
 | | |
 | --- | --- |
-| `lifecycle_status: archived` | **this is not the answer.** Whatever the reasoning says |
+| `lifecycle: archived` | **this is not the answer.** Whatever the reasoning says |
 | `superseded_by` | **follow it.** The record it points at is the answer, and this one exists to explain why the answer moved |
 | `archived_reason` | `superseded` → follow the link · `retired` → finished, nothing replaced it · `invalidated` → **the project has an open question here** · `noise` → it was never a decision |
 

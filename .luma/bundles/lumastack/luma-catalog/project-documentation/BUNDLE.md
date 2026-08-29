@@ -1,7 +1,7 @@
 ---
 type: bundle
-version: 0.15.3
-published: 2026-08-27
+version: 0.16.0
+published: 2026-08-28
 consumers: [project]
 entrypoint: policy/readme
 description: The prose a repository publishes — where it lives, what a README is for, and which documents are worth having at all.
@@ -98,7 +98,25 @@ from what a project publishes about its code.
 
 ## Version
 
-`0.15.3` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+`0.16.0` — **`lifecycle_status` is now `lifecycle`.**
+
+**Same values, same meaning, shorter name**, renamed in the knowledge format
+and carried here. The old name was chosen against `status` — so it never
+collided with a tool's own `todo | in-progress | done` — and **`lifecycle`
+avoids that collision equally well**, because the word at risk was `status` and
+this name does not contain it.
+
+**Breaking for an adopter**, shipped as minor under the pre-1.0 allowance:
+**every Document declaring the old key has to be renamed.** It fails visibly
+rather than quietly — `lifecycle` is unrecognised where `lifecycle_status` was
+expected, and an unrenamed Document reads as having no lifecycle declared at
+all.
+
+`0.15.4` — **references to the knowledge format name sections instead of numbering them.** The format removed section numbers, so every `§n` here pointed at a position that no longer exists — and a stale number resolves to the wrong section rather than to nothing, which is why none of them were reported. Decorative citations are dropped; the rest name what they meant.
+
+Patch: wording only. No rule, field or procedure changed.
+
+`0.15.3` — **`entry_point` is now `entrypoint`.** One word, so the same word names the same thing at every level it appears.
 
 Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 

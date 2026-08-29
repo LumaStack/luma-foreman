@@ -2,7 +2,7 @@
 type: decision
 title: refit is removed rather than renamed, and there is no composite status command
 decided: 2026-08-26
-lifecycle_status: draft
+lifecycle: draft
 reopen_trigger: Somebody needs a single answer to "am I current" and the three existing commands are genuinely too many. The record that re-opens this has to say what such a command can honestly report with no network.
 ---
 
