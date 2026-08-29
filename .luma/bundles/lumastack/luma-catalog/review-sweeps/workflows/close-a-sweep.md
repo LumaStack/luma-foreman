@@ -25,6 +25,14 @@ reads as an oversight forever.
 
 ## 2. Confirm nothing worth keeping is still in the notes
 
+**Harvest `journal.md` first if there is one** — it is the file this step
+exists for, and the reason the sweep can be thrown away at all. **Every entry
+becomes a backlog item, a learning in `sweep.md`, or a deliberate drop.**
+Nothing in a journal was ever meant to survive it.
+
+**A journal that was never harvested is a sweep that cannot safely be
+archived.**
+
 **This is the step that gets skipped, and it is the one that loses things.**
 Read the slices for anything phrased as *we should*, *worth revisiting*, or
 *not sure about this yet*, and route each one now — an idea, a finding, a

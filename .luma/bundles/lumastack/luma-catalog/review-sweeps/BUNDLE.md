@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.12.0
+version: 0.13.0
 published: 2026-08-28
 lifecycle_status: draft
 consumers: [project]
@@ -59,9 +59,11 @@ and nothing about depth.
   rigours of the same one. Read when deciding which you want, or when the two
   look interchangeable.
 
-**Templates** — [a sweep](templates/sweep.md) · [its
-coverage](templates/coverage.md) · [a slice](templates/slice.md) · [presenting
-a file](templates/file-presentation.md)
+**Templates** — [a sweep](templates/sweep.md) ·
+[its coverage](templates/coverage.md) ·
+[its journal](templates/journal.md) ·
+[a slice](templates/slice.md) ·
+[presenting a file](templates/file-presentation.md)
 
 ## Worth knowing before reading further
 
@@ -128,6 +130,36 @@ call graph, and while a headquarters could be read the same way, nobody has —
 adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
+
+`0.13.0` — **an optional `journal.md`, for the space between noticed and
+concluded.**
+
+**A finding routes out at the slice that produced it; a learning goes in the
+sweep once it is settled. Neither holds a suspicion that spans three slices and
+is not yet either** — a pattern starting to show, a term that may be retired
+with nothing enforcing it, a claim to verify when the right file comes up.
+
+**It is authored and spent, which is the third combination.** `sweep.md` is
+authored and kept. `coverage.md` is derived and spent *because it regenerates*.
+The journal is spent because **its contents graduate**: an entry that mattered
+became a finding, an idea or a learning, and one that did not was never worth
+keeping.
+
+**The failure to watch for is that it becomes a queue**, which is the exact
+pile [[what-a-slice-produces]] exists to prevent — *filed by nobody, because
+the reasoning that made each one worth capturing is gone within a day*. So:
+anything actionable goes to its real destination at the slice that produced it,
+and **an entry still sitting in the journal three slices later, while being
+actionable, was routed wrongly rather than journalled correctly.**
+
+**`close-a-sweep` reads it and empties it.** Its step for things trapped in
+notes is exactly this file: every entry leaves or is dropped deliberately, and
+the journal goes with the sweep either way.
+
+*Optional. A sweep that does not want one does not have one, and nothing here
+degrades without it.*
+
+Minor: a new optional file, its type and template, and one step in closing.
 
 `0.12.0` — **the index is derived *given the strategy*, and the strategy has to
 be written down.**

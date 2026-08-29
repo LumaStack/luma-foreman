@@ -46,10 +46,14 @@ checked.
 what its live problems are. That is a second ask rather than the goal, recorded
 so it does not get lost — a sweep aimed only at churn would skip it.
 
-## Coverage lives beside this
+## The other two files
 
 **[`coverage.md`](coverage.md)** carries every file in scope, its status, and who
 set it — plus `indexed_at`, the commit it was last reconciled against.
+
+**[`journal.md`](journal.md)** carries what was noticed along the way and is not
+yet a finding. Append-only, harvested at the close into backlog items and
+learnings, then discarded with the rest of the sweep.
 
 **This file is authored; that one is derived.** Its rows are the scope rule and
 the clustering strategy below applied to the tree, and its statuses are what the
