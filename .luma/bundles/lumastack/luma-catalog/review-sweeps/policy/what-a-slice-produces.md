@@ -81,13 +81,102 @@ as law is how a sweep ships confident changes that no longer match the code.
 
 ## When a fix may land during the sweep
 
-**Only where a person is in the sweep and says so.** Then it is worth doing
-immediately: the context is hot, they understood it, and deferring means
-somebody re-derives it later at full price.
+**Only where a person is in the sweep and says so.** It is theirs to decide,
+and **the recommendation is yours to make** — they cannot see what the fix
+would cost and you can.
 
-**The record is written either way.** The finding exists whether or not the fix
-does, because a fix that lands leaves a diff and a diff does not say what was
-wrong or why anybody looked.
+### Both choices are taxed, and you are choosing which tax to pay
+
+**Doing it now taxes the session.** Context that does not belong to this file
+enters it and stays — a renderer's shape is now in the room while the reader is
+trying to hold a document. **A slice that keeps paying this tax stops being
+about anything.**
+
+**Doing it later taxes the finding**, in two ways that are both silent:
+
+- **The code moves.** By the time somebody returns, the thing observed may not
+  exist in that shape, and the note describes a version nobody can find. **A
+  finding is a claim about a moment.**
+- **The context is gone.** Whoever picks it up has a different session, a
+  different read of the file, and only what was written down. **Framing rots
+  faster than facts** — *what was wrong* survives in a note; *why it mattered
+  here* usually does not, and a successor can re-derive the first and not the
+  second.
+
+### Which tax is smaller
+
+| the fix needs | recommend | because |
+| --- | --- | --- |
+| **only context already loaded**, and lands in about one turn | **now** | the session tax is one turn; deferring pays a full reload plus the risk of rot |
+| **more than two turns**, or files nobody has opened | **route it** | that load happens either way, so paying it here buys nothing and pollutes the slice for free |
+
+**Two turns is where the saving generally disappears**, and it is a heuristic
+rather than a line. One turn is the fix; two is the fix and the check that it
+worked. Past that you are usually loading new context — and new context loaded
+mid-slice is the *while I'm here* failure below wearing an efficiency argument.
+
+***Generally*, because the count is a proxy.** What actually decides it is
+whether the fix needs context nobody has loaded, and turns are only the cheapest
+way to estimate that in advance. **A three-turn fix inside a file already open
+is still cheap**; a one-turn fix in a subsystem nobody has read is not. Where
+the proxy and the thing it stands for disagree, **the context wins.**
+
+**Say which it is and why, in one sentence, then let them choose.**
+
+### Two questions, and only the first one is yours
+
+1. **Which tax is smaller here?** Yours to compute, and the recommendation.
+2. **Does the reader care enough to override it?** Theirs, and not yours to
+   argue.
+
+**Token economy** is the one you can compute. You know what the fix would load
+and what deferring would reload, and that is the recommendation.
+
+**Cohesion is the other, and it is theirs.** A slice holds together because it
+is about one thing, and so does a reader's attention. Somebody deep in a
+document may not want to be pulled sideways into a renderer — or may badly want
+to be, because the annoyance is what they will otherwise remember instead of
+the file. **Both are legitimate, they change by the hour, and nothing in the
+sweep can see which one is true today.**
+
+**The strongest reason to overrule the economy is the reader's own clarity.**
+*I understand this now and I will not understand it as well in a fortnight* is
+a judgement only they can make, and it is a direct read on the rot tax above.
+**When they say it, pay the session tax and fix it** — they are telling you the
+other tax is larger, and they are the only one who can know.
+
+**And that is a rational trade, not an indulgence.** Tokens are renewable: a
+session can be re-run, a file re-read, a context rebuilt, and the price is only
+time and money. **A reader's understanding right now is not.** It exists in one
+head at one moment, and if it does not get written down it is not recoverable
+at any price — a successor can re-derive what was wrong and cannot re-derive
+why it mattered.
+
+**So spending tokens to keep knowledge that would otherwise be forgotten is the
+economy working, not failing.** The recommendation prices the context. **It
+cannot price the thing being bought**, and an agent that argues the number is
+arguing the only half it can see.
+
+So they will override sometimes and they should. **A reader choosing to
+context-switch against the economy is not making a mistake**, and one refusing
+to switch when the fix was free is not either. Make the call on the numbers,
+hand it over, and do not argue the preference.
+
+**Never just ask.** *Fix it now, or route it?* with no recommendation hands the
+reader an accounting problem they have no numbers for, and the usual answer to
+a question like that is whichever takes less thought.
+
+### One case overrides the economy
+
+**A fix that edits the file under review.** It has to be shown and re-confirmed
+— [[review-next]] step 7a — and until it is, **the reader is holding a verdict
+on a state of the file they have not read.** Route it unless they ask
+otherwise, however cheap it looks.
+
+**The record is written either way, and it is not part of the choice.** The
+finding exists whether or not the fix does, because a fix that lands leaves a
+diff and a diff does not say what was wrong or why anybody looked. **Routing
+means deferring the fix, never deferring the record.**
 
 **Propose before applying, every time.** A change nobody has seen turns their
 review into a diff review of yours. And **a yes to one fix is not a yes to the

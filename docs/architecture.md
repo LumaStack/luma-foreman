@@ -62,7 +62,9 @@ decisions must not be committed: what an agent is permitted to do inside a
 repository is the operator's call on their own machine, not a property of the
 repository that every clone should inherit.
 
-Paths follow XDG — see [Standards](standards.md).
+Paths follow XDG, nested `~/.config/<org>/<application>/` — see
+[`where-configuration-lives`](../.luma/bundles/lumastack/luma-catalog/luma-config/policy/where-configuration-lives.md)
+in the adopted `luma-config` bundle, which is where that rule is decided.
 
 ## Which commands run where
 

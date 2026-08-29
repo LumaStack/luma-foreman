@@ -131,3 +131,139 @@ transitional and expected to fold into `what it says it is` once read. All four
 of its rows are now closed, so it should fold at the next reconciliation — and
 `what it says it is` is closed too. **Two clusters are done and the charter
 still lists both**, which is the first thing reconciliation should tidy.
+
+**Scope as data and scope as prose is an anti-pattern, and this sweep proved it
+on itself.** The `sweep` type requires `scope:` as a field — a rule — and the
+charter template asks for scope prose beneath it. This charter's prose
+*enumerated the included paths*, which is the rule copied by hand.
+
+**It disagreed within two slices.** `.gitignore` is tracked, is not `.claude/`
+and is not a vendored bundle, so the rule always included it; the list never
+named it, so it never got a row. Reconciliation at slice 003 found the file with
+nowhere to go.
+
+**The fix is not to drop one of them — they hold different facts.** The field
+states the rule. The prose states **what the rule excluded and who decided**,
+given or chosen, which no field can carry. **What the prose must never do is
+enumerate what is in**, because that is derivable and `coverage.md` already
+derives it.
+
+**For the bundle**: `_types/sweep.md` says `scope` must say what was left out.
+It does not say the body must not restate what was left *in*, and the template
+invites exactly that. Both want the rule. Batched rather than taken — step 8.
+
+*The same shape as `.luma/PROJECT.md`'s `owns`, found in slice 002, running the
+other way: there, prose was treated as data; here, data was restated as prose.
+**One fact, two records, and the copy is always the half that rots.***
+
+**One wrong table produced three wrong paths in three repositories.**
+`luma-config`'s XDG table gave `~/.config/<application>/` and put the
+organization segment in a subsection below it. **A table is what a reader takes
+as canonical**, so `catalog.py` wrote `~/.cache/luma/catalogs`,
+`session-manager` wrote `~/.local/state/luma/sessions`, and this repository's
+gate tests wrote `~/.config/luma/foreman`.
+
+**None was reported by anything**, and the reason is worth keeping: a path
+nobody has written to before is created on demand, so the wrong path works
+perfectly. Nothing notices the right one is empty. **A path defect is silent by
+construction** — unlike a wrong command name, which fails the moment somebody
+runs it.
+
+**`session-manager` is upstream and out of scope.** Six documents, a
+`luma-catalog` fix, recorded here rather than taken because vendored bundles are
+excluded and fixing one in place is drift by definition.
+
+**`CHANGELOG.md:96` says `policy doctor` and `policy install`.** Both retired;
+the command is `agent-permissions`. Found while checking whether the changelog
+held the reversal note — it does, at `:92-93`, and more fully than
+`docs/standards.md` did. **`CHANGELOG.md` is a pending row in cluster *plans,
+config, changelog* and this is waiting for it.**
+
+**A changelog is the one document where a stale name may be correct**, because
+it records what was true when written. `:96` is not that case — it is migration
+instructions telling somebody to run a command that no longer exists.
+
+**The check no earlier slice ran: does an adopted bundle already cover this
+document?** `docs/standards.md` read as reasonable prose and nothing in it
+announced that `luma-config` had taken the subject. **Being superseded is not
+visible from inside a file.** Slices 001 and 002 read four documents without
+asking, and at least `docs/architecture.md` overlaps `luma-layout`. Worth a pass
+before slice 004 rather than after the sweep.
+
+**Four rows were closed by the agent inferring a verdict, and the reader
+delegated rather than re-confirming.** Recorded because the rows now look
+identical to properly confirmed ones and are not.
+
+| row | what actually closed it |
+| --- | --- |
+| `docs/scope.md` | *"delete this file"* — an instruction, not a verdict |
+| `docs/standards.md` | *"merge 131 and drop standards.md"* — the same |
+| `docs/getting-started.md` | nothing quotable; slice 001 records *"approved with it standing"* |
+| `docs/inspect.md` | removed rather than closed; the collapse may have been the agent's call |
+
+**All four were kept as they stand**, on *"do whatever you think is right, I'll
+trust it"*. **That is a delegation and not a confirmation**, and the difference
+matters at the close: four rows rest on the reader's general trust rather than
+on four specific answers. `review-sweeps` 0.20.0 stops this happening again.
+
+**`CLAUDE.md` was the fifth and the reader took it back** — *"CLAUDE is
+approved, it needs work but good enough for MVP."* A sign-off with a finding
+attached, which is why the row reads `approved_by: human:benlinton` with
+`outcome: findings` rather than `clean`.
+
+**What the work is was not specified**, and that is recorded rather than
+guessed. The one thing known about it: **the file is entirely generated.** Zero
+lines outside the `luma:begin`/`luma:end` block, untouched during the slice that
+read it — so *needs work* cannot mean the file and must mean what `apply` writes
+into it, which is `apply.py` and the entrypoint. **Both are pending rows.**
+
+**And it probably should not have a row at all.** The charter excludes
+`.claude/` on reasoning that covers this file exactly — *reviewing generated
+output tells you about the generator, which is in scope as `apply.py`* — and
+**`luma-layout` groups them explicitly**: *"`.claude/`, `AGENTS.md`, `CLAUDE.md`
+and whatever replaces them ... are generated from what is in `.luma/`, and are
+disposable."* The scope rule excludes one member of a set the adopted bundle
+names as one thing.
+
+**Not corrected, now less than ever.** The row carries a sign-off; flipping a
+signed-off row to `skipped` on the agent's reasoning is the defect the entry
+above is about. It belongs in the close, or in the next sweep's charter, where
+the exclusion can be written once and correctly.
+
+**`doctor`'s section headings run into the checks above them and read as
+wrapped text.** Noticed by the reader from real output during slice 004.
+`doctor.py:202` prints the section name with no blank line before it; there is
+one `print()` at `:195` and that is the only separator in the whole report.
+
+**Decided shape: a blank line, and the section name in capitals.**
+
+```
+INSTALLATION
+  ok    gate installed at ~/.local/share/luma/luma-foreman/permission-gate.sh
+
+CLAUDE CODE WIRING
+  ok    settings found at ~/.claude/settings.json
+```
+
+**Capitals rather than `--` or `##` because it is not a new convention.**
+`inspect` already puts uppercase keywords in a left column — `NOTICE`,
+`SKIPPED` — and separates its blocks with blank lines. Taking its shape means
+the two commands stop looking like different tools.
+
+**Ruled out: colour.** There is no ANSI, no `isatty`, and no `NO_COLOR`
+handling anywhere in `src/`. Bold or dim would be a new convention with terminal
+detection attached, which is far more than this needs.
+
+**Ruled out: a rule line under the heading.** Clearer in isolation, but it is
+decoration nothing else uses and it needs a width to size against.
+
+**The finding underneath is larger than the newline: two commands in one binary
+render structured results two different ways**, and neither shares a renderer
+with the other. `inspect` has `inspect/report.py`; `doctor` has a `Report` class
+of its own at `doctor.py:27`. **Whether that wants unifying is a question for
+`doctor.py`'s row and `inspect/report.py`'s**, both pending, and it should be
+answered once for both rather than twice.
+
+**Routed rather than fixed**, at the reader's choice, so slice 004 stays about
+the document in front of it.
+

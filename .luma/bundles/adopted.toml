@@ -53,10 +53,10 @@ commit   = "8ec0cce285bb27f0b6c58bacb62d37bd62a702ee"
 checksum = "sha256:6864dea31bd95f0126f42e206f78e5c49ebeae45500f20ac5ba4058ba177dcd4"
 
 ["lumastack/luma-catalog/luma-config"]
-version  = "0.7.2"
+version  = "0.8.0"
 source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "8ec0cce285bb27f0b6c58bacb62d37bd62a702ee"
-checksum = "sha256:3469a1f493d4fb4d1241611471250d16bb150bed990706061d64278cdb7dc6f7"
+commit   = "86ae736e5b8585380b913b9065ffd7d9f4562ffe"
+checksum = "sha256:dd4e2ef47d8261e8b4dc537bb4c29320588aefb9cf73f018958f63af7003420f"
 
 ["lumastack/luma-catalog/luma-layout"]
 version  = "0.13.1"
@@ -89,10 +89,10 @@ commit   = "8ec0cce285bb27f0b6c58bacb62d37bd62a702ee"
 checksum = "sha256:c6e5781a825c1f9671b26ce396fc4926b42de135b958922bce3c3ce4aca4b6fe"
 
 ["lumastack/luma-catalog/review-sweeps"]
-version  = "0.19.0"
+version  = "0.21.0"
 source   = "https://github.com/LumaStack/luma-catalog.git"
-commit   = "4705f740db6f7b6ab8a10927539bd0e6d836bc0c"
-checksum = "sha256:c66be973abe649451493f78e4219022eff41f3f0a02b311a66524a5f049eb51e"
+commit   = "f784cfec67630e5dcca68e31f82936002c68113e"
+checksum = "sha256:da504ba4d5cb5ddf00d7893d79af432610f7ea80c12e6808cac1fe9b38ee48eb"
 
 ["lumastack/luma-catalog/session-manager"]
 version  = "0.6.4"

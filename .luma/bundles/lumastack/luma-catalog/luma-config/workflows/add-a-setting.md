@@ -10,14 +10,15 @@ Four questions, in order. Each one eliminates a home.
 
 ## 1. Would deleting it lose a decision somebody made?
 
-**No** — it is derived. `~/.cache/<org>/<tool>/`, and nothing else needs deciding.
+**No** — it is derived. `~/.cache/<org>/<application>/`, and nothing else needs
+deciding.
 
 **Yes** — continue.
 
 ## 2. Does it belong to the project, or to whoever is running it?
 
 **To the person.** Timeouts, log levels, an operator's preferred mode, anything
-that must not affect a colleague. `~/.config/<org>/<tool>/` — either
+that must not affect a colleague. `~/.config/<org>/<application>/` — either
 `config.toml` for every project or `projects/<id>.toml` for this one.
 
 **To the project.** Which policies apply, what *done* means, which checks run.
@@ -40,8 +41,8 @@ and they will not notice until it matters.
 
 ## 4. Is it a secret?
 
-**Then it is not a value.** Store the name of an environment variable, a path, a
-keychain reference — anything but the secret.
+**Then it is not a value.** Store the name of an environment variable, a path,
+a keychain reference — anything but the secret.
 
 `.luma/` is committed, so a secret written there is a secret published, and
 nothing done afterwards unpublishes it.
@@ -52,5 +53,5 @@ Add it to `.luma/config/<tool>.toml` under the right table, or document the
 machine-local key if it belongs to the operator.
 
 **If the tool reads more than one layer now, it needs the resolution function**
-— see [[configuration-precedence]]. Reading two layers in two places is how they
-drift into disagreeing.
+— see [[configuration-precedence]]. Reading two layers in two places is how
+they drift into disagreeing.
