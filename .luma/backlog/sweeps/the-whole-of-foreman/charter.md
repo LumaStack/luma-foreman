@@ -47,8 +47,33 @@ none from reading carefully. Careful reading found only what could not be
 checked.
 
 **It is also expected to produce a summary** of what foreman does so far and
-what its live problems are. That is a second ask rather than the goal, recorded
-so it does not get lost — a sweep aimed only at churn would skip it.
+what its live problems are. That is an ask rather than the goal, recorded so it
+does not get lost — a sweep aimed only at churn would skip it.
+
+## The second goal: make the practice work
+
+**This is the first sweep anybody has run, and improving it is not overhead.**
+`review-sweeps` was `draft` and `survival: experimental` when this started.
+Every rule in it that now reads as obvious was absent or wrong until this sweep
+hit the case that exposed it — the reader owning the row, three facts instead of
+one status, a ledger owed when a document is removed, a file closing on a
+verdict rather than on momentum. **That is the material, not a distraction from
+it.**
+
+**It is measured the same way as the first goal**: a rule earns its place by
+having been broken here, against a case that actually occurred. **Improving the
+practice speculatively is not this** — a rule nobody has needed yet is a guess,
+and guesses are what the first slices spent their time deleting.
+
+**It stays out of the frontmatter `goal:` on purpose.** That field states what
+should be true of *this repository* when the sweep is done. This one is about
+the sweep, which is a different subject, and folding them into one line would
+make the field answer neither question cleanly.
+
+**And the two goals compete for time, deliberately.** A sweep that covers ninety
+files and teaches nothing has failed one half. A sweep that produces a polished
+bundle having read eight files has failed the other — **and that is the half
+currently at risk.** The close reports both.
 
 ## The other two files
 
@@ -175,9 +200,13 @@ from unstated judgement to written rule. **That is discovery, not indiscipline.*
 still working out what it is has nothing to estimate against; the estimate below
 is honest about being abandoned rather than revised.
 
-**It has cost seventeen releases of `review-sweeps` while covering six files.**
-That is what discovery costs, and it is the number the next sweep should compare
-itself against rather than repeat.
+**Twenty-one releases of `review-sweeps` across eight files, as of slice
+004.** That is what discovery costs, and it is the number the next sweep should
+compare itself against rather than repeat.
+
+*Dated because it is derived.* An undated count in this file is wrong the moment
+anything changes and nothing announces it — this one said *seventeen releases,
+six files* and had rotted inside a day.
 
 **Worth revisiting at slice 003.** The practice has largely stopped being new
 while the material has not been read — which is the profile of a sweep that
