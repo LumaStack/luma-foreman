@@ -100,19 +100,42 @@ matches:
 # git-worktrees/policy/landing-work-from-a-worktree.md
 provides: [integration-policy]
 matches:
-  - topic: checking whether work has landed
-  - path: .git/worktrees/**
+  - path: .git/worktrees/**          # a different condition, deliberately
 ```
 
-**Neither depends on the other.** A reader with only `git-workflow` gets the
-single-checkout check, **which is complete and correct for them.** A reader with
-both gets the worktree coverage composed on top, delivered by its own `matches`.
+**Neither depends on the other, and neither claims the other's trigger.** A
+reader with only `git-workflow` gets the single-checkout check, **which is
+complete and correct for them.** A reader with both, working in a worktree, has
+**two conditions true at once** — and receives both documents because two things
+fired, not because one thing delivered twice.
 
-| you have | delivered | |
+### A condition matches once, and that is an invariant
+
+**One condition delivers one document.** Two documents claiming the same trigger
+would hand an agent two answers to one question with no basis for choosing —
+**the same duplication this design removes everywhere else, arriving at delivery
+time instead of in a file.**
+
+**So additive coverage composes across situations, never within one.** If two
+providers of a capability want to be delivered together, **they must fire on
+different conditions**, and if they cannot be told apart that way they are the
+same document written twice.
+
+**It is mechanically checkable**, which makes it an invariant rather than a
+convention: two adopted documents declaring the same condition is a finding, and
+the fix is to narrow one or merge them.
+
+*The exception is a fallback, which yields to a real provider of the same
+capability rather than competing with it — see below. That is a suppression
+rule, not a second document answering the same trigger.*
+
+| you have | working in a worktree | delivered |
 | --- | --- | --- |
-| `git-workflow` | the single-checkout check | complete for you |
-| both | both documents | coverage composes |
-| neither | nothing | `needs` unsatisfied — a real finding |
+| `git-workflow` | no | the single-checkout check — **complete for you** |
+| `git-workflow` | yes | the same check, and **nothing tells you it is partial** |
+| both | no | the single-checkout check only |
+| both | yes | **both, because both conditions are true** |
+| neither | — | nothing; `needs` unsatisfied |
 
 **Nobody fetches something they will not use, and nothing is declared
 conditionally.**
@@ -125,21 +148,60 @@ it works alone and gets better when composed.
 ```yaml
 # review-sweeps/policy/landing-a-slice-record.md
 provides: [integration-policy]
-fallback: true
+fallback: basic
 matches:
   - topic: checking whether work has landed
 ```
 
-**Enough to function, and deliberately thin** — for a sweep, *the record is
-committed and pushed, and you have shown that it is.* No branch model, no forge,
-no worktrees. **Adopt `git-workflow` and the real one takes over.**
+**Adopt `git-workflow` and the real one takes over.**
+
+### A fallback has a strength, and the author chooses it
+
+**Three kinds, and they differ in what they assume and how loudly the gap is
+reported.**
+
+| `fallback:` | what it holds | what tooling says |
+| --- | --- | --- |
+| **`basic`** | enough to function, assuming almost nothing | **nothing.** The need is met |
+| **`opinionated`** | a full answer that assumes a great deal, and **names what it assumed** | **a notice**, listing the assumptions |
+| **`required`** | no answer — it states that a real provider must be adopted, and which | **a finding.** The need is not met |
+
+**`basic` for a sweep**: *the record is committed and pushed, and you have shown
+that it is.* No branch model, no forge, no worktrees.
+
+**`opinionated`** would be the same check written against trunk-based
+development with a GitHub remote — **correct and useful for most readers, wrong
+in a way they can see**, because it says what it assumed.
+
+**`required`** is how a bundle says *I genuinely cannot do this for you.* It
+still provides a document, and that document's job is to explain the gap well
+and name what to adopt. **It fires at the moment of use**, which is where it
+helps, rather than only at the next `inspect`.
+
+**Declaring no fallback at all is the same as `required`**, with a worse
+message. **If a need is genuinely unmeetable, write the `required` document** —
+the reader gets a sentence naming what to go and get instead of a checker
+telling them something is absent.
+
+### The author decides how loud the gap is
+
+**That is the point of the gradient.** A bundle that can limp along says `basic`
+and stays quiet. One that guessed says `opinionated` and shows its guesses. One
+that cannot proceed says `required` and stops the reader early.
+
+**Tooling never has to infer severity**, which is the alternative and the one
+that gets it wrong.
 
 ### Two rules make this unambiguous
 
-**A fallback yields to any non-fallback provider.** Where a real provider
-exists, the fallback is not delivered at all — **not stacked, not appended.**
-That is the one place providers are exclusive rather than additive, and it is
-what makes *replaceable* mean something.
+**A fallback yields to any non-fallback provider**, whatever its strength.
+Where a real provider exists the fallback is not delivered at all — **not
+stacked, not appended.** That is the one place providers are exclusive rather
+than additive, and it is what makes *replaceable* mean something.
+
+**Including `required`**, which is the case that matters: adopt a real provider
+and the refusal disappears silently, because it was only ever there to say
+something was missing.
 
 **A fallback satisfies only needs inside its own bundle.** `review-sweeps`'
 fallback answers `review-sweeps`' need and nothing else's. **This removes the
@@ -153,9 +215,9 @@ more, it improves. **Nobody is required to assemble a working set** before
 getting value.
 
 **And it makes declaring a need safe.** The cite-when-unsure asymmetry above
-exists because an over-declared need cries wolf — **a bundle that ships a
-fallback cannot cry wolf**, because the need is satisfied from the moment it is
-adopted. **Where you can write a thin fallback, declare the need.**
+exists because an over-declared need cries wolf — **a `basic` fallback cannot
+cry wolf**, because the need is met from the moment the bundle is adopted.
+**Where you can write one honestly, declare the need.**
 
 *A fallback is a real document with a real `matches`, not a stub. If it cannot
 be written honestly and briefly, that is a sign the capability is too coarse or
@@ -192,11 +254,10 @@ it.**
 
 **`get`** — prints unsatisfied needs. **Fetches nothing.**
 
-**`inspect`** — reports an unsatisfied need. A finding rather than a notice: it
-is mechanically checkable and it is a real gap. **A need covered by its own
-bundle's fallback is satisfied and reported as nothing** — but `inspect` may say
-so once, quietly, since *working on the fallback* is worth knowing when a better
-provider exists in a catalog.
+**`inspect`** — reports according to the fallback's strength: **nothing** for
+`basic`, **a notice** for `opinionated` naming what it assumed, **a finding**
+for `required` or for no fallback at all. **The author set the severity when
+they wrote the fallback**, and the checker only repeats it.
 
 **Nothing else.** No resolution, no transitive fetching, no lockfile.
 
@@ -216,6 +277,9 @@ pulls a second thing there is a resolver, and everything that follows.
 **Every declaration is mechanically checkable.** `provides`, `needs`, `matches`.
 **Nothing prose-only**, because prose-only is what rots without reporting.
 
+**A condition matches once.** Two adopted documents claiming the same trigger is
+a finding. Delivery must never have to choose.
+
 **Derived is never declared twice.** A bundle's capabilities come from its
 documents. One record.
 
@@ -228,6 +292,11 @@ belongs elsewhere.
 **A reader who uses worktrees and does not have `git-worktrees` is told
 nothing.** `matches: path: .git/worktrees/**` cannot fire from a bundle they do
 not have. **You cannot be told about knowledge you do not possess.**
+
+**And the one-condition-one-document invariant makes it quieter, not louder.**
+The check they do get is correct for a single checkout and says nothing about
+being partial — **there is no missing document to notice, because a document
+that is not adopted has no trigger.** The gap is silent by construction.
 
 **Leave it.** It is the ordinary condition of not having something, and browsing
 a catalog is where that is discovered.
