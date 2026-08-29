@@ -36,99 +36,64 @@ declared needs mean at `get` time."* **That has now happened.** The ADR is not
 wrong yet — adoption still copies and resolves nothing — but its re-open
 condition has fired and it should be revisited rather than left looking settled.
 
-## What a split is for, now that rings exist
+## What a split is for, now that rings exist — measured, not assumed
 
-**The token argument is mostly gone and the reasoning has not caught up.** A
-bundle used to cost its documents in every session. Under rings it costs **one
-line** until something opens it. So *split it to keep the common case light* is
-now a much weaker reason than it was when the bundles were first cut.
+**The token argument does not survive measurement.** Merging `git-worktrees`
+into `git-workflow` would save one entrypoint line and cost one ring line, and
+the workflows become skills either way, so what loads at startup is identical.
+**Net zero.**
 
-**Three reasons survive, and they are about people rather than bytes:**
+| | merged | separate |
+| --- | --- | --- |
+| entrypoint lines | 1 | 2 |
+| `git-workflow` ring lines | 3 | 2 |
+| skills at startup | 5 | 5 |
 
-| | the test |
-| --- | --- |
-| **condition** | does this apply to everyone, or only to people doing a particular thing? |
-| **audience** | who opens it, and are they doing the same job? |
-| **replaceability** | would somebody swap out this part alone and keep the rest? |
+**And *it forces readers to skim past the uncommon half* is also wrong.**
+`matches` gates at the document, not the bundle: a reader who never works in a
+worktree never opens that document whether it sits in one bundle or two. **The
+attention argument was answered before it was made.**
 
-**One bundle, one condition, one audience.** That is the rule this estate has
-been reaching for and has not written down.
+*Both were asserted here before being checked. They are left in the record
+rather than deleted, because a plan that shows only its surviving reasons
+teaches nobody which ones to distrust.*
 
-**Many workflows are not the smell.** `git-worktrees` has four — create,
-remove, recover, repair — and `review-sweeps` has three. Each is a choice and
-none is a problem: **they are moments in one job**, and a reader who is doing
-that job will reach most of them eventually.
+### What actually survives
 
-**The smell is a fork in the audience**: a bundle where the reader must first
-work out **which variant of it applies to them**, and one variant is permanently
-not theirs. *Use it with worktrees, or without.* *Read this half if you are an
-author, that half if you are an adopter.*
+**Independent versioning, and it is the one with evidence.** `git-worktrees` has
+moved through `0.6.x` while `git-workflow` sat at `0.5.2`. **Merged, every
+worktree fix bumps the bundle carrying the merge-commit policy**, and every
+adopter re-adopts for a change they do not care about. In an estate that moved
+nine bundle versions in a day, that is a recurring cost rather than a
+hypothetical one.
 
-**The test is what happens after the first read.** Having read it once, is any
-part of it **permanently** not yours? Then that part answers a different
-condition, and it is costing you the attention it took to establish that.
+**Replaceability, which is real and rare.** An organization with its own
+worktree conventions swaps one bundle. Merged, it forks the pair to keep the
+half it wanted.
 
-*Choosing which workflow to invoke is navigation. Deciding which kind of reader
-you are is a fork, and a bundle should not ask.*
+**And placement, which is not a split rule at all** — what is specific to this
+estate should not leak into a bundle other people might take.
+`where-a-bundle-belongs` owns that.
 
-### Until the two conditions share substance
+### So the rule is narrower than it looked
 
-**Then splitting does not remove a cost, it chooses one.** Two conditions that
-share policy, templates or types cannot be cleanly cut: **either the shared
-material is duplicated into both bundles, or one bundle needs the other.**
+**Split when the two parts will version independently, or when somebody would
+plausibly replace one and keep the other.** Not for tokens, and not for
+attention — **rings and `matches` already handle both.**
 
-**Duplication is the worse of the two, and it is the one that looks free.** Two
-copies of a policy diverge silently and nothing reports it — the failure this
-estate has found repeatedly, in a stale template, in a workflow describing a
-retired status, in a count nobody re-checked.
+**Many workflows are not the smell.** `git-worktrees` has four — create, remove,
+recover, repair — and `review-sweeps` has three. They are moments in one job,
+and a reader doing that job reaches most of them.
 
-**A dependency is at least declarable.** It can be written down, printed at
-`get`, and noticed by `inspect`. **That is most of the argument for the rest of
-this plan**: not that dependencies are good, but that the alternative fails
-quietly and this one can be made to fail loudly.
+**The audience question survives as a hint, not a rule.** A bundle whose halves
+are read by different people usually *also* versions independently and *is*
+separately replaceable — **the audience is the tell, and versioning is the
+reason.**
 
-**So the test has two halves.** Split when the conditions differ **and** the
-material separates. **Where conditions differ and the material is shared, decide
-which cost to pay and say which** — and prefer the dependency, because it is the
-one that can be checked.
-
-*`git-workflow` and `git-worktrees` pass both halves: different conditions, and
-almost nothing shared — merge policy and worktree provisioning are separate
-material. **`review-sweeps` and `git-workflow` pass only the first**, which is
-exactly why the split produced a dependency rather than a clean cut.*
-
-**A fourth reason is ours alone:** what is specific to this estate should not
-leak into a bundle other people might take. That is not a split criterion so
-much as a placement one, and `where-a-bundle-belongs` already owns it.
-
-## Decided: `git-workflow` and `git-worktrees` stay separate
-
-**Agreed by the reader on 2026-08-29**, and not for the reason they were first
-split — the token argument that motivated the original cut is largely dissolved
-by rings, and this rests on condition, audience and replaceability instead.
-
-**Recorded here rather than as a decision record**, because it is one line of
-catalog structure settled inside a plan. **If the splitting rule is ever written
-into `bundle-manager`, this is the case it should cite** — and at that point it
-probably earns a record of its own.
-
-**Everyone integrates changes. Only some people run concurrent agents in
-worktrees.** That is one condition versus another, not one depth versus another
-— and a bundle whose condition never fires costs a line under rings, which is
-the cheapest possible way to be irrelevant.
-
-**Collapsing them would force the common reader past worktree provisioning,
-teardown and recovery** to reach a rule about merge commits. **The heavy half
-would be paid by everyone in attention, which rings do not fix.**
-
-**And they are separately replaceable.** An organization with its own worktree
-conventions swaps one bundle and keeps the other. Merged, it would have to fork
-the pair.
-
-*The coupling that already exists is a citation, not a dependency:
-`proving-work-landed` mentions `git worktree list` and sends the reader to
-`git-worktrees` for what to do about it. **A bundle that names another for depth
-is fine; one that needs another to function is the case this plan is about.***
+*Some of this would matter less if [[routers]] existed — conditional loading
+would gate by situation rather than by how the manifests were cut. **The fork
+rule is partly a workaround for a mechanism that does not exist yet**, and it
+should weaken if that one ships.*
 
 ## A dependency is never conditional on the reader
 
