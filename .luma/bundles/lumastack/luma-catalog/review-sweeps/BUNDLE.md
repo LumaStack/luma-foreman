@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.7.0
+version: 0.9.1
 published: 2026-08-28
 lifecycle_status: draft
 consumers: [project]
@@ -37,6 +37,8 @@ and nothing about depth.
   The rule the practice is built around.
 - [[who-does-the-reading]] — the two parties, why neither has to be human, and
   what changes when no human is in it.
+- [[presenting-a-file]] — how a file is put in front of the reader: the shape,
+  the order it arrives in, and deep against shallow.
 - [[choosing-an-order]] — five orders including a led one, what each buys and
   costs, and why the choice is recorded rather than defaulted to.
 - [[what-a-slice-produces]] — a slice records and does not rewrite, why a
@@ -57,7 +59,8 @@ and nothing about depth.
   rigours of the same one. Read when deciding which you want, or when the two
   look interchangeable.
 
-**Templates** — [a sweep](templates/sweep.md) · [a slice](templates/slice.md)
+**Templates** — [a sweep](templates/sweep.md) · [a slice](templates/slice.md) ·
+[presenting a file](templates/file-presentation.md)
 
 ## Worth knowing before reading further
 
@@ -124,6 +127,93 @@ call graph, and while a headquarters could be read the same way, nobody has —
 adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
+
+`0.9.1` — **examples name a fictional person, not a real one.**
+
+`templates/sweep.md` and [[how-a-sweep-is-stored]] carried a real workstation
+account, taken from a filesystem path. The catalog already had a convention for
+this — `human:fsmith`, used across five bundles — and it was missed.
+
+**Two faults, and they are separate.** Naming a real person in a published
+example is a **disclosure**, and in some organizations a workstation username is
+secret. And the value came from the **OS user** rather than a git or forge
+identity, which is wrong provenance anywhere: the logged-in account is not
+necessarily who acted.
+
+**Patch, and it needed to be one.** *Examples only* was the wrong reason not to
+bump — an adopter whose vendored copy carries the leaked value has no way to
+learn a fix exists unless the number moves, which is the whole point of a
+version.
+
+`0.9.0` — **opening a file is often the reader's job, and the file is live
+while you present it.**
+
+**`0.8.0` said *run the command; do not print a path and hope*, which is wrong
+whenever the reader's editor runs in a terminal.** An agent whose `EDITOR` is
+`vim` cannot open anything — a non-interactive call has no terminal to give it,
+so the attempt hangs or dies. **Printing the reference is not a failure to
+help; it is the mechanism**, because the reader's terminal already knows how to
+resolve one. It is also better: nothing steals focus, and they open what they
+want when they want it.
+
+**So references are written in full — `path/to/file.md:10`, never a bare
+`:10`.** Terminals that turn a reference into an editor jump match a path
+followed by a line; an offset alone matches nothing and cannot be made to. It
+costs the agent nothing and decides whether a reference opens or has to be
+retyped.
+
+**The file is live while you are presenting it.** A reader in deep mode has it
+open and may edit while you talk — the arrangement working, not a problem. But
+**the copy you presented is already history**, so re-read before editing rather
+than applying changes against remembered text. That failure looks like a no-op
+rather than an error, which is why it needs saying.
+
+**And a finding may be about more than the file it was found in.** A claim
+repeated in six places is a finding about all six. **Route it at its real scope
+and say where it was found** — but do not chase it inside the slice, because
+following a finding out of the sweep's scope is how a slice becomes an
+afternoon.
+
+Minor: new content, and one instruction corrected.
+
+`0.8.0` — **how a file is presented, and going first as a declared
+arrangement.**
+
+**Found by the first slice, which spent its first three files arguing about
+presentation rather than about the files.** [[presenting-a-file]] settles it,
+with [the shape in a template](templates/file-presentation.md) for both modes:
+**one file at a time** — a cluster presented at once buys nothing, since the
+reader can only read one while the others scroll away — then a data block, a
+summary of what the file *is*, what the agent makes of it, and **only then the
+file opened.** A reader wants to know what they are looking for before they
+change windows.
+
+**The data block has to earn each row**, and the one that repays most is
+`cross-check`: a documented list against the code it lists, a count against
+what it counts, a flag against `--help`. **It is where a stale document
+announces itself, and it costs one command.** The starting set is six rows and
+is explicitly not a contract.
+
+**Open the file rather than printing a path.** A path is clickable in some
+terminals and not others, and a reader who has to select and paste has been
+given a chore. Ask once what opens files on this machine, then use it — at the
+line under discussion, not the top.
+
+**Deep and shallow are different presentations**, declared per area beside the
+pairing: deep gives the file in full and says what to attend to, shallow
+summarises and says what is wrong.
+
+**And going first is now a declared arrangement rather than a per-file
+exception**, which closes a gap this sweep recorded before its first slice. A
+reader may decide at the start that a whole area works that way — *show me the
+file with your read attached* — and it is roughly twice as fast. **What it
+costs is not nothing**: anchoring still operates, and some of what they would
+have seen unaided is gone. The protection is reduced rather than removed,
+because they have the file itself. **So it is declared, never drifted into** —
+a sweep that slid into it one file at a time lost the property without anybody
+choosing to.
+
+Minor: new content, and one workflow step restated.
 
 `0.7.0` — **a row finishes two ways, and challenge is not veto.**
 

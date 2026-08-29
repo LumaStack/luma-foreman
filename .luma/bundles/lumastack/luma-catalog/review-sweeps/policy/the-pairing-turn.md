@@ -140,6 +140,24 @@ override gets the whole practice abandoned rather than argued with. Note in the
 slice that the agent read first; a reader can discount a stated weakness, and
 an unstated one is the harder problem.
 
+### It may be the declared arrangement, not only an exception
+
+**A reader may decide at the start that a whole area works this way**, and that
+is the commoner case rather than a deviation from it. *Show me the file with
+your read attached, and I will form my own view against both* is a legitimate
+way to work, and it is faster than the turn order by roughly half.
+
+**What it costs is real and is not nothing.** Anchoring still operates: reading
+a file after being told what is wrong changes what you notice, and some of what
+you would have seen unaided is now unavailable. **The protection is reduced
+rather than removed** — the reader has the file itself, which a findings-list
+alone never gives them.
+
+**So it is declared, not drifted into.** Recorded per area beside the pairing
+([[who-does-the-reading]]), and [[presenting-a-file]] gives the shape. A sweep
+that slid into it one file at a time has lost the property without anybody
+choosing to.
+
 **Some files genuinely warrant it** — generated code, a vendored dependency, a
 file in a language they do not read. Going first there is not the failure mode;
 it is the ordinary division of labour, and it should still be written down.

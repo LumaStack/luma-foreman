@@ -141,6 +141,21 @@ about what it spawned — see [[how-a-sweep-is-stored]]. Recording is
 bookkeeping, not a dependency, and conflating them is how a project that moves
 things becomes one where nothing can be approved.
 
+## A finding may be about more than the file
+
+**The file is where you found it, not necessarily what it is about.** A claim
+repeated in six places is a finding about all six; one that contradicts another
+repository is a finding about the boundary between them.
+
+**Route it at its real scope, and say where it was found.** *Filed from slice
+004, seen in `docs/commands.md`, asserted in five documents across another
+bundle* is actionable. *`docs/commands.md:41` is wrong* is a fix that leaves
+five copies standing.
+
+**Do not chase it inside the slice.** Following a finding out of the sweep's
+scope is how a slice becomes an afternoon, and the sweep is the thing with
+momentum worth protecting. Record where it reaches and move on.
+
 ## Nothing worth keeping stays in the sweep
 
 **Everything routes out.** A sweep is backlog: it gets archived and eventually

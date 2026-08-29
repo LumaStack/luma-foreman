@@ -4,13 +4,13 @@ title: The whole of luma-foreman
 created: 2026-08-28
 lifecycle_status: provisional
 survival: experimental
-goal: Every file still says what its author meant after nineteen days of renames and substitutions — and I can name what is currently wrong
+goal: Nothing in this repository states something false — whether it drifted there or was written that way
 scope: All tracked content except the generated .claude/ adapters and the vendored .luma/bundles/ copies
 ordering: led
 pairing: human-agent
-indexed_at: bb8b3c2398af
+indexed_at: 52787ca6b968
 contributors:
-  - human:warden
+  - human:benlinton
   - agent:opus-5
 ---
 
@@ -18,12 +18,30 @@ contributors:
 
 ## Goal
 
-**I do not trust what recent churn did.** Nineteen days, 246 commits, and a
-week that included estate-wide automated substitutions — section references,
-field renames, a vocabulary change carried through twenty-two bundles.
+**Nothing here should state something false.** Two ways that happens and the
+sweep is aimed at both:
 
-**On track means:** every file still says what its author meant, and the sweep
-can name what is currently wrong rather than only that something is.
+- **Churn damage.** Nineteen days, 246 commits, and a week of estate-wide
+  automated substitution — section references, field renames, a vocabulary
+  change carried through twenty-two bundles. Statements that were true when
+  written and are not now.
+- **False on creation.** Statements that were never true, written confidently
+  and never checked.
+
+**On track means:** every claim holds when checked against the thing it
+describes, and the sweep can name what is wrong rather than only that something
+is.
+
+**Corrected after slice 001.** The goal was churn damage alone, and the first
+slice found three documents that were false *when written* — no history, no
+drift, nothing for a churn-aimed sweep to catch. **Three of its four files would
+have been out of scope under the original goal.**
+
+**It makes `cross-check` the primary method rather than a habit.** Every
+mechanical finding in slice 001 came from running the thing a document
+described — `--help`, the rules on disk, the code behind a claim about it — and
+none from reading carefully. Careful reading found only what could not be
+checked.
 
 **It is also expected to produce a summary** of what foreman does so far and
 what its live problems are. That is a second ask rather than the goal, recorded
@@ -41,6 +59,9 @@ vendored bundles, `src/`, `tests/`, `bin/`, `libexec/`. **81 files.**
 - **`.luma/bundles/` — 162 files.** Vendored copies owned upstream in
   `luma-catalog`. Editing them here is drift by definition, so reading them here
   can produce nothing actionable.
+- **`.luma/backlog/sweeps/` — this sweep's own record.** A sweep reviewing the
+  file that records it is circular, and approving your own index proves nothing.
+  Added as an exclusion once the sweep's files appeared inside its own scope.
 
 ## Who reads the source is not uniform, and the index says so
 
@@ -101,14 +122,14 @@ signed off, and only a person gives it. The `by` column records who.
 
 | cluster | file | read by | status | by | slice |
 | --- | --- | --- | --- | --- | --- |
-| what it says it is | `README.md` | both | **approved** | `human:warden` | — |
+| what it says it is | `README.md` | both | **approved** | `human:benlinton` | — |
 | what it says it is | `CLAUDE.md` | both | pending | | |
 | what it says it is | `.luma/PROJECT.md` | both | pending | | |
 | what it says it is | `docs/scope.md` | both | pending | | |
-| split from README | `docs/getting-started.md` | both | pending | | |
-| split from README | `docs/commands.md` | both | pending | | |
-| split from README | `docs/inspect.md` | both | pending | | |
-| split from README | `docs/architecture.md` | both | pending | | |
+| split from README | `docs/getting-started.md` | both | **approved** | `human:benlinton` | 001 |
+| split from README | `docs/commands.md` | both | **approved** | `human:benlinton` | 001 |
+| split from README | ~~`docs/inspect.md`~~ | both | **removed** | — | 001 — collapsed into `commands.md` |
+| split from README | `docs/architecture.md` | both | **approved** | `human:benlinton` | 001 |
 | standards and permissions | `docs/standards.md` | both | pending | | |
 | standards and permissions | `docs/claude-agent-permissions.md` | both | pending | | |
 | standards and permissions | `docs/examples/README.md` | both | pending | | |
@@ -136,6 +157,8 @@ signed off, and only a person gives it. The `by` column records who.
 | ideas A | `.luma/backlog/ideas/distribution-beyond-clone-and-symlink.md` | both | pending | | |
 | ideas A | `.luma/backlog/ideas/drive-an-incident.md` | both | pending | | |
 | ideas A | `.luma/backlog/ideas/edit-ceremony-should-key-on-citations.md` | both | pending | | |
+| ideas B | `.luma/backlog/ideas/bundles-declare-what-they-work-with.md` | both | pending | | |
+| ideas B | `.luma/backlog/ideas/never-derive-an-actor-from-the-os-user.md` | both | pending | | |
 | ideas B | `.luma/backlog/ideas/hook-against-leaking-internal-hq.md` | both | pending | | |
 | ideas B | `.luma/backlog/ideas/knowledge-reaching-agents-elsewhere.md` | both | pending | | |
 | ideas B | `.luma/backlog/ideas/named-permission-profiles.md` | both | pending | | |
@@ -232,6 +255,21 @@ vendored dependency, a file in a language they do not read"* — one-off cases
 noticed in the moment. It has no shape for *the reader decides at the start that
 a whole area will be read for them*, which is what happened here and is probably
 the commoner arrangement. The index had to invent a column for it.
+
+## Progress
+
+| | |
+| --- | --- |
+| approved | 4 |
+| removed | 1 — `docs/inspect.md`, collapsed |
+| pending | 82 |
+| total rows | 87 |
+| slices | 1 |
+
+**Measured rate, replacing the estimate:** slice 001 covered four documents and
+produced four bundle releases. **That is not a rate to plan against** — the
+practice was being built while it ran, and later slices should not resemble it.
+Re-measure after 002.
 
 ## Closing summary
 

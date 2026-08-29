@@ -58,7 +58,18 @@ one convenient slice at a time.
 **Three to eight files.** Fewer means a file read without its collaborators;
 more means a skim.
 
-## 3. Orient — facts only, no verdicts
+## 3. Orient — one file at a time
+
+**[[presenting-a-file]] gives the shape**: the data block, a summary of what
+the file is, what you make of it, then open it for them. One file, not the
+cluster.
+
+**Whether your read comes before or after theirs is the sweep's declared
+arrangement**, not yours to pick per file. Under the turn order it comes after
+— facts only until they have spoken. Where the reader has declared otherwise
+for this area, it comes with the file.
+
+### Under the turn order: facts only, no verdicts
 
 **Read the cluster, then say what it is.** What these files do, how they
 connect, what calls in and what they call out, what changed here recently and
