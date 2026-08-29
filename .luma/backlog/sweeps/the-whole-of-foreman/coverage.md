@@ -10,6 +10,22 @@ indexed_at: 52787ca6b968
 applied to the tree; the statuses are what the slices record. Every commit ages
 this file, and every slice brings it back.
 
+## Progress
+
+| | |
+| --- | --- |
+| approved | 4 |
+| reviewed | 0 |
+| skipped | 0 |
+| removed | 1 — `docs/inspect.md`, collapsed into `commands.md` |
+| pending | 82 |
+| total rows | 87 |
+
+**Rate: one slice, four files.** Too few to be a range yet, and slice 001 was
+atypical — it built the practice while it ran, producing five releases of
+`review-sweeps`. **An outlier widens the range rather than being dropped from
+it**, so it counts, and the range will say so once there is one.
+
 ## The index
 
 `pending` · `reviewed` · `approved` · `skipped` **with a reason, always**
@@ -106,19 +122,3 @@ signed off, and only a person gives it. The `by` column records who.
 | tests | `tests/apply-test.sh` | agent | pending | | |
 | tests | `tests/inspect-test.sh` | agent | pending | | |
 | tests | `tests/permission-gate-test.sh` | agent | pending | | |
-
-## Progress
-
-| | |
-| --- | --- |
-| approved | 4 |
-| reviewed | 0 |
-| skipped | 0 |
-| removed | 1 — `docs/inspect.md`, collapsed into `commands.md` |
-| pending | 82 |
-| total rows | 87 |
-
-**Rate: one slice, four files.** Too few to be a range yet, and slice 001 was
-atypical — it built the practice while it ran, producing five releases of
-`review-sweeps`. **An outlier widens the range rather than being dropped from
-it**, so it counts, and the range will say so once there is one.

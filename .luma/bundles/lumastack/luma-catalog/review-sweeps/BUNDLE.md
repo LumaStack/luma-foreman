@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.11.0
+version: 0.11.1
 published: 2026-08-28
 lifecycle_status: draft
 consumers: [project]
@@ -128,6 +128,13 @@ call graph, and while a headquarters could be read the same way, nobody has —
 adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
+
+`0.11.1` — **progress goes above the index in `coverage.md`.** The summary a
+reader wants is *how far along*, and a table of every file in scope should not
+sit between them and it. Detail below the thing that summarises it, as in any
+document.
+
+Patch: the same content, in the order a reader needs it.
 
 `0.11.0` — **the index moves out of `sweep.md` into `coverage.md`.**
 

@@ -33,6 +33,12 @@ It is a fact about the index rather than about the sweep: the commit this table
 was last reconciled against, advanced every time a slice reconciles. **The
 sweep has no commit** and deliberately so — it is true of a moving target.
 
+## Progress goes above the index
+
+**The summary a reader wants is *how far along*, and eighty-seven rows should
+not sit between them and it.** Detail below the thing that summarises it, as in
+any document.
+
 ## No counts in the frontmatter
 
 **Progress is derived from the rows and written in the body at the time of

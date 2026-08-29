@@ -23,6 +23,25 @@ indexed_at: <12-character commit this was last reconciled against>
 ```markdown
 # Coverage
 
+## Progress
+
+<Derived from the rows below, never typed. A wrong number here is the rot the
+writing conventions warn about, and this is the one table a reader trusts
+without checking.>
+
+| | |
+| --- | --- |
+| approved | |
+| reviewed | |
+| skipped | |
+| pending | |
+| total rows | |
+
+<And the rate, re-taken here at every slice: a range across every slice so far,
+with how many there have been.>
+
+## The index
+
 `pending` · `reviewed` · `approved` · `skipped` **with a reason, always**
 
 **`reviewed`** — read and satisfactory; either party may set it. **`approved`** —
@@ -42,20 +61,4 @@ here can never be shown to have been read.>
 <Strike a deleted file through rather than removing the row, so the index still
 explains itself.>
 
-## Progress
-
-<Derived from the rows above, never typed. A wrong number here is the rot the
-writing conventions warn about, and this is the one table a reader trusts
-without checking.>
-
-| | |
-| --- | --- |
-| approved | |
-| reviewed | |
-| skipped | |
-| pending | |
-| total rows | |
-
-<And the rate, re-taken here at every slice: a range across every slice so far,
-with how many there have been.>
 ```
