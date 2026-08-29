@@ -51,12 +51,15 @@ careful reading were the ones nobody had checked.
 
 ## Against the goal
 
-**On track, and the goal was aimed slightly wrong.** *Does every file still say
-what its author meant after the churn* assumes drift. These files had no history
-to drift from; they were false on creation.
+**On track, and it corrected the goal.** *Does every file still say what its
+author meant after the churn* assumes drift. These files had no history to drift
+from; they were false on creation, and **three of the four would have been out of
+scope under the goal as written.**
 
-**Worth carrying into later slices**: for anything created during the estate's
-recent churn, the question is not *did this rot* but *was this ever true*.
+**The goal is now both** — churn damage and false statements, whichever way a
+claim got there. `cross-check` moves from a habit to the primary method, because
+every mechanical finding here came from running the thing a document described
+and none from reading it carefully.
 
 ## Where it went
 

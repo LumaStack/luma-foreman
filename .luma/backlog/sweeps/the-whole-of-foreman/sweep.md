@@ -4,7 +4,7 @@ title: The whole of luma-foreman
 created: 2026-08-28
 lifecycle_status: provisional
 survival: experimental
-goal: Every file still says what its author meant after nineteen days of renames and substitutions — and I can name what is currently wrong
+goal: Nothing in this repository states something false — whether it drifted there or was written that way
 scope: All tracked content except the generated .claude/ adapters and the vendored .luma/bundles/ copies
 ordering: led
 pairing: human-agent
@@ -18,12 +18,30 @@ contributors:
 
 ## Goal
 
-**I do not trust what recent churn did.** Nineteen days, 246 commits, and a
-week that included estate-wide automated substitutions — section references,
-field renames, a vocabulary change carried through twenty-two bundles.
+**Nothing here should state something false.** Two ways that happens and the
+sweep is aimed at both:
 
-**On track means:** every file still says what its author meant, and the sweep
-can name what is currently wrong rather than only that something is.
+- **Churn damage.** Nineteen days, 246 commits, and a week of estate-wide
+  automated substitution — section references, field renames, a vocabulary
+  change carried through twenty-two bundles. Statements that were true when
+  written and are not now.
+- **False on creation.** Statements that were never true, written confidently
+  and never checked.
+
+**On track means:** every claim holds when checked against the thing it
+describes, and the sweep can name what is wrong rather than only that something
+is.
+
+**Corrected after slice 001.** The goal was churn damage alone, and the first
+slice found three documents that were false *when written* — no history, no
+drift, nothing for a churn-aimed sweep to catch. **Three of its four files would
+have been out of scope under the original goal.**
+
+**It makes `cross-check` the primary method rather than a habit.** Every
+mechanical finding in slice 001 came from running the thing a document
+described — `--help`, the rules on disk, the code behind a claim about it — and
+none from reading carefully. Careful reading found only what could not be
+checked.
 
 **It is also expected to produce a summary** of what foreman does so far and
 what its live problems are. That is a second ask rather than the goal, recorded
