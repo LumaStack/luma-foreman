@@ -1,6 +1,6 @@
 ---
 type: bundle
-version: 0.22.0
+version: 0.23.0
 published: 2026-08-29
 lifecycle_status: draft
 survival: experimental
@@ -131,6 +131,51 @@ call graph, and while a headquarters could be read the same way, nobody has —
 adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
+
+`0.23.0` — **a slice has a close routine: what it did, where the sweep stands,
+and whether to clear.**
+
+**What it did** in three or four lines — not the slice note, which is the
+record, but the reader remembering what happened before choosing what is next.
+
+**Where the sweep stands**, as a table with four rows — **closed**,
+**skipped**, **open**, **untouched** — shown without being asked, because the
+reader has spent the slice inside one or two files and needs the whole thing
+back in front of them.
+
+**Names in the first three rows, groups in the last.** A reader wants to know
+which files are finished and roughly what is left; **ninety filenames under
+`untouched` is not a status, it is the index printed twice.**
+
+**The shape lives in `templates/slice-close.md`**, beside the presentation
+template it is modelled on — a message shape rather than a document, and the
+workflow points at it instead of carrying a second copy.
+
+**Derived and never stored.** It is rebuilt from `coverage.md` each time and
+discarded. Writing it into a file would be a third copy of what the index
+already holds — and it would start rotting immediately, which
+[[how-a-sweep-is-stored]] covers under counts.
+
+**And it is asked to draw its own conclusion**, in a line: *two clusters closed
+and none of `src/` reached* is the sentence the table exists to produce.
+
+**Whether to clear the context** is the third part, and **a slice boundary is
+the cheapest moment there will ever be to drop a session** — for a structural
+reason: by the time a slice closes, everything worth keeping is already on
+disk. That is what the preceding steps are for.
+
+**So it is a check, not a judgement:** *is anything left that exists only in
+this session?* If no, clearing is free and gets recommended. **If yes, that is
+a defect rather than a reason to keep the context** — write it down, then
+clear.
+
+**Never inside a slice**, because the turn order depends on both parties
+holding the same file. **And say so when the next slice is the same cluster**,
+where orientation carries over and holding is genuinely cheaper.
+
+**Found by running it.** A sweep produced this table once, unprompted, and the
+reader asked to see it after every slice. Nothing in the bundle had asked for
+it — which is the whole reason it only appeared once.
 
 `0.22.0` — **a count in the charter is almost always wrong to write.**
 

@@ -293,3 +293,44 @@ rewritten, dropped as duplicate, or **dropped as wrong with what it was checked
 against**. A deletion is the one thing a later reader cannot go and verify for
 themselves. [[what-a-slice-produces]] has the rule and the template has the
 table.
+
+## 11. Close out the slice
+
+**Three parts, in order, every time** — what this slice did, where the sweep
+stands, and whether to clear. **[The slice-close
+template](../templates/slice-close.md) carries the shape**; what follows is why
+the third part is there at all.
+
+### Why a slice boundary is where a session gets cleared
+
+**It is the cheapest moment there will ever be to drop the context**, and for a
+structural reason: **by the time a slice closes, everything worth keeping has
+already been written to disk.** The slice note, the index, the journal, the
+routed findings, the commit. That is not luck — it is what steps 6 to 10 are
+for.
+
+**So it is a check rather than a judgement:** *is anything left that exists
+only in this session?*
+
+- **No.** Clearing costs nothing — **recommend it.** What the context mostly
+  holds is files still sitting on disk, and re-reading the two that matter next
+  is cheaper than carrying all of them through every remaining turn.
+- **Yes.** **That is a defect, not a reason to keep the context.** Write it down
+  and then clear. An observation surviving only in a session is one restart from
+  gone, and [[how-a-sweep-is-stored]] gives the journal for exactly this.
+
+**Recommend; do not decide.** The same shape as fix-now-or-route — you can see
+what the context costs and you cannot see whether they are mid-thought about
+something they have not said yet.
+
+**Never clear inside a slice.** [[the-pairing-turn]]'s order depends on both
+parties holding the same file. Halfway through, clearing makes the agent
+re-derive a read the reader has already answered, and their answers no longer
+attach to anything.
+
+**The one case for carrying on: the next slice is the same cluster.**
+Orientation carries over, and clearing buys a re-read of files about to be
+discussed anyway. **Say so rather than recommending a clear out of habit.**
+
+*In Claude Code this is `/clear`; the reasoning is the same wherever the
+session lives.*
