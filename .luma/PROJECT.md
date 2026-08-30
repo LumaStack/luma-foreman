@@ -3,14 +3,6 @@ type: luma/project
 title: luma-foreman
 disclosure_level: public
 description: The command-line tool that runs inside a project repository — agent permissions, inspect rules, and eventually adoption. Open it for anything foreman does to a repository, not for what a standard says.
-owns:
-  - the Claude Code permission gate and its per-project rules
-  - inspect rules and their findings
-  - projections from .luma/ into whatever a tool expects
-must_not_own:
-  - what a standard says, or the reasoning behind it
-  - the knowledge format
-  - any organization's decisions or private context
 ---
 
 ## Why it exists

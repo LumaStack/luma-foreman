@@ -311,6 +311,10 @@ grep -q '^source' "$FRESH/.luma/config/luma-foreman.toml" \
 grepped 'type: luma/project' "$FRESH/.luma/PROJECT.md"
 grepped 'TODO' "$FRESH/.luma/PROJECT.md"
 
+# The two fields luma/project 0.2.0 dropped are not scaffolded any more.
+ungrep 'owns:' "$FRESH/.luma/PROJECT.md"
+ungrep 'must_not_own:' "$FRESH/.luma/PROJECT.md"
+
 # --catalog writes the one setting that has no default, and makes the next
 # command shorter by exactly the argument it records.
 WITHCAT=$T/withcat
