@@ -43,10 +43,6 @@ disclosure_level: internal
 description: >-
   TODO — one sentence, for somebody outside this repository. What is this, and
   when would a person or an agent open it rather than something else?
-owns:
-  - TODO — what decisions belong here and nowhere else
-must_not_own:
-  - TODO — what belongs to another repository, named
 ---
 
 # {title}
