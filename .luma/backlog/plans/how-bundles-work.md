@@ -39,6 +39,29 @@ in an entry here and argued on its own. Nothing is carried forward by citation.
 statement of what it carries, which is a different thing from what happens to be
 on disk.
 
+## What it has to solve
+
+Not yet settled. The fields in the mock-up below are a starting shape, not a
+proposal; each one survives only if a problem here needs it.
+
+1. **Membership.** What is part of this project — so a stray directory and a
+   missing one are both reportable.
+2. **Provenance.** Where a copy came from, and at what point in that source's
+   history.
+3. **Integrity.** Whether a copy has been changed here since it landed.
+4. **Currency.** Whether something newer exists upstream.
+5. **Divergence.** Whether an edit to a copy is *intentional*, so the integrity
+   check stops reporting it. See
+   [a bundle should be able to diverge](../ideas/a-bundle-should-be-able-to-diverge.md).
+6. **Reproducibility.** Whether a copy could be re-fetched exactly from what a
+   row records — and whether that is a promise worth making at all.
+7. **Identity for local bundles.** What namespace a project-authored bundle
+   takes when it has no catalog behind it.
+8. **Level.** Bundles declare `consumers: [project, organization]`. Whether
+   adoption at a level records anything here.
+9. **Enablement.** Whether a bundle can be present and switched off.
+10. **Precedence.** Whether this file decides anything when two bundles collide.
+
 ## Mock-up
 
 ```toml
@@ -47,7 +70,7 @@ on disk.
 # Authored — `luma-foreman get` adds rows and fills in where a copy came from.
 # A row with source/commit/checksum is a copy of something upstream: change it
 # there and take it again, never here. A row without them was written in this
-# repository, and its own BUNDLE.md is the truth.
+# repository, and there is nothing upstream to check it against.
 
 ["lumastack/luma-catalog/git-secrets"]
 version  = "0.5.1"
@@ -68,9 +91,10 @@ source   = "../catalogs/house-rules"
 commit   = "4f1c9ab0d2e8a77315b0c6d9e4f2a1b8c3d5e6f7"
 checksum = "sha256:9c1e..."
 
-# Written here. Membership is the whole of the row — version lives in its own
-# BUNDLE.md, and there is no upstream to point at or verify against.
+# Written here. No upstream to point at or verify against, so nothing keeps the
+# version honest but a check against the bundle's own BUNDLE.md.
 ["lumastack/luma-foreman/adoption-internals"]
+version  = "0.1.0"
 ```
 
 ## What the mock-up is asserting
@@ -85,35 +109,13 @@ stray.
 `source`/`commit`/`checksum` marks a copy. No `local = true`, because a flag
 that restates what the other columns already show is a second copy of one fact.
 
-**A local row carries no version.** You are the author, the `BUNDLE.md` is the
-truth, and duplicating it into a table produces two numbers that will eventually
-disagree.
+**Every row carries a version.** For a copy it is the version taken, frozen
+until it is taken again. For a bundle written here it is what the bundle
+currently is, and nothing but the author keeps it current — so `inspect`
+compares it against the bundle's own `BUNDLE.md` and reports disagreement.
 
 **The file is authored, not generated.** `get` edits it the way
 `npm install --save` edits `package.json`. It carries no *do not edit* banner.
-
-## Open — what it has to solve
-
-Not yet settled. The fields above are a starting shape, not a proposal; each one
-survives only if a problem below needs it.
-
-1. **Membership.** What is part of this project — so a stray directory and a
-   missing one are both reportable.
-2. **Provenance.** Where a copy came from, and at what point in that source's
-   history.
-3. **Integrity.** Whether a copy has been changed here since it landed.
-4. **Currency.** Whether something newer exists upstream.
-5. **Divergence.** Whether an edit to a copy is *intentional*, so the integrity
-   check stops reporting it. See
-   [a bundle should be able to diverge](../ideas/a-bundle-should-be-able-to-diverge.md).
-6. **Reproducibility.** Whether a copy could be re-fetched exactly — and whether
-   that is a promise worth making, given nothing restores from this file.
-7. **Identity for local bundles.** What namespace a project-authored bundle
-   takes when it has no catalog behind it.
-8. **Level.** Bundles declare `consumers: [project, organization]`. Whether
-   adoption at a level records anything here.
-9. **Enablement.** Whether a bundle can be present and switched off.
-10. **Precedence.** Whether this file decides anything when two bundles collide.
 
 ## Open — placement
 
