@@ -37,13 +37,15 @@ Each one depends on the entries above it and on none below.
 | 3 | what a document is | — | the thing a bundle holds |
 | 4 | what a project records about them | — | membership, provenance, integrity |
 | 5 | how knowledge reaches a harness | files a harness reads | what implements each category |
-| 6 | how a bundle reaches a repository | a directory on disk | the catalog, and `get` |
+| 6 | how a bundle reaches a catalog | a catalog | publishing |
+| 7 | how a bundle reaches a repository | a directory on disk | `get`, and adoption |
 
-**Three destinations, and they were all being called the same thing.** A bundle
-**lands** on disk when `get` copies it, is **registered** into a harness when
-`apply` writes adapters, and **loads** into context when a model reads it.
-Naming the destination is what keeps Entries 1, 5 and 6 from collapsing into
-each other — which they did twice while this document was being cut. **There is
+**Every destination was being called the same thing.** A bundle **lands** on
+disk — in a catalog when it is published, in a repository when `get` copies it —
+is **registered** into a harness when `apply` writes adapters, and **loads**
+into context when a model reads it. Naming the destination is what keeps Entries
+1, 5, 6 and 7 from collapsing into each other — which they did twice while this
+document was being cut. **There is
 no word for the whole path**, deliberately: nobody observes that arrival failed,
 only that something did not load, and the stages behind it are walked by name.
 
@@ -62,7 +64,26 @@ differently.
 - **Presence and reading are separate axes.** What must be *fetched* is
   bundle-grained, because fetching is. What is *read* has its own grain, settled
   per case rather than by the fetch boundary. A claim about one is not a claim
-  about the other, and conflating them is what made bundle-level dependency look like it contradicted the bullet above.
+  about the other, and conflating them is what made bundle-level dependency look
+  like it contradicted the bullet above.
+
+## Prevention and detection
+
+**Almost everything here reports a violation rather than stopping one**, and
+that is a pattern rather than a run of unrelated choices.
+
+| | prevention | detection |
+| --- | --- | --- |
+| a vendored bundle edited locally | — | the checksum reports it |
+| a stray directory | — | the manifest reports it |
+| a local bundle's version drifting | — | `inspect` compares it |
+| a governing body's rule | put it out of reach | check compliance afterwards |
+| `expose` | a boundary the model cannot cross | — |
+
+`expose` is the only place this design prevents rather than reports, and a
+governing body's rule is the only case still open. **A design that detects
+everywhere except one place should know why that place is different** — whether
+prevention is genuinely required there, or whether nobody asked the question.
 
 ---
 
@@ -120,6 +141,17 @@ What enforces it, who sets it, **whether visibility and openability are one
 control or two**, and whether it introduces a permission axis crossing Entry 1's
 categories are all open.
 
+**adopt** — a project taking a bundle and becoming answerable for what it does
+here. The bundle **lands** as a committed copy and the project records that it
+belongs. **Landing and adopting are not the same event**: a copy that landed
+without being adopted is a stray, and detecting that is most of why the record
+is worth keeping.
+
+**adopter** — whoever makes that decision and answers for it. Distinct from the
+**author**, who wrote the bundle without seeing this project, and from a
+**governing body**, whose rules the adopter may not overrule — whether that is
+enforced by putting them out of reach or by checking compliance afterwards.
+
 **land** — reaching disk. What `get` does: a bundle lands in the repository as a
 committed copy and stays there whether or not anything ever reads it.
 
@@ -127,13 +159,14 @@ committed copy and stays there whether or not anything ever reads it.
 mechanism put it there. `/load-bundle` and `/load-context` are named for this,
 so the concept and the command agree.
 
-**request** — the act of naming something so it enters context, whatever its
-category. Available to a person, to another agent, and to a document citing
-another. The manual counterpart of `guaranteed`. And the only way anything on
+**request** — the act of naming something so it enters context. Available to a
+person, to another agent, to a document citing another, and to a mechanism whose
+checks caught a miss. Where `guaranteed` fires on a declared condition, a request
+fires on a decision that this thing is needed now. It is also how anything on
 `standby` loads.
 
 **request helper** — whatever performs a request. It has to be announced before
-anything can invoke it, which is the one shared line `standby` pays.
+anything can invoke it, which would be the one announcement `standby` pays for.
 **Deliberately unspecific about form** — a command, a tool call, something not
 yet determined — because an adapter provides it and Entry 5 decides what it is.
 Naming it for a form it may not take is how a word starts lying.
@@ -147,7 +180,7 @@ is ambiguous between the event and the state.
 
 **session floor** — the residency every session pays before the work is known,
 whether or not the work turns out to touch it. What `expected` and `optional`
-charge a line for, and what `standby` avoids entirely.
+pay an announcement for, and what `standby` pays only once.
 
 ### Avoided vocabulary
 
@@ -184,25 +217,30 @@ all have to say which of these they are producing.
 1. **What an absence means.** Whether a document not being present is a defect,
    and if so, whose.
 2. **What can be verified.** Which loads a tool can check or enforce 
-   (e.g. forcibly inject), and which no tool can ever check.
+   (e.g. forcibly inject), and which nothing yet can.
 3. **What each costs.** A mechanism, standing context, or nothing.
 4. **What the default is.** What a document gets by declaring nothing at all.
 5. **Whether strength is the same question.** How badly something is wanted,
    versus whether it loads.
 6. **What an announcement may cost.** `expected` and `optional` are only cheap
    while their announcements stay small, and nothing yet holds them there.
-7. **Who declares, and who may override.** An author states how their document
-   or bundle loads. Whether an adopting project can change that — force
-   something that was offered by default, demote something expected to optional,
-   silence it, or narrow where it applies — and what happens when author and
-   adopter disagree.
-8. **What a matcher means at each grain.** A bundle, a document and a section
-   cannot all mean the same thing by it — a bundle has no body, so a matcher on
-   one gates whether its contents are in play rather than delivering anything.
-   Whether all three grains exist, how they compose when they disagree, what a
-   section-level matcher implies about a document needing an index of its own,
-   and whether a document may therefore span categories rather than sitting in
-   one.
+7. **Who declares, and who may overrule whom.** An author states how their
+   document or bundle loads, having never seen the adopting project. An adopter
+   may disagree with good reason — too noisy here, only under `src/`, adopted
+   for one workflow and not for its policies. A governing body may need to
+   overrule the adopter in a way the adopter cannot undo. Whether that is one
+   mechanism with a precedence order or several with different reach, where a
+   governing body's declaration lives given a project must not be able to edit
+   it, and what happens when two of them disagree.
+8. **What a matcher means at each grain.** Whether a bundle, a document and a
+   section can all mean the same thing by it. **This turns on whether a bundle
+   has a body**, which Entry 2 owns: if a bundle's self-description is itself
+   loadable, a bundle matcher is one job at its coarsest grain; if a bundle has
+   nothing of its own to load, the declaration has to mean something else,
+   nearer to *is this in play at all*. Also whether all three grains exist, how
+   they compose when they disagree, what a section-level matcher implies about a
+   document needing an index of its own, and whether a document may therefore
+   span categories rather than sitting in one.
 9. **What survives a context reset.** Loading happens at a moment; context does
    not persist. `/clear` empties it, `/compact` may summarize things away, and a
    long session may push them out — in every case silently. **Both halves fail,
@@ -213,6 +251,10 @@ all have to say which of these they are producing.
    mechanism is wired. Which of those costs more depends on what was lost, and
    is not decidable here. Whether a promise holds across these events, what
    re-establishes it, and how anything knows it needs to.
+10. **How a trend is gathered.** `expected` is improvable only if somebody can
+    see whether the right things are being loaded more often than they used to
+    be. What produces that signal, who reads it, and whether it can be collected
+    at all without watching sessions closely enough to cost more than it saves.
 
 ## The categories
 
@@ -247,7 +289,7 @@ at all.
 | **guaranteed** | loads | set by its matcher | however much of it loads | a mechanism, and something evaluating it on every call |
 | **expected** | announces itself, and should be taken | **its announcement** | however much of it loads | — |
 | **optional** | announces itself, and may be taken | **its announcement** | however much of it loads | — |
-| **standby** | does nothing until requested | **one shared line**, however many documents | however much of it loads | a request helper, and somebody who knows the name |
+| **standby** | does nothing until requested | **one announcement at most**, however many documents | however much of it loads | a way to reach it, and somebody who knows the name |
 
 **`guaranteed` is priced by its matcher** — and that price is not yet computable.
 A matcher that never narrows puts content into every session, which is the
@@ -277,13 +319,14 @@ document believes it has the whole one, so anything withheld that qualified what
 remains is acted on as though it did not exist. Both are worth knowing before
 Entry 5 picks.
 
-**And *matcher* is one word over more than one job**, so the bill above is a
-sketch rather than an accounting. A bundle has no body to deliver, so a matcher
-on a bundle cannot mean *put this in context* — it must mean something nearer to
-*is this bundle in play at all*. A matcher on a document decides a load. A
-matcher on a section, if sections can carry one, decides how much of one.
-Those are three different declarations wearing one name, and until they are
-separated any cost stated here is provisional.
+**Whether `matcher` is doing more than one job is itself open**, so the costs
+above are a sketch rather than an accounting. A matcher on a document decides a
+load; a matcher on a section, if sections can carry one, decides how much of
+one. A bundle is the case in question: if its self-description is loadable, a
+bundle matcher is the same job at a coarser grain, and one word is right. If a
+bundle has nothing of its own to load, the declaration means something else
+entirely and the word is covering two jobs. **Entry 2 decides whether a bundle
+has a body**, and no cost stated here is settled until it does.
 
 **An announcement has no natural size, and that is a problem.** A line is the
 target for `expected` and `optional`, not a property of them. Nothing in the
@@ -292,12 +335,13 @@ that grows until it is a second copy of the thing it points at — which has
 been observed, and which quietly turns a cheap category into an expensive one. The
 floor is set by whoever wrote the announcement, and nobody is checking.
 
-**`standby` is not free either — its floor is fixed rather than absent.** The
-request helper has to be announced or nothing can invoke it, and announcing it
-costs a line like anything else. What makes the category different is that the
-line is **paid once for all of it**: five standby documents and five hundred
-cost the same, because nothing is advertised per document. It is the only
-category whose floor does not scale with how much content sits behind it.
+**`standby`'s floor does not scale, and how high it sits is undecided.** If a
+request helper is required, its announcement is the floor, and it is **paid once
+for all of it** — five standby documents and five hundred cost the same, because
+nothing is advertised per document. If a path handed to a model is enough, the
+floor is nothing at all. Either way it is the only category whose floor does not
+grow with how much content sits behind it, and that property holds whichever way
+the question goes.
 
 **The second price is discoverability, and it is not paid in tokens.** Somebody
 has to know the name — a person who has seen it, an agent that searched, or a
@@ -314,27 +358,33 @@ until `standby` surfaced.
 precisely because it is large and specific, not because it matters less. These
 are four things a document can be, not one gradient with four stops.
 
-## Request is an act, not a category
+## Request acts on a status
 
 **Anything not already present can be requested**, and that is what keeps the
 four above honest. A person types `/load-bundle`; an agent that noticed what
-this one missed names a document; a document being read cites another. In every
-case the content enters context regardless of its category.
+this one missed names a document; a document being read cites another.
 
-**A request is the manual counterpart of `guaranteed`.** Both force a load; they
-differ only in who initiates — a mechanism, or somebody deciding. That is why it
+**A request and `guaranteed` both force a load, and differ in what they fire
+on.** `guaranteed` fires on a declared condition. A request fires on somebody or
+something deciding that this particular thing is needed now — a person, another
+agent, a citation, or a hook whose own checks caught a miss. **The initiator is
+not the difference**, since a mechanism can request too. That is why a request
 cannot be a fifth status: it is an action performed *on* a status, available to
-`expected`, `optional` and `standby` alike, and meaningless against `guaranteed`
-because that is already there.
+`expected`, `optional` and `standby` alike.
+
+**Against `guaranteed` it is usually redundant, and not always.** A guaranteed
+document whose residency has ended is absent, so requesting it is a reload
+rather than a no-op. Whether that is how a broken guarantee gets repaired — and
+whether anything can tell that it needs repairing — belongs with problem 9.
 
 **`standby` is the category that has nothing else.** For the other two a request
 is recovery from a miss; for `standby` it is the only way in. That makes
-the request helper a hard dependency of one whole category rather than a
+whatever serves that purpose a dependency of one whole category rather than a
 convenience bolted onto the rest.
 
-## Why the set is closed
+## Whether the set is closed
 
-**Binary questions, and a branch that cannot exist.**
+**Binary questions, and one branch nothing yet fills.**
 
 ```
 does anything deliver it by default?
@@ -347,31 +397,40 @@ does anything deliver it by default?
 ```
 
 The unexplored branch is *not advertised, and an absence is a miss* — a document
-a model is supposed to load and was never told about. Nothing can miss what it
-was never shown, so the cell is empty rather than unnamed. These are the leaves
-of a complete tree, not points chosen off a spectrum.
+a model is supposed to load and was never told about. **Whether anything belongs
+there is open.** A model that searches has been shown something without anything
+advertising it, which would put content in that cell. And searching may itself
+be mediated, by a hook or a command or whatever `expose` becomes, in which case
+what is findable is a decision rather than a given. The tree is the set as it
+stands, not a proof that nothing else fits.
 
 ## What each one obliges
 
-**Guaranteed obliges a check that the mechanism exists.** It is the only
-category whose promise can be verified, and an unverified one is worse than no
-promise at all: the author stops worrying about it, the adopter stops worrying
-about it, the content never loads, and nothing says so. The check is what
-makes the category worth declaring.
+**Guaranteed obliges a mechanism**, and somebody to keep it working. That is the
+only obligation here that lands on the harness rather than on the context
+budget.
 
-**Expected raises the session floor, and that is its price.** For a model to
-notice something, its line has to be present before the moment of noticing. This
-is the category where a model's judgement is load-bearing and where a failure is
-silent, so it earns the most skepticism and the least content.
+**It is also the only promise anything can check.** A mechanism either exists or
+it does not, which is decidable in a way nothing about the other three is. That
+cuts both ways: where nothing checks, a declaration reads as kept when it is
+not, and the author, the adopter, and anything auditing all stop worrying about
+it on the strength of a word.
 
-**Optional obliges a line, the same as expected.** For a model to choose
-something it has to see it, so the price is identical and only the meaning of an
-absence differs.
+**Expected raises the session floor by the size of its announcement, and that
+is its price.** For a model to notice something, the announcement has to be
+present before the moment of noticing. This is the category where a model's
+judgement is load-bearing and where a failure is silent.
 
-**Standby obliges nothing but an address** — and something able to request it.
-It is free precisely because the model was never shown it.
+**Optional obliges an announcement, the same as expected.** For a model to
+choose something it has to see it, so the price is whatever that announcement
+costs, and only the meaning of an absence differs.
 
-## The objective lives in `expected`
+**Standby obliges an address and some way to reach it**, plus whatever
+announcing that way costs. Whether the way must be a helper, should be one, or
+may be a path given to a model directly is open, and it is what decides whether
+the floor is one announcement or none.
+
+## The trade every category answers
 
 **Both failures are opposite, and the whole design sits between them.** A floor
 set too high and every session pays for context it never touches. Set too low
@@ -380,13 +439,21 @@ over-fetches to be safe. **As low a session floor as possible, and still enough
 to choose correctly** — getting that trade right is most of why these tools
 exist.
 
-**A single instance cannot be verified; a trend can be observed.** No tool can
-say *this should have been opened and was not* at the moment it happens, and
-grading one session is the same unanswerable question in smaller form. **What is
+**Each category answers it in its own currency.** `guaranteed` in how wide its
+matcher is, `expected` and `optional` in how large an announcement, `standby` in
+how findable it is willing to be. **Overuse any of them and the pain is the same
+size in a different shape** — a floor nobody needed, a model that cannot find
+what it needs, content nobody ever asks for. Which turns out to be the worst
+failure in practice is not knowable from here, and nothing in this document
+should be read as claiming otherwise.
+
+**Where a single instance cannot be verified, a trend can be.** When no tool can
+say *this should have been opened and was not* at the moment it happens, grading
+one session is the same unanswerable question in smaller form. **What is
 observable is longitudinal** — across many sessions, whether the right thing is
 being opened more often than it used to be. An adopter who can see that can act
-on it, by rewording a line, moving a document to `guaranteed`, or dropping it to
-`standby`.
+on it, by rewording an announcement, moving a document to `guaranteed`, or
+dropping it to `standby`.
 
 That is a weaker instrument than a check and a far stronger one than nothing,
 and it is what makes `expected` improvable rather than merely hoped-for. **How
@@ -394,22 +461,23 @@ such a trend is gathered is unsolved** and belongs on the problem list rather
 than being assumed here.
 
 **A miss is recoverable, not terminal.** Anything offered can still be asked for
-by name after the fact — by a person, or by another agent that noticed what this
-one did not. **What provides it belongs to Entry 5; that it exists belongs
-here**, because it changes what a miss costs and therefore how much skepticism
-the category actually deserves.
+by name after the fact — by a person, by another agent that noticed what this
+one did not, or by a hook whose own checks caught the miss. **What provides it
+belongs to Entry 5; that it exists belongs here**, because it changes what a
+miss costs and therefore how much skepticism the category actually deserves.
 
-**And requesting is not only a safety net.** It is recovery here, but it is
-`standby`'s only way in — so if Entry 5 does not provide something like
-`/load-bundle` or `/load-context`, a whole category has no delivery at all.
+**And requesting is not only a safety net.** It is recovery here, and it is
+`standby`'s only way in — so whatever Entry 5 provides for it carries a whole
+category rather than a convenience.
 
 ## Candidates, neither settled
 
 **The default is now a real question rather than an obvious one.** It used to
-look settled: guaranteed costs a mechanism and expected costs a line, so a
-document declaring nothing should fall into the cheapest thing. With `standby`
-in the taxonomy the cheapest thing is no longer `optional` — it is `standby`,
-which costs nothing and is also invisible.
+look settled: guaranteed costs a mechanism and expected costs an announcement,
+so a document declaring nothing should fall into the cheapest thing. With
+`standby` in the taxonomy the cheapest thing is no longer `optional` — it is
+`standby`, whose floor does not grow however much sits behind it, and which is
+also invisible.
 
 That sharpens the trade rather than settling it. **`standby` as the default**
 means an author who forgets a field ships something only a person who already
@@ -431,23 +499,54 @@ conflated the two, which is why it never produced a check worth running.
 
 ## Open
 
-**Adopter power is a known gap, not a designed one.** Everything above is
-declared by an author who has never seen the adopting project. An adopter has no
-say at all, and that cannot be right — a project may reasonably find a bundle's
-expected content too noisy, want it only under `src/`, or want a bundle it
-adopted for one workflow to stop volunteering its policies. *How* that is
-expressed is unknown; *that it is needed* is the part worth recording now.
+**The design has room for one voice and needs several.** Everything above is
+declared by an author who has never seen the adopting project. An adopter knows
+things the author could not — a bundle's expected content is too noisy here, or
+should apply only under `src/`, or was adopted for one workflow and should stop
+volunteering its policies. A governing body — security, compliance, whoever
+answers for the organization — knows things the adopter is not entitled to
+overrule.
 
-Two problems already on the list are instances of it rather than separate
-things: Entry 4's *Enablement* is an override to never, and its *Precedence* is
-what happens when two authors' claims collide in one project. If adopter
-override is designed here, both should point at it instead of solving it twice.
+**They may not want the same mechanism.** An adopter adjusting a category is an
+override: the binding resolves differently. A governing body forbidding content
+outright is a boundary nothing in the project can reach past, which is `expose`.
+Whether those are one mechanism with a precedence order, or several with
+different reach, is open.
 
-**What implements `guaranteed` in a harness with no hooks.** The category
-promises a mechanism, and mechanisms are harness-specific — so a harness without
-one either cannot honour `guaranteed`, or honours it by degrading to `expected`
-while still reading as guaranteed. Which of those is acceptable, and whether
-there is a third answer, belongs to Entry 5.
+**And authority need not mean an unreachable declaration.** A governing body's
+rule could live somewhere the adopter cannot edit, which prevents a violation.
+Or it could live in the repository like everything else, with something external
+checking that the repository still complies — which reports a violation instead.
+**This design already prefers the second shape elsewhere**: a vendored bundle is
+editable and the checksum detects the edit rather than forbidding it. Which is
+right here depends on whether a governing body needs violations stopped or
+needs them found.
+
+Several problems already on the list are facets of this rather than separate
+things. Entry 4's *Enablement* is an override to never; its *Precedence* is what
+happens when claims collide; its *Level* — bundles declaring who they are for —
+is the same question seen from the bundle's side. If this is designed in one
+place, those should point at it.
+
+**A checking mechanism may be a cheaper `guaranteed`, and is worth
+considering.** The obvious implementation loads on every match, including every
+time the model would have loaded the content anyway. One that instead notices
+the content is absent when it should be present pays the body only on a miss.
+Same promise, different bill. Whether that is a better default, a special case,
+or a thing only some harnesses can do belongs to Entry 5.
+
+**What implements `guaranteed`, and what a harness has to have for it.** Hooks
+are not the only route. An **unconditional** guarantee needs only a file the
+harness always loads — `CLAUDE.md` and its equivalents, which nearly every
+harness has — and it pays the whole body into the session floor for the
+privilege. A **conditional** one needs something that evaluates the condition and
+injects, which fewer harnesses offer.
+
+**So the matcher decides which mechanisms can serve it**, not just what it costs.
+A harness that cannot evaluate conditions can honour `matches: always` and
+little else. What it should then do with a conditional guarantee — refuse it, or
+degrade it to `expected` while it still reads as guaranteed to everyone who
+declared it — belongs to Entry 5.
 
 ---
 
@@ -667,12 +766,25 @@ Entry 3** — *Adapter input*, which decides what a harness has to work with.
 
 ---
 
-# Entry 6 — how a bundle reaches a repository
+# Entry 6 — how a bundle reaches a catalog
+
+**Not yet written.** Publishing is a different movement from fetching — a
+different actor, at a different moment, into a repository nobody adopting has
+written to. Splitting it out is what stops the two being reasoned about as one.
+
+**Inherits from Entry 2** — *Identity*, which decides what a bundle is called
+where others will find it; *Version*, which decides what a release promises; and
+*Boundary*, which decides what is released together.
+
+---
+
+# Entry 7 — how a bundle reaches a repository
 
 **Not yet written.** No problems are unique to it yet, and saying so is more
 honest than inventing some.
 
-**Inherits from Entry 2** — *Version*, which decides what a release means, and
-*Boundary*, which decides what is released together. **From Entry 4** —
-*Provenance*, *Integrity*, *Currency*, *Divergence* and *Reproducibility*, each
-of which is recorded there and exercised here.
+**Inherits from Entry 2** — *Identity*, since a copy is keyed by it. **From
+Entry 4** — *Provenance*, *Integrity*, *Currency*, *Divergence* and
+*Reproducibility*, each of which is recorded there and exercised here. This is
+also where a bundle is **adopted** rather than merely landing, and the
+difference between those is Entry 4's to detect.
