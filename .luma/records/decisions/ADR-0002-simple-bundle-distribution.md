@@ -1,12 +1,11 @@
 ---
 type: decision
-title: Adoption copies a directory and never resolves anything
+title: Simple bundle distribution
 decided: 2026-08-23
 lifecycle: draft
-reopen_trigger: Bundle dependencies are adopted as a design, at which point something has to decide what a bundle's declared needs mean at `get` time.
 ---
 
-# ADR-0002: The `get` command copies a directory
+# ADR-0002: Simple bundle distribution
 
 `luma-foreman get` copies one bundle directory and writes a receipt. It
 resolves no graph, fetches nothing later, and typically installs nothing.
@@ -27,7 +26,7 @@ source, the source's commit, and a checksum of exactly what landed.
 **The copy is committed** with the rest of the project.
 
 **Refuse rather than overwrite.** A vendored copy that was edited
-locally is never silently replaced.
+locally is never silently replaced; it should fail loudly.
 
 ## Why
 

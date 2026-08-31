@@ -61,7 +61,7 @@ answers**, and the journal says which and why.
 | standards and permissions | `docs/examples/design-first-working-mode.md` | — |  |  |  | skipped — reader excluded `docs/examples/` from this sweep |
 | standards and permissions | `docs/examples/no-competitor-names-in-committed-docs.md` | — |  |  |  | skipped — reader excluded `docs/examples/` from this sweep |
 | decisions | `.luma/records/decisions/ADR-0001-apply-writes-adapters-not-copies.md` | both | human:benlinton | human:benlinton | findings | 005 |
-| decisions | `.luma/records/decisions/ADR-0002-adoption-copies-and-never-resolves.md` | both |  |  |  |  |
+| decisions | `.luma/records/decisions/ADR-0002-simple-bundle-distribution.md` | both |  |  |  |  |
 | decisions | `.luma/records/decisions/ADR-0003-cli-speaks-convention-not-metaphor.md` | both |  |  |  |  |
 | decisions | `.luma/records/decisions/ADR-0004-refit-is-removed-not-renamed.md` | both |  |  |  |  |
 | decisions | `.luma/records/decisions/ADR-0005-a-retired-word-is-released-when-its-referent-goes.md` | both |  |  |  |  |
