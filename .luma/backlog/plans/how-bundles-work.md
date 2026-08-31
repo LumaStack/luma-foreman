@@ -585,7 +585,9 @@ they are settled.
 1. **Identity.** How a bundle is named, whether that name survives moving
    between catalogs or the repository being renamed, and what a bundle written
    in a project takes as a namespace when there is no catalog behind it.
-2. **Contents.** What must be present for a directory to be a bundle at all.
+2. **Contents.** What a directory must contain to be a bundle, what it may
+   contain besides, and what a well-formed one carries even where nothing
+   requires it.
 3. **Version.** What the number promises, and what counts as breaking when the
    thing versioned is knowledge rather than an API.
 4. **Boundary.** What belongs in one bundle rather than two — a bundle is a
@@ -618,6 +620,109 @@ settled per case, so declaring `needs` at either level is defensible and nothing
 above rules out either. What decides it is who can act: the
 adopter works in bundles, at fetch time, while a document's need surfaces at
 delivery time to an agent mid-task who cannot adopt anything.
+
+## What touches a bundle
+
+**Every item below is a demand on what a bundle has to carry.** They are
+collected here rather than in the entries that own each moment, because the
+question this entry answers — what a bundle holds — is answered by all of them
+at once rather than by any one of them.
+
+### Authoring and publishing
+
+- An author creates a bundle from nothing
+- An author adds or removes a document
+- An author changes a rule's meaning
+- An author patches typos or prose without changing outcomes
+- An author, agent, or CI updates a bundle's changelog
+- An author changes a bundle version
+- An author decides what belongs in this bundle rather than a new one
+- An author declares what the bundle provides
+- An author declares what it needs provided
+- A curator validates a bundle before it goes into a catalog
+- Someone browses a catalog deciding what to take
+- A bundle moves — promoted out of a project, or between catalogs
+
+### Fetching
+
+- A project takes a bundle it has never had
+- A project checks whether something newer exists upstream
+- A project verifies its copy is unmodified
+- A project takes a newer version over an older one
+- A project stops using a bundle
+- A tool detects a directory nobody adopted, or a record with no directory
+- A bundle's needs are unsatisfied and something says so
+- A set of bundles is taken together rather than one at a time
+
+### Registering
+
+- A tool resolves what answers which condition, and what each workflow is called
+- A tool settles a collision between two bundles claiming one name
+- A tool applies whatever the adopter overrode
+- A tool checks the mechanism a declaration depends on actually exists
+- A tool detects that two providers contradict rather than compose
+
+### Working
+
+- An agent orients: what does this project know at all
+- An agent judges whether this bundle bears on what it is doing
+- An agent opens a bundle to see what is inside
+- An agent loads one document
+- A mechanism injects a document because a condition fired
+- Somebody names a document and it loads
+- A document cites another document and that resolves
+- An agent needs part of a document rather than all of it
+- An agent finds something inside a bundle without reading the whole bundle
+
+### Maintaining
+
+- A maintainer reads what changed between two versions
+- A maintainer decides whether an upgrade is worth taking
+- A maintainer diagnoses why something did not load when it should have
+- A maintainer finds what is costing the most session floor
+- A maintainer edits a vendored copy deliberately and wants that recorded
+
+### Governance — the rule exists
+
+Someone with authority says so. Nothing is enforced or checked by the saying.
+
+- A governing body declares a rule that reaches repositories which did not ask
+  for it
+- A governing body forbids content, or restricts which bundles a session, agent
+  or model type may load
+- A governing body mandates that something load and the project may not demote
+  it
+- An adopter attempts an override they are not entitled to make
+
+### Enforcement — the rule happens
+
+Mechanical, in the harness, at the moment of action.
+
+- A harness refuses to load content the rules forbid
+- A harness restricts what an agent may touch
+- Something loads because a rule required it, not because anyone chose it
+
+### Compliance — the rule is checked
+
+Outside the harness, after the fact.
+
+- A check runs against a repository and reports what does not match
+- A violation nobody prevented gets found
+- A project proves it conformed, to somebody who was not watching
+
+## Two findings already out of this list
+
+**A bundle carries two descriptions, not one.** Catalog copy answers *is this
+worth having* for somebody deciding whether to adopt, and is read once, before
+the bundle is here. An announcement answers *does this bear on what I am doing*
+for a model, and is paid for in every session forever. Different audiences,
+different lengths, different costs — and the prototype's single `description` is
+the catalog string, which is part of why the announcement has no natural size.
+
+**Catalog-facing data is sidecar material.** It has to travel with the bundle so
+a browser can read it, and nothing needs it once the bundle is adopted. That
+puts it in the same class as a changelog: present in the bundle, never in the
+session floor.
 
 ---
 
