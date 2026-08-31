@@ -91,22 +91,25 @@ prevention is genuinely required there, or whether nobody asked the question.
 
 Pinned because the later entries cannot be cut without it.
 
+### Places and movements
+
 **context** — what a model can actually see at the moment it acts. The scarce
 resource, and the destination Entry 1 is about. Distinct from *disk*, where a
 bundle lands, and from a *harness*, which reads files a model never sees.
 
-**adapter** — what `register` leaves behind: harness-specific files that let one
-harness find what a binding decided. The harness-specific twin of a binding —
-the same correspondence, expressed in whatever shape that harness reads. *Thin* is the goal and still needs a testable meaning. A pointer is cheap and
-cannot drift; a copy is a second source of truth and can. Whether an adapter
-may ever inline content — for a harness that cannot follow a pointer, or where
-inlining is the only way to get an acceptable outcome — is open. Optimize for
-reliability, followed closely by minimizing duplication.
+**land** — reaching disk. What `get` does: a bundle lands in the repository as a
+committed copy and stays there whether or not anything ever reads it.
 
-*Open: whether an adapter is one file or a set.* `apply` writes several per
-harness — a skill per workflow, a table a hook reads, a block in a memory file —
-so the word is either collective for all of it, or each file is an adapter and a
-harness gets many.
+**register** — writing the binding into one harness's own format so that harness
+can consult it. **One binding, registered once per harness** — the deciding
+happens once and the writing happens per consumer, which is what makes an
+adapter thin rather than merely small.
+
+**load** — reaching context. Content entering what a model can see, by whatever
+mechanism put it there. `/load-bundle` and `/load-context` are named for this,
+so the concept and the command agree.
+
+### What declares, and what it resolves to
 
 **matcher** — a declaration on a document, or on a bundle, of the conditions
 under which it loads. Written by an author who has never seen the adopting
@@ -125,39 +128,22 @@ input to resolution rather than an edit of the result**, since the binding is
 recomputed on every `apply`. Mostly harness-agnostic: resolving name collisions
 assumes a harness that addresses things by name, which most do.
 
-**register** — writing the binding into one harness's own format so that harness
-can consult it. **One binding, registered once per harness** — the deciding
-happens once and the writing happens per consumer, which is what makes an
-adapter thin rather than merely small.
+**adapter** — what `register` leaves behind: harness-specific files that let one
+harness find what a binding decided. The harness-specific twin of a binding —
+the same correspondence, expressed in whatever shape that harness reads.
 
-**expose** — control over what a model can reach at all, as opposed to what it
-should load. Where a matcher and a binding say *when this applies*, exposure
-says whether the model may open it — **and whether it can see there is anything
-to open.** Enforced by something standing between the model and the content,
-rather than by anything the model is told. The governance half: a boundary
-rather than a correspondence.
+*Thin* is the goal and still needs a testable meaning. A pointer is cheap and
+cannot drift; a copy is a second source of truth and can. Whether an adapter
+may ever inline content — for a harness that cannot follow a pointer, or where
+inlining is the only way to get an acceptable outcome — is open. Optimize for
+reliability, followed closely by minimizing duplication.
 
-What enforces it, who sets it, **whether visibility and openability are one
-control or two**, and whether it introduces a permission axis crossing Entry 1's
-categories are all open.
+*Open: whether an adapter is one file or a set.* `apply` writes several per
+harness — a skill per workflow, a table a hook reads, a block in a memory file —
+so the word is either collective for all of it, or each file is an adapter and a
+harness gets many.
 
-**adopt** — a project taking a bundle and becoming answerable for what it does
-here. The bundle **lands** as a committed copy and the project records that it
-belongs. **Landing and adopting are not the same event**: a copy that landed
-without being adopted is a stray, and detecting that is most of why the record
-is worth keeping.
-
-**adopter** — whoever makes that decision and answers for it. Distinct from the
-**author**, who wrote the bundle without seeing this project, and from a
-**governing body**, whose rules the adopter may not overrule — whether that is
-enforced by putting them out of reach or by checking compliance afterwards.
-
-**land** — reaching disk. What `get` does: a bundle lands in the repository as a
-committed copy and stays there whether or not anything ever reads it.
-
-**load** — reaching context. Content entering what a model can see, by whatever
-mechanism put it there. `/load-bundle` and `/load-context` are named for this,
-so the concept and the command agree.
+### Asking for something
 
 **request** — the act of naming something so it enters context. Available to a
 person, to another agent, to a document citing another, and to a mechanism whose
@@ -170,6 +156,45 @@ anything can invoke it, which would be the one announcement `standby` pays for.
 **Deliberately unspecific about form** — a command, a tool call, something not
 yet determined — because an adapter provides it and Entry 5 decides what it is.
 Naming it for a form it may not take is how a word starts lying.
+
+### Governance
+
+**governing body** — whoever sets rules an adopter may not overrule. Security,
+compliance, whoever answers for the organization. **What separates them from
+another opinion is that the adopter cannot override them back** — enforced
+either by putting their rules beyond the adopter's reach, which prevents a
+violation, or by checking afterwards that a repository still complies, which
+reports one. Which of those is right, and where a rule lives under either, is
+open.
+
+**expose** — control over what a model can reach at all, as opposed to what it
+should load. Where a matcher and a binding say *when this applies*, exposure
+says whether the model may open it — **and whether it can see there is anything
+to open.** Enforced by something standing between the model and the content,
+rather than by anything the model is told. The governance half: a boundary
+rather than a correspondence.
+
+What enforces it, who sets it, **whether visibility and openability are one
+control or two**, and whether it introduces a permission axis crossing Entry 1's
+categories are all open.
+
+### Who decides
+
+**adopt** — a project taking a bundle and becoming answerable for what it does
+here. The bundle **lands** as a committed copy and the project records that it
+belongs. **Landing and adopting are not the same event**: a copy that landed
+without being adopted is a stray, and detecting that is most of why the record
+is worth keeping.
+
+**adopter** — whoever takes a bundle into a project and answers for what it does
+there.
+
+**author** — whoever wrote the bundle, having never seen the projects that adopt
+it. Everything a bundle declares about how it loads is the author's claim, made
+without knowing any particular project — which is why an adopter needs some way
+to disagree.
+
+### What it costs
 
 **residency** — the state of currently occupying context, as distinct from
 having loaded. **Residency ends**: a compaction can summarize it away, `/clear`
