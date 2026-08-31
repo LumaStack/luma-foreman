@@ -1,11 +1,11 @@
 ---
 type: decision
-title: Simple bundle distribution
+title: MVP bundle distribution
 decided: 2026-08-23
 lifecycle: draft
 ---
 
-# ADR-0002: Simple bundle distribution
+# ADR-0002: MVP bundle distribution
 
 `luma-foreman get` copies one bundle directory and writes a receipt. It
 resolves no graph, fetches nothing later, and typically installs nothing.
