@@ -31,7 +31,7 @@ Each one depends on the entries above it and on none below.
 
 | | entry | reaches where | answers |
 | --- | --- | --- | --- |
-| 0 | established vocabulary | — | how to use shared predictable language |
+| 0 | established vocabulary | — | the words every later entry depends on |
 | 1 | how knowledge reaches context | a model's context | what everything else is classified by |
 | 2 | what a bundle is | — | the unit everything else references |
 | 3 | what a document is | — | the thing a bundle holds |
@@ -215,6 +215,19 @@ all have to say which of these they are producing.
    re-establishes it, and how anything knows it needs to.
 
 ## The categories
+
+```
+guaranteed  a mechanism puts it there
+offered     the model decides
+  ├─ expected   absence is a miss
+  └─ optional   absence is fine
+standby     nothing decides until somebody asks
+```
+
+**`offered` is a bracket rather than a fifth category.** It names the pair the
+model chooses between, and it marks the line where verifiability stops:
+`guaranteed` is the only one a tool can check, and nothing under `offered` can
+be checked by anything.
 
 **Each category describes what a document does on its own.** They are named as
 statuses rather than as mechanisms, because the mechanism can change without the
