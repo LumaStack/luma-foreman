@@ -25,32 +25,112 @@ worked through capabilities, `needs` and `provides`; *knowledge delivery* and *h
 delivery* worked through transports. Whatever survives from them gets restated
 in an entry here and argued on its own. Nothing is carried forward by citation.
 
-## Established vocabulary
+## The entries, and why in this order
+
+Each one depends on the entries above it and on none below.
+
+| | entry | reaches where | answers |
+| --- | --- | --- | --- |
+| 0 | established vocabulary | — | how to use shared predictable language |
+| 1 | how knowledge reaches context | a model's context | what everything else is classified by |
+| 2 | what a bundle is | — | the unit everything else references |
+| 3 | what a document is | — | the thing a bundle holds |
+| 4 | what a project records about them | — | membership, provenance, integrity |
+| 5 | how knowledge reaches a harness | files a harness reads | what implements each category |
+| 6 | how a bundle reaches a repository | a directory on disk | the catalog, and `get` |
+
+**Three destinations, and they were all being called the same thing.** A bundle
+**lands** on disk when `get` copies it, is **registered** into a harness when
+`apply` writes adapters, and **loads** into context when a model reads it.
+Naming the destination is what keeps Entries 1, 5 and 6 from collapsing into
+each other — which they did twice while this document was being cut. **There is
+no word for the whole path**, deliberately: nobody observes that arrival failed,
+only that something did not load, and the stages behind it are walked by name.
+
+**Problems are stated once, where they are decided.** An entry that depends on a
+problem it does not own says so and points at the owner rather than restating
+it — a problem written twice is a problem that will be answered twice, and
+differently.
+
+## Settled before this document opened
+
+- **The bundle boundary does not decide relevance.** `git-secrets` holds
+  credentials and identity, whose first moves are opposite, so a bundle's
+  contents need not share one profile. Reading may therefore be decided per
+  document — or per bundle, where that genuinely is the right grain. Which
+  grain applies where is open, and Entry 5 is where it gets decided.
+- **Presence and reading are separate axes.** What must be *fetched* is
+  bundle-grained, because fetching is. What is *read* has its own grain, settled
+  per case rather than by the fetch boundary. A claim about one is not a claim
+  about the other, and conflating them is what made bundle-level dependency look like it contradicted the bullet above.
+
+---
+
+# Entry 0 — established vocabulary
 
 Pinned because the later entries cannot be cut without it.
-
-**adapter** — files written into a harness's own configuration that make
-harness-agnostic content reachable. *Thin* is the goal and still needs a
-testable meaning. A pointer is cheap and cannot drift; a copy is a second source
-of truth and can. Whether an adapter may ever inline content — for a harness
-that cannot follow a pointer, or where inlining is the only way to get an
-acceptable outcome — is open. Optimize for reliability, followed closely by
-minimizing duplication.
-
-**matcher** — a declaration on a document, or on a bundle, of the conditions
-under which it surfaces. *When* is certain. Whether a matcher also determines
-*how* it arrives — or whether that is derived from its shape — is open, and
-belongs to Entry 5. *Where* has no case behind it yet and is deliberately not
-claimed - although they may change as the final design emerges.
 
 **context** — what a model can actually see at the moment it acts. The scarce
 resource, and the destination Entry 1 is about. Distinct from *disk*, where a
 bundle lands, and from a *harness*, which reads files a model never sees.
 
+**adapter** — what `register` leaves behind: harness-specific files that let one
+harness find what a binding decided. The harness-specific twin of a binding —
+the same correspondence, expressed in whatever shape that harness reads. *Thin* is the goal and still needs a testable meaning. A pointer is cheap and
+cannot drift; a copy is a second source of truth and can. Whether an adapter
+may ever inline content — for a harness that cannot follow a pointer, or where
+inlining is the only way to get an acceptable outcome — is open. Optimize for
+reliability, followed closely by minimizing duplication.
+
+*Open: whether an adapter is one file or a set.* `apply` writes several per
+harness — a skill per workflow, a table a hook reads, a block in a memory file —
+so the word is either collective for all of it, or each file is an adapter and a
+harness gets many.
+
+**matcher** — a declaration on a document, or on a bundle, of the conditions
+under which it loads. Written by an author who has never seen the adopting
+project, so it claims *when this content applies*, not what any project will do
+about it. *When* is certain. Whether a matcher also determines *how* it loads —
+or whether that is derived from its shape — is open, and belongs to Entry 5.
+*Where* has no case behind it yet and is deliberately not claimed.
+
+**binding** — the resolved correspondence for one project: which content answers
+which condition, and which name each workflow takes. `apply` produces it by
+resolving every adopted bundle's matchers against each other and against
+whatever the project has settled. Where a matcher is what an author claimed, a
+binding is what this project decided — it is where two bundles claiming one name
+get separated, and where an adopter's override takes effect. **The override is an
+input to resolution rather than an edit of the result**, since the binding is
+recomputed on every `apply`. Mostly harness-agnostic: resolving name collisions
+assumes a harness that addresses things by name, which most do.
+
+**register** — writing the binding into one harness's own format so that harness
+can consult it. **One binding, registered once per harness** — the deciding
+happens once and the writing happens per consumer, which is what makes an
+adapter thin rather than merely small.
+
+**expose** — control over what a model can reach at all, as opposed to what it
+should load. Where a matcher and a binding say *when this applies*, exposure
+says whether the model may open it — **and whether it can see there is anything
+to open.** Enforced by something standing between the model and the content,
+rather than by anything the model is told. The governance half: a boundary
+rather than a correspondence.
+
+What enforces it, who sets it, **whether visibility and openability are one
+control or two**, and whether it introduces a permission axis crossing Entry 1's
+categories are all open.
+
+**land** — reaching disk. What `get` does: a bundle lands in the repository as a
+committed copy and stays there whether or not anything ever reads it.
+
+**load** — reaching context. Content entering what a model can see, by whatever
+mechanism put it there. `/load-bundle` and `/load-context` are named for this,
+so the concept and the command agree.
+
 **request** — the act of naming something so it enters context, whatever its
 category. Available to a person, to another agent, and to a document citing
 another. The manual counterpart of `guaranteed`. And the only way anything on
-`standby` arrives into context.
+`standby` loads.
 
 **request helper** — whatever performs a request. It has to be announced before
 anything can invoke it, which is the one shared line `standby` pays.
@@ -58,8 +138,12 @@ anything can invoke it, which is the one shared line `standby` pays.
 yet determined — because an adapter provides it and Entry 5 decides what it is.
 Naming it for a form it may not take is how a word starts lying.
 
-**residency** — content occupying context. Anything loaded has taken up
-residency, whenever and however it got there.
+**residency** — the state of currently occupying context, as distinct from
+having loaded. **Residency ends**: a compaction can summarize it away, `/clear`
+empties it, a long session pushes it out. So *it loaded* and *it is here* are
+different claims, and the gap between them is where a guarantee quietly stops
+being true without anything reporting it. The adjective is *resident*; *loaded*
+is ambiguous between the event and the state.
 
 **session floor** — the residency every session pays before the work is known,
 whether or not the work turns out to touch it. What `expected` and `optional`
@@ -80,48 +164,11 @@ others cannot express.
 
 **Retired: `bundle entrypoint`.** Already stated twice over: a bundle's
 self-description says what to read first, and each document's matcher says what
-surfaces it. A third statement of the same fact is three places to disagree.
+loads it. A third statement of the same fact is three places to disagree.
 
 **Avoided: `delivery`, `triggers`.** *Delivery* spans every category in Entry 1
 at once and hides the differences between them. *Triggers* is `matcher` under
 another name.
-
-## The entries, and why in this order
-
-Each one depends on the entries above it and on none below.
-
-| | entry | arrives where | answers |
-| --- | --- | --- | --- |
-| 1 | how knowledge reaches context | a model's context | what everything else is classified by |
-| 2 | what a bundle is | — | the unit everything else references |
-| 3 | what a document is | — | the thing a bundle holds |
-| 4 | what a project records about them | — | membership, provenance, integrity |
-| 5 | how knowledge reaches a harness | files a harness reads | what implements each category |
-| 6 | how a bundle reaches a repository | a directory on disk | the catalog, and `get` |
-
-**Arrival has three destinations and they were all being called the same
-thing.** A bundle reaches *disk* when `get` copies it. It reaches a *harness*
-when `apply` writes adapters. It reaches *context* when a model actually reads
-it. Naming the destination is what keeps Entries 1, 5 and 6 from collapsing into
-each other — which they did twice while this document was being cut.
-
-**Problems are stated once, where they are decided.** An entry that depends on a
-problem it does not own says so and points at the owner rather than restating
-it — a problem written twice is a problem that will be answered twice, and
-differently.
-
-## Settled before this document opened
-
-- **The bundle boundary does not decide relevance.** `git-secrets` holds
-  credentials and identity, whose first moves are opposite, so a bundle's
-  contents need not share one profile. Reading may therefore be decided per
-  document — or per bundle, where that genuinely is the right grain. Which
-  grain applies where is open, and Entry 5 is where it gets decided.
-- **Presence and reading are separate axes.** What must be *fetched* is
-  bundle-grained, because fetching is. What is *read* has its own grain, settled
-  per case rather than by the fetch boundary. A claim about one is not a claim
-  about the other, and conflating them is what made bundle-level dependency look
-  like it contradicted the bullet above.
 
 ---
 
@@ -136,25 +183,27 @@ all have to say which of these they are producing.
 
 1. **What an absence means.** Whether a document not being present is a defect,
    and if so, whose.
-2. **What can be verified.** Which arrivals a tool can check or enforce 
+2. **What can be verified.** Which loads a tool can check or enforce 
    (e.g. forcibly inject), and which no tool can ever check.
 3. **What each costs.** A mechanism, standing context, or nothing.
 4. **What the default is.** What a document gets by declaring nothing at all.
 5. **Whether strength is the same question.** How badly something is wanted,
-   versus whether it arrives.
+   versus whether it loads.
 6. **What an announcement may cost.** `expected` and `optional` are only cheap
    while their announcements stay small, and nothing yet holds them there.
 7. **Who declares, and who may override.** An author states how their document
-   or bundle arrives. Whether an adopting project can change that — force
+   or bundle loads. Whether an adopting project can change that — force
    something that was offered by default, demote something expected to optional,
    silence it, or narrow where it applies — and what happens when author and
    adopter disagree.
 8. **What a matcher means at each grain.** A bundle, a document and a section
    cannot all mean the same thing by it — a bundle has no body, so a matcher on
    one gates whether its contents are in play rather than delivering anything.
-   Whether all three grains exist, how they compose when they disagree, and what
-   a section-level matcher implies about a document needing an index of its own.
-9. **What survives a context reset.** Arrival happens at a moment; context does
+   Whether all three grains exist, how they compose when they disagree, what a
+   section-level matcher implies about a document needing an index of its own,
+   and whether a document may therefore span categories rather than sitting in
+   one.
+9. **What survives a context reset.** Loading happens at a moment; context does
    not persist. `/clear` empties it, `/compact` may summarize things away, and a
    long session may push them out — in every case silently. **Both halves fail,
    and differently.** An announcement that vanishes takes the model's map with
@@ -174,32 +223,52 @@ word going stale.
 **Nothing here is free — each category moves its cost somewhere else**, and the
 columns exist so that where is visible. The **session floor** is context spent
 before the work is known, in every session, whether or not it turns out to be
-touched. **When it lands** is context spent in the one session where the content
-actually arrives. **What must exist** is machinery somebody builds and keeps
+touched. **When it loads** is context spent in the one session where the content
+actually loads. **What must exist** is machinery somebody builds and keeps
 working, and in some cases runs on every tool call. Averaging any of these hides
 which is being spent, and calling one of them *nothing* hides that it was spent
 at all.
 
-| | left alone, it… | session floor | when it lands | what must exist |
+| | left alone, it… | session floor | when it loads | what must exist |
 | --- | --- | --- | --- | --- |
-| **guaranteed** | arrives | set by its matcher | its whole body | a mechanism, and something evaluating it on every call |
-| **expected** | announces itself, and should be taken | **its announcement** | its whole body | — |
-| **optional** | announces itself, and may be taken | **its announcement** | its whole body | — |
-| **standby** | does nothing until requested | **one shared line**, however many documents | its whole body | a request helper, and somebody who knows the name |
+| **guaranteed** | loads | set by its matcher | however much of it loads | a mechanism, and something evaluating it on every call |
+| **expected** | announces itself, and should be taken | **its announcement** | however much of it loads | — |
+| **optional** | announces itself, and may be taken | **its announcement** | however much of it loads | — |
+| **standby** | does nothing until requested | **one shared line**, however many documents | however much of it loads | a request helper, and somebody who knows the name |
 
-**`guaranteed` is priced by its matcher, not by its category** — and that price
-is not yet computable. A matcher that never narrows puts content into every
-session, which is the highest floor anything here can set. A conditional one
-keeps the floor at zero and pays instead for a mechanism that has to be built
-and kept working, plus an evaluation that runs on every tool call whether or not
-it matches. The category says it is forced; the matcher says how often; the bill
-follows the matcher.
+**`guaranteed` is priced by its matcher** — and that price is not yet computable.
+A matcher that never narrows puts content into every session, which is the
+highest floor anything here can set. A conditional one keeps the floor at zero
+and pays instead for a mechanism that has to be built and kept working, plus an
+evaluation that runs on every tool call whether or not it matches. The category
+says it is forced; the matcher says how often; the bill follows the matcher.
 
-**But *matcher* is one word over more than one job**, so the bill above is a
+**How much of a document loads is not settled either, and this table does not
+rule anything out.** Nothing here requires a whole body. A mechanism that
+injects can inject a part; a model opening a file can stop at a marked point; a
+document may be able to say in frontmatter or inline which of its parts belong
+to which category, so that one file spans several.
+
+**These may not be different mechanisms at all.** A document might mark where its
+announcement ends and its body begins — in frontmatter, inline, however — and
+that one marking could be honoured by whatever is doing the delivering: an
+injector that pushes only the first part, a model that opens only the first
+part, or a tool that hands over the first part and withholds the rest. Whether
+that is three mechanisms or one declaration honoured three ways is not decided.
+
+**What a tool adds there is enforcement rather than a different kind of
+delivery**, and it cuts both ways. A model cannot over-fetch what it cannot see,
+and cannot skip past a boundary it never learns about — which is both failures
+this design worries about, closed by one thing. But a model reading a filtered
+document believes it has the whole one, so anything withheld that qualified what
+remains is acted on as though it did not exist. Both are worth knowing before
+Entry 5 picks.
+
+**And *matcher* is one word over more than one job**, so the bill above is a
 sketch rather than an accounting. A bundle has no body to deliver, so a matcher
 on a bundle cannot mean *put this in context* — it must mean something nearer to
-*is this bundle in play at all*. A matcher on a document decides an arrival. A
-matcher on a section, if sections can carry one, decides how much of an arrival.
+*is this bundle in play at all*. A matcher on a document decides a load. A
+matcher on a section, if sections can carry one, decides how much of one.
 Those are three different declarations wearing one name, and until they are
 separated any cost stated here is provisional.
 
@@ -239,7 +308,7 @@ four above honest. A person types `/load-bundle`; an agent that noticed what
 this one missed names a document; a document being read cites another. In every
 case the content enters context regardless of its category.
 
-**A request is the manual counterpart of `guaranteed`.** Both force arrival; they
+**A request is the manual counterpart of `guaranteed`.** Both force a load; they
 differ only in who initiates — a mechanism, or somebody deciding. That is why it
 cannot be a fifth status: it is an action performed *on* a status, available to
 `expected`, `optional` and `standby` alike, and meaningless against `guaranteed`
@@ -274,7 +343,7 @@ of a complete tree, not points chosen off a spectrum.
 **Guaranteed obliges a check that the mechanism exists.** It is the only
 category whose promise can be verified, and an unverified one is worse than no
 promise at all: the author stops worrying about it, the adopter stops worrying
-about it, the content never arrives, and nothing says so. The check is what
+about it, the content never loads, and nothing says so. The check is what
 makes the category worth declaring.
 
 **Expected raises the session floor, and that is its price.** For a model to
@@ -296,7 +365,7 @@ set too high and every session pays for context it never touches. Set too low
 and the model does not know the right thing exists, so it either misses it or
 over-fetches to be safe. **As low a session floor as possible, and still enough
 to choose correctly** — getting that trade right is most of why these tools
-exist rather than a nice property of them.
+exist.
 
 **A single instance cannot be verified; a trend can be observed.** No tool can
 say *this should have been opened and was not* at the moment it happens, and
@@ -318,8 +387,8 @@ here**, because it changes what a miss costs and therefore how much skepticism
 the category actually deserves.
 
 **And requesting is not only a safety net.** It is recovery here, but it is
-`standby`'s sole means of arrival — so if Entry 5 does not provide something
-like `/load-bundle` or `/load-context`, a whole category has no delivery at all.
+`standby`'s only way in — so if Entry 5 does not provide something like
+`/load-bundle` or `/load-context`, a whole category has no delivery at all.
 
 ## Candidates, neither settled
 
@@ -396,7 +465,7 @@ they are settled.
    to it. If any document can be cited from anywhere, every internal path is
    public and nothing inside a bundle can be moved without breaking somebody.
 
-**Inherits from Entry 1** — the arrival categories, which *Self-description* has
+**Inherits from Entry 1** — the loading categories, which *Self-description* has
 to produce: what a bundle says about itself is a claim that some of its contents
 are expected and the rest optional.
 
@@ -427,7 +496,7 @@ delivery time to an agent mid-task who cannot adopt anything.
    it as something invocable, given the document cannot know which harness will
    read it.
 
-**Inherits from Entry 1** — the arrival categories, which a document's matcher
+**Inherits from Entry 1** — the loading categories, which a document's matcher
 has to select one of. **From Entry 2** — *Contents*, which decides what may sit
 in a bundle at all, and *Interface*, which decides whether a document is
 addressable from outside its own bundle.
@@ -554,7 +623,7 @@ knowledge tree is renamed the file moves with it and the name still holds. Also
 open: whether membership belongs in a file of its own at all, rather than in a
 project configuration alongside other settings.
 
-**And whether this file records more than what arrived.** A manifest that only
+**And whether this file records more than what landed.** A manifest that only
 says *what landed on this machine* excludes bundles written here, which never
 landed from anywhere — which would make it a receipt again, take the
 stray-directory check with it, and reopen the format decision above.
@@ -567,7 +636,7 @@ stray-directory check with it, and reopen the format decision above.
 
 ## What it has to solve
 
-1. **Granularity of arrival.** What must be declared so the right part arrives
+1. **Granularity of loading.** What must be declared so the right part loads
    at the right moment, and at what grain that is decidable: the bundle, the
    document, or something smaller.
 2. **Harness independence.** What a bundle may assume about whatever is reading
@@ -575,7 +644,7 @@ stray-directory check with it, and reopen the format decision above.
    harness is an adapter rather than a fork.
 3. **What implements each category.** Carried from Entry 1: what makes something
    guaranteed in a harness that has hooks, and what happens in one that does not.
-4. **Declared or derived.** Whether a matcher states how a document arrives, or
+4. **Declared or derived.** Whether a matcher states how a document loads, or
    whether that is computed from the matcher's shape.
 
 **Inherits from Entry 1** — the categories themselves. This entry decides what
