@@ -85,6 +85,24 @@ governing body's rule is the only case still open. **A design that detects
 everywhere except one place should know why that place is different** — whether
 prevention is genuinely required there, or whether nobody asked the question.
 
+## Checks key on state, not on the route
+
+**A bundle can arrive many ways.** `get` is one. It can be written here, copied
+in by hand, arrive as a submodule, or come from something that does not exist
+yet. **Anything attached to a command misses whatever arrived by another
+route** — which is why the manifest detects strays at all: a directory that
+landed without being adopted is precisely what a command-keyed check never sees.
+
+So verification, resolution and reporting run over what is present, whenever
+they run, rather than at the moment something arrived. Two consequences follow.
+They have to be **re-runnable**, and they have to produce **the same answer from
+the same state**, or each run churns what the last one settled.
+
+**And a check over state can warn where one bound to a command would block.**
+Taking a second provider is not a mistake to prevent — the adopter may be doing
+it deliberately, meaning to silence the first. Detection lets them; prevention
+at the moment of fetch would not.
+
 ---
 
 # Entry 0 — established vocabulary
@@ -653,6 +671,10 @@ at once rather than by any one of them.
 - A tool detects a directory nobody adopted, or a record with no directory
 - A bundle's needs are unsatisfied and something says so
 - A set of bundles is taken together rather than one at a time
+- A bundle from one catalog satisfies a need declared by a bundle from another
+- An organization replaces a capability a public bundle provides, keeping the
+  rest of that bundle
+- Something already present precludes the bundle being taken
 
 ### Registering
 
@@ -686,12 +708,10 @@ at once rather than by any one of them.
 
 Someone with authority says so. Nothing is enforced or checked by the saying.
 
-- A governing body declares a rule that reaches repositories which did not ask
-  for it
+- A governing body declares a rule that reaches repositories which did not ask for it
 - A governing body forbids content, or restricts which bundles a session, agent
   or model type may load
-- A governing body mandates that something load and the project may not demote
-  it
+- A governing body mandates that something load and the project may not demote it
 - An adopter attempts an override they are not entitled to make
 
 ### Enforcement — the rule happens
@@ -710,7 +730,7 @@ Outside the harness, after the fact.
 - A violation nobody prevented gets found
 - A project proves it conformed, to somebody who was not watching
 
-## Two findings already out of this list
+## Findings already out of this list
 
 **A bundle carries two descriptions, not one.** Catalog copy answers *is this
 worth having* for somebody deciding whether to adopt, and is read once, before
@@ -719,10 +739,107 @@ for a model, and is paid for in every session forever. Different audiences,
 different lengths, different costs — and the prototype's single `description` is
 the catalog string, which is part of why the announcement has no natural size.
 
-**Catalog-facing data is sidecar material.** It has to travel with the bundle so
-a browser can read it, and nothing needs it once the bundle is adopted. That
-puts it in the same class as a changelog: present in the bundle, never in the
-session floor.
+**The long description is sidecar material.** It has to travel with the bundle
+so somebody deciding whether to take it can read it, and nothing needs it once
+the bundle is here. That puts it in the same class as a changelog: present in
+the bundle, rarely in the session, never in the floor. A catalog is one consumer of it rather
+than the reason it exists — a bundle with no catalog behind it still wants one.
+
+**Whatever expresses these relationships should ideally cross organizations that never
+spoke.** A bundle from one catalog can satisfy something a bundle from another
+declared, and an organization can replace part of a public bundle while keeping
+the rest. Both are wanted. Both mean the vocabulary spans boundaries nobody
+governs — so two organizations can coin one term meaning different things, a
+substitution silently succeeds, and the wrong policy applies with nothing to
+catch it. **Nothing discussed so far solves this**, and it is the hardest
+problem this list has produced. It is a constraint on any shape, not an argument
+for one.
+
+**A name alone would not carry enough.** Whether a thing tolerates more than one
+provider cannot come from the providers — two bundles cannot settle between
+themselves whether what they share admits company. And *what could satisfy this*
+has to be answerable from somewhere when nothing does. Both are demands on
+whatever shape is chosen; neither says where the knowledge lives, when it is
+computed, or that a name is the right unit at all.
+
+**Substitution may need no precedence rule**, under at least one shape.
+Replacing part of a public bundle with your own looks like it requires deciding
+which wins. It does not, if two answers to one question can be detected as a
+conflict: the adopter silences one and theirs stands. That is adopter override,
+which is needed anyway. **Precedence — nearer or later automatically wins —
+would be a resolver**, and this is the second feature that looked like it needed
+one and did not.  In any case, warning the user is ideal so they are never surprised.
+
+## What Dependency and Interface have to solve
+
+**These are the part of this section to trust.** They hold whatever shape ends
+up chosen, and they were derived from the use cases above rather than from any
+mechanism. The shapes that follow them are parked, not proposed.
+
+**A bundle assumes knowledge it does not contain.** A sweep workflow that says
+*check whether work landed* assumes an integration policy exists somewhere. If
+nothing provides one, the agent proceeds anyway on whatever it invents. → *An
+unmet assumption has to be detectable.*
+
+**Two independently-authored bundles say contradictory things and nothing
+notices.** One says never squash, another says squash freely. Both load, the
+model follows whichever it saw, and nothing crashes. → *Contradiction between
+bundles that never met has to be detectable.* Bundles should be curated rather
+than greedily consumed; but curation can not solve this problem on it's own.
+
+**An organization wants most of a public bundle and not one part of it.** Their
+merge policy differs; the rest is fine. → *A project has to be able to
+substitute its own answer for part of an adopted bundle without forking it.*
+I'm not sure if this is a good idea, but it's something to consider.
+
+**A bundle cannot know what else exists.** It is authored once and adopted into
+projects that do not exist yet, beside bundles that do not exist yet. →
+*Relationships have to be expressible without naming anything.*
+
+**More than one thing may legitimately answer the same question differently.**
+Landing work from a worktree and landing it normally are both *did this land*,
+under different conditions, and both are right. → *Coverage from several sources
+has to be expressible without reading as conflict.*
+
+### Shapes that have come up, none of them chosen
+
+**Recorded so the reasoning is not rebuilt, and kept subordinate on purpose.**
+Each was reached by elaborating a mechanism rather than by working from the
+problems above, which is the wrong direction and how a design acquires
+machinery nobody asked for. `provides` and `needs` is one to consider, not the
+answer.
+
+**Capabilities** — a document declares what it provides and what it needs, by
+name rather than by pointing at anything. Handles *name nothing* well. Struggles
+to separate contradiction from coverage, and pushes a vocabulary problem across
+organizational boundaries with nobody to govern it. The reason we name needs is
+because users need to be able to replace the default with their own version 
+and naming specific bundles does not work for that use case.
+
+**Direct references** — a bundle names another. Simplest, and fails *name
+nothing* outright: the reference goes stale when the other bundle is renamed,
+moved, or replaced by an equivalent. Direct refences may be a viable option
+but we should approach it with eyes wide open and it can't be the only option.
+
+**Project-level declaration** — the project states what it has and what it
+wants; bundles declare nothing. Puts the knowledge where the facts actually are,
+at the cost of every adopter doing work an author could have done once.
+
+**Convention** — documents about the same subject collide by path or type, and
+the collision is the signal. No new vocabulary at all; weak precision.
+
+**Read the content.** A model notices that two policies contradict without
+either having declared anything. The only shape that catches contradictions
+nobody anticipated. Expensive, unreliable, and newly plausible in a way it was
+not a few years ago.
+
+### What the shapes have in common
+
+**Four of the five problems are detection problems**, and detection is where
+this design keeps landing. The one that is not — substitution — turned out to
+reuse adopter override rather than needing a mechanism of its own. So it is
+possible the whole area needs less declaration than any of these shapes assume,
+and that is worth testing before any of them is built.
 
 ---
 
