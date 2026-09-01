@@ -756,6 +756,12 @@ applies with nothing to catch it. **Nothing discussed so far solves this**, and
 it is the hardest problem this list has produced. It is a constraint on any
 shape, not an argument for one.
 
+**And it is not an MVP problem.** It cannot happen until two organizations
+publish independently, so there is nothing yet to test a solution against and no
+way to tell a good one from a plausible one. What is worth having near MVP is
+the **shape of the declaration** settled — changing that later is expensive,
+while changing what it means is not.
+
 **A name alone would not carry enough.** Whether a thing tolerates more than one
 provider cannot come from the providers — two bundles cannot settle between
 themselves whether what they share admits company. And *what could satisfy this*
@@ -804,6 +810,9 @@ under different conditions, and both are right. → *Coverage from several sourc
 has to be expressible without reading as conflict.*
 
 ### Shapes that have come up, none of them chosen
+
+Most of this should get handled later in the roadmap because some or most of it 
+will not be necessary for the MVP.
 
 **Recorded so the reasoning is not rebuilt, and kept subordinate on purpose.**
 Each was reached by elaborating a mechanism rather than by working from the
