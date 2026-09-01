@@ -742,18 +742,19 @@ the catalog string, which is part of why the announcement has no natural size.
 **The long description is sidecar material.** It has to travel with the bundle
 so somebody deciding whether to take it can read it, and nothing needs it once
 the bundle is here. That puts it in the same class as a changelog: present in
-the bundle, rarely in the session, never in the floor. A catalog is one consumer of it rather
-than the reason it exists — a bundle with no catalog behind it still wants one.
+the bundle, rarely in the session, never in the floor. A catalog is one
+consumer of it rather than the reason it exists — a bundle with no catalog
+behind it still wants one.
 
-**Whatever expresses these relationships should ideally cross organizations that never
-spoke.** A bundle from one catalog can satisfy something a bundle from another
-declared, and an organization can replace part of a public bundle while keeping
-the rest. Both are wanted. Both mean the vocabulary spans boundaries nobody
-governs — so two organizations can coin one term meaning different things, a
-substitution silently succeeds, and the wrong policy applies with nothing to
-catch it. **Nothing discussed so far solves this**, and it is the hardest
-problem this list has produced. It is a constraint on any shape, not an argument
-for one.
+**Whatever expresses these relationships should ideally cross organizations
+that never spoke.** A bundle from one catalog can satisfy something a bundle
+from another declared, and an organization can replace part of a public bundle
+while keeping the rest. Both are wanted. Both mean the vocabulary spans
+boundaries nobody governs — so two organizations can coin one term meaning
+different things, a substitution silently succeeds, and the wrong policy
+applies with nothing to catch it. **Nothing discussed so far solves this**, and
+it is the hardest problem this list has produced. It is a constraint on any
+shape, not an argument for one.
 
 **A name alone would not carry enough.** Whether a thing tolerates more than one
 provider cannot come from the providers — two bundles cannot settle between
@@ -768,7 +769,8 @@ which wins. It does not, if two answers to one question can be detected as a
 conflict: the adopter silences one and theirs stands. That is adopter override,
 which is needed anyway. **Precedence — nearer or later automatically wins —
 would be a resolver**, and this is the second feature that looked like it needed
-one and did not.  In any case, warning the user is ideal so they are never surprised.
+one and did not. In any case, warning the adopter is ideal, so nothing about it
+is a surprise.
 
 ## What Dependency and Interface have to solve
 
@@ -785,7 +787,7 @@ unmet assumption has to be detectable.*
 notices.** One says never squash, another says squash freely. Both load, the
 model follows whichever it saw, and nothing crashes. → *Contradiction between
 bundles that never met has to be detectable.* Bundles should be curated rather
-than greedily consumed; but curation can not solve this problem on it's own.
+than greedily consumed, but curation cannot solve this on its own.
 
 **An organization wants most of a public bundle and not one part of it.** Their
 merge policy differs; the rest is fine. → *A project has to be able to
@@ -818,8 +820,8 @@ and naming specific bundles does not work for that use case.
 
 **Direct references** — a bundle names another. Simplest, and fails *name
 nothing* outright: the reference goes stale when the other bundle is renamed,
-moved, or replaced by an equivalent. Direct refences may be a viable option
-but we should approach it with eyes wide open and it can't be the only option.
+moved, or replaced by an equivalent. Direct references may still be viable with
+eyes open, but cannot be the only option.
 
 **Project-level declaration** — the project states what it has and what it
 wants; bundles declare nothing. Puts the knowledge where the facts actually are,
