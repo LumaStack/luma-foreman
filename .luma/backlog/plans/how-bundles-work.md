@@ -641,96 +641,323 @@ delivery time to an agent mid-task who cannot adopt anything.
 
 ## What touches a bundle
 
-**Every item below is a demand on what a bundle has to carry.** They are
-collected here rather than in the entries that own each moment, because the
-question this entry answers — what a bundle holds — is answered by all of them
-at once rather than by any one of them.
+**Every item below is a demand on what a bundle has to carry.** *Minimal* is the
+least that would work; *ideal* is what would make it good. Prose is noted only
+where it earns a line — most of these are read by tools, and silence means no.
+
+They are collected here rather than in the entries that own each moment, because
+the question this entry answers — what a bundle holds — is answered by all of
+them at once rather than by any one.
 
 ### Authoring and publishing
 
-- An author creates a bundle from nothing
-- An author adds or removes a document
-- An author changes a rule's meaning
-- An author patches typos or prose without changing outcomes
-- An author, agent, or CI updates a bundle's changelog
-- An author changes a bundle version
-- An author decides what belongs in this bundle rather than a new one
-- An author declares what the bundle provides
-- An author declares what it needs provided
-- A curator validates a bundle before it goes into a catalog
-- Someone browses a catalog deciding what to take
-- A bundle moves — promoted out of a project, or between catalogs
+**An author creates a bundle from nothing**
+*Minimal.* A name and a version exist.
+*Ideal.* A scaffold that cannot produce an invalid bundle, and a check that says
+whether one is valid.
+
+**An author adds or removes a document**
+*Minimal.* The version moves, and nothing the bundle still declares points at
+what left.
+*Ideal.* The bundle's own index cannot fall out of date, and internal references
+are checked rather than remembered.
+
+**An author changes a rule's meaning**
+*Minimal.* The version moves at the level that says this breaks something.
+*Ideal.* Plus what changed, and what an adopter has to do about it.
+*Prose.* The *why* is the part a maintainer needs, and no field carries it.
+
+**An author patches typos or prose without changing outcomes**
+*Minimal.* The smallest part of the version moves.
+*Ideal.* The record separates *nothing to do here* from *read this before
+upgrading*, so an adopter can skip safely.
+
+**An author, agent, or CI updates a changelog**
+*Minimal.* Somewhere to append.
+*Ideal.* Consistent enough in shape that something can answer *what changed
+since the version I have*.
+*Prose.* Almost entirely prose, which is exactly why it belongs outside anything
+loaded during work.
+
+**An author changes a bundle version**
+*Minimal.* The version is stored in one place.
+*Ideal.* Plus something that checks the size of the bump against the size of the
+change.
+
+**An author decides what belongs here rather than in a new bundle**
+*Minimal.* What is already in the bundle.
+*Ideal.* Plus a stated scope, so *does this fit* is answerable rather than felt.
+*Prose.* A boundary is a judgement and does not reduce to fields.
+
+**An author declares what the bundle provides**
+*Minimal.* Some way to say it that does not name anything else.
+*Ideal.* Plus knowing that another author, elsewhere, means the same thing.
+
+**An author declares what it needs provided**
+*Minimal.* The same, in the other direction.
+*Ideal.* Plus what should happen when nothing satisfies it.
+
+**A curator validates a bundle before it goes into a catalog**
+*Minimal.* Whatever a bundle must have is present.
+*Ideal.* Plus links resolve, matchers parse, and nothing collides with what the
+catalog already holds.
+
+**Someone browses a catalog deciding what to take**
+*Minimal.* Its name, its version, and the long description.
+*Ideal.* Plus what it provides and needs, who it is for, and some signal of what
+it will cost in session floor.
+*Prose.* Here the prose is the product — this reader is a person deciding.
+
+**A bundle moves, promoted out of a project or between catalogs**
+*Minimal.* An identity that does not encode where it currently lives.
+*Ideal.* Plus a trace of where it came from, so an adopter can follow it.
 
 ### Fetching
 
-- A project takes a bundle it has never had
-- A project checks whether something newer exists upstream
-- A project verifies its copy is unmodified
-- A project takes a newer version over an older one
-- A project stops using a bundle
-- A tool detects a directory nobody adopted, or a record with no directory
-- A bundle's needs are unsatisfied and something says so
-- A set of bundles is taken together rather than one at a time
-- A bundle from one catalog satisfies a need declared by a bundle from another
-- An organization replaces a capability a public bundle provides, keeping the
-  rest of that bundle
-- Something already present precludes the bundle being taken
+**A project takes a bundle it has never had**
+*Minimal.* A source, an identity, a version, and a way to tell that what arrived
+is what was sent.
+*Ideal.* Plus enough to know it will work here before taking it — its needs are
+satisfiable, its level is appropriate, and nothing already present precludes it.
+
+**A project checks whether something newer exists upstream**
+*Minimal.* The version it took, and somewhere to ask.
+*Ideal.* Plus what changed, answerable **without fetching first**.
+*Prose.* The answer to *should I care* is the changelog.
+
+**A project verifies its copy is unmodified**
+*Minimal.* A checksum over the copy.
+*Ideal.* Plus which files differ, since *something changed* is not actionable.
+
+**A project takes a newer version over an older one**
+*Minimal.* The new copy replaces the old.
+*Ideal.* Plus a refusal when the copy was edited here, and a statement of what
+the adopter now has to do.
+*Prose.* Upgrade instructions, where a version needs them.
+
+**A project stops using a bundle**
+*Minimal.* The directory and the record both go.
+*Ideal.* Plus a warning when something else was relying on what it satisfied.
+
+**A tool detects a directory nobody adopted, or a record with no directory**
+*Minimal.* The record, and a walk of what is on disk.
+*Ideal.* Nothing further — this one is already complete.
+
+**A bundle's needs are unsatisfied and something says so**
+*Minimal.* What this bundle requires, and what everything present offers.
+*Ideal.* Plus what could be taken to fix it.
+
+**A set of bundles is taken together rather than one at a time**
+*Minimal.* Something naming what is in the set.
+*Ideal.* Undecided, and it turns on whether a set is just a bundle that declares
+needs and holds nothing.
+
+**A bundle from one catalog satisfies a need declared by a bundle from another**
+*Minimal.* Whatever expresses the need and whatever expresses the satisfaction
+are comparable across catalogs that never coordinated.
+*Ideal.* Plus confidence that both sides mean the same thing — which is the
+unsolved problem below.
+
+**An organization replaces part of a public bundle, keeping the rest**
+*Minimal.* A way to stop one part applying without forking or dropping the
+bundle.
+*Ideal.* Plus detection that both the original and the replacement are present,
+so the substitution is visible rather than silent.
+
+**Something already present precludes the bundle being taken**
+*Minimal.* Enough to detect the conflict at all.
+*Ideal.* A warning rather than a refusal — the adopter may be doing it on
+purpose, intending to silence the other.
 
 ### Registering
 
-- A tool resolves what answers which condition, and what each workflow is called
-- A tool settles a collision between two bundles claiming one name
-- A tool applies whatever the adopter overrode
-- A tool checks the mechanism a declaration depends on actually exists
-- A tool detects that two providers contradict rather than compose
+**A tool resolves what answers which condition, and what each workflow is called**
+*Minimal.* Every document's matcher, type and name are discoverable.
+*Ideal.* Discoverable without opening every file, which matters only at scale.
+
+**A tool settles a collision between two bundles claiming one name**
+*Minimal.* Both claims, and which bundle each came from.
+*Ideal.* Plus a rule producing **stable** results, so a name an agent learned
+yesterday is still there today.
+
+**A tool applies whatever the adopter overrode**
+*Minimal.* The overrides, and what each attaches to.
+*Ideal.* Plus a complaint when an override points at something that no longer
+exists, since it otherwise does nothing silently.
+
+**A tool checks the mechanism a declaration depends on actually exists**
+*Minimal.* What mechanism each declaration needs, and whether this harness has
+it.
+*Ideal.* Plus what to do when it does not — refuse, degrade, or warn.
+
+**A tool detects that two providers contradict rather than compose**
+*Minimal.* Both declarations, and whether the thing they share tolerates company.
+*Ideal.* Plus which two, and what an adopter can do about it.
 
 ### Working
 
-- An agent orients: what does this project know at all
-- An agent judges whether this bundle bears on what it is doing
-- An agent opens a bundle to see what is inside
-- An agent loads one document
-- A mechanism injects a document because a condition fired
-- Somebody names a document and it loads
-- A document cites another document and that resolves
-- An agent needs part of a document rather than all of it
-- An agent finds something inside a bundle without reading the whole bundle
+**An agent orients — what does this project know**
+*Minimal.* A line for each thing this project holds. Whether "thing" means a
+bundle, a document, or something else is undecided — and that choice sets the
+session floor, which makes it the most consequential open question here.
+*Ideal.* Whichever grain produces the most useful matches for the fewest bytes.
+
+**An agent judges whether a bundle bears on the work**
+*Minimal.* The bundle's announcement — the short string a model compares against
+what it is currently doing.
+*Ideal.* An announcement written to be matched against work rather than to
+persuade somebody to adopt. Those are different jobs and one string will not do
+both well.
+
+**An agent opens a bundle to see what is inside**
+*Minimal.* A line for each document, saying enough that a reader can pick one.
+*Ideal.* Plus which to read first, and nothing listed that a reader cannot
+actually open.
+*Prose.* *Read this one first* is a judgement the author holds and no field
+expresses.
+
+**An agent loads one document**
+*Minimal.* A path.
+*Ideal.* Nothing further — already fully served.
+
+**A mechanism injects a document because a condition fired**
+*Minimal.* The condition that fired, the document to inject, and something able
+to do the injecting.
+*Ideal.* Plus a way to know the document is already in context. Without it, a
+condition firing forty times injects the same body forty times.
+
+**Somebody names a document and it loads**
+*Minimal.* A name, and something that turns that name into content.
+*Ideal.* Names stable enough that one learned in a previous session still works
+in this one.
+
+**A document cites another document**
+*Minimal.* The citation resolves to something loadable.
+*Ideal.* It still resolves after the target is renamed or moved, which
+constrains what a citation may be made of.
+
+**An agent needs part of a document rather than all of it**
+*Minimal.* The document has parts that can be addressed separately.
+*Ideal.* Those parts are declared by the author rather than inferred from
+headings by whatever is reading.
+
+**An agent finds something inside a bundle without reading the whole thing**
+*Minimal.* Some way to look that is not reading everything.
+*Ideal.* That way costs measurably less than reading would have. If it does not,
+it is a name for the problem rather than a solution.
 
 ### Maintaining
 
-- A maintainer reads what changed between two versions
-- A maintainer decides whether an upgrade is worth taking
-- A maintainer diagnoses why something did not load when it should have
-- A maintainer finds what is costing the most session floor
-- A maintainer edits a vendored copy deliberately and wants that recorded
+**A maintainer reads what changed between two versions**
+*Minimal.* A record of what changed, kept per version.
+*Ideal.* Readable without having both copies to compare, and structured enough
+to answer *since the version I hold*.
+*Prose.* What changed and why it matters is a judgement, not a diff.
+
+**A maintainer decides whether an upgrade is worth taking**
+*Minimal.* What changed.
+*Ideal.* Plus what it costs them specifically — whether anything they overrode
+disappears, whether a name they rely on moves.
+*Prose.* Whether a change matters here is exactly the judgement a changelog is
+written to support.
+
+**A maintainer diagnoses why something did not load when it should have**
+*Minimal.* What was supposed to load, and what actually did.
+*Ideal.* Plus which stage failed — it never landed, it landed but was never
+registered, or it was registered and did not load. Three destinations, three
+places to look.
+
+**A maintainer finds what is costing the most session floor**
+*Minimal.* What is resident before work starts, and how large each part is.
+*Ideal.* Plus whether it was ever used, so cost can be weighed against benefit
+rather than reported alone.
+
+**A maintainer edits a vendored copy deliberately and wants that recorded**
+*Minimal.* Some way to say the edit is intentional, so integrity checking stops
+reporting it as damage.
+*Ideal.* Plus what was changed, so a later upgrade knows what to preserve rather
+than silently discarding it.
+*Prose.* Why somebody diverged is the part that will not be reconstructable
+later.
 
 ### Governance — the rule exists
 
 Someone with authority says so. Nothing is enforced or checked by the saying.
 
-- A governing body declares a rule that reaches repositories which did not ask for it
-- A governing body forbids content, or restricts which bundles a session, agent
-  or model type may load
-- A governing body mandates that something load and the project may not demote it
-- An adopter attempts an override they are not entitled to make
+**A governing body declares a rule that reaches repositories which did not ask
+for it**
+*Minimal.* Somewhere a rule can be stated that the projects it binds do not own.
+*Ideal.* Plus a project being able to see that a rule applies to it, rather than
+finding out when something fails.
+
+**A governing body forbids content, or restricts which bundles a session, agent
+or model type may load**
+*Minimal.* A way to name what is forbidden that survives the thing being renamed.
+*Ideal.* Plus restricting by **who is asking** and not only by what is asked
+for — a rule that holds for one model and not another is a different axis from a
+rule about content.
+
+**A governing body mandates that something load and the project may not demote
+it**
+*Minimal.* A declaration that outranks the project's own.
+*Ideal.* Plus the project being able to see that it was outranked, rather than
+wondering why its override did nothing.
+
+**An adopter attempts an override they are not entitled to make**
+*Minimal.* The attempt does not take effect, and says so.
+*Ideal.* Plus naming who forbade it and where that came from, so the adopter can
+go argue with a person rather than with a tool.
 
 ### Enforcement — the rule happens
 
 Mechanical, in the harness, at the moment of action.
 
-- A harness refuses to load content the rules forbid
-- A harness restricts what an agent may touch
-- Something loads because a rule required it, not because anyone chose it
+**A harness refuses to load content the rules forbid**
+*Minimal.* The harness can see the rule at the moment of loading.
+*Ideal.* Plus refusing in a way the agent can tell apart from the content simply
+not existing.
+
+**A harness restricts what an agent may touch**
+*Minimal.* A boundary the harness can apply.
+*Ideal.* Mostly outside a bundle's concern — a bundle contributes the rule at
+most, never the mechanism.
+
+**Something loads because a rule required it, not because anyone chose it**
+*Minimal.* The same mechanism `guaranteed` needs.
+*Ideal.* Plus the agent knowing it arrived by mandate rather than by relevance,
+since that changes how much weight it should carry against what the work
+actually is.
 
 ### Compliance — the rule is checked
 
 Outside the harness, after the fact.
 
-- A check runs against a repository and reports what does not match
-- A violation nobody prevented gets found
-- A project proves it conformed, to somebody who was not watching
+**A check runs against a repository and reports what does not match**
+*Minimal.* The rules and the repository state, in comparable terms.
+*Ideal.* Plus running without the harness at all, since whoever checks
+compliance is generally not the person running the agent.
+
+**A violation nobody prevented gets found**
+*Minimal.* Detection after the fact.
+*Ideal.* Plus when it started, so the blast radius is knowable rather than
+assumed.
+
+**A project proves it conformed, to somebody who was not watching**
+*Minimal.* A report.
+*Ideal.* Plus something the project being checked cannot forge — self-reported
+compliance is worth roughly what it costs to produce.
+*Prose.* An exception is a judgement somebody has to explain and somebody else
+has to accept.
 
 ## Findings already out of this list
+
+**Prose earns a line in eleven of fifty-two use cases, and never for a tool.**
+Registering, governance and enforcement want it in none of their rows — those
+are the most mechanical moments in the design. Where it does appear it clusters
+on three things: **a change** (what moved and whether it matters), **a
+judgement** (does this fit, read this first, is this exception acceptable), and
+**a sell** (is this worth taking). That is most of the answer to *what value
+does prose have*, arrived at by counting rather than by asserting.
 
 **A bundle carries two descriptions, not one.** Catalog copy answers *is this
 worth having* for somebody deciding whether to adopt, and is read once, before
