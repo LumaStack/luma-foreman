@@ -1120,10 +1120,21 @@ covers.
 listing computed. Each half sits where it cannot go wrong; the cost is two
 things instead of one and a boundary that has to stay sharp.
 
-**The question that decides it:** does a bundle need to say anything about how
-its documents relate to each other? Ordering might be a field on a document.
-Grouping cannot be, since a document declaring *I belong with those two* has to
-know they exist — which is the coupling Interface exists to prevent.
+**Three places structure could come from**, and only the first is an index.
+Authored, as prose in the bundle. Declared, as a field on each document —
+ordering is the obvious candidate. Or **read off the links between documents**:
+a self-contained bundle whose documents cite each other already carries a graph,
+and relatedness can be derived from it without anything declaring a group.
+
+*Interface does not forbid that.* It exists to stop a bundle reaching into
+another bundle's internals; documents inside one bundle ship, move and version
+together, and the wikilink convention already assumes they name each other.
+
+**The question that decides it, then:** does a bundle need to say anything about
+its documents that neither a field nor the links can express? What a link does
+not carry is the **nature** of a relation — that one document is the exception
+to the others, or supersedes them, is not something *A cites B* says. Whether
+that belongs in an index, in the documents themselves, or nowhere is open.
 
 **What it blocks.** Entry 1's problem 8 waits on it, because *does a bundle have
 a body* is the same question wearing different clothes. So does **Contents** —
