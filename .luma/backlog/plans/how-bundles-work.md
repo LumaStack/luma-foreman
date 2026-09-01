@@ -341,6 +341,20 @@ and pays instead for a mechanism that has to be built and kept working, plus an
 evaluation that runs on every tool call whether or not it matches. The category
 says it is forced; the matcher says how often; the bill follows the matcher.
 
+**A category may be relative to its container, which would make that price
+computable.** Under that reading, `guaranteed` means *guaranteed once the thing
+holding me has loaded* — and the chain reaches the top only where every link is
+guaranteed. A document is resident in every session only if its bundle is too.
+The price is then the chance its container loads, times its size, recursively up
+to something that is always there. At the top that chance is one; two levels in,
+behind a bundle nobody opens, it is near zero.
+
+**And it expresses something neither pure category can.** A bundle nobody loads
+by default, which brings its own required policy the moment it is reached: the
+policy costs nothing until the bundle is wanted, and is not optional once it is.
+`guaranteed` alone would pay in every session. `expected` alone would let a
+model skip what the bundle needs in order to work.
+
 **How much of a document loads is not settled either, and this table does not
 rule anything out.** Nothing here requires a whole body. A mechanism that
 injects can inject a part; a model opening a file can stop at a marked point; a
@@ -662,15 +676,16 @@ what left.
 *Ideal.* The bundle's own index cannot fall out of date, and internal references
 are checked rather than remembered.
 
-**An author changes a rule's meaning**
+**An author changes a rule's meaning, behavior, or outcome**
 *Minimal.* The version moves at the level that says this breaks something.
 *Ideal.* Plus what changed, and what an adopter has to do about it.
 *Prose.* The *why* is the part a maintainer needs, and no field carries it.
+And it should never get loaded into context unless requested or necessary.
 
 **An author patches typos or prose without changing outcomes**
 *Minimal.* The smallest part of the version moves.
 *Ideal.* The record separates *nothing to do here* from *read this before
-upgrading*, so an adopter can skip safely.
+upgrading*, so an adopter can make informed upgrade decisions.
 
 **An author, agent, or CI updates a changelog**
 *Minimal.* Somewhere to append.
@@ -719,6 +734,7 @@ it will cost in session floor.
 is what was sent.
 *Ideal.* Plus enough to know it will work here before taking it — its needs are
 satisfiable, its level is appropriate, and nothing already present precludes it.
+These might be prechecks, since apply is probably where the primary gate should reside.
 
 **A project checks whether something newer exists upstream**
 *Minimal.* The version it took, and somewhere to ask.
@@ -732,7 +748,7 @@ satisfiable, its level is appropriate, and nothing already present precludes it.
 **A project takes a newer version over an older one**
 *Minimal.* The new copy replaces the old.
 *Ideal.* Plus a refusal when the copy was edited here, and a statement of what
-the adopter now has to do.
+the adopter now has to do. A framework for mechanical migrations.
 *Prose.* Upgrade instructions, where a version needs them.
 
 **A project stops using a bundle**
@@ -743,9 +759,15 @@ the adopter now has to do.
 *Minimal.* The record, and a walk of what is on disk.
 *Ideal.* Nothing further — this one is already complete.
 
+**A bundle requires a given tool or command to exist**
+*Minimal.* The get system warns when the tool is missing.
+*Ideal.* The get and/or apply system helps the user resolve missing tools, 
+requiring prior user confirmation.
+
 **A bundle's needs are unsatisfied and something says so**
 *Minimal.* What this bundle requires, and what everything present offers.
 *Ideal.* Plus what could be taken to fix it.
+This is a more broad version of the use case above, outside of command line needs.
 
 **A set of bundles is taken together rather than one at a time**
 *Minimal.* Something naming what is in the set.
@@ -824,7 +846,8 @@ expresses.
 *Minimal.* The condition that fired, the document to inject, and something able
 to do the injecting.
 *Ideal.* Plus a way to know the document is already in context. Without it, a
-condition firing forty times injects the same body forty times.
+condition firing forty times injects the same body forty times. Injection is
+logged so we can debug, observe, and improve.
 
 **Somebody names a document and it loads**
 *Minimal.* A name, and something that turns that name into content.
@@ -1248,6 +1271,104 @@ stray-directory check with it, and reopen the format decision above.
 implements them; it does not get to redefine them. **From Entry 2** —
 *Self-description*, which decides what a reader gets on opening a bundle. **From
 Entry 3** — *Adapter input*, which decides what a harness has to work with.
+
+## How loading might be structured
+
+**Parked, and recorded so none of it is re-derived.** Nothing here is chosen.
+
+### The shape this started from
+
+| ring | holds | fired by |
+| --- | --- | --- |
+| **`1-project`** | what this repository knows | the harness, at session start |
+| **`2-bundle`** | what one bundle holds | reaching for that bundle |
+| **`3-document`** | what one document holds | opening that document |
+| **`4-section`** | content — the leaf, with no map of its own | reading it |
+
+**Numbers go inward**, so what is outside everything you have is `0`.
+
+**One rule at every level: a map names the members of the next ring in.**
+`1-project` names bundles, `2-bundle` names documents, `3-document` names
+sections. Nothing to memorise beyond that.
+
+**Firing a ring delivers two things and only two:** what is always true at that
+level, and the map of the next ring in — every item's name, what it is for, and
+what fires it.
+
+**What it buys.** One rule at every level, so the same model works everywhere. A
+floor that is O(bundles) by construction rather than by discipline. And it
+anticipates sections, which answers *needing part of a document* before anyone
+asked.
+
+**What it costs.** Ring 1 names bundles, so the floor becomes a set of
+predictions that everything inside each bundle is relevant together — which the
+settled bullet says is false. When a bundle's line does not match, everything
+inside it is unreachable however well one document would have matched. And
+strict nesting assumes traversal is the only route, which it no longer is:
+`guaranteed` content is injected without any map firing, a request names a
+document directly, and a citation jumps sideways.
+
+### Announcement grain
+
+**Only bundles announce.** Cheapest floor. A document is unreachable when its
+bundle's line does not match.
+
+**Only documents announce.** Better matching, a floor several times larger, and
+no line saying what a bundle is *for*.
+
+**Both, always.** Most reliable, most expensive, and the two layers largely
+restate each other.
+
+**Bundles by default, documents opt in** where a bundle's line would not surface
+them. This is the four categories doing the work at both grains. Its weakness is
+that an author decides the opt-in while guessing about work they will never see.
+
+**The tension:** the uniform rule and the missed-bundle failure come from the
+same property. Relaxing the nesting so ring 1 may name something deeper fixes
+the failure and costs the rule.
+
+### Arriving without traversing
+
+A workflow invoked by name, a request, or a citation all arrive part-way in.
+What should come with them:
+
+**The container's guarantees, transitively** — one rule for every route, at the
+cost of a workflow's price never being just the workflow.
+
+**Nothing** — standalone, predictable, and the workflow may assume a policy it
+does not get.
+
+**The thing's own declared needs** — precise, reuses a mechanism the design
+needs anyway, and fails quietly when an author forgets.
+
+**An announcement of the container's guarantees, without loading them** — cheap,
+and it converts a guarantee into an offer, which is the degradation Entry 1
+warns about.
+
+**Nothing guaranteed below ring 1** — simplest possible model, and the
+offered-bundle-with-required-policy case becomes inexpressible.
+
+**The entry point declares its own behaviour** — control, at the cost of the
+uniform rule and of an author guessing again.
+
+### What would decide any of it
+
+**Is a workflow ever safe to run without its bundle's policy?** If never, the
+pull is mandatory. If usually, it is waste most of the time.
+
+**How large can a container's guarantees get?** Cheap at a paragraph, ruinous at
+a bundle's worth of policy — and nothing bounds it, which is problem 6 arriving
+at another level.
+
+**Uniform or per-case?** Every shape but the last applies one rule everywhere.
+
+### Settled for MVP
+
+**Workflows announce at ring 1 eagerly**, because the harness registers every
+skill's name and description at startup and an adapter cannot know which bundles
+a session will open. **That is a harness limit rather than a design choice.**
+Past MVP a dispatching super-skill, commands, files regenerated between turns,
+or hooks that register mid-session each change it.
 
 ---
 
