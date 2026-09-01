@@ -1028,6 +1028,108 @@ would be a resolver**, and this is the second feature that looked like it needed
 one and did not. In any case, warning the adopter is ideal, so nothing about it
 is a surprise.
 
+## What data any of this could need
+
+**Derived from the use cases above, and deliberately not placed.** Several
+groups belong to other entries — a document's fields are Entry 3's, a project's
+are Entry 4's, rules from above span governance — but they came out of one pass,
+and splitting them before any shape is settled would scatter the reasoning that
+produced them.
+
+**Nothing here is decided.** This is what could be needed, not what will exist,
+and several items may turn out to be the same thing said twice.
+
+### About a bundle itself
+
+- **identity** — what it is called; what a record keys on and a citation points at
+- **version** — what has changed since, and what a promise attaches to
+- **announcement** — the short text matched against work in progress, to decide
+  whether this bears on it
+- **scope** — what it covers, and what it deliberately does not
+- **long description** — for a person deciding whether to take it; read once,
+  never during work
+- **who it is for** — a project, an organization, or something else
+- **licence** — optional; travels with the content, since a bundle may have no
+  catalog behind it and may move between them
+- **maturity** — whether this is settled or still moving *(may be version said
+  twice)*
+- **compatibility** — what harnesses or tools it works with *(may belong to a
+  catalog)*
+- **supersession** — what replaces it, if anything
+
+### About what it contains
+
+- **the set of members** — which documents are in it
+- **member type** — what each one is: a policy, a workflow, something else
+- **member subject** — what each one is about
+- **reading order** — what to read first
+- **relatedness** — which members belong with which
+- **relation nature** — elaborates, contradicts, supersedes
+- **deliberate absence** — what this bundle does not cover, said so nobody goes
+  looking
+- **assets** — which files are material for a workflow rather than things to read
+
+### About its relationships to other bundles
+
+- **provides** — what it offers that something else could rely on
+- **needs** — what it assumes exists and does not itself contain
+- **precludes** — what it cannot coexist with
+- **exclusivity** — whether something it shares tolerates more than one provider
+- **required tools** — commands or binaries that must exist for it to work at all
+
+### About a document
+
+- **type** — what it is, and therefore what it becomes in a harness
+- **subject** — what it is about, matched against work
+- **matcher** — the conditions under which it loads
+- **category** — guaranteed, expected, optional, standby
+- **invocable name** — where it can be asked for by name
+- **addressable parts** — whether less than all of it can be taken
+- **citations** — what it points at
+- **part categories** — whether its parts carry categories of their own *(only if
+  section loading survives)*
+
+### About a copy of a bundle in a project
+
+- **source** — where this copy came from
+- **version taken** — which version this is a copy of
+- **integrity signal** — whether it still matches what arrived
+- **deliberate divergence** — that an edit here was intentional, not damage
+- **divergence rationale** — why somebody changed it, for whoever upgrades later
+- **overrides** — what this project decided differently
+- **provider choice** — which was taken where several could satisfy
+
+### About a project
+
+- **membership** — which bundles it has, so a stray or a missing one is visible
+- **decisions** — what it settled differently from every default
+- **catalogs** — which it draws on
+
+### About rules from above
+
+- **the rule** — what is required or forbidden
+- **binding** — which repositories, projects or teams it reaches
+- **declarer** — who set it
+- **direction** — whether it mandates or forbids
+- **actor restriction** — by who is asking, rather than by what is asked for
+- **origin** — where it came from, so an adopter can go argue with a person
+
+### About change
+
+- **what changed** — between two versions
+- **breakage** — whether anything relying on it has to act
+- **remedy** — what an adopter must do about it
+- **when** — so a blast radius is knowable
+
+### Observed rather than declared
+
+- **resident now** — what is currently in context
+- **what loaded** — and by which route
+- **paid versus used** — what the floor cost, against what was touched
+- **mechanism presence** — whether what a declaration depends on actually exists
+  here
+- **hit rate** — whether the right thing is opened more often than it used to be
+
 ## What Dependency and Interface have to solve
 
 **These are the part of this section to trust.** They hold whatever shape ends
