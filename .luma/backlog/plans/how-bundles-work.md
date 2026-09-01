@@ -1094,6 +1094,45 @@ either having declared anything. The only shape that catches contradictions
 nobody anticipated. Expensive, unreliable, and newly plausible in a way it was
 not a few years ago.
 
+### What the index might be
+
+**Unsettled, and this one does block things.** *The index* means whatever a
+reader gets on opening a bundle — the listing of what is inside.
+
+**Authored.** Written by hand. Carries judgement no document can: *read this
+first*, grouping, and prose explaining how the parts relate — none of which
+lives in any single document, because no document knows about the others. Goes
+stale, duplicates every description, and makes each addition two edits.
+
+**Derived at read time.** Computed from the documents whenever wanted. Cannot go
+stale, duplicates nothing, needs no maintenance. But it requires the tool to
+exist in order to see it, which cuts against `.luma/` being committed so a clone
+reproduces with nothing installed — and ordering falls back to something
+arbitrary.
+
+**Generated at publish, shipped as a file.** Fresh whenever publishing happens,
+readable with no tooling, nothing maintained by hand. Stale for anything that
+skips publishing, and it is a generated file living inside what a checksum
+covers.
+
+**Split — facts derived, judgement authored.** A small authored piece saying
+*read this first, these belong together, that one is an exception*, with the
+listing computed. Each half sits where it cannot go wrong; the cost is two
+things instead of one and a boundary that has to stay sharp.
+
+**The question that decides it:** does a bundle need to say anything about how
+its documents relate to each other? Ordering might be a field on a document.
+Grouping cannot be, since a document declaring *I belong with those two* has to
+know they exist — which is the coupling Interface exists to prevent.
+
+**What it blocks.** Entry 1's problem 8 waits on it, because *does a bundle have
+a body* is the same question wearing different clothes. So does **Contents** —
+whether an index is something a bundle must contain. And so does the sidecar
+question, since a derived index is not bundle data at all.
+
+**What will force it:** writing anything that opens a bundle, or the first
+bundle whose documents change often enough that a stale listing bites somebody.
+
 ### What the shapes have in common
 
 **Four of the five problems are detection problems**, and detection is where
@@ -1327,6 +1366,14 @@ that an author decides the opt-in while guessing about work they will never see.
 same property. Relaxing the nesting so ring 1 may name something deeper fixes
 the failure and costs the rule.
 
+**Unsettled, and it can stay that way for now.** It blocks nothing — the four
+categories work at any grain, and every use case in Entry 2 is served either
+way. **What it does decide is the session floor**, which is the only cost paid
+whether or not the work touches it, so no project's floor can be sized until it
+is chosen. **What will force it:** the first real measurement of a floor, or the
+first project carrying enough bundles that the difference between eighteen lines
+and ninety stops being theoretical.
+
 ### Arriving without traversing
 
 A workflow invoked by name, a request, or a citation all arrive part-way in.
@@ -1361,6 +1408,14 @@ a bundle's worth of policy — and nothing bounds it, which is problem 6 arrivin
 at another level.
 
 **Uniform or per-case?** Every shape but the last applies one rule everywhere.
+
+**Unsettled, and safe to leave so.** Nothing structural waits on it — this is
+runtime behaviour that can be added or changed without disturbing what a bundle
+holds. **What it does decide is what invoking a workflow actually costs**, and
+whether a workflow may assume the policy its bundle guarantees. **What will
+force it:** the first workflow that misbehaves because it did not get its
+bundle's policy, or the first time anyone measures what invoking a skill drags
+in behind it.
 
 ### Settled for MVP
 
