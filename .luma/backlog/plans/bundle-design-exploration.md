@@ -1,13 +1,13 @@
 ---
 type: document
-title: How bundles work
+title: Bundle design exploration
 description: The end-to-end design for bundles — how knowledge reaches context, what a bundle is, what a document is, what a project records, how it reaches a harness, and how it reaches a repository. Written forward, entry by entry, rather than derived from what exists.
 lifecycle: draft
 created: { by: human:benlinton, at: 2026-08-30T00:00:00Z }
 modified: { by: agent:claude-opus-5, at: 2026-08-31T00:00:00Z }
 ---
 
-# How bundles work
+# Bundle design exploration
 
 **Written forward.** What exists today is a prototype that grew into artifacts
 answering overlapping questions — a manifest, a routing table, a project ring
@@ -36,7 +36,7 @@ Each one depends on the entries above it and on none below.
 | 2 | what a bundle is | — | the unit everything else references |
 | 3 | what a document is | — | the thing a bundle holds |
 | 4 | what a project records about them | — | membership, provenance, integrity |
-| 5 | how knowledge reaches a harness | files a harness reads | what implements each category |
+| 5 | how knowledge reaches a harness | files a harness reads | what implements each posture |
 | 6 | how a bundle reaches a catalog | a catalog | publishing |
 | 7 | how a bundle reaches a repository | a directory on disk | `get`, and adoption |
 
@@ -59,11 +59,11 @@ differently.
 - **The bundle boundary does not decide relevance.** `git-secrets` holds
   credentials and identity, whose first moves are opposite, so a bundle's
   contents need not share one profile. Reading may therefore be decided per
-  document — or per bundle, where that genuinely is the right grain. Which
-  grain applies where is open, and Entry 5 is where it gets decided.
+  document — or per bundle, where that genuinely is the right level. Which
+  level applies where is open, and Entry 5 is where it gets decided.
 - **Presence and reading are separate axes.** What must be *fetched* is
-  bundle-grained, because fetching is. What is *read* has its own grain, settled
-  per case rather than by the fetch boundary. A claim about one is not a claim
+  decided per bundle, because fetching is. What is *read* is decided at its
+  own level, settled per case rather than by the fetch boundary. A claim about one is not a claim
   about the other, and conflating them is what made bundle-level dependency look
   like it contradicted the bullet above.
 
@@ -137,7 +137,7 @@ or whether that is derived from its shape — is open, and belongs to Entry 5.
 *Where* has no case behind it yet and is deliberately not claimed.
 
 **binding** — the resolved correspondence for one project: which content answers
-which condition, and which name each workflow takes. `apply` produces it by
+which condition, and which name each procedure takes. `apply` produces it by
 resolving every adopted bundle's matchers against each other and against
 whatever the project has settled. Where a matcher is what an author claimed, a
 binding is what this project decided — it is where two bundles claiming one name
@@ -157,7 +157,7 @@ inlining is the only way to get an acceptable outcome — is open. Optimize for
 reliability, followed closely by minimizing duplication.
 
 *Open: whether an adapter is one file or a set.* `apply` writes several per
-harness — a skill per workflow, a table a hook reads, a block in a memory file —
+harness — a skill per procedure, a table a hook reads, a block in a memory file —
 so the word is either collective for all of it, or each file is an adapter and a
 harness gets many.
 
@@ -194,7 +194,7 @@ rather than a correspondence.
 
 What enforces it, who sets it, **whether visibility and openability are one
 control or two**, and whether it introduces a permission axis crossing Entry 1's
-categories are all open.
+postures are all open.
 
 ### Who decides
 
@@ -242,7 +242,7 @@ others cannot express.
 self-description says what to read first, and each document's matcher says what
 loads it. A third statement of the same fact is three places to disagree.
 
-**Avoided: `delivery`, `triggers`.** *Delivery* spans every category in Entry 1
+**Avoided: `delivery`, `triggers`.** *Delivery* spans every posture in Entry 1
 at once and hides the differences between them. *Triggers* is `matcher` under
 another name.
 
@@ -270,20 +270,20 @@ all have to say which of these they are producing.
 7. **Who declares, and who may overrule whom.** An author states how their
    document or bundle loads, having never seen the adopting project. An adopter
    may disagree with good reason — too noisy here, only under `src/`, adopted
-   for one workflow and not for its policies. A governing body may need to
+   for one procedure and not for its policies. A governing body may need to
    overrule the adopter in a way the adopter cannot undo. Whether that is one
    mechanism with a precedence order or several with different reach, where a
    governing body's declaration lives given a project must not be able to edit
    it, and what happens when two of them disagree.
-8. **What a matcher means at each grain.** Whether a bundle, a document and a
+8. **What a matcher means at each level.** Whether a bundle, a document and a
    section can all mean the same thing by it. **This turns on whether a bundle
    has a body**, which Entry 2 owns: if a bundle's self-description is itself
-   loadable, a bundle matcher is one job at its coarsest grain; if a bundle has
+   loadable, a bundle matcher is one job at its outermost level; if a bundle has
    nothing of its own to load, the declaration has to mean something else,
-   nearer to *is this in play at all*. Also whether all three grains exist, how
+   nearer to *is this in play at all*. Also whether all three levels exist, how
    they compose when they disagree, what a section-level matcher implies about a
    document needing an index of its own, and whether a document may therefore
-   span categories rather than sitting in one.
+   span postures rather than sitting in one.
 9. **What survives a context reset.** Loading happens at a moment; context does
    not persist. `/clear` empties it, `/compact` may summarize things away, and a
    long session may push them out — in every case silently. **Both halves fail,
@@ -299,7 +299,7 @@ all have to say which of these they are producing.
     be. What produces that signal, who reads it, and whether it can be collected
     at all without watching sessions closely enough to cost more than it saves.
 
-## The categories
+## The loading postures
 
 ```
 guaranteed  a mechanism puts it there
@@ -309,16 +309,16 @@ offered     the model decides
 standby     nothing decides until somebody asks
 ```
 
-**`offered` is a bracket rather than a fifth category.** It names the pair the
+**`offered` is a bracket rather than a fifth posture.** It names the pair the
 model chooses between, and it marks the line where verifiability stops:
 `guaranteed` is the only one a tool can check, and nothing under `offered` can
 be checked by anything.
 
-**Each category describes what a document does on its own.** They are named as
+**Each posture describes what a document does on its own.** They are named as
 statuses rather than as mechanisms, because the mechanism can change without the
 word going stale.
 
-**Nothing here is free — each category moves its cost somewhere else**, and the
+**Nothing here is free — each posture moves its cost somewhere else**, and the
 columns exist so that where is visible. The **session floor** is context spent
 before the work is known, in every session, whether or not it turns out to be
 touched. **When it loads** is context spent in the one session where the content
@@ -338,10 +338,10 @@ at all.
 A matcher that never narrows puts content into every session, which is the
 highest floor anything here can set. A conditional one keeps the floor at zero
 and pays instead for a mechanism that has to be built and kept working, plus an
-evaluation that runs on every tool call whether or not it matches. The category
+evaluation that runs on every tool call whether or not it matches. The posture
 says it is forced; the matcher says how often; the bill follows the matcher.
 
-**A category may be relative to its container, which would make that price
+**A posture may be relative to its container, which would make that price
 computable.** Under that reading, `guaranteed` means *guaranteed once the thing
 holding me has loaded* — and the chain reaches the top only where every link is
 guaranteed. A document is resident in every session only if its bundle is too.
@@ -349,7 +349,7 @@ The price is then the chance its container loads, times its size, recursively up
 to something that is always there. At the top that chance is one; two levels in,
 behind a bundle nobody opens, it is near zero.
 
-**And it expresses something neither pure category can.** A bundle nobody loads
+**And it expresses something neither pure posture can.** A bundle nobody loads
 by default, which brings its own required policy the moment it is reached: the
 policy costs nothing until the bundle is wanted, and is not optional once it is.
 `guaranteed` alone would pay in every session. `expected` alone would let a
@@ -359,7 +359,7 @@ model skip what the bundle needs in order to work.
 rule anything out.** Nothing here requires a whole body. A mechanism that
 injects can inject a part; a model opening a file can stop at a marked point; a
 document may be able to say in frontmatter or inline which of its parts belong
-to which category, so that one file spans several.
+to which posture, so that one file spans several.
 
 **These may not be different mechanisms at all.** A document might mark where its
 announcement ends and its body begins — in frontmatter, inline, however — and
@@ -380,7 +380,7 @@ Entry 5 picks.
 above are a sketch rather than an accounting. A matcher on a document decides a
 load; a matcher on a section, if sections can carry one, decides how much of
 one. A bundle is the case in question: if its self-description is loadable, a
-bundle matcher is the same job at a coarser grain, and one word is right. If a
+bundle matcher is the same job one level out, and one word is right. If a
 bundle has nothing of its own to load, the declaration means something else
 entirely and the word is covering two jobs. **Entry 2 decides whether a bundle
 has a body**, and no cost stated here is settled until it does.
@@ -389,14 +389,14 @@ has a body**, and no cost stated here is settled until it does.
 target for `expected` and `optional`, not a property of them. Nothing in the
 design stops an author announcing a document with a paragraph, or with a summary
 that grows until it is a second copy of the thing it points at — which has
-been observed, and which quietly turns a cheap category into an expensive one. The
+been observed, and which quietly turns a cheap posture into an expensive one. The
 floor is set by whoever wrote the announcement, and nobody is checking.
 
 **`standby`'s floor does not scale, and how high it sits is undecided.** If a
 request helper is required, its announcement is the floor, and it is **paid once
 for all of it** — five standby documents and five hundred cost the same, because
 nothing is advertised per document. If a path handed to a model is enough, the
-floor is nothing at all. Either way it is the only category whose floor does not
+floor is nothing at all. Either way it is the only posture whose floor does not
 grow with how much content sits behind it, and that property holds whichever way
 the question goes.
 
@@ -434,9 +434,9 @@ document whose residency has ended is absent, so requesting it is a reload
 rather than a no-op. Whether that is how a broken guarantee gets repaired — and
 whether anything can tell that it needs repairing — belongs with problem 9.
 
-**`standby` is the category that has nothing else.** For the other two a request
+**`standby` is the posture that has nothing else.** For the other two a request
 is recovery from a miss; for `standby` it is the only way in. That makes
-whatever serves that purpose a dependency of one whole category rather than a
+whatever serves that purpose a dependency of one whole posture rather than a
 convenience bolted onto the rest.
 
 ## Whether the set is closed
@@ -475,7 +475,7 @@ it on the strength of a word.
 
 **Expected raises the session floor by the size of its announcement, and that
 is its price.** For a model to notice something, the announcement has to be
-present before the moment of noticing. This is the category where a model's
+present before the moment of noticing. This is the posture where a model's
 judgement is load-bearing and where a failure is silent.
 
 **Optional obliges an announcement, the same as expected.** For a model to
@@ -487,7 +487,7 @@ announcing that way costs. Whether the way must be a helper, should be one, or
 may be a path given to a model directly is open, and it is what decides whether
 the floor is one announcement or none.
 
-## The trade every category answers
+## The trade every posture answers
 
 **Both failures are opposite, and the whole design sits between them.** A floor
 set too high and every session pays for context it never touches. Set too low
@@ -496,7 +496,7 @@ over-fetches to be safe. **As low a session floor as possible, and still enough
 to choose correctly** — getting that trade right is most of why these tools
 exist.
 
-**Each category answers it in its own currency.** `guaranteed` in how wide its
+**Each posture answers it in its own currency.** `guaranteed` in how wide its
 matcher is, `expected` and `optional` in how large an announcement, `standby` in
 how findable it is willing to be. **Overuse any of them and the pain is the same
 size in a different shape** — a floor nobody needed, a model that cannot find
@@ -521,11 +521,11 @@ than being assumed here.
 by name after the fact — by a person, by another agent that noticed what this
 one did not, or by a hook whose own checks caught the miss. **What provides it
 belongs to Entry 5; that it exists belongs here**, because it changes what a
-miss costs and therefore how much skepticism the category actually deserves.
+miss costs and therefore how much skepticism the posture actually deserves.
 
 **And requesting is not only a safety net.** It is recovery here, and it is
 `standby`'s only way in — so whatever Entry 5 provides for it carries a whole
-category rather than a convenience.
+posture rather than a convenience.
 
 ## Candidates, neither settled
 
@@ -559,12 +559,12 @@ conflated the two, which is why it never produced a check worth running.
 **The design has room for one voice and needs several.** Everything above is
 declared by an author who has never seen the adopting project. An adopter knows
 things the author could not — a bundle's expected content is too noisy here, or
-should apply only under `src/`, or was adopted for one workflow and should stop
+should apply only under `src/`, or was adopted for one procedure and should stop
 volunteering its policies. A governing body — security, compliance, whoever
 answers for the organization — knows things the adopter is not entitled to
 overrule.
 
-**They may not want the same mechanism.** An adopter adjusting a category is an
+**They may not want the same mechanism.** An adopter adjusting a posture is an
 override: the binding resolves differently. A governing body forbidding content
 outright is a boundary nothing in the project can reach past, which is `expose`.
 Whether those are one mechanism with a precedence order, or several with
@@ -581,7 +581,7 @@ needs them found.
 
 Several problems already on the list are facets of this rather than separate
 things. Entry 4's *Enablement* is an override to never; its *Precedence* is what
-happens when claims collide; its *Level* — bundles declaring who they are for —
+happens when claims collide; its *Audience* — bundles declaring who they are for —
 is the same question seen from the bundle's side. If this is designed in one
 place, those should point at it.
 
@@ -600,7 +600,7 @@ privilege. A **conditional** one needs something that evaluates the condition an
 injects, which fewer harnesses offer.
 
 **So the matcher decides which mechanisms can serve it**, not just what it costs.
-A harness that cannot evaluate conditions can honour `matches: always` and
+A harness that cannot evaluate conditions can honour `matches: eager` and
 little else. What it should then do with a conditional guarantee — refuse it, or
 degrade it to `expected` while it still reads as guaranteed to everyone who
 declared it — belongs to Entry 5.
@@ -636,7 +636,7 @@ they are settled.
    to it. If any document can be cited from anywhere, every internal path is
    public and nothing inside a bundle can be moved without breaking somebody.
 
-**Inherits from Entry 1** — the loading categories, which *Self-description* has
+**Inherits from Entry 1** — the loading postures, which *Self-description* has
 to produce: what a bundle says about itself is a claim that some of its contents
 are expected and the rest optional.
 
@@ -647,8 +647,8 @@ relied on, and how reliance is declared. If Interface resolves to *only
 capabilities are public*, Dependency has no remaining choice to make and the two
 collapse into one.
 
-**Dependency's grain is open.** Presence is bundle-grained and reading is
-settled per case, so declaring `needs` at either level is defensible and nothing
+**The level `needs` is declared at is open.** Presence is decided per bundle
+and reading is settled per case, so declaring it at either level is defensible and nothing
 above rules out either. What decides it is who can act: the
 adopter works in bundles, at fetch time, while a document's need surfaces at
 delivery time to an agent mid-task who cannot adopt anything.
@@ -733,7 +733,7 @@ it will cost in session floor.
 *Minimal.* A source, an identity, a version, and a way to tell that what arrived
 is what was sent.
 *Ideal.* Plus enough to know it will work here before taking it — its needs are
-satisfiable, its level is appropriate, and nothing already present precludes it.
+satisfiable, its audience is appropriate, and nothing already present precludes it.
 These might be prechecks, since apply is probably where the primary gate should reside.
 
 **A project checks whether something newer exists upstream**
@@ -793,7 +793,7 @@ purpose, intending to silence the other.
 
 ### Registering
 
-**A tool resolves what answers which condition, and what each workflow is called**
+**A tool resolves what answers which condition, and what each procedure is called**
 *Minimal.* Every document's matcher, type and name are discoverable.
 *Ideal.* Discoverable without opening every file, which matters only at scale.
 
@@ -822,7 +822,7 @@ it.
 *Minimal.* A line for each thing this project holds. Whether "thing" means a
 bundle, a document, or something else is undecided — and that choice sets the
 session floor, which makes it the most consequential open question here.
-*Ideal.* Whichever grain produces the most useful matches for the fewest bytes.
+*Ideal.* Whichever level produces the most useful matches for the fewest bytes.
 
 **An agent judges whether a bundle bears on the work**
 *Minimal.* The bundle's announcement — the short string a model compares against
@@ -1058,14 +1058,14 @@ Maybe:
 
 Maybe:
 - **the set of members** — which documents are in it (should this be data?)
-- **member type** — what each one is: a policy, a workflow, something else
+- **member type** — what each one is: a policy, a procedure, something else
 - **member description** — what each one is about
 - **member order** — what to read first
 - **relatedness** — which members belong with which
 - **relation nature** — elaborates, contradicts, supersedes
 - **deliberate absence** — what this bundle does not cover, said so nobody goes
   looking
-- **assets** — which files are material for a workflow rather than things to read
+- **assets** — which files are material for a procedure rather than things to read
 - **scripts** — which files are executable
 
 ### About its relationships to other bundles
@@ -1089,11 +1089,11 @@ Definitely:
 - **matcher** — the conditions under which it loads
 
 Maybe:
-- **category** — guaranteed, expected, optional, standby (this needs a better name)
+- **loading posture** — guaranteed, expected, optional, standby
 - **invocable name** — where it can be asked for by name
 - **addressable parts** — whether less than all of it can be taken
 - **citations** — what it points at
-- **part categories** — whether its parts carry categories of their own *(only if
+- **part postures** — whether its parts carry postures of their own *(only if
   section loading survives)*
 
 ### About a copy of a bundle in a project
@@ -1148,7 +1148,7 @@ Maybe:
 up chosen, and they were derived from the use cases above rather than from any
 mechanism. The shapes that follow them are parked, not proposed.
 
-**A bundle assumes knowledge it does not contain.** A sweep workflow that says
+**A bundle assumes knowledge it does not contain.** A sweep procedure that says
 *check whether work landed* assumes an integration policy exists somewhere. If
 nothing provides one, the agent proceeds anyway on whatever it invents. → *An
 unmet assumption has to be detectable.*
@@ -1275,12 +1275,12 @@ and that is worth testing before any of them is built.
 ## What it has to solve
 
 1. **Assets.** Templates and examples are not documents. What distinguishes a
-   file an agent should read from one that is only material for a workflow.
-2. **Adapter input.** The least a workflow must declare for a harness to install
+   file an agent should read from one that is only material for a procedure.
+2. **Adapter input.** The least a procedure must declare for a harness to install
    it as something invocable, given the document cannot know which harness will
    read it.
 
-**Inherits from Entry 1** — the loading categories, which a document's matcher
+**Inherits from Entry 1** — the loading postures, which a document's matcher
 has to select one of. **From Entry 2** — *Contents*, which decides what may sit
 in a bundle at all, and *Interface*, which decides whether a document is
 addressable from outside its own bundle.
@@ -1306,8 +1306,8 @@ different thing from what happens to be on disk.
    [a bundle should be able to diverge](../ideas/a-bundle-should-be-able-to-diverge.md).
 6. **Reproducibility.** Whether a copy could be re-fetched exactly from what a
    record holds — and whether that is a promise worth making at all.
-7. **Level.** Bundles declare who they are for. Whether adoption at a level
-   records anything here.
+7. **Audience.** Bundles declare who they are for. Whether adoption by a
+   given audience records anything here.
 8. **Enablement.** Whether a bundle can be present and switched off.
 9. **Precedence.** Whether this file decides anything when two bundles collide.
 
@@ -1420,18 +1420,18 @@ stray-directory check with it, and reopen the format decision above.
 
 ## What it has to solve
 
-1. **Granularity of loading.** What must be declared so the right part loads
-   at the right moment, and at what grain that is decidable: the bundle, the
+1. **Level of loading.** What must be declared so the right part loads
+   at the right moment, and at what level that is decidable: the bundle, the
    document, or something smaller.
 2. **Harness independence.** What a bundle may assume about whatever is reading
    it, and where harness-specific work lives instead — thin enough that a second
    harness is an adapter rather than a fork.
-3. **What implements each category.** Carried from Entry 1: what makes something
+3. **What implements each posture.** Carried from Entry 1: what makes something
    guaranteed in a harness that has hooks, and what happens in one that does not.
 4. **Declared or derived.** Whether a matcher states how a document loads, or
    whether that is computed from the matcher's shape.
 
-**Inherits from Entry 1** — the categories themselves. This entry decides what
+**Inherits from Entry 1** — the postures themselves. This entry decides what
 implements them; it does not get to redefine them. **From Entry 2** —
 *Self-description*, which decides what a reader gets on opening a bundle. **From
 Entry 3** — *Adapter input*, which decides what a harness has to work with.
@@ -1472,7 +1472,7 @@ strict nesting assumes traversal is the only route, which it no longer is:
 `guaranteed` content is injected without any map firing, a request names a
 document directly, and a citation jumps sideways.
 
-### Announcement grain
+### Announcement level
 
 **Only bundles announce.** Cheapest floor. A document is unreachable when its
 bundle's line does not match.
@@ -1484,7 +1484,7 @@ no line saying what a bundle is *for*.
 restate each other.
 
 **Bundles by default, documents opt in** where a bundle's line would not surface
-them. This is the four categories doing the work at both grains. Its weakness is
+them. This is the four postures doing the work at both levels. Its weakness is
 that an author decides the opt-in while guessing about work they will never see.
 
 **The tension:** the uniform rule and the missed-bundle failure come from the
@@ -1492,7 +1492,7 @@ same property. Relaxing the nesting so ring 1 may name something deeper fixes
 the failure and costs the rule.
 
 **Unsettled, and it can stay that way for now.** It blocks nothing — the four
-categories work at any grain, and every use case in Entry 2 is served either
+postures work at any level, and every use case in Entry 2 is served either
 way. **What it does decide is the session floor**, which is the only cost paid
 whether or not the work touches it, so no project's floor can be sized until it
 is chosen. **What will force it:** the first real measurement of a floor, or the
@@ -1501,13 +1501,13 @@ and ninety stops being theoretical.
 
 ### Arriving without traversing
 
-A workflow invoked by name, a request, or a citation all arrive part-way in.
+A procedure invoked by name, a request, or a citation all arrive part-way in.
 What should come with them:
 
 **The container's guarantees, transitively** — one rule for every route, at the
-cost of a workflow's price never being just the workflow.
+cost of a procedure's price never being just the procedure.
 
-**Nothing** — standalone, predictable, and the workflow may assume a policy it
+**Nothing** — standalone, predictable, and the procedure may assume a policy it
 does not get.
 
 **The thing's own declared needs** — precise, reuses a mechanism the design
@@ -1525,7 +1525,7 @@ uniform rule and of an author guessing again.
 
 ### What would decide any of it
 
-**Is a workflow ever safe to run without its bundle's policy?** If never, the
+**Is a procedure ever safe to run without its bundle's policy?** If never, the
 pull is mandatory. If usually, it is waste most of the time.
 
 **How large can a container's guarantees get?** Cheap at a paragraph, ruinous at
@@ -1536,15 +1536,15 @@ at another level.
 
 **Unsettled, and safe to leave so.** Nothing structural waits on it — this is
 runtime behaviour that can be added or changed without disturbing what a bundle
-holds. **What it does decide is what invoking a workflow actually costs**, and
-whether a workflow may assume the policy its bundle guarantees. **What will
-force it:** the first workflow that misbehaves because it did not get its
+holds. **What it does decide is what invoking a procedure actually costs**, and
+whether a procedure may assume the policy its bundle guarantees. **What will
+force it:** the first procedure that misbehaves because it did not get its
 bundle's policy, or the first time anyone measures what invoking a skill drags
 in behind it.
 
 ### Settled for MVP
 
-**Workflows announce at ring 1 eagerly**, because the harness registers every
+**Procedures announce at ring 1 eagerly**, because the harness registers every
 skill's name and description at startup and an adapter cannot know which bundles
 a session will open. **That is a harness limit rather than a design choice.**
 Past MVP a dispatching super-skill, commands, files regenerated between turns,
