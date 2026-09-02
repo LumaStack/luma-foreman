@@ -1,17 +1,17 @@
 ---
 type: decision
-title: Apply writes adapters, never copies of a document
+title: Apply writes adapters
 decided: 2026-08-23
-lifecycle: provisional
+lifecycle: draft
 reopen_trigger: A harness appears that cannot follow a file path from a skill body, or measurement shows the extra read costs more than the duplication would.
 ---
 
-# ADR-0001: Apply writes adapters, never copies of a document
+# ADR-0001: Apply writes adapters
 
 ## Summary
 
-`luma-foreman apply` writes a pointer to each adopted document and never a copy
-of its body.
+`luma-foreman apply` writes a pointer to each adopted document and avoids duplicating
+document contents.
 
 ## Problem
 
@@ -35,7 +35,7 @@ grow with every bundle adopted.
 **An adapter is a file `apply` generates so a harness can reach a document it
 would otherwise never find.** It carries whatever that harness needs in order to
 recognise the file, a path to the real document under `.luma/`, and nothing
-else. Two kinds exist today: a skill per workflow, and the block in `CLAUDE.md`.
+else. Two kinds exist today: a skill per procedure, and the block in `CLAUDE.md`.
 Both are generated, both are disposable, and neither is a source of truth.
 
 **A general form is preferred wherever one works.** Something harness-specific
