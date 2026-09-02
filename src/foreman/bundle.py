@@ -25,6 +25,9 @@ USAGE = """What this project has taken, and what shape it is in.
   luma-foreman bundle list            every adopted bundle
   luma-foreman bundle show <name>     one bundle's receipt and contents
   luma-foreman bundle outdated        which have a newer version published
+  luma-foreman bundle index <dir>     generate a bundle's INDEX.md (--check to
+                                      verify instead) — an authoring act; it
+                                      refuses a vendored copy
 
   --to <project>   a project other than this repository
 
@@ -157,6 +160,13 @@ def main(argv: list[str]) -> int:
     verb = args[0] if args else "list"
     operands = args[1:]
 
+    if verb == "index":
+        # An authoring act on a directory, not a read of this project's
+        # state — so it takes a path, resolves no project, and lives in its
+        # own module.
+        from . import bundle_index
+
+        return bundle_index.main(operands)
     if verb == "outdated":
         # The same command, reached under the noun it belongs to. Its own
         # options keep working, so `--json` and `--to` behave as documented.
