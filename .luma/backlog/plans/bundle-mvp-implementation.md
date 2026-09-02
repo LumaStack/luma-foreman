@@ -14,14 +14,22 @@ ADR-0006 through ADR-0010; the declaration surface is LKF spec `v0.0.19`,
 already released. This document owns only order, scope per step, and the
 check that proves a step done.
 
-**The order avoids compatibility machinery instead of building it.** The
-catalog migrates before `apply` is rewritten, so `apply` never has to read
-two bundle formats: rewritten last, it meets only new-format bundles, and
-no tolerance window is ever built — the same zero-adopters reasoning the
-spec used to remove `entrypoint` without deprecation. The cost is a short
-stretch where the catalog is newer than the tool reading it, accepted
-because the old `apply` keeps working against its committed artifacts
-until step 5 replaces them.
+**The order exists to avoid throwaway code, and a broken stretch is
+accepted.** Two orders were possible. Rewriting `apply` before the
+catalog migrates means the new `apply` meets this repository's still
+old-format vendored copies, and the only way through is a two-format
+compatibility layer — built, tested, and deleted within days, serving
+zero external adopters. Migrating the catalog first costs nothing here,
+because adoption is a copy: this repository runs on its vendored bundles
+and the old `apply`'s committed artifacts, and a newer catalog upstream
+affects it exactly as much as a newer library affects a pinned lockfile —
+not at all, until step 5 chooses to update. So the catalog migrates
+first, `apply` is rewritten against a world where every published bundle
+is new-format, and the compatibility layer is never written. Between
+steps 2 and 5 the published catalog is ahead of the installed tool, and a
+mid-stretch `get` would land a bundle the old `apply` cannot render.
+Acceptable: the implementation may pass through broken states, and the
+only promise is that step 5 ends with everything working and verified.
 
 ## Step 1 — the index generator
 
