@@ -1,12 +1,12 @@
 ---
 type: decision
-title: Apply writes adapters, never copies of a document
+title: Apply writes adapters
 decided: 2026-08-23
 lifecycle: provisional
 reopen_trigger: A harness appears that cannot follow a file path from a skill body, or measurement shows the extra read costs more than the duplication would.
 ---
 
-# ADR-0001: Apply writes adapters, never copies of a document
+# ADR-0001: Apply writes adapters
 
 ## Summary
 
