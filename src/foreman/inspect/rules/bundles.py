@@ -48,6 +48,7 @@ EVENTS = ("session-start", "session-end", "before-commit", "before-push",
 # Reserved names, keyed by their lowercase spelling so a miscased file can be
 # recognised and named.
 RESERVED_BY_LOWER = {"bundle.md": "BUNDLE.md", "catalog.md": "CATALOG.md",
+                     "index.md": "INDEX.md",
                      "log.md": "LOG.md", "project.md": "PROJECT.md"}
 
 # Where a lowercase match is correct rather than a mistake, and the rule is what
@@ -117,6 +118,12 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
             continue
         rel = path.relative_to(root).as_posix()
         seen.append(rel)
+        if rel == "INDEX.md":
+            # The bundle's generated rendering (LKF v0.0.19, Reserved files).
+            # Nothing links to it because everything reaches it the other way
+            # around — calling it an orphaned Asset would flag every bundle
+            # that ships one.
+            continue
         if path.suffix != ".md":
             assets.append(rel)
             continue
