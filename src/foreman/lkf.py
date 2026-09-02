@@ -102,9 +102,13 @@ def matches(path: Path) -> tuple[str, ...]:
     start = MATCHES.search(front)
     if start is None:
         return ()
+    # Both spellings are read until the apply rewrite retires the old one:
+    # the vendored bundles here still say `always` while the catalog migrates
+    # to spec v0.0.19's `eager`. Callers decide what each means; an unknown
+    # keyword still resolves to nothing, the safe direction.
     keyword = unquote(start.group(1).strip())
     if keyword:
-        return (keyword,) if keyword == "always" else ()
+        return (keyword,) if keyword in ("always", "eager") else ()
     out: list[str] = []
     for line in front[start.end() :].splitlines():
         if line.strip() == "":
