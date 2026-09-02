@@ -20,8 +20,9 @@ would be the normal thing to do.
 ## Decision
 
 **`get` is `cp -r` plus a record.** The bundle lands in
-`.luma/bundles/<org>/<name>/` and `manifest.toml` gains: version,
-source, the source's commit, and a checksum of exactly what landed.
+`.luma/bundles/<org>/<name>/` and the manifest — `MANIFEST.md`, per the
+bundle design MVP — gains: version, source, the source's commit, and a
+checksum of exactly what landed.
 
 **The copy is committed** with the rest of the project.
 
