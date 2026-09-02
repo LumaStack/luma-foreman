@@ -106,6 +106,14 @@ grows into. The `expected` / `optional` split inside *offered* is deferred —
 not rejected — because nothing in the MVP can observe a miss, so nothing can
 act on the difference. The day a load log exists, the split earns a field.
 
+**`guaranteed` always takes an object.** In the table it promises a body:
+loads when its container loads. Machinery can later promise an
+*announcement* instead — an offered document's index line re-asserted so
+no compaction or clear takes the model's map away, while the body stays
+the model's call. Different promises, different machinery, and the word
+never appears without saying which is meant — a guarantee with a vague
+object reads as more than anything keeps.
+
 **Every posture is container-relative, and the containers chain.** A
 document's declaration means *once the thing holding me is in play*. A
 document's container is its bundle; a bundle's container is the project; the
@@ -724,6 +732,18 @@ trend exists: whether the right documents load more often than they used to.
 That is when `expected` splits from `optional` — an absence somebody can
 finally see — and when an adopter can demote what never fires and promote
 what keeps being requested, from evidence instead of feel.
+
+**Residency machinery makes announcements guaranteed.** The floor already
+survives every reset — the harness re-sends the always-loaded chain each
+turn — but everything conversation-borne is losable: a bundle index
+opened mid-session, an eager body read at the gate, a requested document,
+all silently summarized away by a compaction. The log is what closes
+this: a hook that records what it injected and observes what the model
+opened knows the intended-resident set, and re-asserts it after a reset —
+announcements first, the cheap half whose loss takes the model's map with
+it and with it the ability to request what it no longer knows exists.
+This is the exploration's problem 9 given its mechanism, and it is the
+second job hooks arrive to do.
 
 **Promotion answers the missed-bundle failure.** A document whose line
 belongs in the project index even when its bundle's entry would not surface
