@@ -30,9 +30,10 @@ Postures are container-relative: `eager` on a document means required
 reading when its bundle opens; `eager` on a bundle lifts its required
 documents into every session's floor.
 
-**The grammar:** an entry is a bare word or `kind:value` shorthand,
-defined as sugar for a single-key map. The longhand is reserved for
-qualifier keys none of which are defined yet.
+**The grammar** is the spec's: `eager` and `nothing` are scalar values of
+the field, never members of the condition list, and conditions are a list
+of single-key maps — the extensible form, growing qualifier keys in place
+if one ever earns them, with none defined yet.
 
 **The names:** `eager`, not `always`, which overclaimed scope; the field
 stays `matches`, not `trigger`, which overclaims causation. `nothing`
@@ -40,8 +41,9 @@ stays as deliberate absence — and is never a lock: the postures say what
 volunteers content, never what may be reached.
 
 **Deferred:** the `expected` / `optional` split inside *offered*, until a
-load log can observe a miss. All deltas go upstream as LKF spec proposals,
-never as conventions smuggled around it.
+load log can observe a miss. Every delta went upstream as an LKF spec
+proposal rather than a convention smuggled around it, and was ratified in
+spec `v0.0.19` — `matches` is now a core field, optional everywhere.
 
 ## Why
 

@@ -42,9 +42,11 @@ the adopting project, so it claims *when*, never what any project will do
 about it.
 
 ```yaml
-matches: [eager]                               # load when my container loads
-matches: [topic:merging, command:git merge]    # load when the work matches
-# absent                                       # load only when asked for
+matches: eager        # load when my container loads
+matches:              # load when the work matches — any one of them
+  - topic: merging
+  - command: git merge
+# absent              # load only when asked for
 ```
 
 The vocabulary is `eager`, `topic:`, `path:`, `command:`, `event:`,
@@ -55,29 +57,27 @@ upgrade free. `topic:` is the one that will stay model-evaluated forever,
 and that is fine — judging whether work is *about* something is what a model
 is for.
 
-**The grammar: every entry is a shorthand with a longhand behind it.** An
-entry is a bare word (`eager`), or `kind:value` with no space after the
-colon — and that shorthand is defined as sugar for a single-key map,
-`kind:value` ≡ `{kind: value}`. The longhand is how a condition grows
-qualifier keys if one ever earns them; none are defined now, on the same
-discipline as every other deferral — the shape is reserved, the vocabulary
-waits for a forcing case. MVP tooling normalizes a single-key map to its
-shorthand meaning and rejects a map with more keys. Indexes always render
-the canonical shorthand, so frontmatter and index never diverge. This also
-dissolves YAML's own trap rather than policing it: an author who writes a
-space after the colon produces the longhand, which means the same thing —
-the mistake ceases to be one.
+**The grammar is the spec's, and it extends by construction.** `eager` and
+`nothing` are scalar values of the field, never members of the condition
+list — as a list member either could sit beside a condition it silently
+renders dead under OR semantics, and a form whose invalid state cannot be
+written needs no rule forbidding it. Conditions are a list of single-key
+maps — `- command: git commit` — which is already the extensible form: a
+condition that ever earns qualifier keys grows them in place, with none
+defined until a forcing case. Indexes render conditions in one fixed
+compact form, derived one-to-one from the frontmatter — a rendering
+concern rather than a second syntax, with the frontmatter authoritative
+as everywhere.
 
-**The field already exists in LKF, so the deltas go upstream.** The spec
-defines `matches` on `policy` and `workflow` with values `always`,
-`nothing`, or a condition list, defaulting to `nothing` when absent. Four
-proposals against the spec rather than conventions smuggled around it:
-`always` becomes `eager`; `matches` becomes legal on any type, since a
-document that is neither policy nor workflow can be worth offering;
-`nothing` stays as the deliberate form of absence — it says an author
-decided, where a bare absence says nothing at all; and the `workflow` type
-is renamed `procedure`, for the reasons recorded with the procedure
-mock-up below.
+**The field is LKF's, core as of spec `v0.0.19`.** `matches` is a core
+field on the root — optional everywhere, so any document may say what
+surfaces it — with values `eager`, `nothing`, or the condition list, and
+absence meaning `nothing`. This design's proposals were taken upstream
+and ratified rather than smuggled around the spec: the scope-honest
+rename to `eager`, the field's promotion to core, `nothing` kept as the
+deliberate form of absence — it says an author decided, where a bare
+absence says nothing at all — and the `workflow` type renamed
+`procedure`, for the reasons recorded with the procedure mock-up below.
 
 **And `nothing` is never a lock.** The postures say what *volunteers*
 content, never what may be reached: a request or a citation loads anything
@@ -142,7 +142,10 @@ type: policy
 title: Never commit credentials
 description: What counts as a credential, which files never belong in a
   repository, and why rotation comes before cleanup.
-matches: [command:git commit, command:git push, event:before-commit]
+matches:
+  - command: git commit
+  - command: git push
+  - event: before-commit
 lifecycle: stable
 created: {by: human:asmith, at: 2026-08-12T09:00:00Z}
 modified: {by: agent:claude-fable-5, at: 2026-09-01T16:00:00Z}
@@ -152,7 +155,7 @@ modified: {by: agent:claude-fable-5, at: 2026-09-01T16:00:00Z}
 An eager policy differs by one value; a standby reference by one absence:
 
 ```yaml
-matches: [eager]        # required reading the moment this bundle is opened
+matches: eager          # required reading the moment this bundle is opened
 ```
 
 ```yaml
@@ -171,7 +174,7 @@ size* problem gets its handle: one field, one rendered line, one place to
 audit.
 
 **A bundle declares `eager` on its own document.** LKF already defines a
-`bundle` type for a bundle's metadata, so `matches: [eager]` on that
+`bundle` type for a bundle's metadata, so `matches: eager` on that
 document is what lifts the bundle's required reading into the session
 floor — the spec's own shape, no new file.
 
@@ -300,7 +303,7 @@ index generation is an authoring act, `apply` a project rendering act, so
 **The authored half lives in the bundle's own document.** The exploration's
 split answer to what an index is — facts derived, judgement authored, each
 half where it cannot go wrong — lands here without a new field. The strong
-judgement, *read this before acting here*, is already `matches: [eager]`
+judgement, *read this before acting here*, is already `matches: eager`
 and renders as the Required gate. Everything judgement-shaped beyond it —
 how the parts relate, what belongs together, what this bundle deliberately
 does not cover — is prose in the body of the bundle's `type: bundle`
@@ -321,12 +324,17 @@ regeneration, breaking nothing already authored.
 
 ## The index is markdown, because it is a rendering
 
-**No tool parses an index, ever.** The ground truth is the documents' LKF
-frontmatter and the bundle's own metadata; the index is generated from that
-truth, and any tool that needs the data — `apply` compiling the project
-index, `audit-bundle` verifying, the eventual hook building its binding
-table — reads the frontmatter, not the rendering. The index has exactly two
-readers, models and humans, and for them markdown wins outright: it carries
+**The frontmatter an index renders is authoritative, always.** The ground
+truth is the documents' LKF frontmatter and the bundle's own metadata; the
+index is generated from that truth, and any tool that needs the data —
+`apply` compiling the project index, `audit-bundle` verifying, the
+eventual hook building its binding table — reads the frontmatter. A tool
+MAY read an index mechanically instead — one file instead of many, and in
+an unmodified copy the rendering cannot disagree with its source — but
+where the two disagree the frontmatter wins, and the disagreement is a
+reportable defect of that copy, exactly as spec `v0.0.19` states. The
+index is *written for* two readers, models and humans, and for them
+markdown wins outright: it carries
 the judgement no data format can (*read this first — everything else assumes
 it*), models are trained on it, and it matches the estate of reserved
 ALL-CAPS markdown. A data format would spend tokens on syntax to serve a
@@ -334,9 +342,10 @@ tool audience that does not exist. One source of truth with a rendered view
 is also what makes drift impossible by construction rather than detected
 after the fact.
 
-**One discipline keeps it honest:** the `matches:` lines in an index echo
-the frontmatter verbatim — same syntax, no translation — so there is never a
-second dialect of the same declaration.
+**One discipline keeps it honest:** the `matches:` lines in an index are
+rendered in a single fixed compact form, derived one-to-one from the
+frontmatter — a display convention, never a second declaration syntax, and
+never a place where a fact appears that the frontmatter does not state.
 
 ## The mock-up — a bundle's `INDEX.md`
 
@@ -375,7 +384,7 @@ name rather than reading them here.
 **The derived postures render as the visible groupings**, so the
 derivation table above is what a reader actually sees. In it: identity and
 version; the purpose line, written to be matched against work; each
-document's id, type, one-liner, and verbatim matches. Not in it: document
+document's id, type, one-liner, and compactly rendered matches. Not in it: document
 bodies; the catalog sell-copy, which answers *is this worth adopting* for a
 different reader at a different moment; the changelog; checksums and
 provenance, which are the manifest's; and per-project skill-name
@@ -446,7 +455,7 @@ documents, so the complete session floor is auditable by reading one file.
 
 **What an entry asserts.** The derived postures render at this level too —
 an eager bundle under Required, a bundle never volunteered under By
-request. A bundle-level conditional matcher carries over verbatim where one
+request. A bundle-level conditional matcher renders the same way where one
 exists; for most bundles the purpose line is the whole announcement. A
 local bundle is indistinguishable from a vendored one here, because
 provenance and integrity are the manifest's facts, not loading facts.

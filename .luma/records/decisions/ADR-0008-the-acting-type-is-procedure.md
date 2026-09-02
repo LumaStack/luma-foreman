@@ -8,7 +8,7 @@ lifecycle: draft
 # ADR-0008: The acting type is procedure
 
 The LKF type for invocable, executable knowledge is `procedure` — not
-`workflow`, not `skill`. Proposed upstream as a spec rename.
+`workflow`, not `skill`. Proposed upstream and ratified in spec `v0.0.19`.
 
 ## Problem
 
@@ -60,7 +60,6 @@ names the act not the thing, or truncates back to the word being avoided.
 
 ## Re-open when
 
-The LKF spec rejects the rename, or the ecosystem settles "skill" as the
-fully generic cross-vendor concept while harness diversity never
-materializes. Full reasoning:
+The ecosystem settles "skill" as the fully generic cross-vendor concept
+while harness diversity never materializes. Full reasoning:
 [bundle design MVP](../../backlog/plans/bundle-design-mvp.md).
