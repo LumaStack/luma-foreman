@@ -1041,48 +1041,55 @@ and several items may turn out to be the same thing said twice.
 
 ### About a bundle itself
 
-- **identity** — what it is called; what a record keys on and a citation points at
-- **version** — what has changed since, and what a promise attaches to
-- **announcement** — the short text matched against work in progress, to decide
+Definitely:
+- **name** — what it is called; what a record keys on and a citation points at
+- **description** — the short text matched against work in progress, to decide
   whether this bears on it
-- **scope** — what it covers, and what it deliberately does not
-- **long description** — for a person deciding whether to take it; read once,
-  never during work
-- **who it is for** — a project, an organization, or something else
+- **version** — what has changed since, and what a promise attaches to
 - **licence** — optional; travels with the content, since a bundle may have no
   catalog behind it and may move between them
-- **maturity** — whether this is settled or still moving *(may be version said
-  twice)*
+
+Maybe:
 - **compatibility** — what harnesses or tools it works with *(may belong to a
   catalog)*
-- **supersession** — what replaces it, if anything
+- **depends_on** - other bundles that will get referenced by name (this may not work because how would you replace a depended on bundle with your own version of it)
 
 ### About what it contains
 
-- **the set of members** — which documents are in it
+Maybe:
+- **the set of members** — which documents are in it (should this be data?)
 - **member type** — what each one is: a policy, a workflow, something else
-- **member subject** — what each one is about
-- **reading order** — what to read first
+- **member description** — what each one is about
+- **member order** — what to read first
 - **relatedness** — which members belong with which
 - **relation nature** — elaborates, contradicts, supersedes
 - **deliberate absence** — what this bundle does not cover, said so nobody goes
   looking
 - **assets** — which files are material for a workflow rather than things to read
+- **scripts** — which files are executable
 
 ### About its relationships to other bundles
 
+Probably:
 - **provides** — what it offers that something else could rely on
 - **needs** — what it assumes exists and does not itself contain
 - **precludes** — what it cannot coexist with
-- **exclusivity** — whether something it shares tolerates more than one provider
-- **required tools** — commands or binaries that must exist for it to work at all
+
+Maybe:
+- **exclusivity** — whether something it shares tolerates more than one provider (I can not think of any example where loading multiple versions of the same thing is ok in context)
+- **required tools** — commands or binaries that must exist for it to work at all (maybe the same as compatability)
 
 ### About a document
 
+Also see https://github.com/LumaStack/luma-knowledge-format/blob/main/luma-knowledge-format/specification/lkf.md
+
+Definitely:
 - **type** — what it is, and therefore what it becomes in a harness
-- **subject** — what it is about, matched against work
+- **title** — what it is about, matched against work
 - **matcher** — the conditions under which it loads
-- **category** — guaranteed, expected, optional, standby
+
+Maybe:
+- **category** — guaranteed, expected, optional, standby (this needs a better name)
 - **invocable name** — where it can be asked for by name
 - **addressable parts** — whether less than all of it can be taken
 - **citations** — what it points at
@@ -1091,7 +1098,8 @@ and several items may turn out to be the same thing said twice.
 
 ### About a copy of a bundle in a project
 
-- **source** — where this copy came from
+Maybe:
+- **originated from** — where this copy came from (maybe needs a different name)
 - **version taken** — which version this is a copy of
 - **integrity signal** — whether it still matches what arrived
 - **deliberate divergence** — that an edit here was intentional, not damage
@@ -1101,12 +1109,14 @@ and several items may turn out to be the same thing said twice.
 
 ### About a project
 
-- **membership** — which bundles it has, so a stray or a missing one is visible
-- **decisions** — what it settled differently from every default
+Maybe:
+- **bundles landed** — which bundles it has landed, so a stray or a missing one is visible
+- **bundles applied** — which bundles it has applied, so a stray or a missing one is visible
 - **catalogs** — which it draws on
 
 ### About rules from above
 
+Maybe:
 - **the rule** — what is required or forbidden
 - **binding** — which repositories, projects or teams it reaches
 - **declarer** — who set it
@@ -1116,6 +1126,7 @@ and several items may turn out to be the same thing said twice.
 
 ### About change
 
+Maybe:
 - **what changed** — between two versions
 - **breakage** — whether anything relying on it has to act
 - **remedy** — what an adopter must do about it
@@ -1123,6 +1134,7 @@ and several items may turn out to be the same thing said twice.
 
 ### Observed rather than declared
 
+Maybe:
 - **resident now** — what is currently in context
 - **what loaded** — and by which route
 - **paid versus used** — what the floor cost, against what was touched
