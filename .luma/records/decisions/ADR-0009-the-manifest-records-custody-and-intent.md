@@ -55,8 +55,7 @@ follows the same rule as another input to `apply`.
 authors. **An applied-state record or wiring snapshot** — rejected as
 lie-shaped. **Separate manifest and registry files** — rejected: a second
 file earns existence only when writer or lifecycle differ, and neither
-does. **TOML** — no standard-library writer exists, even for a
-regenerated receipt.
+does.
 
 ## Re-open when
 
