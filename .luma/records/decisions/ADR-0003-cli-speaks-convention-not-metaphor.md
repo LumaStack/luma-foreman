@@ -79,7 +79,7 @@ which catalogs a project draws on.
 **Discoverability is paid by every new user forever; the metaphor was paid once,
 by the author.** That asymmetry decides it on its own.
 
-**`install` is precluded by [[ADR-0002-adoption-copies-and-never-resolves]].** It
+**`install` is precluded by [[ADR-0002-mvp-bundle-distribution]].** It
 promises a resolver, a lockfile, an uninstall, and transitive fetching. Adoption
 refuses all four by design, and the README already names the conflict — *"which
 is what keeps this a copy rather than an install."*
@@ -219,7 +219,7 @@ checkout — which is the normal case when developing a catalog.
 - Anyone with the old names in a script or in muscle memory gets a failure
   rather than a warning.
 - `get` feeds the package-manager mental model that
-  [[ADR-0002-adoption-copies-and-never-resolves]] exists to fight. The
+  [[ADR-0002-mvp-bundle-distribution]] exists to fight. The
   documentation carries that correction now, not the verb.
 
 ## Standing consequences
