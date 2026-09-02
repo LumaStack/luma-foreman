@@ -31,8 +31,9 @@ re-authors nothing.
 **The graduation paths are recorded, not improvised:** a hook that
 evaluates `path:`, `command:`, `tool:` and `event:` with dedup and a log;
 the Required gate graduating from instruction to injection when a bundle's
-index is opened; degradation reported on harnesses without the hook,
-never silent.
+index is opened; announcements re-asserted after a context reset, so the
+model's map survives what the conversation cannot; degradation reported
+on harnesses without the hook, never silent.
 
 ## Why
 
