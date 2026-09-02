@@ -35,7 +35,9 @@ from ..finding import Finding, Notice, Result, Skipped
 TRIGGER_KINDS = ("path", "tool", "command", "event", "topic")
 # The scalar forms. Anything else in that position is a typo, and it resolves
 # to `nothing` — the safe direction, and reported rather than absorbed.
-KEYWORDS = ("always", "nothing")
+# `eager` is the spec's word as of LKF v0.0.19; `always` is its retired
+# spelling, still read until the apply rewrite retires it everywhere at once.
+KEYWORDS = ("eager", "always", "nothing")
 # `event` reaches what no other trigger can: a lifecycle point, fired however
 # it is arrived at. Four of these overlap with `command` on purpose — a command
 # trigger catches a literal invocation, an event catches the point itself — and
@@ -175,7 +177,7 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
         bad("high", f"{len(unknown_kind)} trigger(s) name something that is not a trigger",
             unknown_kind,
             "matches takes a closed vocabulary — " + ", ".join(sorted(TRIGGER_KINDS)) +
-            ", or the bare word always or nothing. Anything else parses, "
+            ", or the bare word eager or nothing. Anything else parses, "
             "publishes, and never fires, which is indistinguishable from a rule "
             "whose moment has not come.")
     if unknown_event:
