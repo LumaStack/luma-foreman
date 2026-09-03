@@ -2,8 +2,8 @@
 type: sweep
 title: The whole of luma-foreman
 created: 2026-08-28
-lifecycle: provisional
-survival: experimental
+stage: provisional
+survival: probationary
 goal: Nothing in this repository states something false — whether it drifted there or was created that way
 scope: All tracked content except the generated .claude/ adapters and the vendored .luma/bundles/ copies
 goal_discipline: exploratory
@@ -279,7 +279,7 @@ README* cluster is where the next slice should start.
 
 ## Where the practice fought us
 
-**This is the first sweep ever run, and the bundle is `survival: experimental`.**
+**This is the first sweep ever run, and the bundle is `survival: probationary`.**
 Every slice keeps a line for where the practice got in the way — an order that
 stopped working, an estimate wrong by double, a step that produced nothing.
 

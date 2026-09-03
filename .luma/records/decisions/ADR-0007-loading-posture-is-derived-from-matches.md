@@ -2,7 +2,7 @@
 type: decision
 title: Loading posture is derived from matches
 decided: 2026-09-02
-lifecycle: draft
+stage: draft
 ---
 
 # ADR-0007: Loading posture is derived from matches

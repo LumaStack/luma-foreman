@@ -5,7 +5,7 @@ created: { by: agent:claude-opus-5, at: 2026-08-29T00:00:00Z }
 contributors: [agent:claude-opus-5, human:benlinton]
 horizon: next
 scope: project
-lifecycle: draft
+stage: draft
 ---
 
 # Report what an adoption costs before it loads

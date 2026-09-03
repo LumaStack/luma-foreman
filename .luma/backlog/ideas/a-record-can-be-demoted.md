@@ -1,16 +1,16 @@
 ---
 type: luma/idea
-title: The lifecycle ladder is written one way, and a record sometimes has to come back down
+title: The stage ladder is written one way, and a record sometimes has to come back down
 created: { by: human:benlinton, at: 2026-08-26T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]
 horizon: next
 scope: organization
-lifecycle: draft
+stage: draft
 ---
 
 # A record sometimes has to come back down
 
-`decision-guidelines` describes `lifecycle` as a mutability ladder and
+`decision-guidelines` describes `stage` as a mutability ladder and
 every transition in it climbs: `draft` becomes `provisional` becomes `stable`,
 and `archived` is the exit. **Nothing describes going the other way.**
 

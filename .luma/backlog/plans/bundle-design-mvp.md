@@ -2,7 +2,7 @@
 type: document
 title: Bundle design MVP
 description: The design for loading bundles and context — one declaration on a document, loading postures derived from it, an index in every container, what apply compiles for a harness now, and the eventual state the same declarations grow into.
-lifecycle: draft
+stage: draft
 created: { by: agent:claude-fable-5, at: 2026-09-01T00:00:00Z }
 ---
 
@@ -146,7 +146,7 @@ matches:
   - command: git commit
   - command: git push
   - event: before-commit
-lifecycle: stable
+stage: stable
 created: {by: human:asmith, at: 2026-08-12T09:00:00Z}
 modified: {by: agent:claude-fable-5, at: 2026-09-01T16:00:00Z}
 ---
@@ -187,7 +187,7 @@ title: Audit sensitive data
 description: Check whether a repository has already published credentials
   or private identity, and decide what each finding is worth. Use before
   making a repository public, or on any repository nobody has checked.
-lifecycle: stable
+stage: stable
 created: {by: human:asmith, at: 2026-08-12T09:00:00Z}
 modified: {by: agent:claude-fable-5, at: 2026-09-01T16:00:00Z}
 ---
@@ -225,7 +225,7 @@ commands. *Skill* appears only at the harness boundary, where it is true;
 *invoke* and *invocable* are the verbs everywhere; and `policy` beside
 `procedure` gives the acting types a pair every institution already knows.
 
-Everything else in the frontmatter — lifecycle, provenance events, tags —
+Everything else in the frontmatter — stage, provenance events, tags —
 is LKF's own business, orthogonal to loading, and deliberately untouched
 here.
 

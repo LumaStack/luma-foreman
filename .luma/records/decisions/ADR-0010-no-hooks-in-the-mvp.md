@@ -2,7 +2,7 @@
 type: decision
 title: No hooks in the MVP
 decided: 2026-09-02
-lifecycle: draft
+stage: draft
 ---
 
 # ADR-0010: No hooks in the MVP

@@ -5,7 +5,7 @@ created: { by: human:benlinton, at: 2026-08-29T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]
 horizon: next
 scope: project
-lifecycle: draft
+stage: draft
 ---
 
 # The gate test asserts on a path that has never held a gate

@@ -2,7 +2,7 @@
 type: decision
 title: MVP bundle distribution
 decided: 2026-08-23
-lifecycle: draft
+stage: draft
 ---
 
 # ADR-0002: MVP bundle distribution

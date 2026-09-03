@@ -2,7 +2,7 @@
 type: decision
 title: The manifest records custody and intent
 decided: 2026-09-02
-lifecycle: draft
+stage: draft
 ---
 
 # ADR-0009: The manifest records custody and intent

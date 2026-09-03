@@ -1,35 +1,31 @@
 # luma-foreman
 
-**Every repository set up right, and kept that way.**
+**Every repository set up right, and kept that way.**<br>
+Provide each project with consistent governance and predictable intelligence. 
 
-Foreman moves knowledge, policy and workflows to where they're needed, it wires
-up agents to use knowledge correctly, and verifies the knowledge remains true.
-
-## How it works with catalogs
-
-Everything a bundle *knows* — the layout a project should have, what tooling to
-install, what policy a project should follow — belongs in a catalog, unless it's
-truly specific to a single project. **A catalog holds knowledge; the foreman tool
-helps transfer and enforce that knowledge.**
-
-> **Status: early.** Getting, applying, inspecting and initializing work end to
-> end. Interfaces still move.
+Foreman moves knowledge, policy and procedures to where they're needed, it wires
+up agent harnesses to utilize knowledge correctly, and verifies the knowledge 
+remains true.
 
 ## Why it exists
 
-**A standard that lives only in prose is a standard that's easy to ignore.** Somebody
+**A standard that lives only in text is a standard that's easy to ignore.** Somebody
 writes down how projects here are supposed to work, everyone agrees, and six
 months later no two repositories look alike — because nothing carries the
 standard into them and nothing noticed when it drifted.
 
-Agents make that worse and better at once. Worse, because an agent that has not
-been told a convention will confidently violate it. Better, because an agent
-*will* follow a rule it is actually given — the problem was never willingness,
-it was delivery.
+An agent that has not been told a convention will confidently violate it. 
+But an informed and governed agent *will* follow a rule it is actually given 
+— the problem was never willingness, it was delivery.
 
-**So foreman standardizes knowledge delivery.** It runs inside a repository that
-may know nothing about any of it: copying knowledge in, applying it into each harness,
-and reporting where each project falls short.
+**So foreman standardizes knowledge delivery.** It runs inside a repository: copying knowledge in, applying it into each harness, and reporting back where a project 
+falls short.
+
+## How it works with catalogs
+
+A bundle belongs in a catalog, unless it's truly specific to a single project. 
+**A catalog holds a library of knowledge; the foreman tool helps transfer 
+and enforce that knowledge.**
 
 ## What it looks like
 
@@ -40,7 +36,7 @@ luma-foreman get lumastack/luma-catalog/decision-records \
 luma-foreman apply
 ```
 
-A bundle is distributed knowledge containing workflows, policy, concepts, and more.
+A bundle is distributed knowledge containing policy, procedures, and more.
 The `get` copies any bundle into `.luma/bundles/` with a receipt — version,
 origin, catalog commit, checksum. The `apply` writes thin adapters into whatever
 this project's harness reads, so an agent can use the knowledge bundle at the right time

@@ -2,7 +2,7 @@
 type: decision
 title: The acting type is procedure
 decided: 2026-09-02
-lifecycle: draft
+stage: draft
 ---
 
 # ADR-0008: The acting type is procedure
