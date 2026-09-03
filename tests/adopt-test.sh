@@ -763,6 +763,17 @@ reg 'get resolves through the registry' 0 get corp/kit/widgets
 has 'adopted 1.0.0'
 has 'corp/kit —'
 
+# A bare name cannot resolve through the registry — the ID is what carries
+# the catalog's name — and with nothing adopted under that name either, this
+# used to report *no catalog* at a project that has one registered. It names
+# the catalogs it has, and the two ways to reach one it does not.
+reg 'a bare name names the registered catalogs' 2 get gadgets
+has 'not a bundle ID'
+has 'luma-foreman get corp/kit/gadgets'
+has 'catalog show'
+has 'catalog add'
+case $LAST in *'no catalog'*) bad 'reported no catalog with one registered' ;; *) ok ;; esac
+
 # The receipt is name-indirect: the name is recorded, the URL is not.
 grepped '  - catalog: corp/kit' "$REG/.luma/bundles/MANIFEST.md"
 grep -q -- '- source:' "$REG/.luma/bundles/MANIFEST.md" \
