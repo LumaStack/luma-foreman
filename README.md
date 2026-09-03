@@ -1,9 +1,9 @@
 # luma-foreman
 
-Predictable intelligence and reliable governance, for every project.
+Predictable intelligence and reliable governance — for every project.
 
 - Seamlessly distribute your knowledge, policy and procedures between projects
-- Effortlessly wire up each agent harness — so it uses your knowledge correctly
+- Effortlessly wire up each agent harness; so it uses your knowledge correctly
 - Continuously verify your shared knowledge remains true
 
 ## Why use Foreman
