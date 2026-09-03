@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import sys
 
+from . import __version__
 from .inspect import registry, report
 from .agent_permissions import commands
 
@@ -23,7 +24,8 @@ Commands:
   catalog             where bundles come from — list, show
   agent-permissions   what an agent is allowed to do in this repository
 
-Run `luma-foreman <command> --help` for a command's own options."""
+Run `luma-foreman <command> --help` for a command's own options, and
+`luma-foreman --version` for which version this is."""
 
 POLICY_USAGE = """Read and write the per-project agent permissions that the permission gate
 consults on every Bash tool call. Changes take effect on the NEXT tool call — no
@@ -165,6 +167,13 @@ def main(argv: list[str] | None = None) -> int:
 
     if command in ("help", "-h", "--help"):
         print(USAGE)
+        return 0
+    # Both spellings, because both get typed: `--version` is what a flag-shaped
+    # habit reaches for and `version` is what a command-shaped one does. The
+    # same reasoning already gives `agent-permissions` show/list and
+    # reset/unset.
+    if command in ("version", "-V", "--version"):
+        print(f"luma-foreman {__version__}")
         return 0
     if command == "agent-permissions":
         return _policy(argv[1:])

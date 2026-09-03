@@ -61,6 +61,25 @@ done
 run 'help'            0 help;            contains 'help' 'Commands:'
 run 'unknown command' 1 not-a-command
 
+# All three spellings answer, and all three answer the same thing — a version
+# that disagrees with itself depending on how it was asked is worse than none.
+run 'version command' 0 version;     contains 'version command' 'luma-foreman '
+VERSION_SAID=$LAST
+run 'version flag'    0 --version;   [ "$LAST" = "$VERSION_SAID" ] && ok || bad '--version disagrees with version'
+run 'version short'   0 -V;          [ "$LAST" = "$VERSION_SAID" ] && ok || bad '-V disagrees with version'
+
+# The printed version must be the one the package declares. Pinning the literal
+# here would mean every release edits a test, so ask the package instead.
+DECLARED=$(cd "$ROOT" && PYTHONPATH=src python3 -c 'import foreman; print(foreman.__version__)')
+[ "$VERSION_SAID" = "luma-foreman $DECLARED" ] && ok || bad "version output '$VERSION_SAID' is not 'luma-foreman $DECLARED'"
+
+# The v is on the tag, never in the field — a string comparison between a tag
+# and this value silently fails if the prefix drifts in here.
+case $DECLARED in v*) bad "__version__ carries a v prefix: $DECLARED" ;; *) ok ;; esac
+
+# Discoverable, or it is half-built.
+run 'version in usage' 0 help; contains 'version in usage' '--version'
+
 # Renamed commands are a hard error with no alias (ADR-0003), so the message is
 # the whole migration path. Pin it: a bare "unknown command" would strand people.
 run 'adopt renamed'     1 adopt;     contains 'adopt renamed'     'renamed to: get'
