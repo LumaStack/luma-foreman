@@ -65,7 +65,7 @@ catalog() {
 # --- a catalog and a project ----------------------------------------------------
 
 CATALOG=$T/catalog
-mkdir -p "$CATALOG/catalog/bundles/widgets/workflows" \
+mkdir -p "$CATALOG/catalog/bundles/widgets/procedure" \
          "$CATALOG/catalog/bundles/widgets/policy" \
          "$CATALOG/catalog/bundles/widgets/_types"
 
@@ -81,14 +81,13 @@ cat > "$CATALOG/catalog/bundles/widgets/BUNDLE.md" <<'EOF'
 ---
 type: bundle
 version: 0.1.0
-entrypoint: workflows/make-a-widget
 description: Everything about widgets.
 ---
 EOF
 
-cat > "$CATALOG/catalog/bundles/widgets/workflows/make-a-widget.md" <<'EOF'
+cat > "$CATALOG/catalog/bundles/widgets/procedure/make-a-widget.md" <<'EOF'
 ---
-type: workflow
+type: procedure
 title: Make a widget
 description: Produce one widget. Use when a widget is wanted.
 ---
@@ -151,7 +150,7 @@ has 'Everything about widgets'
 get 'adopt' 0 acme/widgets --from "$CATALOG"
 has 'adopted 0.1.0'
 exists "$VENDORED/BUNDLE.md"
-exists "$VENDORED/workflows/make-a-widget.md"
+exists "$VENDORED/procedure/make-a-widget.md"
 exists "$MANIFEST"
 grepped '`acme/widgets` 0.1.0' "$MANIFEST"
 grepped "  - commit: $COMMIT" "$MANIFEST"
@@ -213,7 +212,7 @@ grepped 'name: make-a-widget' "$PROJECT/.claude/skills/make-a-widget/SKILL.md"
 grepped 'Produce one widget' "$PROJECT/.claude/skills/make-a-widget/SKILL.md"
 
 # The adapter points at the source and does not copy it.
-grepped '.luma/bundles/acme/widgets/workflows/make-a-widget.md' \
+grepped '.luma/bundles/acme/widgets/procedure/make-a-widget.md' \
   "$PROJECT/.claude/skills/make-a-widget/SKILL.md"
 grep -q 'Steps go here' "$PROJECT/.claude/skills/make-a-widget/SKILL.md" \
   && bad 'the adapter copied the workflow body' || ok
@@ -226,16 +225,14 @@ case $LAST in *preload*) ok ;; *) bad "expected the legacy preload reported: $LA
 # not what the legacy field asked for: it declares no `matches`, so nothing
 # surfaces it and it waits to be asked for. The legacy field is reported and
 # ignored — a rule nobody can see governs nothing, so it is still named.
-RING=$PROJECT/.luma/bundles/entrypoint.md
-BRING=$PROJECT/.luma/bundles/rings/acme/widgets.md
+RING=$PROJECT/.luma/bundles/INDEX.md
 grepped 'acme/widgets' "$RING"
-grepped 'widget-rules' "$BRING"
-ungrep '@.luma/bundles/acme/widgets/policy/widget-rules.md' "$PROJECT/CLAUDE.md"
-
-# A Type Definition is not reading material: it is consulted when writing a
-# Document of its type, which is a job the workflow already sends you to.
-grep -q '_types/widget' "$BRING" \
-  && bad '_types should not be named in a ring' || ok
+# The project index is bundle-grained: document names stay in the bundle's own
+# index, which ships inside the bundle rather than being generated here.
+grep -q 'widget-rules' "$RING" \
+  && bad 'document names do not belong in the project index' || ok
+grep -q '@.luma/bundles/acme/widgets/policy/widget-rules.md' "$PROJECT/CLAUDE.md" \
+  && bad 'no bundle content is imported by the adapter' || ok
 
 apply 'check after apply' 0 --check
 has 'up to date'
@@ -408,6 +405,18 @@ printf -- '---\ntype: bundle\nversion: 1.0.0\n---\nb\n' > "$GONE/.luma/bundles/a
 LAST=$(cd "$GONE" && "$CLI" catalog list 2>&1); got=$?
 [ "$got" -eq 0 ] && ok || bad "unreachable catalog failed the run (exit $got): $LAST"
 case $LAST in *"? published"*) ok ;; *) bad "did not mark the count unknown: $LAST" ;; esac
+
+# One repository, four spellings: .git, a scheme, scp with and without a user.
+# A listing keyed on the raw string showed one catalog as two, each claiming
+# half the bundles.
+mkdir -p "$GONE/.luma/bundles/acme/y"
+printf -- '---\ntype: bundle\nversion: 1.0.0\n---\nb\n' > "$GONE/.luma/bundles/acme/y/BUNDLE.md"
+printf -- '\n["acme/y"]\nversion  = "1.0.0"\nsource   = "https://example.invalid/nope"\ncommit   = "c"\nchecksum = "sha256:c"\n' \
+  >> "$GONE/.luma/bundles/adopted.toml"
+LAST=$(cd "$GONE" && "$CLI" catalog list 2>&1); got=$?
+case $LAST in *"1 catalog,"*) ok ;; *) bad "two spellings of one catalog were listed twice: $LAST" ;; esac
+lacks 'nope.git' '' 2>/dev/null || true
+case $LAST in *"nope.git"*) bad "the longer spelling was chosen for display" ;; *) ok ;; esac
 case $LAST in *"could not"*) ok ;; *) bad "did not say why: $LAST" ;; esac
 case $LAST in *"1 could not be reached"*) ok ;; *) bad 'no summary of what was missed' ;; esac
 
@@ -455,7 +464,7 @@ absent "$PROJECT/.claude/skills/make-a-widget"
 exists "$PROJECT/.claude/skills/hand-written/SKILL.md"
 
 # With a different bundle adopted, the hand-written skill still stays.
-mkdir -p "$CATALOG/catalog/bundles/gadgets/workflows"
+mkdir -p "$CATALOG/catalog/bundles/gadgets/procedure"
 cat > "$CATALOG/catalog/bundles/gadgets/BUNDLE.md" <<'EOF'
 ---
 type: bundle
@@ -463,9 +472,9 @@ version: 0.1.0
 description: Gadgets, not widgets.
 ---
 EOF
-cat > "$CATALOG/catalog/bundles/gadgets/workflows/make-a-gadget.md" <<'EOF'
+cat > "$CATALOG/catalog/bundles/gadgets/procedure/make-a-gadget.md" <<'EOF'
 ---
-type: workflow
+type: procedure
 title: Make a gadget
 description: Produce one gadget.
 ---

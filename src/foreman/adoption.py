@@ -170,19 +170,24 @@ def applied(project: Path, bundle_id: str) -> bool:
     and more damaging question: has anybody ever seen this bundle.
 
     Two files, and both have to be right. The adapter in ``CLAUDE.md`` is what
-    a harness loads; the ring is what names the bundle. Either one missing
-    means nothing reaches an agent, and checking only the ring would report
-    green for a project whose harness was never wired to read it.
+    a harness loads; the project index is what names the bundle. Either one
+    missing means nothing reaches an agent, and checking only the index would
+    report green for a project whose harness was never wired to read it.
     """
     from . import apply  # imported here: apply reads this module at import time
 
     claude = project / "CLAUDE.md"
-    ring = project / apply.ENTRYPOINT
-    if not claude.is_file() or not ring.is_file():
+    index = project / apply.INDEX
+    if not index.is_file():
+        # The predecessor artifact, read until the next apply sweeps it — a
+        # project mid-migration still reaches its agent through it, and
+        # reporting every bundle unreachable would be the check lying.
+        index = project / apply.LEGACY_ENTRYPOINT
+    if not claude.is_file() or not index.is_file():
         return False
     try:
         adapter = claude.read_text(encoding="utf-8")
-        named = ring.read_text(encoding="utf-8")
+        named = index.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError):
         return False
     return apply.BEGIN in adapter and bundle_id in named
@@ -211,6 +216,12 @@ def same_origin(a: str, b: str) -> bool:
     return _origin(a) == _origin(b)
 
 
+def origin(source: str) -> str:
+    """The normalised identity of a recorded source — what `same_origin`
+    compares, public so a listing can group by it rather than by spelling."""
+    return _origin(source)
+
+
 def _origin(source: str) -> str:
     s = source.strip().rstrip("/")
     if s.endswith(".git"):
@@ -222,6 +233,12 @@ def _origin(source: str) -> str:
     url = re.match(r"^[A-Za-z][A-Za-z0-9+.-]*://(?:[^@/]+@)?([^/]+)(/.*)?$", s)
     if url:
         return f"{url.group(1).lower()}{url.group(2) or ''}"
+    # scp-style without a user: github.com:LumaStack/luma-catalog. The host
+    # must contain a dot, or a relative path with a colon in it would be read
+    # as a remote.
+    bare = re.match(r"^([A-Za-z0-9][A-Za-z0-9.-]*\.[A-Za-z0-9.-]+):([^/].*)$", s)
+    if bare:
+        return f"{bare.group(1).lower()}/{bare.group(2)}"
     # A filesystem path. Left alone beyond the two suffixes above, because its
     # case is load-bearing and it has no host to fold.
     return s
