@@ -312,13 +312,17 @@ def main(argv: list[str]) -> int:
         )
     wanted = requested[0]
 
+    # Read before the branch, not inside it: the last refusal below reports
+    # what is registered, and an error about the registry that cannot see it
+    # is the bug this whole block exists to stop repeating.
+    registered = config.registry(project_root)
+
     if source is None:
         # A bundle ID starts with the name of the catalog that publishes it,
         # so the registry resolves it with nothing restated. Longest name
         # first, because a name may be any number of segments. The registry
         # outranks the receipt deliberately: a moved catalog makes the
         # registry current truth and the receipt history.
-        registered = config.registry(project_root)
         for name in sorted(registered, key=len, reverse=True):
             if wanted.startswith(name + "/"):
                 source = registered[name]
@@ -347,6 +351,28 @@ def main(argv: list[str]) -> int:
     if source is None:
         source = config.catalog_source(project_root)
     if source is None:
+        # A bare name is not a bundle ID, and the registry cannot resolve one
+        # however many catalogs are in it — the ID is what carries the
+        # catalog's name. Reporting *no catalog* to a project that has
+        # registered several sent an operator to `catalog add` for a catalog
+        # that was already there. Two ways out, because the bundle may not be
+        # in what is registered: name a catalog that is, or reach one that
+        # is not.
+        if "/" not in wanted and registered:
+            offered = "\n".join(
+                f"    luma-foreman get {name}/{wanted}"
+                for name in sorted(registered)
+            )
+            return _err(
+                f"{wanted} is not a bundle ID — a bundle is addressed "
+                f"<namespace>/<name>, and the namespace is the catalog's.\n"
+                f"  From a catalog registered here:\n"
+                f"{offered}\n"
+                f"  `luma-foreman catalog show <name>` lists what each "
+                f"publishes.\n"
+                f"  From one that is not: luma-foreman catalog add <url>, "
+                f"or get --from <path-or-url>"
+            )
         return _err(
             "no catalog — luma-foreman catalog add <url> to register one, "
             "or pass --from <path-or-url>"

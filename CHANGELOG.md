@@ -9,6 +9,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 
 ## [Unreleased]
 
+### Fixed
+
+- **`get <bare-name>` no longer reports *no catalog* at a project that has one registered.** A bare name cannot resolve through the registry however many catalogs are in it — the bundle ID is what carries the catalog's name — but the refusal blamed the last resolution step it tried, `[catalog] source`, and sent an operator to `catalog add` for a catalog that was already there. It now says the name is not a bundle ID and prints the command per registered catalog, plus `catalog show` for what each publishes and `catalog add`/`--from` for a catalog that is not registered here — both, because the bundle may not be in what this project already has.
+
 ## [0.1.0] - 2026-09-03
 
 ### Added
