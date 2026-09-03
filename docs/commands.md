@@ -33,19 +33,26 @@ Idempotent: run it again and it adds what is missing.
 ## get — take a bundle
 
 ```bash
-luma-foreman get lumastack/luma-catalog/decision-records \
-  --from https://github.com/LumaStack/luma-catalog
-luma-foreman get <bundle> --force       # replace a copy that no longer matches
+luma-foreman get lumastack/luma-catalog/decision-records
+luma-foreman get <bundle> --from <catalog>   # a catalog nobody registered
+luma-foreman get <bundle> --force            # replace a copy that no longer matches
 ```
 
-`--from` takes a catalog checkout or a git URL, and defaults to `[catalog]
-source` in the project config.
+**Without `--from`, the bundle ID resolves itself.** It starts with the name
+of the catalog that publishes it, so `get` prefix-matches it against the
+registered catalogs in `.luma/config/luma-foreman.toml`, then falls back to
+the source an existing receipt records, then to the bare `[catalog] source`
+default. The registry outranks the receipt deliberately: a moved catalog
+makes the registry current truth and the receipt history.
 
 **A fetch with a receipt.** The bundle lands in
 `.luma/bundles/<namespace>/<bundle-name>/` — the namespace derives from the
 catalog's address (`lumastack/luma-catalog`), so two catalogs from one
-organization vendor side by side — and `MANIFEST.md` records the version, origin,
-catalog commit, and a checksum of exactly what landed.
+organization vendor side by side — and `MANIFEST.md` records the version,
+catalog commit, a checksum of exactly what landed, and where it came from: the
+catalog's *name* when it is registered, so a moved catalog is one config line
+rather than every receipt going stale, or the raw source when it is not —
+like a hand-installed .deb.
 
 **Nothing is fetched later.** Commit the copy — a fresh clone with no network
 then reproduces the project exactly.
@@ -135,12 +142,21 @@ each bundle's catalog and needs a network.**
 ```bash
 luma-foreman catalog list
 luma-foreman catalog show <name>     # what a catalog publishes
+luma-foreman catalog add <source>    # register one, so `get` needs no --from
 ```
 
-`<name>` is a short name from `list`, a path to a checkout, or a git URL.
+`<name>` is a registered name, a short name from `list`, a path to a
+checkout, or a git URL.
 
-**`list` is derived from what has been adopted and works offline; `show` reaches
-the catalog and needs a network.**
+**`add` registers a catalog the way apt registers a source** — once,
+committed, by the namespace it serves. The name is never an argument: `add`
+fetches the catalog and asks, which is what verifies the entry at write time
+instead of in a teammate's `get` next week. Same name and source again is a
+no-op; the same name from a different source is refused, naming the entry it
+would shadow.
+
+**`list` reads the registry and the receipts and works offline; `add` and
+`show` reach the catalog and need a network.**
 
 ## agent-permissions — what an agent may do here
 

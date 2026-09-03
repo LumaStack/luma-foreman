@@ -149,12 +149,15 @@ naming them; `inspect --rule adoption` only spoke on failure. The inventory
 lived in `adopted.toml` with no command over it, and the command whose name
 sounded right — `adopt --list` — returned the catalog's contents instead.
 
-**The set of catalogs is derived, not registered.** A catalog is an argument and
-a config default, not a tracked entity, so `catalog list` has nothing to read
-but the distinct `source` values in `adopted.toml` plus the configured default —
-which is already how `outdated` decides where to look. That is enough to answer
-*where does my knowledge come from*, including the org-private-plus-universal
-case, before anything builds catalog registration.
+**The set of catalogs is the registry plus what the receipts remember**
+*(corrected 2026-09-03 — this clause originally read "derived, not
+registered", written before anything built catalog registration)*.
+Registration arrived with [[ADR-0012-catalogs-are-registered-sources]], the
+pressure the standing consequences below predicted. `catalog list` still
+answers offline either way: a project that registered nothing keeps the
+derived answer — the distinct `source` values on record plus the configured
+default — which remains how the org-private-plus-universal case works with
+nothing registered.
 
 ## Alternatives
 
@@ -245,7 +248,8 @@ argument, and today a catalog is identified by a URL or a path. Derive a short
 name from the last path segment and accept the full source string too. This is
 the first real pressure toward registering catalogs rather than deriving them,
 and it should be recorded as such when it arrives rather than solved by
-accident.
+accident. *It arrived — [[ADR-0012-catalogs-are-registered-sources]] is that
+record.*
 
 **Local where it works, the network where it is needed.** `catalog list` and
 `catalog show` ask a catalog what it publishes; `bundle outdated` compares

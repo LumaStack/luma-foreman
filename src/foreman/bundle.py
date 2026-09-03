@@ -144,7 +144,12 @@ def show(project_root: Path, requested: str) -> int:
     if description:
         print(f"  {description}")
     print()
-    print(f"  source     {entry.source}")
+    # One of the two is on the receipt, never both: a registered catalog is
+    # recorded by name and the registry owns where that name lives.
+    if entry.catalog:
+        print(f"  catalog    {entry.catalog}")
+    else:
+        print(f"  source     {entry.source}")
     print(f"  commit     {entry.commit}")
     print(f"  vendored   {home.relative_to(project_root)}")
     print(f"  copy       {condition}" + (f" — {STATE_NOTE[condition]}" if condition in STATE_NOTE else ""))
