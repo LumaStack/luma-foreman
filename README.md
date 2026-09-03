@@ -25,16 +25,16 @@ reporting back when a project falls short.
 ```bash
 luma-foreman init
 luma-foreman catalog add https://github.com/LumaStack/luma-catalog
-luma-foreman get lumastack/luma-catalog/decision-records
+luma-foreman get lumastack/luma-catalog/git-workflow
 luma-foreman apply
+
+# SUCCESS! Agents will now use git correctly for this project.
 ```
 
 A bundle is distributed knowledge containing policy, procedures, and more.
-The `catalog add` registers where knowledge comes from, once — after that a
-bundle's ID is enough to resolve it. The `get` copies any bundle into
-`.luma/bundles/` with a receipt — version, origin, catalog commit, checksum. The `apply` writes thin adapters into whatever
-this project's harness reads, so an agent can use the knowledge bundle at the right time
-without hand holding.
+- `catalog add` registers where knowledge comes from, once — after that a bundle's ID is enough to resolve it. 
+- `get` copies any bundle into `.luma/bundles/` with a receipt — version, origin, catalog commit, checksum.
+- `apply` writes thin adapters into whatever this project's harness reads, so an agent can use the knowledge bundle at the right time without hand holding.
 
 ## Where distributed knowledge lives
 
@@ -42,7 +42,7 @@ Shared knowledge is saved inside bundles and then uploaded to a
 [catalog](https://github.com/LumaStack/luma-catalog). You can think of a catalog 
 as a library of knowledge, you can pick and choose from. And the foreman tool helps 
 distribute selected bundles of knowledge to each project that needs them. And foreman
-can support as many or as few catalogs as you want to subscribe to.
+can support as many or as few catalogs as you'd like.
 
 ## Where to go next
 
