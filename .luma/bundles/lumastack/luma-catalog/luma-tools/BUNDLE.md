@@ -1,9 +1,10 @@
 ---
 type: bundle
-version: 0.10.1
-published: 2026-08-27
+title: lumastack/luma-catalog/luma-tools
+version: 0.12.0
+published: 2026-09-02
+stage: draft
 consumers: [project, organization]
-entrypoint: workflows/adopt-knowledge
 description: Using the luma tools — which one does what, getting them onto a machine, standing a project up, and the get-then-apply loop that puts knowledge in front of an agent.
 ---
 
@@ -24,7 +25,7 @@ repository that builds a tool adopts both, everywhere else adopts only this.
 - [[what-each-tool-does]] — the three activities, which tool answers which, and
   the engines-versus-content rule. Read first.
 
-**Workflows**
+**Procedures**
 
 - [[adopt-knowledge]] — the loop that matters: get, apply, verify.
 - [[install-the-tools]] — getting an engine onto a machine and wired up.
@@ -37,7 +38,7 @@ Two documents are `mandatory` and that is one more than usual. [[adopt-knowledge
 earns it because **the failure it prevents is silent**: a project that takes a
 bundle and never applies it looks correct from every angle and reaches no agent
 at all. An
-adopter who never reads that workflow finds out months later, or not at all.
+adopter who never reads that procedure finds out months later, or not at all.
 
 [[install-the-tools]] is `optional` deliberately, though it is the first thing
 chronologically. It is run once per machine, and machine setup is not something
@@ -58,7 +59,24 @@ most embarrassing.
 
 ## Version
 
-`0.10.1` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+`0.10.3` — **the manifest declares `lifecycle: draft`.** The field was absent, and
+absent reads as `unknown` — *nobody has said*. Something was known: this is
+developed by its maintainers for their own use, and its shape can reverse
+without notice.
+
+**Publication did not promote it.** Being reachable by somebody who did not
+write it makes the question live rather than answering it, and the answer here
+is *still a draft* — which is a legitimate thing to publish, and says more than
+silence did.
+
+Patch: a fact written down. Nothing an adopter is obliged to do has changed, and
+`unknown` promised nothing that `draft` withdraws.
+
+`0.10.2` — **references to the knowledge format name sections instead of numbering them.** The format removed section numbers, so every `§n` here pointed at a position that no longer exists — and a stale number resolves to the wrong section rather than to nothing, which is why none of them were reported. Decorative citations are dropped; the rest name what they meant.
+
+Patch: wording only. No rule, field or procedure changed.
+
+`0.10.1` — **`entry_point` is now `entrypoint`.** One word, so the same word names the same thing at every level it appears.
 
 Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 

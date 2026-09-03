@@ -1,9 +1,10 @@
 ---
 type: bundle
-version: 0.10.2
-published: 2026-08-27
+title: lumastack/luma-catalog/token-manager
+version: 0.12.0
+published: 2026-09-02
+stage: draft
 consumers: [project, organization]
-entrypoint: workflows/token-tutorial
 description: Where an agent session's tokens actually go — a paced tutorial on the mechanism and the fixes that follow from it, and an audit that measures a real setup instead of guessing at it.
 ---
 
@@ -21,7 +22,7 @@ available to them.
 
 ## What is here
 
-**Workflows**
+**Procedures**
 
 - [[token-tutorial]] — the mechanism and what follows from it, presented a step
   at a time with a pause after each, ending in a quiz.
@@ -44,7 +45,7 @@ which is what earns a type rather than a label.
 
 ## Learn the mechanism, then measure
 
-**The workflows answer different questions.** *What should I do about any of
+**The procedures answer different questions.** *What should I do about any of
 this* is answered by the tutorial; *what is wrong with my setup specifically* is
 answered by numbers from your own machine.
 
@@ -78,7 +79,7 @@ makes the trade. This bundle makes sure they can see it.
 
 Token costs, cache lifetimes, which servers are expensive, whether tool deferral
 is on by default: all of it moves, and some of it has moved since these
-workflows were written. The figures are here because a claim with a number
+procedures were written. The figures are here because a claim with a number
 attached is one somebody can check, and a claim without one is one nobody ever
 tests.
 
@@ -87,7 +88,7 @@ number here disagrees with what `/context` and `/usage` say on the machine in
 front of you, the machine is right — and the tutorial ends by pointing at those
 meters for exactly that reason.
 
-**The same split applies to the harness.** Both workflows are written for Claude
+**The same split applies to the harness.** Both procedures are written for Claude
 Code and name its commands directly. The reasoning holds anywhere — no memory,
 everything resent each turn, a cache a model switch invalidates — while the
 keystrokes are between renamed and absent elsewhere. The tutorial says so before
@@ -104,7 +105,24 @@ rediscovering at their own expense.
 
 ## Version
 
-`0.10.2` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+`0.10.4` — **the manifest declares `lifecycle: draft`.** The field was absent, and
+absent reads as `unknown` — *nobody has said*. Something was known: this is
+developed by its maintainers for their own use, and its shape can reverse
+without notice.
+
+**Publication did not promote it.** Being reachable by somebody who did not
+write it makes the question live rather than answering it, and the answer here
+is *still a draft* — which is a legitimate thing to publish, and says more than
+silence did.
+
+Patch: a fact written down. Nothing an adopter is obliged to do has changed, and
+`unknown` promised nothing that `draft` withdraws.
+
+`0.10.3` — **references to the knowledge format name sections instead of numbering them.** The format removed section numbers, so every `§n` here pointed at a position that no longer exists — and a stale number resolves to the wrong section rather than to nothing, which is why none of them were reported. Decorative citations are dropped; the rest name what they meant.
+
+Patch: wording only. No rule, field or procedure changed.
+
+`0.10.2` — **`entry_point` is now `entrypoint`.** One word, so the same word names the same thing at every level it appears.
 
 Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 
@@ -125,7 +143,7 @@ Patch: nothing but the identifiers a reference points at.
 `0.10.0` — **vocabulary.** `moment` becomes `event` — a moment is a point in
 time and `applies_to` takes nouns. `compliance` is dropped wherever it was
 saying nothing: a policy binds unless it says otherwise, so only a strong
-default declares `recommended`, and a workflow's steps bind by being steps.
+default declares `recommended`, and a procedure's steps bind by being steps.
 Type Definitions use `field_presence: required` for what was
 `obligation: mandatory`, matching the format.
 
@@ -212,18 +230,18 @@ a pause after each, what the pause was for. **All of that is the agent's busines
 rather than the reader's**, and saying a pause is coming bought them nothing they
 would not learn a moment later by reaching it.
 
-The workflow keeps the reasoning — it is what needs to understand why the pause
+The procedure keeps the reasoning — it is what needs to understand why the pause
 matters — and gains a rule against describing it, beside the existing one against
 announcing the step count. **Both are defaults with a named exception:** announce
 a pause when the reader must be prepared for it, or when hitting it unwarned
 would be jarring. Nothing here qualifies, since every pause ends a step with an
 offer and a visible way to continue.
 
-`0.4.0` — every step gains `## Takeaways`, and the workflow now specifies what the
+`0.4.0` — every step gains `## Takeaways`, and the procedure now specifies what the
 reader sees rather than leaving it to be improvised.
 
 **From a real run, which is why each of these is here.** The agent headed steps
-*Screen 1 —* despite the word appearing nowhere in the material, so the workflow
+*Screen 1 —* despite the word appearing nowhere in the material, so the procedure
 now gives the exact heading format. It ad-libbed the closing line into something
 that read as the model talking to itself, so the four closing blocks are written
 out word for word and rendered from `pause`. And it announced the step count up
@@ -259,7 +277,7 @@ frontmatter; they are now [[tutorial_step]] and [[tutorial_quiz]], and the
 walkthrough reads the same.
 
 **The change worth knowing about is where the pause kind lives.** It was a column
-in the workflow's running order and is now a `pause` field on each step. That
+in the procedure's running order and is now a `pause` field on each step. That
 removes the copy that could drift, and it puts the answer in the document the
 agent is already reading at the moment it needs it — rather than in a table it
 has to look back at, one step removed from the thing being described.

@@ -1,11 +1,11 @@
 ---
 type: bundle
-version: 0.28.0
-published: 2026-08-29
-lifecycle: draft
-survival: experimental
+title: lumastack/luma-catalog/review-sweeps
+version: 0.31.0
+published: 2026-09-02
+stage: draft
+survival: probationary
 consumers: [project]
-entrypoint: policy/how-a-sweep-is-stored
 description: The review sweep — reading a whole codebase with an agent beside you, ordered and resumable, with the reader's own read as the thing being protected.
 ---
 
@@ -45,7 +45,7 @@ and nothing about depth.
 - [[what-a-slice-produces]] — a slice records and does not rewrite, why a
   proposed fix is a suggestion rather than law, and when a fix may land at all.
 
-**Workflows**
+**Procedures**
 
 - [[start-a-sweep]] — the goal, then scope, order, index, and an honest
   estimate of the size.
@@ -132,18 +132,54 @@ adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
 
+`0.29.0` — **at the close, rename the sweep if it is far enough off.**
+
+A sweep's scope moves — exclusions arrive, whole areas get deferred — and
+**nothing said what to do about a name that had stopped being true.**
+`the-whole-of-foreman` that skipped every source file is a directory whose name
+is false, and **the directory name is the first thing anybody sees**, before the
+charter or the index could correct it.
+
+**Slug and title both.** The slug is not sacred; it is a handle, and a handle
+that misdescribes what it opens is worse than an ugly one.
+
+**Only when it is far enough off** — the test is whether the name would mislead
+somebody deciding whether to read it, not whether it is imprecise. **Most sweeps
+drift a little and should be left alone.**
+
+**At the close, not during.** Mid-sweep you do not yet know what it became, and
+renaming while slices are still being written is churn against a moving target.
+
+**Then grep the old slug and repair what points at it** — which is why **a slug
+must be greppable**: two or three distinctive words, never one common one.
+`the-docs-of-foreman` can be found; `docs` cannot. **A slug that cannot be
+grepped is a slug that cannot be renamed.**
+
+**No opaque identifier**, deliberately. One would make renaming mechanical at
+the price of meaningless characters in every path forever, to insure an artifact
+**designed to be spent**. *Decision records carry `ADR-NNNN` because they are
+kept indefinitely; a sweep is not.* **Three things would change that**: sweeps
+collected across repositories, sweeps becoming kept records, or a second rename.
+
+**Provenance keeps the old name.** *"Raised during sweep X, slice 001"* says what
+it was called then, and rewriting it makes a true sentence false.
+
+**Also fixed: the status template hardcoded a real project's sweep slug** in its
+paste-block example, so every adopter got a worked example naming a sweep that
+exists in one repository.
+
 `0.28.0` — **prove nothing is stranded; do not remember it — and `git-workflow`
 owns how.**
 
 The clear check asked *is anything left that exists only in this session?* and
-rested on a claim that **by the time a slice closes, everything worth keeping is
-on disk — the note, the index, the journal, the commit.**
+rested on a claim that **by the time a slice closes, everything worth keeping
+is on disk — the note, the index, the journal, the commit.**
 
-**A commit on an unmerged branch satisfies all of that and is still invisible.**
-A sweep lost forty-three skipped rows exactly that way: the slice was committed,
-no pull request was ever opened, a detour began with a branch switch, and the
-next slice branched from an integration branch that had never seen it. **The
-check passed honestly and the record was gone.**
+**A commit on an unmerged branch satisfies all of that and is still
+invisible.** A sweep lost forty-three skipped rows exactly that way: the slice
+was committed, no pull request was ever opened, a detour began with a branch
+switch, and the next slice branched from an integration branch that had never
+seen it. **The check passed honestly and the record was gone.**
 
 **So the question widens** — the session, the working tree, the branch, a
 worktree, anywhere work can be stranded — **and most of it is checkable rather
@@ -151,13 +187,13 @@ than recalled.**
 
 **How to check it is not this bundle's business.** `git-workflow`'s
 `proving-work-landed` is the source of truth: the commands, the fetch, the
-remote ref, showing the output, and the two levels of gate. **Every bundle whose
-work can be stranded on a branch has the same problem**, and each inventing its
-own commands produces a set of near-identical checks that drift.
+remote ref, showing the output, and the two levels of gate. **Every bundle
+whose work can be stranded on a branch has the same problem**, and each
+inventing its own commands produces a set of near-identical checks that drift.
 
 *This bundle had already written the rule and walked past it —
-`what-a-slice-produces` ends "How changes get integrated is not this bundle's to
-say."*
+`what-a-slice-produces` ends "How changes get integrated is not this bundle's
+to say."*
 
 **What stays here is the obligation and where it falls**: at a slice's close,
 and again before the next branch is cut. Plus which sweep failures are worth a
@@ -313,7 +349,7 @@ which files are finished and roughly what is left; **ninety filenames under
 
 **The shape lives in `templates/slice-close.md`**, beside the presentation
 template it is modelled on — a message shape rather than a document, and the
-workflow points at it instead of carrying a second copy.
+procedure points at it instead of carrying a second copy.
 
 **Derived and never stored.** It is rebuilt from `coverage.md` each time and
 discarded. Writing it into a file would be a third copy of what the index
@@ -462,7 +498,7 @@ prose wants `--word-diff`, or a line diff shows every paragraph that moved and
 buries the words that changed.
 
 **Also: step 8 still described `reviewed` and `approved` as statuses**, which
-0.18.0 replaced with three columns four releases ago. The workflow was telling
+0.18.0 replaced with three columns four releases ago. The procedure was telling
 a reader to write a shape the type no longer has.
 
 **Found by running it.** A sweep dropped a document on the instruction *"drop
@@ -721,7 +757,7 @@ the sweep rather than improvising one in the index — improvising is how an
 index quietly stops being a cache and becomes a record of judgements nothing
 else holds.
 
-Minor: new content in the layout policy, both workflows and the sweep template.
+Minor: new content in the layout policy, both procedures and the sweep template.
 
 `0.11.2` — **retention is stated, and why it is safe.** An audit is kept
 indefinitely because the exchange *is* what it produced — discard it and
@@ -830,7 +866,7 @@ is false precision a reader will plan against. **Slices that measured something
 else are discarded and said to be** — a first slice of a `draft` practice
 measures the practice, not the material.
 
-Minor: new content, and one workflow step added.
+Minor: new content, and one procedure step added.
 
 `0.9.1` — **examples name a fictional person, not a real one.**
 
@@ -917,7 +953,7 @@ because they have the file itself. **So it is declared, never drifted into** —
 a sweep that slid into it one file at a time lost the property without anybody
 choosing to.
 
-Minor: new content, and one workflow step restated.
+Minor: new content, and one procedure step restated.
 
 `0.7.0` — **a row finishes two ways, and challenge is not veto.**
 
@@ -1257,7 +1293,7 @@ for them:
   value is being readable at a glance and that a sweep has one writer. If sweeps
   turn out to run with several readers at once, that reasoning fails and the
   shape has to change.
-- **Whether `close-a-sweep` earns being a workflow** rather than a paragraph.
+- **Whether `close-a-sweep` earns being a procedure** rather than a paragraph.
 
 **No retention period for archived sweeps**, deliberately. Nobody has run
 enough of them to know what one should be, and a number invented now would be

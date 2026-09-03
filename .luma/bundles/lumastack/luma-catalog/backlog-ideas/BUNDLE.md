@@ -1,9 +1,10 @@
 ---
 type: bundle
-version: 0.12.0
-published: 2026-08-28
+title: lumastack/luma-catalog/backlog-ideas
+version: 0.14.0
+published: 2026-09-02
+stage: draft
 consumers: [project, organization]
-entrypoint: policy/capturing-ideas
 description: Ideas as individual files rather than one growing IDEAS.md — what earns a file, how capture stays fast, and how the list gets tended rather than accumulating.
 ---
 
@@ -27,7 +28,7 @@ session that prunes.
 - [[where-an-idea-lives]] — project, department or organization, and the default.
 - [[tending-ideas]] — growth stages, when to prune, archive versus delete.
 
-**Workflows**
+**Procedures**
 
 - [[capture-idea]] — write, ask for more, check duplicates, *then* ask how much
   detail is wanted.
@@ -57,7 +58,7 @@ courteous.
 read an idea afterwards and vouched for it. An agent overseeing another agent's
 work is real and worth recording, and is still not a human having seen it.
 
-**Almost everything reuses a core field.** Growth stages are `lifecycle`
+**Almost everything reuses a core field.** Growth stages are `stage`
 — seedling `draft`, budding `provisional`, evergreen `stable`, pruned
 `archived`. Dates and authorship are `created`. Human review is `verified`. The
 type declares only `horizon`, `scope`, `archived` and `contributors`, because
@@ -114,6 +115,19 @@ Both levels. An organization has ideas about how it works; a project has ideas
 about what it builds. The same shape holds, and `scope` records which.
 
 ## Version
+
+`0.12.1` — **the manifest declares `lifecycle: draft`.** The field was absent, and
+absent reads as `unknown` — *nobody has said*. Something was known: this is
+developed by its maintainers for their own use, and its shape can reverse
+without notice.
+
+**Publication did not promote it.** Being reachable by somebody who did not
+write it makes the question live rather than answering it, and the answer here
+is *still a draft* — which is a legitimate thing to publish, and says more than
+silence did.
+
+Patch: a fact written down. Nothing an adopter is obliged to do has changed, and
+`unknown` promised nothing that `draft` withdraws.
 
 `0.12.0` — **`lifecycle_status` is now `lifecycle`.**
 
@@ -178,7 +192,7 @@ Minor. Nothing a reader is obliged to do has changed.
 `0.9.0` — **vocabulary.** `moment` becomes `event` — a moment is a point in
 time and `applies_to` takes nouns. `compliance` is dropped wherever it was
 saying nothing: a policy binds unless it says otherwise, so only a strong
-default declares `recommended`, and a workflow's steps bind by being steps.
+default declares `recommended`, and a procedure's steps bind by being steps.
 Type Definitions use `field_presence: required` for what was
 `obligation: mandatory`, matching the format.
 

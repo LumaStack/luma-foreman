@@ -1,9 +1,10 @@
 ---
 type: bundle
-version: 0.12.0
-published: 2026-08-28
+title: lumastack/luma-catalog/bundle-manager
+version: 0.15.0
+published: 2026-09-02
+stage: draft
 consumers: [project, organization]
-entrypoint: policy/organizing-a-bundle
 description: Creating, updating, auditing, repairing, migrating and retiring bundles — the layout they use and which catalog they belong in.
 ---
 
@@ -21,14 +22,14 @@ belongs in, and a procedure for each thing you do to a bundle over its life.
 
 **Policy**
 
-- [[organizing-a-bundle]] — the layout, and the three rules that decide whether
-  something is a document, an asset, or a type. Read first.
+- [[organizing-a-bundle]] — the layout, and what decides whether something is a
+  document, an asset, or a type. Read first.
 - [[where-a-bundle-belongs]] — the four routes a bundle takes, when to start in
   a project and when to start in a catalog, and the one bar that still binds.
 - [[an-index-of-what-exists]] — load the index, never the content. How a bundle
   stays large without being expensive, and why the alternative fails silently.
 
-**Workflows**
+**Procedures**
 
 - [[create-bundle]] — scaffold a new one and get it publishable.
 - [[update-bundle]] — change contents and version the change honestly.
@@ -49,13 +50,14 @@ bundle, and every tool reading it would believe that — which is the first thin
 
 ## Loading
 
-Only [[organizing-a-bundle]] has no `applies_to` — every workflow here
-assumes it. The six workflows are `optional`: you load the one you are doing,
-not all six.
+**Every policy here says what surfaces it**, so a rule arrives when you are
+creating a bundle, restructuring one, or deciding where it belongs — and costs
+nothing before then. **The procedures declare nothing**, which makes them
+available on request: you load the one you are doing.
 
-That is the field working as intended. Marking every workflow mandatory would
-impose the whole bundle on any consumer that touched it, which is the cost that
-keeps `mandatory` meaning something.
+That is the field working as intended. A document asking to be present always
+would impose itself on any consumer that touched this bundle, in every session,
+forever — which is the cost that keeps `matches: eager` worth justifying.
 
 **The three document directories are three disclosure tiers**, which is the
 point of filing by type at all:
@@ -63,7 +65,7 @@ point of filing by type at all:
 | tier | what belongs there | when it loads |
 | --- | --- | --- |
 | **`policy/`** | what to do, and what outranks what | **standing** |
-| **`workflows/`** | the procedures | **invoked** |
+| **`procedure/`** | the procedures | **invoked** |
 | **`concepts/`** | background that explains — rationale, models, open questions | **when relevant** |
 
 The test is whether the reader is working **through** the bundle or **on** it.
@@ -83,6 +85,67 @@ Both levels. An organization curates a catalog and a project writes bundles it
 may later promote, and the procedure is the same at either end.
 
 ## Version
+
+`0.13.1` — **the type-definition template still taught `obligation: mandatory`.** The
+`0.x` vocabulary change moved Type Definitions to `field_presence: required`
+and this template was in scope and missed — so every type scaffolded from it
+since has started with the wrong key and the wrong value. It is the only
+leftover that was still making new ones.
+
+Patch: one line.
+
+`0.13.0` — **a bundle is asked what it is, on both ladders, and this one
+answers.** The manifest template carried five fields and neither of these, so
+every bundle scaffolded from it was born declaring `lifecycle: unknown` by
+omission — *nobody has said*, which a reader cannot tell apart from nobody
+having thought about it. Twenty-three bundles in this catalog were in that state,
+every one of them by accident rather than by decision.
+
+**`lifecycle: draft` is now in the block you copy**, so the honest value for a
+new bundle is the one already there and anything higher has to be typed. It is
+the true answer on the day a bundle is written, and [[create-bundle]] says why:
+its maintainers are developing it for their own use, and the shape can reverse
+without notice.
+
+**`survival` is deliberately not in the block.** It defaults to `intended`, so
+writing that would add a line saying what silence already says — the field earns
+its place only at `probationary` or `promised`. **The question is asked every
+time and the field is written sometimes**, which is the distinction the two
+procedures now carry.
+
+**[[update-bundle]] gains a step for both.** A version bump is the one moment
+somebody is already looking at the manifest, so it is the only reliable moment
+to ask — otherwise a bundle that was `draft` three months and two rewrites ago
+still says `draft`, because nothing on either ladder moves on its own.
+
+**Neither procedure promotes anything.** What moves a bundle up is audience
+rather than use: publishing it and adopting it make the question live, and
+somebody still has to answer it. *No, still a draft* is an answer, and this
+catalog is now full of it.
+
+**Three claims in this bundle had rotted, and are removed rather than
+recounted.** `organizing-a-bundle` asserted that nothing in this catalog declares
+`matches: always`. Something does, and did before the sentence was written — a
+register of retired words, which is useless unless it is present before somebody
+uses one. The claim rested on a bundle count, which is the failure
+`project-documentation`'s writing style names using *"Seventeen bundles"* as its
+example. **The rule survives; the census is gone**, and what replaces it is the
+exception that shows what earns the expensive outcome.
+
+**The `Loading` section was stale against three format changes at once.** It
+named `applies_to`, renamed to `matches` in `0.8.0`, and called the procedures
+`optional`, a `compliance` value removed in `0.7.0` — in a bundle whose whole job
+is teaching field names. It also had the fact backwards: every policy here
+declares `matches`, and it is the procedures that declare nothing.
+
+**And this manifest called them "the three rules" while the policy's own
+description called them "the two rules."** Neither now counts. Both name the
+subject, which survives somebody adding a rule.
+
+Minor: new guidance, a new line in a template, and a step. An existing bundle
+stays valid, and adding the field to one is a patch — a fact written down rather
+than a change to what it obliges. The corrections ride along, and none of them
+changes what this bundle obliges either.
 
 `0.12.0` — **`lifecycle_status` is now `lifecycle`.**
 
@@ -134,7 +197,7 @@ in the manifest, then let first contact rewrite what it rewrites.
 Minor. Nothing an adopter must do has changed, and a bundle that followed the
 old rule is still following this one.
 
-`0.10.4` — **`entry_point` is now `entrypoint`.** One word, so the same word names the same thing at every level it appears. The policy, the three workflows and the template all taught the old spelling, so each is corrected — a bundle that teaches a field name is wrong in a way that spreads.
+`0.10.4` — **`entry_point` is now `entrypoint`.** One word, so the same word names the same thing at every level it appears. The policy, the three procedures and the template all taught the old spelling, so each is corrected — a bundle that teaches a field name is wrong in a way that spreads.
 
 Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 
@@ -220,7 +283,7 @@ Minor. Nothing a reader is obliged to do has changed.
 `0.6.0` — **vocabulary.** `moment` becomes `event` — a moment is a point in
 time and `applies_to` takes nouns. `compliance` is dropped wherever it was
 saying nothing: a policy binds unless it says otherwise, so only a strong
-default declares `recommended`, and a workflow's steps bind by being steps.
+default declares `recommended`, and a procedure's steps bind by being steps.
 Type Definitions use `field_presence: required` for what was
 `obligation: mandatory`, matching the format.
 
@@ -242,7 +305,7 @@ every document changes.
 
 `0.4.0` — **the naming rule is written down**: ALL CAPS names a file that
 speaks for the thing containing it, lowercase names one of the things contained.
-With the case a document owns a directory, which is how a workflow carrying its
+With the case a document owns a directory, which is how a procedure carrying its
 own steps keeps them out of every consumer's standing surface.
 
 Minor, because an author who correctly understood the previous version would now

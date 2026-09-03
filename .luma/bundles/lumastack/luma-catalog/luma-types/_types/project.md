@@ -1,31 +1,21 @@
 ---
 type: type_definition
 defines: luma/project
-version: "0.1.0"
+version: "0.2.0"
 extends: document
 fields:
+  # Two inherited fields, strengthened and nothing else. Presence is the only
+  # thing a subtype may change, so field_type and values are not restated —
+  # restating them is how a copy drifts from the definition it copied.
   description:
     field_presence: recommended
-    field_type: text
-    desc: "when somebody should open this repository. Strengthened from the root's optional — the field this type exists to carry"
-  lifecycle:
+  stage:
     field_presence: recommended
-    field_type: enum
-    values: [draft, provisional, stable, archived]
-    desc: "how mature the repository is. Strengthened from the root's optional; absent means nobody has said"
   disclosure_level:
     field_presence: recommended
     field_type: enum
     values: [public, internal, confidential, restricted]
     desc: "how widely this repository is disclosed. Absent refuses sensitive content — undeclared is not permission"
-  owns:
-    field_presence: recommended
-    field_type: list of text
-    desc: "what this repository is responsible for. A claim, which its organization may adjudicate"
-  must_not_own:
-    field_presence: optional
-    field_type: list of text
-    desc: "what belongs to somebody else. The half that prevents scope creep"
 ---
 
 # luma/project
@@ -65,23 +55,38 @@ only this sentence? If two would read the same, it is not specific enough.
 
 ## Inherited fields that are strengthened
 
-Permitted by the format's inheritance rules, which allow a subtype to raise an inherited field_presence and
-never to lower one.
+Permitted by the format's inheritance rules, which allow a subtype to raise an
+inherited `field_presence` and never to lower one.
+
+**Presence, and nothing else.** The format is explicit that a strengthened field
+is redeclared *"with a higher `field_presence` and nothing else changed"*, and
+that a subtype may not redefine an inherited field's `field_type` or `values`.
+So neither is restated here — a copy of a definition is a thing that can
+disagree with the definition, and eventually does.
 
 **`description` moves `optional` → `recommended`** because a consumer reads it to
 decide whether to load this at all, before anything else about the repository is
 fetched. A project descriptor without one has no reason to exist.
 
-**`lifecycle` moves `optional` → `recommended`** because how mature a
+**`stage` moves `optional` → `recommended`** because how mature a
 repository is changes how everything inside it should be treated — a position
 recorded in a two-week-old repository binds differently from the same position in
 a five-year-old one, and nothing else in the descriptor says which this is.
 
-**Absent means nobody has said.** The format gives `lifecycle` a default of
-`provisional`, and that default answers *what is the value*. It does not answer
-*may I act on it*: anything making a consequential choice on the strength of
-maturity should require an explicit declaration, because **a default is not a
-declaration.** The same asymmetry `disclosure_level` states below.
+**`unknown` means the descriptor is incomplete.** Not that the repository is at
+an early stage — that the question has not been answered. Either a tool did not
+ask and could not work it out, or somebody was asked and declined. Both are
+incompleteness, and **neither is a maturity.**
+
+**So it is used only where it has to be**, and a tool must not guess past it.
+Writing `draft` because most new things are drafts produces a value nothing can
+tell from one somebody chose, which is the whole reason this field has no
+plausible default.
+
+A default answers *what is the value*. It does not answer *may I act on it*:
+anything making a consequential choice on the strength of maturity should
+require an explicit declaration, because **a default is not a declaration.** The
+same asymmetry `disclosure_level` states below.
 
 ## `disclosure_level` — how widely this repository is disclosed
 
@@ -186,28 +191,6 @@ permission is unrecoverable.** Every rule above fails toward restriction
 deliberately: absent refuses, the declaration beats the observation, a check that
 cannot be performed is a failure rather than a pass, and the field can narrow but
 never widen. **Those are one principle applied four times.**
-
-## `owns` and `must_not_own`
-
-What lets somebody detect that **two repositories are about to collide** — a
-question no single repository can answer and every organization eventually asks.
-
-```yaml
-owns: [storefront, checkout, payment-integration]
-must_not_own: [inventory levels, pricing rules]
-```
-
-**`must_not_own` is the more useful half.** Everything owns something; an
-explicit *this is not ours* is a boundary somebody argued about, and it is what
-stops a repository quietly absorbing a neighbour's job over two years.
-
-**They are claims, not rulings.** A repository states what it believes it owns;
-its organization may disagree, and that disagreement is exactly the finding worth
-having.
-
-**Only what was actually decided.** Invented boundaries are read as settled, and
-a wrong claim looks exactly like a right one. Leave both out rather than
-guessing — absent means nobody has said, which is findable.
 
 ## It does not record its own location
 

@@ -1,7 +1,9 @@
 ---
 type: bundle
-version: 0.12.0
-published: 2026-08-28
+title: lumastack/luma-catalog/luma-types
+version: 0.15.0
+published: 2026-09-02
+stage: draft
 consumers: [project, organization]
 description: The type definitions more than one luma tool has to agree on — namespaced, vendored, and deliberately not built into the knowledge format.
 ---
@@ -137,6 +139,49 @@ A collector should read the version each project declares and say so, rather tha
 presenting a mixed set as though it were uniform.
 
 ## Version
+
+`0.13.0` — **both types shed fields nothing used** *(breaking)*.
+
+**`luma/catalog` is `default_namespace` and `upstream`.** A catalog publishes; it
+does not oblige whoever takes from it, so `requires` goes — and `tags` with it,
+since it existed only to narrow a requirement to some consumers. A tag belongs
+on a Bundle, where the format already has one, and a catalog can derive its set
+from what it publishes. `namespace` becomes `default_namespace` because the
+namespace derives from where the catalog lives; declaring one overrides that.
+
+**`luma/project` drops `owns` and `must_not_own`** — claims nothing read — and
+declares presence only for `description` and `stage`, since a subtype may
+not redefine an inherited field's `field_type` or `values`.
+
+*Migration:* remove `owns` and `must_not_own` from any `.luma/PROJECT.md`.
+Nothing reads either, so nothing breaks meanwhile.
+
+`0.12.2` — **the `requires` example was renamed and should not have been.** The same
+vocabulary change scoped itself to Type Definitions, where `obligation` graded
+how strongly a *field* should be present. A catalog's `requires.obligation`
+grades whether a *Bundle* must be adopted — a different question, and out of
+scope — but a key-level replace does not know that.
+
+The file has contradicted itself since: the example said `field_presence:
+required` while the table under it listed `mandatory / recommended / optional /
+deprecated` and the prose called the field `obligation`. The table, the prose,
+the frontmatter description and the live `CATALOG.md` were all right; the
+example was the one wrong line.
+
+Patch: one line.
+
+`0.12.1` — **the manifest declares `lifecycle: draft`.** The field was absent, and
+absent reads as `unknown` — *nobody has said*. Something was known: this is
+developed by its maintainers for their own use, and its shape can reverse
+without notice.
+
+**Publication did not promote it.** Being reachable by somebody who did not
+write it makes the question live rather than answering it, and the answer here
+is *still a draft* — which is a legitimate thing to publish, and says more than
+silence did.
+
+Patch: a fact written down. Nothing an adopter is obliged to do has changed, and
+`unknown` promised nothing that `draft` withdraws.
 
 `0.12.0` — **`lifecycle_status` is now `lifecycle`.**
 

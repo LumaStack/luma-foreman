@@ -1,10 +1,11 @@
 ---
 type: bundle
-version: 0.6.2
-published: 2026-08-27
+title: lumastack/luma-catalog/github-release
+version: 0.8.0
+published: 2026-09-02
+stage: draft
 consumers: [project]
-entrypoint: workflows/publish-release
-description: Cutting and publishing GitHub releases — choosing the version, the changelog, release titles and contents, and the gh workflow.
+description: Cutting and publishing GitHub releases — choosing the version, the changelog, release titles and contents, and the gh procedure.
 ---
 
 # GitHub release
@@ -19,7 +20,7 @@ against it, notes that list commits instead of consequences.
 
 ## What is here
 
-- [[publish-release]] — the workflow. Verifies `gh` is installed,
+- [[publish-release]] — the procedure. Verifies `gh` is installed,
   authenticated and working *in this repository* before anything is tagged.
 - [[release-versions]] — which part to bump, and the two cases that must be said
   out loud. Enough to cut a release; the reasoning is in the **versioning**
@@ -46,24 +47,41 @@ is the right outcome for a procedure nobody runs by accident.
 [[changelog]] on the `CHANGELOG.md` path, [[release-notes]] on the
 `gh release create` command and the `before-release` event, and
 [[release-versions]] on that same event and on the topic of choosing which part
-of a version to bump. They arrive when the workflow reaches them or when someone
+of a version to bump. They arrive when the procedure reaches them or when someone
 questions a version number, rather than being held in context against the
 possibility.
 
 ## The one hard requirement
 
-The workflow **stops** if `gh` is missing rather than falling back to the web
+The procedure **stops** if `gh` is missing rather than falling back to the web
 interface or a raw API call. The first produces a release nobody can reproduce;
 the second needs a token that then has to live somewhere.
 
 When it stops it **asks** whether to install `gh` or leave that to you, and
 waits. Installing software is outside what "publish a release" implies, harder
-to undo than anything else in the workflow, and on a managed machine it may not
+to undo than anything else in the procedure, and on a managed machine it may not
 be yours to do.
 
 ## Version
 
-`0.6.2` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+`0.6.4` — **the manifest declares `lifecycle: draft`.** The field was absent, and
+absent reads as `unknown` — *nobody has said*. Something was known: this is
+developed by its maintainers for their own use, and its shape can reverse
+without notice.
+
+**Publication did not promote it.** Being reachable by somebody who did not
+write it makes the question live rather than answering it, and the answer here
+is *still a draft* — which is a legitimate thing to publish, and says more than
+silence did.
+
+Patch: a fact written down. Nothing an adopter is obliged to do has changed, and
+`unknown` promised nothing that `draft` withdraws.
+
+`0.6.3` — **references to the knowledge format name sections instead of numbering them.** The format removed section numbers, so every `§n` here pointed at a position that no longer exists — and a stale number resolves to the wrong section rather than to nothing, which is why none of them were reported. Decorative citations are dropped; the rest name what they meant.
+
+Patch: wording only. No rule, field or procedure changed.
+
+`0.6.2` — **`entry_point` is now `entrypoint`.** One word, so the same word names the same thing at every level it appears.
 
 **Also: a release-title example named `preload`**, which the format released
 in `v0.0.12`. An example's content is arbitrary, so it cost nothing to stop

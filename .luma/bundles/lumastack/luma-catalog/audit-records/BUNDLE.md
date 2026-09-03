@@ -1,9 +1,10 @@
 ---
 type: bundle
-version: 0.7.2
-published: 2026-08-27
+title: lumastack/luma-catalog/audit-records
+version: 0.10.0
+published: 2026-09-02
+stage: draft
 consumers: [project, organization]
-entrypoint: policy/audit-layout
 description: Audits as records — findings written by one party, answered by another, closed by the first. The whole exchange lives in git.
 ---
 
@@ -34,7 +35,7 @@ the conversation.
   loop. Read first.
 - [[writing-findings]] — what makes a finding actionable rather than an opinion.
 
-**Workflows**
+**Procedures**
 
 - [[conduct-audit]] — pin the commit, scope it, write the findings.
 - [[respond-to-audit]] — take a position on every one, and point at evidence.
@@ -77,7 +78,47 @@ audits conformance across projects. The exchange is the same shape either way.
 
 ## Version
 
-`0.7.2` — **`entry_point` is now `entrypoint`.** One word, per LKF §11.1, so the same word names the same thing at every level it appears.
+`0.8.3` — **the manifest declares `lifecycle: draft`.** The field was absent, and
+absent reads as `unknown` — *nobody has said*. Something was known: this is
+developed by its maintainers for their own use, and its shape can reverse
+without notice.
+
+**Publication did not promote it.** Being reachable by somebody who did not
+write it makes the question live rather than answering it, and the answer here
+is *still a draft* — which is a legitimate thing to publish, and says more than
+silence did.
+
+Patch: a fact written down. Nothing an adopter is obliged to do has changed, and
+`unknown` promised nothing that `draft` withdraws.
+
+`0.8.2` — **references to the knowledge format name sections instead of numbering them.** The format removed section numbers, so every `§n` here pointed at a position that no longer exists — and a stale number resolves to the wrong section rather than to nothing, which is why none of them were reported. Decorative citations are dropped; the rest name what they meant.
+
+Patch: wording only. No rule, field or procedure changed.
+
+`0.8.1` — **the pointer to review sweeps is withdrawn.**
+
+`0.8.0` added a subsection routing *audit the whole codebase* to
+`lumastack/luma-catalog/review-sweeps`. **That bundle is `draft`**, and a settled
+practice pointing at an experimental one lends it standing it has not earned —
+every adopter of this bundle would have been told about something that may not
+survive.
+
+**The direction was wrong, not just the timing.** A new practice has to situate
+itself against what already exists, and it does: that bundle names this one.
+**An established practice acquires no matching obligation**, or it slowly fills
+with pointers to experiments, each of which has to be removed by somebody who
+notices it went away.
+
+**The gap it was filling is real and stays open.** Nothing here says an audit
+answers a question rather than covering a territory, so *audit the whole
+codebase* still reads as an ordinary request. Filling that needs a sentence about
+what an audit *is*, not a signpost to somebody else's bundle — and it is better
+written when whatever it points at has stopped moving.
+
+Patch: content withdrawn. Nobody adopted `0.8.0`, and nothing an adopter must do
+has changed in either direction.
+
+`0.7.2` — **`entry_point` is now `entrypoint`.** One word, so the same word names the same thing at every level it appears.
 
 Patch: one key renamed. Same value, same meaning, same `optional` presence, and `luma-foreman` reads both spellings while the rename lands.
 
@@ -120,7 +161,7 @@ deterministic-command exception now rests on it too — a checker is exempt beca
 it carries nothing between runs.
 
 Minor: no document changes shape, and every existing audit stays valid. What
-changed is which arrangements the workflows ask for and what they ask to be
+changed is which arrangements the procedures ask for and what they ask to be
 written down.
 
 `0.6.0` — **an audit starts by asking what it is for.** `conduct-audit` opens
@@ -128,7 +169,7 @@ with three questions: is this targeted or open-ended, what problems is it aimed
 at, and what is the scope. **The shape is asked first, deliberately** — otherwise
 anybody with a complaint ready gets a targeted audit without having chosen one.
 
-**Both shapes are biased and the workflow says so.** Targeting is biased toward
+**Both shapes are biased and the procedure says so.** Targeting is biased toward
 what is already suspected, and a problem is usually a symptom, so an audit aimed
 at one never looks at its cause. Open-ended is biased toward what is easy to
 notice — and an auditor who has just worked on the subject cannot run one, since
@@ -160,7 +201,7 @@ in has been renamed, and `applies_to` is still read while the rename finishes.
 `0.4.0` — **vocabulary.** `moment` becomes `event` — a moment is a point in
 time and `applies_to` takes nouns. `compliance` is dropped wherever it was
 saying nothing: a policy binds unless it says otherwise, so only a strong
-default declares `recommended`, and a workflow's steps bind by being steps.
+default declares `recommended`, and a procedure's steps bind by being steps.
 Type Definitions use `field_presence: required` for what was
 `obligation: mandatory`, matching the format.
 

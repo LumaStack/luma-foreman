@@ -17,10 +17,10 @@ fields:
   auditor:
     field_presence: recommended
     field_type: actor
-    desc: "who or what performed it (§7.4)"
+    desc: "who or what performed it"
   also_examined:
     field_presence: optional
-    desc: "other repositories examined, each with the commit it was at — see below. No field_type: it is a list of records, which §10.2 cannot yet express"
+    desc: "other repositories examined, each with the commit it was at — see below. No field_type: it is a list of records, which the format's field declarations cannot yet express"
 ---
 
 # Audit

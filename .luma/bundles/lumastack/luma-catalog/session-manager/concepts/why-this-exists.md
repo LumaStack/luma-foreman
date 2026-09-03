@@ -9,7 +9,7 @@ description: The case for ending sessions deliberately — what is lost by defau
 **Read this when working on the bundle, not when working through it.** Deciding
 whether to adopt it, arguing with a step, extending it, or judging whether it
 still earns its place. An agent that is simply ending a session needs
-[[session-continuity]] and a workflow, and nothing here.
+[[session-continuity]] and a procedure, and nothing here.
 
 ## What happens by default
 
@@ -92,7 +92,7 @@ Worth stating, since none of it has been tested.
 **If sessions end cleanly without it**, this is ceremony. The evidence would be
 handoffs that were fine anyway and closes that found nothing to route.
 
-**If the workflows cost more context than they save**, they have defeated
+**If the procedures cost more context than they save**, they have defeated
 themselves — the thing they protect is the thing they spend. [[context-budget]]
 exists because that risk is real, not hypothetical.
 

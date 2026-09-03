@@ -6,7 +6,7 @@ description: How much room is left, what that changes about ending a session, an
 
 # Working against a context limit
 
-**These workflows run inside the resource they are protecting.** That is the
+**These procedures run inside the resource they are protecting.** That is the
 whole problem. A thorough handoff started with almost no room left will trigger
 the compaction it was meant to survive, halfway through writing the note — and
 then both the work and the record of it are gone.
@@ -17,11 +17,11 @@ have, and does that change what I should be doing at all?**
 ## The check is cheap, and usually the answer is *proceed*
 
 **Nothing here applies unless a forced compaction is close.** Look, see there is
-room, run the workflow as written, say nothing about it. That is the normal
+room, run the procedure as written, say nothing about it. That is the normal
 outcome and it should cost a glance.
 
 Everything below — the triage order, the one-pass rule, the refusal to start —
-engages only when the limit is near enough that the workflow might not finish.
+engages only when the limit is near enough that the procedure might not finish.
 **Do not narrate the check.** A session that reports its context budget every
 time it checkpoints has turned a safeguard into noise, which is how safeguards
 get switched off.
@@ -74,7 +74,7 @@ symmetric penalty to balance against, so bias hard toward early.
 
 | | what changes |
 | --- | --- |
-| **room to work** | **nothing.** Run the workflow as written and do not mention the check. This is the usual case |
+| **room to work** | **nothing.** Run the procedure as written and do not mention the check. This is the usual case |
 | **getting tight** | drop what is re-derivable from disk, defer every ambiguous question, skip optional steps — and **say which** were skipped |
 | **nearly out** | triage. Shortest path to a landed note. Start nothing that cannot finish |
 
@@ -85,7 +85,7 @@ describe postures, not thresholds.
 
 ## Under pressure, order by what cannot be recovered
 
-Not by the order the workflow lists its steps. Descending by cost to re-derive:
+Not by the order the procedure lists its steps. Descending by cost to re-derive:
 
 1. **Dead ends.** Conversation-only, expensive to rediscover, and the thing a
    summary reliably discards — it keeps conclusions and drops refuted paths.
@@ -108,7 +108,7 @@ So: **write the smallest useful version first, then enrich it.** Do not compose
 it across several turns, and do not leave the most important section for last.
 If room runs out after the first pass, what landed is coherent.
 
-## A workflow that cannot finish should not start
+## A procedure that cannot finish should not start
 
 If a full handoff would consume what is left, **do not begin one.** Write a
 minimal note, say plainly that it is minimal and why, and stop.

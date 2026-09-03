@@ -8,7 +8,7 @@ matches:
 
 # Where knowledge goes
 
-Every workflow here reaches the same step: *this is worth keeping, where does it
+Every procedure here reaches the same step: *this is worth keeping, where does it
 go?* **The answer is different in every repository, so this bundle must not
 contain it.** A hardcoded list would be wrong in most projects and, worse, would
 look authoritative while being wrong.

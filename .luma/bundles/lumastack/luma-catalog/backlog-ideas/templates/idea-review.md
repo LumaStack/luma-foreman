@@ -36,7 +36,7 @@ created: { by: <actor>, at: <timestamp> }
 contributors: [<everyone in the exchange>]
 horizon: <next|later|someday>
 scope: <project|department|organization>
-lifecycle: draft
+stage: draft
 ​```
 
 <One or two sentences of reasoning. Which rule decided it.>

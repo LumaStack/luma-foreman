@@ -25,7 +25,7 @@ log      = "luma/logging"
 decision = "acme/architecture-decisions"
 ```
 
-**Today.** The workflows check `.luma/config/` and fall through. The defaults
+**Today.** The procedures check `.luma/config/` and fall through. The defaults
 carry every case, which is correct for now — nothing has adopted anything, so
 there is nothing to override.
 
@@ -36,13 +36,13 @@ for rather than guessing.
 ## A logging bundle, and a journaling bundle
 
 **Wanted.** `luma/logging` and `luma/journaling`, each owning its format,
-location and cadence. The workflows would find the bundle and do what it says.
+location and cadence. The procedures would find the bundle and do what it says.
 
 **Today.** Both are conditional on being *established*, by the detection rule in
 [[where-knowledge-goes]], and neither exists — so in practice both steps are
 skipped everywhere.
 
-**This is the right failure.** A session workflow inventing a log format would
+**This is the right failure.** A session procedure inventing a log format would
 be one bundle deciding another's business, and every project would get a
 slightly different invented format depending on which agent ran first.
 
@@ -108,7 +108,7 @@ elapsed time, context pressure, or a hook before an irreversible command.
 **a forced compaction is unannounced**, and insurance you have to remember to
 buy is not insurance. It is the largest known hole in this bundle.
 
-[[context-budget]] mitigates it without curing it — the three ending workflows
+[[context-budget]] mitigates it without curing it — the three ending procedures
 check the remaining room first and reorder under pressure. That still depends on
 an agent noticing, which is the part a hook would replace.
 
@@ -124,7 +124,7 @@ early and be wrong harmlessly.
 
 ## Acting on what was skipped
 
-**Wanted, and undecided.** The workflows report recommended practices this
+**Wanted, and undecided.** The procedures report recommended practices this
 project does not have — see [[where-knowledge-goes]]. Something should let a
 person act on that: show what exists, what does not, and offer to adopt the
 missing ones.
@@ -132,13 +132,13 @@ missing ones.
 **Today.** The report says what was skipped. Adopting is `luma-foreman get`,
 run by hand, whenever the user chooses.
 
-**It should be a separate command, not a step in these workflows.** The end of a
+**It should be a separate command, not a step in these procedures.** The end of a
 session is the worst available moment to decide what a project should adopt: the
 user is leaving, and adoption is a durable change to the repository being made
 under time pressure by somebody who has already stopped thinking about it. A
 report costs nothing and can be ignored; a prompt has to be answered.
 
-Separating them also keeps the workflows honest. A step that offers to install
+Separating them also keeps the procedures honest. A step that offers to install
 things has stopped ending the session and started changing the project, which is
 a different act needing different consent.
 
@@ -150,7 +150,7 @@ let somebody run it when they mean to.
 **Signal.** Somebody reading a skip report and wanting to act on it immediately.
 If that never happens, the report was enough and this was not worth building.
 
-## Anything that runs the arriving workflow automatically
+## Anything that runs the arriving procedure automatically
 
 **Wanted.** A session that opens and consumes the note waiting for it, without
 anybody remembering to ask.
@@ -167,22 +167,22 @@ more damage than never having written one. Every other gap here costs
 convenience. This one costs correctness.
 
 **Signal.** Any harness with a session-start hook, or generated output that can mark
-a workflow as *run me on arrival*. Worth watching for as actively as the
+a procedure as *run me on arrival*. Worth watching for as actively as the
 pre-compaction hook, and for the same reason: both replace *an agent remembered*
 with *the harness did it*.
 
 ## Adapters for other agents
 
-**Wanted.** These four workflows available as `/session-checkpoint` and friends
+**Wanted.** These four procedures available as `/session-checkpoint` and friends
 in whatever agent is running, generated rather than hand-written per tool.
 
-**Today.** Whatever the host agent does with a `workflow` document. Getting one
+**Today.** Whatever the host agent does with a `procedure` document. Getting one
 in front of an agent is foreman's problem, and it is deliberately not solved
 here — a
-workflow naming its harness has bound vendor-neutral knowledge to whichever
+procedure naming its harness has bound vendor-neutral knowledge to whichever
 assistant happened to be current when it was written.
 
-**Signal.** Foreman projecting workflows at all.
+**Signal.** Foreman projecting procedures at all.
 
 ## What to do when one of these arrives
 

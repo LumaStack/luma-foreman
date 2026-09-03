@@ -2,9 +2,7 @@
 type: policy
 title: How a session survives its own end
 description: The three ways a session ends, who reads what each one leaves behind, and the invariant that makes a session note safe to destroy.
-matches:
-  - event: session-start
-  - event: session-end
+matches: eager
 ---
 
 # How a session survives its own end
@@ -41,10 +39,10 @@ deciding whether to keep, extend or adopt the bundle, not while using it.
 
 **A timer would interrupt mid-thought** — the most expensive moment to stop, and
 the one where you have least worth saying, because you do not yet know what you
-have learned. So each workflow fires on something that has already happened: a
+have learned. So each procedure fires on something that has already happened: a
 seam, a transfer, an end. **A seam is already a pause.**
 
-**The user's invocation outranks any heuristic.** If they ask for a workflow, run
+**The user's invocation outranks any heuristic.** If they ask for a procedure, run
 it; if they declare a mode, take it. `session-close hard-stop` is declared rather
 than inferred for exactly this reason, and urgency is not visible from inside a
 session anyway.
@@ -67,7 +65,7 @@ resume point: where I am, what is in flight, what I would do next.
 
 It is also a checkable rule rather than an aspiration. Before deleting a note,
 read it and ask of each line: *does this exist anywhere else?* If something does
-not, route it first. That is a step in both workflows that delete one.
+not, route it first. That is a step in both procedures that delete one.
 
 ## Confirmed earns a durable home; unconfirmed stays in the note
 
@@ -140,12 +138,12 @@ none of those held.
 **So every note explains itself in its own first lines**: what it is, that it
 should be deleted after use, and that its age is worth checking. Those lines are
 the only mechanism that works when the bundle is absent, `apply` failed, or
-the successor simply never ran the workflow.
+the successor simply never ran the procedure.
 
 **This is the weakest part of the design and it is structural.** The whole model
 rests on notes being consumed and destroyed, and nothing in the format can force
 that. A self-describing note narrows the gap; it does not close it. What would
-close it is a harness that runs the arriving workflow automatically — see
+close it is a harness that runs the arriving procedure automatically — see
 [[future-hooks]].
 
 ## Write for a reader who cannot see the conversation
@@ -166,7 +164,7 @@ still remember — but you will remember less than you expect after a compaction
 
 ## What every note carries
 
-Regardless of which workflow wrote it:
+Regardless of which procedure wrote it:
 
 - **Where I am** — branch, whether the tree is clean, what the current task is.
 - **What is in flight** — half-finished edits, open pull requests, anything
@@ -205,10 +203,10 @@ dresses an interruption up as a roadmap.
 ## Cost is a first-class constraint
 
 **A step that costs more context than it saves is a net loss**, and this is not
-a marginal concern: these workflows run inside the context they are protecting.
+a marginal concern: these procedures run inside the context they are protecting.
 
 It binds hardest on [[session-checkpoint]], which runs repeatedly during the
 work. It barely binds on [[session-close]], which runs once and has nothing left
-to protect. Each workflow states its own budget, and when a step would blow it,
+to protect. Each procedure states its own budget, and when a step would blow it,
 the correct move is to **write down that the step was skipped** rather than
 skipping it silently.

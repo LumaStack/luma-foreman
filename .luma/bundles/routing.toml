@@ -11,7 +11,7 @@ document = "policy/audit-layout"
 title = "How audits are stored"
 path = ".luma/bundles/lumastack/luma-catalog/audit-records/policy/audit-layout.md"
 on_violation = "allow"
-matches = ["topic:conducting an audit, or recording one"]
+matches = ["eager"]
 
 [[rule]]
 bundle = "lumastack/luma-catalog/audit-records"
@@ -27,7 +27,7 @@ document = "policy/capturing-ideas"
 title = "What is worth capturing"
 path = ".luma/bundles/lumastack/luma-catalog/backlog-ideas/policy/capturing-ideas.md"
 on_violation = "allow"
-matches = ["topic:capturing an idea worth keeping"]
+matches = ["eager"]
 
 [[rule]]
 bundle = "lumastack/luma-catalog/backlog-ideas"
@@ -59,7 +59,7 @@ document = "policy/organizing-a-bundle"
 title = "Organizing a bundle"
 path = ".luma/bundles/lumastack/luma-catalog/bundle-manager/policy/organizing-a-bundle.md"
 on_violation = "allow"
-matches = ["topic:creating or restructuring a bundle"]
+matches = ["eager"]
 
 [[rule]]
 bundle = "lumastack/luma-catalog/bundle-manager"
@@ -91,7 +91,7 @@ document = "policy/never-commit-private-identity"
 title = "Private identity never reaches a repository"
 path = ".luma/bundles/lumastack/luma-catalog/git-secrets/policy/never-commit-private-identity.md"
 on_violation = "allow"
-matches = ["command:git commit", "command:git config", "event:before-commit"]
+matches = ["eager"]
 
 [[rule]]
 bundle = "lumastack/luma-catalog/git-workflow"
@@ -99,7 +99,7 @@ document = "policy/merge-commits"
 title = "Integrate with merge commits"
 path = ".luma/bundles/lumastack/luma-catalog/git-workflow/policy/merge-commits.md"
 on_violation = "allow"
-matches = ["command:gh pr merge", "command:git merge", "event:before-merge"]
+matches = ["eager"]
 
 [[rule]]
 bundle = "lumastack/luma-catalog/git-workflow"
@@ -115,7 +115,7 @@ document = "policy/worktree-isolation"
 title = "Worktree isolation"
 path = ".luma/bundles/lumastack/luma-catalog/git-worktrees/policy/worktree-isolation.md"
 on_violation = "allow"
-matches = ["command:git worktree", "topic:working in or creating a worktree"]
+matches = ["eager"]
 
 [[rule]]
 bundle = "lumastack/luma-catalog/github-release"
@@ -147,7 +147,7 @@ document = "policy/where-configuration-lives"
 title = "Where configuration lives"
 path = ".luma/bundles/lumastack/luma-catalog/luma-config/policy/where-configuration-lives.md"
 on_violation = "allow"
-matches = ["path:.luma/config/**", "topic:deciding where a setting belongs"]
+matches = ["eager"]
 
 [[rule]]
 bundle = "lumastack/luma-catalog/luma-layout"
@@ -155,7 +155,7 @@ document = "policy/luma-directory-layout"
 title = "The .luma directory layout"
 path = ".luma/bundles/lumastack/luma-catalog/luma-layout/policy/luma-directory-layout.md"
 on_violation = "allow"
-matches = ["path:.luma/**"]
+matches = ["eager"]
 
 [[rule]]
 bundle = "lumastack/luma-catalog/luma-maintainers"
@@ -163,7 +163,7 @@ document = "policy/the-estate"
 title = "The estate, and what each repository owns"
 path = ".luma/bundles/lumastack/luma-catalog/luma-maintainers/policy/the-estate.md"
 on_violation = "allow"
-matches = ["topic:deciding which repository a new thing belongs in"]
+matches = ["eager"]
 
 [[rule]]
 bundle = "lumastack/luma-catalog/luma-tools"
@@ -187,7 +187,7 @@ document = "policy/readme"
 title = "What a README is for"
 path = ".luma/bundles/lumastack/luma-catalog/project-documentation/policy/readme.md"
 on_violation = "allow"
-matches = ["path:README.md"]
+matches = ["eager"]
 
 [[rule]]
 bundle = "lumastack/luma-catalog/project-documentation"
@@ -235,7 +235,7 @@ document = "policy/how-a-sweep-is-stored"
 title = "How a sweep is stored"
 path = ".luma/bundles/lumastack/luma-catalog/review-sweeps/policy/how-a-sweep-is-stored.md"
 on_violation = "allow"
-matches = ["topic:running or resuming a review sweep", "path:.luma/backlog/sweeps/**"]
+matches = ["eager"]
 
 [[rule]]
 bundle = "lumastack/luma-catalog/review-sweeps"
@@ -275,7 +275,7 @@ document = "policy/session-continuity"
 title = "How a session survives its own end"
 path = ".luma/bundles/lumastack/luma-catalog/session-manager/policy/session-continuity.md"
 on_violation = "allow"
-matches = ["event:session-start", "event:session-end"]
+matches = ["eager"]
 
 [[rule]]
 bundle = "lumastack/luma-catalog/session-manager"
@@ -291,4 +291,4 @@ document = "policy/semantic-versioning"
 title = "Semantic versioning"
 path = ".luma/bundles/lumastack/luma-catalog/versioning/policy/semantic-versioning.md"
 on_violation = "allow"
-matches = ["topic:choosing a version number", "path:**/BUNDLE.md"]
+matches = ["eager"]
