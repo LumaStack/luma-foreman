@@ -4,7 +4,7 @@ Predictable intelligence and reliable governance, for every project.
 
 - Seamlessly distribute your knowledge, policy and procedures between projects
 - Effortlessly wire up each agent harness — so it uses your knowledge correctly
-- Continuously verify our shared knowledge remains true
+- Continuously verify your shared knowledge remains true
 
 ## Why use Foreman
 
