@@ -22,7 +22,8 @@ layer nobody has widened.**
   something other than Claude Code consumes what `apply` writes, *harness-
   neutral* is a claim rather than a demonstrated property.
 - **More than skills.** Workflows reach an agent as skills; **scripts, assets
-  and anything that is not a procedure have no projection at all.** See
+  and anything that is not a procedure have nothing written for them at all.**
+  See
   [[no-format-for-non-procedural-knowledge]], which is the format-side half of
   the same gap.
 
