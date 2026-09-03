@@ -774,6 +774,16 @@ has 'catalog show'
 has 'catalog add'
 case $LAST in *'no catalog'*) bad 'reported no catalog with one registered' ;; *) ok ;; esac
 
+# A namespace nothing answers to is the same mistake wearing a slash — the
+# ID names a catalog this project does not have, which is not the same fact
+# as having none. The last segment is still the bundle's name, so the
+# registered catalogs still give a command to try.
+reg 'an unanswered namespace names the registered catalogs' 2 get acme/gadgets
+has 'no registered catalog publishes acme/'
+has 'luma-foreman get corp/kit/gadgets'
+has 'catalog add'
+case $LAST in *'no catalog —'*) bad 'reported no catalog with one registered' ;; *) ok ;; esac
+
 # The receipt is name-indirect: the name is recorded, the URL is not.
 grepped '  - catalog: corp/kit' "$REG/.luma/bundles/MANIFEST.md"
 grep -q -- '- source:' "$REG/.luma/bundles/MANIFEST.md" \

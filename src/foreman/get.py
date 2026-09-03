@@ -351,22 +351,41 @@ def main(argv: list[str]) -> int:
     if source is None:
         source = config.catalog_source(project_root)
     if source is None:
-        # A bare name is not a bundle ID, and the registry cannot resolve one
-        # however many catalogs are in it — the ID is what carries the
-        # catalog's name. Reporting *no catalog* to a project that has
-        # registered several sent an operator to `catalog add` for a catalog
-        # that was already there. Two ways out, because the bundle may not be
-        # in what is registered: name a catalog that is, or reach one that
-        # is not.
-        if "/" not in wanted and registered:
+        # Nothing resolved, and the registry is not empty — so the fault is in
+        # the ID rather than in the setup, and reporting *no catalog* to a
+        # project that has registered several sent an operator to `catalog
+        # add` for a catalog that was already there.
+        #
+        # Two ways to be wrong, and they need different first sentences: a
+        # bare name never carries a catalog, and a namespace nothing answers
+        # to names one this project does not have. Both end the same way,
+        # because the last segment is the bundle's name either way and every
+        # registered catalog therefore gives a command worth trying — the
+        # guess `_resolve_id` already makes when it holds a single catalog.
+        # Two routes out, because the bundle may not be in what is registered
+        # at all: name a catalog that is, or reach one that is not.
+        if registered:
+            if "/" in wanted:
+                headline = (
+                    f"no registered catalog publishes "
+                    f"{wanted.rsplit('/', 1)[0]}/ — a bundle's namespace is "
+                    f"the catalog's, and nothing here answers to that one"
+                )
+                label = "Did you mean:"
+            else:
+                headline = (
+                    f"{wanted} is not a bundle ID — a bundle is addressed "
+                    f"<namespace>/<name>, and the namespace is the catalog's"
+                )
+                label = "From a catalog registered here:"
+            bundle_name = wanted.rsplit("/", 1)[-1]
             offered = "\n".join(
-                f"    luma-foreman get {name}/{wanted}"
+                f"    luma-foreman get {name}/{bundle_name}"
                 for name in sorted(registered)
             )
             return _err(
-                f"{wanted} is not a bundle ID — a bundle is addressed "
-                f"<namespace>/<name>, and the namespace is the catalog's.\n"
-                f"  From a catalog registered here:\n"
+                f"{headline}.\n"
+                f"  {label}\n"
                 f"{offered}\n"
                 f"  `luma-foreman catalog show <name>` lists what each "
                 f"publishes.\n"
