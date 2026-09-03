@@ -10,7 +10,7 @@ Predictable intelligence and reliable governance, for every project.
 
 **Standards are easy to ignore.** Somebody writes down how projects are
 supposed to work, everyone agrees — and six months later no two repositories
-look alike. The standards spread by the best of intentions, which means drift
+look alike. The standards spread through best intentions, which means drift
 and failure are inevitable.
 
 An agent either amplifies this problem or becomes the solution. An unaware
