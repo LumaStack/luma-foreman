@@ -13,10 +13,10 @@ supposed to work, everyone agrees — and six months later no two repositories
 look alike. The standards spread through best intentions, which means drift
 and failure are inevitable.
 
-Agents can either amplify this problem or become the solution. An unaware
+Agents can either amplify this problem or **become the solution**. An unaware
 agent will confidently violate our shared standards; an informed
 agent will relentlessly uphold them — in every project, every time.
-**So foreman standardizes knowledge delivery** for agents. It runs inside a
+So **foreman standardizes knowledge delivery** for agents. It runs inside a
 repository: distributing shared knowledge, wiring up each harness, and
 reporting back when a project falls short.
 
