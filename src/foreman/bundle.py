@@ -28,11 +28,12 @@ from . import adoption, lkf, outdated, project
 
 USAGE = """What this project has taken, and what shape it is in.
 
-  luma-foreman bundle new <name>      start a bundle in this project, under
-                                      the reserved local/ namespace
   luma-foreman bundle list            every adopted bundle
   luma-foreman bundle show <name>     one bundle's receipt and contents
   luma-foreman bundle outdated        which have a newer version published
+
+  luma-foreman bundle new <name>      start a bundle in this project, under
+                                      the reserved local/ namespace
   luma-foreman bundle index <dir>     generate a bundle's INDEX.md (--check to
                                       verify instead) — an authoring act; it
                                       refuses a vendored copy
@@ -49,9 +50,9 @@ USAGE = """What this project has taken, and what shape it is in.
 
   --to <project>   a project other than this repository
 
-`new` writes a bundle to start from; `list` and `show` read committed state,
-and all three work offline. `outdated` reaches each bundle's catalog and does
-not.
+The reads come first, and the writes below them. `list` and `show` read
+committed state and `new` writes one bundle, so all three work offline;
+`outdated` reaches each bundle's catalog and does not.
 
 Exit codes: 0 fine, 1 something is wrong or behind, 2 could not run."""
 
@@ -333,9 +334,18 @@ def main(argv: list[str]) -> int:
     if target and not target.is_dir():
         return _err(f"not a directory: {target}")
 
-    verb = args[0] if args else "list"
+    # A bare noun shows what the noun can do. `luma-foreman` itself already
+    # answers that way, and this noun holds four verbs that write — a bare
+    # word that silently picks one of them is a guess that gets worse with
+    # every verb added. `--help` stays the explicit route and is handled
+    # above, so which verb a bare noun resolves to can change again without
+    # touching the way anybody asks for help on purpose.
+    verb = args[0] if args else "help"
     operands = args[1:]
 
+    if verb == "help":
+        print(USAGE)
+        return 0
     if verb == "index":
         # An authoring act on a directory, not a read of this project's
         # state — so it takes a path, resolves no project, and lives in its

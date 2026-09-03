@@ -20,8 +20,8 @@ Commands:
   apply               write what this project adopted into what a harness reads
   inspect             check a project against the baseline and report shortfalls
 
-  bundle              bundles this project holds — new, list, show, outdated
-  catalog             where bundles come from — list, show
+  bundle              bundles this project holds — list, show, new, outdated
+  catalog             where bundles come from — list, show, add
   agent-permissions   what an agent is allowed to do in this repository
 
 Run `luma-foreman <command> --help` for a command's own options, and
@@ -80,9 +80,15 @@ def _policy(argv: list[str]) -> int:
         else:
             args.append(arg)
 
-    verb = args[0] if args else "show"
+    # A bare noun shows what the noun can do — see the note in `bundle`. The
+    # third noun, changed with the other two: fixing two of three would move
+    # the inconsistency rather than end it.
+    verb = args[0] if args else "help"
     rest = args[1:]
 
+    if verb == "help":
+        print(POLICY_USAGE)
+        return 0
     if verb in ("show", "list"):
         return commands.show(scope_global, as_json)
     if verb == "keys":

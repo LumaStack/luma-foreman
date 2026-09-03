@@ -9,6 +9,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 
 ## [Unreleased]
 
+### Changed
+
+- **A bare noun shows what the noun can do.** `luma-foreman bundle`, `luma-foreman catalog` and `luma-foreman agent-permissions` print their verb menu and exit 0, where they used to run `list`, `list` and `show`. `luma-foreman` itself already answered that way, so a bare word meant *show me the menu* at the top level and *run a verb somebody picked for you* one level down. All three changed together — fixing two would move the inconsistency rather than end it.
+  **The guess got worse as the nouns grew.** `bundle` was three reporting verbs when `list` was a sensible default; it now holds seven, four of which write. Incidentally, bare `catalog` no longer needs a network: `list` reaches every catalog to count what it publishes, which made the shortest thing you could type the one that required connectivity.
+  *`--help` is untouched* and stays the explicit route — it is handled before verb dispatch in all three, so what a bare noun resolves to cannot affect it, and changing that default back later is one word. Each noun also accepts `help` as a verb.
+  *`bundle`'s menu is reordered*: the reads first — `list`, `show`, `outdated` — then the writes.
+
 ### Added
 
 - **`luma-foreman bundle new <name>` starts a bundle in this project.** It writes `.luma/bundles/local/<name>/BUNDLE.md` from a template and nothing else — `local/` because that is where a bundle with no published identity lives (ADR-0011), and it is the only namespace this writes into, since a name is a bundle's and a namespace is a catalog's to give. **A bundle needs no catalog to exist**, so this needs no network, no registry and no `--from`; it needs a `.luma/`, and says so when there is none.

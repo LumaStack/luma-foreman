@@ -396,6 +396,23 @@ has 'acme/widgets'
 bundle 'bundle show refuses an unknown name' 2 show acme/nothing
 has 'not recorded'
 
+# A bare noun shows what the noun can do, the way `luma-foreman` itself
+# already answers. It is not an error — somebody asking what is here should
+# not get a non-zero status — and it must not run the verb it used to guess.
+bundle 'a bare noun is the menu' 0
+has 'luma-foreman bundle new'
+has 'luma-foreman bundle list'
+lacks 'acme/widgets'
+bundle 'the verb still spells itself' 0 help
+has 'luma-foreman bundle list'
+
+# Offline, which the old default was not: `catalog list` reaches every catalog
+# to count what it publishes, so the shortest thing you could type was the one
+# that needed a network.
+catalog 'a bare noun is the menu' 0
+has 'luma-foreman catalog add'
+lacks "$CATALOG"
+
 catalog 'catalog list' 0 list
 has "$CATALOG"
 has '1 catalog,'
