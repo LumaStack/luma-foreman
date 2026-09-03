@@ -89,11 +89,14 @@ def legacy_path(project: Path) -> Path:
 
 
 def vendored(project: Path, bundle: str) -> Path:
-    """Where a bundle lives once adopted: ``.luma/bundles/<org>/<name>/``.
+    """Where a bundle lives once adopted: ``.luma/bundles/<namespace>/<name>/``.
 
-    The namespace is in the path because it is what tells an adopted bundle from
-    one this project wrote. A ``vendor/`` directory would put the same fact in
-    two places, and two copies of one fact can disagree.
+    The namespace is the catalog identifier, derived from the catalog's
+    address — ``lumastack/luma-catalog`` — with any number of segments, the
+    bundle name always the last. Two catalogs from one organization therefore
+    vendor side by side, and a bundle's full ID says where it came from just
+    by being read. It is in the path because a ``vendor/`` directory would put
+    the same fact in two places, and two copies of one fact can disagree.
     """
     return bundles_dir(project) / bundle
 

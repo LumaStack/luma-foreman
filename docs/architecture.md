@@ -79,7 +79,9 @@ to run in continuous integration was never the point and would buy nothing.
 ## How adoption stays a copy
 
 **`get` fetches once and records what arrived.** The bundle lands in
-`.luma/bundles/<org>/<name>/`, and the manifest — `.luma/bundles/MANIFEST.md`,
+`.luma/bundles/<namespace>/<name>/` — the namespace is the catalog
+identifier, derived from the catalog's address, so `lumastack/luma-catalog`
+for this estate — and the manifest — `.luma/bundles/MANIFEST.md`,
 a receipt kept by commands — records the version, where it came from, the
 catalog commit, and a checksum of exactly what landed.
 
