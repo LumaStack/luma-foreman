@@ -81,9 +81,11 @@ def matches(path: Path) -> tuple[str, ...]:
 
     **Two shapes, and the bare word is the whole point of the split.** A list of
     single-key mappings yields ``("command:git commit", …)``; the scalar forms
-    yield a single entry with no colon — ``("always",)`` — which is what tells a
-    keyword apart from a trigger without a second return value. ``nothing``, an
-    unrecognised keyword, and an absent field all yield ``()``.
+    yield a single entry with no colon — ``("eager",)`` — which is what tells a
+    keyword apart from a trigger without a second return value. An explicit
+    ``nothing`` is returned as itself, because *declared quiet* and *said
+    nothing* are different facts and a consumer may derive differently from
+    them. An unrecognised keyword and an absent field both yield ``()``.
 
     **An unknown keyword resolving to nothing is deliberate.** It fails toward
     *available on request* rather than toward *loaded in every session*, because
@@ -108,7 +110,7 @@ def matches(path: Path) -> tuple[str, ...]:
     # keyword still resolves to nothing, the safe direction.
     keyword = unquote(start.group(1).strip())
     if keyword:
-        return (keyword,) if keyword in ("always", "eager") else ()
+        return (keyword,) if keyword in ("always", "eager", "nothing") else ()
     out: list[str] = []
     for line in front[start.end() :].splitlines():
         if line.strip() == "":

@@ -4,23 +4,20 @@
 #
 #   sh tests/apply-test.sh
 #
-# `adopt-test.sh` already covers apply end to end — that a skill appears, that
+# `adopt-test.sh` covers apply end to end — that a skill appears, that
 # CLAUDE.md is spliced rather than owned, that orphans leave. This file covers
-# the part that decides *what* gets written: an author declares `compliance` and
-# `matches`, and everything else is computed.
+# the part that decides *what* gets written: an author declares `matches`, and
+# the loading posture is derived — never chosen by hand:
 #
-# Three classes come out of that computation, and the whole point is that none
-# of them is chosen by hand:
+#   eager     required reading the moment its bundle is in play
+#   offered   named in its bundle's index, opened when it matches
+#   standby   reachable, not announced
 #
-#   standing     body present before work starts
-#   advertised   name and description present, body on match
-#   on-demand    neither; findable, not announced
-#
-# There is exactly one path to standing — `mandatory` with no trigger anyone
-# could state — so the expensive outcome is something an author falls into
-# rather than selects. Most of these cases exist to hold that line.
-#
-# Written before the behaviour, so a fresh checkout fails every case below.
+# Postures are container-relative: eager on a document means required reading
+# when the bundle opens; eager on the bundle itself lifts its required
+# documents into every session's floor, imported by the project index. And
+# `register: nothing` in the manifest parks a bundle entirely — landed, not
+# wired.
 set -u
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd -P)
@@ -28,8 +25,7 @@ CLI=${LUMA_FOREMAN_CLI:-$ROOT/bin/luma-foreman}
 export PYTHONDONTWRITEBYTECODE=1
 
 # Hermetic: the operator's own harness wiring must not decide what these cases
-# see. Pointing CLAUDE_CONFIG_DIR at an empty directory means the gate reads as
-# not installed here, whatever is true of this machine.
+# see.
 
 T=$(mktemp -d /tmp/apply.XXXXXX) || exit 2
 export CLAUDE_CONFIG_DIR=$T/no-harness
@@ -51,38 +47,34 @@ apply() {
 }
 
 # --- a project with one bundle written into it ----------------------------------
-#
-# Written directly rather than adopted. `.luma/bundles/` holds both what a
-# project took from a catalog and what it wrote itself, and apply writes both
-# — so this exercises the same path with none of the adoption machinery.
 
 PROJECT=$T/project
 B=$PROJECT/.luma/bundles/acme/rules
 mkdir -p "$B/policy" "$B/concepts" "$B/_types" \
-         "$B/workflows/run-the-thing/steps" "$PROJECT/.claude"
+         "$B/procedure/run-the-thing/steps" "$PROJECT/.claude"
 (cd "$PROJECT" && git init -q . 2>/dev/null) || true
 
 cat > "$B/BUNDLE.md" <<'EOF'
 ---
 type: bundle
+title: acme/rules
 version: 0.1.0
 description: Rules for widget work.
-entrypoint: policy/house-rules
 ---
 EOF
 
-# always-on: it asks for a permanent seat, which is now the only way to get one.
+# eager: required reading the moment this bundle is in play.
 cat > "$B/policy/house-rules.md" <<'EOF'
 ---
 type: policy
 title: House rules
 description: The rules that govern all work here.
-matches: always
+matches: eager
 ---
 Everything here is always in force.
 EOF
 
-# advertised: mandatory, but it only governs stylesheets.
+# offered: it governs stylesheets, and costs nothing before they come up.
 cat > "$B/policy/stylesheets.md" <<'EOF'
 ---
 type: policy
@@ -95,7 +87,7 @@ matches:
 Rules for CSS.
 EOF
 
-# advertised: a rule with teeth, fired by a command.
+# offered, with teeth: fired by a command, blocking on violation.
 cat > "$B/policy/no-credentials.md" <<'EOF'
 ---
 type: policy
@@ -109,41 +101,32 @@ matches:
 Do not commit credentials.
 EOF
 
-# on-demand: a concept obliges nothing, so it is never announced.
+# standby: no matches, so nothing volunteers it. Reached by request.
 cat > "$B/concepts/why-widgets.md" <<'EOF'
 ---
 type: document
 title: Why widgets
 description: Background on why widgets exist.
-compliance: optional
 ---
 Rationale.
 EOF
 
-# a workflow that owns a directory, and the steps it owns.
-cat > "$B/workflows/run-the-thing/WORKFLOW.md" <<'EOF'
+# a procedure that owns a directory, and the steps it owns.
+cat > "$B/procedure/run-the-thing/PROCEDURE.md" <<'EOF'
 ---
-type: workflow
+type: procedure
 title: Run the thing
 description: Run the thing. Use when the thing needs running.
 ---
 Step one, step two.
 EOF
 
-cat > "$B/workflows/run-the-thing/steps/01-first.md" <<'EOF'
+cat > "$B/procedure/run-the-thing/steps/01-first.md" <<'EOF'
 ---
 type: acme/step
 title: First step
 ---
 Do the first bit.
-EOF
-
-cat > "$B/workflows/run-the-thing/steps/02-second.md" <<'EOF'
----
-type: acme/step
-title: Second step
----
-Do the second bit.
 EOF
 
 cat > "$B/_types/widget.md" <<'EOF'
@@ -157,197 +140,171 @@ Fields go here.
 EOF
 
 CLAUDE=$PROJECT/CLAUDE.md
-RING=$PROJECT/.luma/bundles/entrypoint.md
-BRING=$PROJECT/.luma/bundles/rings/acme/rules.md
+INDEX=$PROJECT/.luma/bundles/INDEX.md
 SKILLS=$PROJECT/.claude/skills
 
 apply 'projects a bundle written in place' 0
 
-# --- the split: a ring, and an adapter that only points at it -------------------
-#
-# A ring is the same thing whatever reads it; a harness's file is not. So what
-# this project knows is written once, and CLAUDE.md carries a pointer. The
-# adapter staying small is the property under test: the moment it starts
-# restating the ring there are two copies of one fact.
+# --- the split: a project index, and an adapter that only points at it ----------
 
-grepped 'entrypoint.md' "$CLAUDE"
-grepped '@.luma/bundles/entrypoint.md' "$CLAUDE"
-[ -f "$RING" ] && ok || bad 'expected the entrypoint to be written'
+grepped 'INDEX.md' "$CLAUDE"
+grepped '@.luma/bundles/INDEX.md' "$CLAUDE"
+[ -f "$INDEX" ] && ok || bad 'expected the project index to be written'
+grepped 'Every container has an index' "$INDEX"
 
-# --- workflows are carried by skills, and are not named twice -------------------
+# --- the project index is bundle-grained ----------------------------------------
 #
-# Claude Code loads every skill's name and description at session start. Listing
-# them in the ring as well is one fact rendered twice for one reader, which is
-# the adapter obligation this exists to enforce. They stay reachable by name.
+# One entry per bundle, under the posture its own declaration derives. What is
+# inside a bundle is its own index's business — which is what keeps the floor
+# per-bundle rather than per-document.
+
+grepped 'acme/rules' "$INDEX"
+grepped 'Rules for widget work.' "$INDEX"
+grepped 'Offered — open a bundle' "$INDEX"
+ungrep 'house-rules' "$INDEX"
+ungrep 'stylesheets' "$INDEX"
+ungrep 'why-widgets' "$INDEX"
+
+# --- procedures are carried by skills, and are not named twice ------------------
 
 grepped 'run-the-thing' "$SKILLS/run-the-thing/SKILL.md"
-ungrep 'run-the-thing' "$RING"
+ungrep 'run-the-thing' "$INDEX"
 
-# Its *description* stays out of the ring — that is the duplication. Its name
-# stays in, because a ring that omits a document without saying so is claiming
-# the bundle holds less than it does.
-ungrep 'Run the thing. Use when' "$BRING"
-
-# --- a bundle's own answer to where to start ------------------------------------
+# --- an eager bundle assembles the floor ----------------------------------------
 #
-# `entrypoint` is a claim about reading order and nothing else. It reached no
-# reader until the ring existed — twenty published bundles declared one and
-# nothing consumed it, which is the same defect as a rule nobody can see.
+# eager on the bundle lifts its required documents into every session: the
+# adapter imports the project index, the project index imports the documents.
+# The whole floor is auditable by reading one file.
 
-grepped 'Start at' "$BRING"
+BASE=$PROJECT/.luma/bundles/acme/base
+mkdir -p "$BASE/policy"
+cat > "$BASE/BUNDLE.md" <<'EOF'
+---
+type: bundle
+title: acme/base
+version: 0.2.0
+description: How work is done here, in force everywhere.
+matches: eager
+---
+EOF
+cat > "$BASE/policy/core.md" <<'EOF'
+---
+type: policy
+title: Core conduct
+description: The floor rules.
+matches: eager
+---
+Always in force.
+EOF
 
-# And it does not repeat what the list below already says. A ring is fifteen
-# lines; the same sentence twice in one is the sort of thing an author does not
-# notice and a reader cannot miss.
-[ "$(grep -c 'The rules that govern all work here' "$BRING")" -eq 1 ] \
-  && ok || bad 'entrypoint description repeated in the ring'
+apply 'projects an eager bundle' 0
+grepped 'Required — imported here' "$INDEX"
+grepped 'acme/base' "$INDEX"
+grepped '@acme/base/policy/core.md' "$INDEX"
+# The import lives in the index, not the adapter — one file assembles the floor.
+ungrep '@acme/base/policy/core.md' "$CLAUDE"
+# An ordinary bundle's eager document is scoped to its bundle, never the floor.
+ungrep '@acme/rules/policy/house-rules.md' "$INDEX"
 
-# --- a ring says what it does not name -----------------------------------------
+# --- a bundle declaring nothing is adopted, and never volunteered ---------------
+
+QUIET=$PROJECT/.luma/bundles/acme/quiet
+mkdir -p "$QUIET"
+cat > "$QUIET/BUNDLE.md" <<'EOF'
+---
+type: bundle
+title: acme/quiet
+version: 0.1.0
+description: A reference shelf nobody should be told about twice.
+matches: nothing
+---
+EOF
+
+apply 'projects a by-request bundle' 0
+grepped 'By request — adopted, and never volunteered' "$INDEX"
+grepped 'acme/quiet' "$INDEX"
+
+# --- register: nothing parks a bundle everywhere --------------------------------
 #
-# A ring claims to say what a bundle holds. Workflows reach this harness as
-# skills and are correctly absent — the silence about them was the defect.
-# Reachable and invisible is the failure the whole design exists to end.
+# Intent from the manifest: deliberately landed and not wired. No index entry,
+# no skills — and the run says so, because a silent skip reads as a bug.
 
-grepped 'reach you as skills' "$BRING"
-grepped 'run-the-thing' "$BRING"
+PARKED=$PROJECT/.luma/bundles/acme/parked
+mkdir -p "$PARKED/procedure"
+cat > "$PARKED/BUNDLE.md" <<'EOF'
+---
+type: bundle
+title: acme/parked
+version: 0.1.0
+description: Landed, not wired.
+---
+EOF
+cat > "$PARKED/procedure/do-parked-things.md" <<'EOF'
+---
+type: procedure
+title: Do parked things
+description: A procedure that must not become a skill.
+---
+Steps.
+EOF
+cat > "$PROJECT/.luma/bundles/MANIFEST.md" <<'EOF'
+<!-- Written by `luma-foreman`. Change it with commands, not by hand. -->
 
-# --- 1-project names bundles; 2-bundle names what is inside one ------------------
+# Bundles
+
+- `acme/parked` 0.1.0
+  - register: nothing
+EOF
+
+apply 'parks a register-nothing bundle' 0
+ungrep 'acme/parked' "$INDEX"
+absent "$SKILLS/do-parked-things"
+case $LAST in *parked*) ok ;; *) bad "expected the parked bundle reported: $LAST" ;; esac
+rm -rf "$PARKED" "$PROJECT/.luma/bundles/MANIFEST.md"
+
+# --- subordination --------------------------------------------------------------
 #
-# A ring's map names the members of the next ring in. So the project ring names
-# the bundle and points at its ring, and says nothing about its contents — which
-# is what keeps standing cost per-bundle rather than per-document.
+# The steps under a procedure's directory belong to that procedure. They are
+# reachable only through it — one adopted bundle once put twenty-one step
+# titles into every session before anybody noticed.
 
-grepped 'acme/rules' "$RING"
-grepped '.luma/bundles/rings/acme/rules.md' "$RING"
-[ -f "$BRING" ] && ok || bad 'expected the bundle ring to be written'
-
-# --- always is scoped to its ring, not to the session ---------------------------
-#
-# `matches: always` is still the one route to arriving unasked, but it arrives
-# when its own ring is fired rather than in every session. A rule holding
-# throughout one bundle used to be charged to work that never touched it.
-
-grepped 'house-rules' "$BRING"
-ungrep 'house-rules' "$CLAUDE"
-ungrep '@.luma/bundles/acme/rules/policy/house-rules.md' "$CLAUDE"
-
-# --- advertised: named up front, body withheld ----------------------------------
-#
-# A rule that governs stylesheets should be reachable the moment stylesheets are
-# touched, and cost nothing before then. Its description is the routing entry;
-# importing its body would charge every session for a rule most never hit.
-
-grepped 'stylesheets' "$BRING"
-ungrep 'stylesheets' "$RING"
-ungrep '@.luma/bundles/acme/rules/policy/stylesheets.md' "$CLAUDE"
-grepped 'no-credentials' "$BRING"
-ungrep 'no-credentials' "$RING"
-
-# --- on-demand background: not announced at all ---------------------------------
-#
-# A concept obliges nothing. Announcing it spends the index on something no
-# consumer is ever obliged to read, and it is reached through the rules and
-# procedures that do act. A *policy* matching nothing is a different case and is
-# still listed — see below — because a rule nobody can see governs nothing.
-
-ungrep 'why-widgets' "$CLAUDE"
-ungrep 'why-widgets' "$RING"
-ungrep 'why-widgets' "$BRING"
-
-# --- subordination, which is the leak this exists to close ----------------------
-#
-# The steps under a workflow's directory belong to that workflow. They are
-# reachable only through it, and the observed failure is that they were listed
-# individually — one adopted bundle put twenty-one step titles into every
-# session before anybody noticed.
-
+apply 'reapplies after the parked bundle left' 0
 ungrep '01-first' "$CLAUDE"
-ungrep '01-first' "$RING"
-ungrep '01-first' "$BRING"
-ungrep '02-second' "$CLAUDE"
-ungrep '02-second' "$RING"
-ungrep '02-second' "$BRING"
+ungrep '01-first' "$INDEX"
 absent "$SKILLS/01-first"
-absent "$SKILLS/02-second"
 
-# --- the workflow itself, and the name its directory gives it -------------------
-#
-# The owner of a document directory is the all-caps markdown file in it. The
-# casing is the signal rather than any particular word, so a policy with
-# diagrams gets POLICY.md and somebody's own type gets its own — nothing is
-# centrally reserved, which matters because the type vocabulary is open.
-#
-# Borrowed from SKILL.md deliberately: anyone who has seen one reads this
-# correctly with nothing to learn. A workflow is a skill that travels across
-# harnesses and carries more, so it cannot take the name — but it can take the
-# shape.
-#
-# The directory remains the identity. The document is `workflows/run-the-thing`,
-# and WORKFLOW.md is visible only to somebody already standing in the directory.
+# --- the procedure itself, and the name its directory gives it ------------------
 
 exists "$SKILLS/run-the-thing/SKILL.md"
 grepped 'name: run-the-thing' "$SKILLS/run-the-thing/SKILL.md"
 grepped 'Use when the thing needs running' "$SKILLS/run-the-thing/SKILL.md"
-
-# The adapter stays thin — a pointer, never a copy. A copy is a second source of
-# truth, and it charges every firing for content the pointer costs nothing to
-# reach.
+# Thin: a pointer, never a copy.
 ungrep 'Step one, step two' "$SKILLS/run-the-thing/SKILL.md"
-grepped '.luma/bundles/acme/rules/workflows/run-the-thing' "$SKILLS/run-the-thing/SKILL.md"
+grepped '.luma/bundles/acme/rules/procedure/run-the-thing' "$SKILLS/run-the-thing/SKILL.md"
+# The bundle's eager documents ride along as required reading, by pointer.
+grepped 'Required reading' "$SKILLS/run-the-thing/SKILL.md"
+grepped 'house-rules' "$SKILLS/run-the-thing/SKILL.md"
 
 # --- the routing table ----------------------------------------------------------
 #
-# Every Document with a trigger gets a row: when it fires and what happens. The
-# gate reads the rows that block; a router will read the rest. Compiling it once
-# is what keeps those two from drifting — and the gate cannot walk the bundles
-# itself, because it runs before every tool call against a budget in
-# milliseconds.
+# Kept while the permission gate consumes it: the gate reads the rows that
+# block, and a deleted table is an adopted block rule failing open.
 
 ROUTING=$PROJECT/.luma/bundles/routing.toml
 exists "$ROUTING"
 grepped 'policy/stylesheets' "$ROUTING"
 grepped 'path:\*\*/\*.css' "$ROUTING"
 grepped 'command:git commit' "$ROUTING"
-
-# A Document that matches always earns a row saying so — it is a routing fact
-# like any other, and the gate ignores it because no `always` entry names a
-# command. What earns no row is a Document that matches nothing: there is
-# nothing to route.
-grepped 'house-rules' "$ROUTING"
-grepped 'matches = \["always"\]' "$ROUTING"
+grepped 'matches = \["eager"\]' "$ROUTING"
 ungrep 'why-widgets' "$ROUTING"
-
-# Subordinate documents are invisible here too — they arrive with their owner.
 ungrep '01-first' "$ROUTING"
 
 # --- blocking is compiled, and reported when nothing can honour it --------------
-#
-# Declaring `block` where no gate is installed is a rule that reads as enforced
-# and is not. Saying so is the difference between a guardrail and a label.
 
-cat > "$B/policy/no-force-push.md" <<'EOF'
----
-type: policy
-title: Never force-push a shared branch
-description: Force-pushing a shared branch destroys other people's work.
-
-on_violation: block
-matches:
-  - command: git push --force
----
-Do not force-push.
-EOF
-
-apply 'compiles a blocking rule' 0
-grepped 'no-force-push' "$ROUTING"
 grepped 'on_violation = "block"' "$ROUTING"
 case $LAST in *"nothing here enforces"*) ok ;; *) bad "expected apply to say blocking is unenforced here: $LAST" ;; esac
 
 # --- `preload` is reported, never honoured --------------------------------------
-#
-# The field it replaces has to stop working loudly. Honouring it during a
-# transition means a half-migrated bundle behaves correctly and nobody finds
-# out; reporting it means the migration cannot stall silently.
 
 cat > "$B/policy/legacy.md" <<'EOF'
 ---
@@ -355,27 +312,16 @@ type: policy
 title: Legacy rule
 description: Still using the old field.
 preload: mandatory
-matches: always
+matches: eager
 ---
 Old-style declaration.
 EOF
 
 apply 'reports a bundle still using preload' 0
 case $LAST in *preload*) ok ;; *) bad "expected apply to report the legacy preload field: $LAST" ;; esac
-
-# It *does* reach the standing surface of its own ring — but not because
-# `preload` was read. It says `matches: always`, which is the one route to
-# arriving unasked. The old field is reported and otherwise ignored, so a
-# half-migrated bundle cannot behave correctly and stall there forever.
-
-grepped 'legacy' "$BRING"
+rm "$B/policy/legacy.md"
 
 # --- a trigger nothing can honour fails loudly ----------------------------------
-#
-# The first build has no degradation paths. A declared intervention the harness
-# cannot perform is an error, not a quiet downgrade to the nearest thing that
-# works — silently becoming `warn` is the failure this design exists to remove,
-# arriving inside the design itself.
 
 cat > "$B/policy/needs-approval.md" <<'EOF'
 ---
@@ -392,15 +338,9 @@ EOF
 
 apply 'refuses an intervention it cannot perform' 2
 case $LAST in *require_approval*) ok ;; *) bad "expected the unsupported value named: $LAST" ;; esac
-
-rm "$B/policy/needs-approval.md" "$B/policy/legacy.md"
+rm "$B/policy/needs-approval.md"
 
 # --- an inert trigger is reported -----------------------------------------------
-#
-# A glob matching nothing in this project never fires, and that is
-# indistinguishable from a rule that has simply not come up yet. Both look like
-# silence. Saying so is the difference between a rule that does not apply and a
-# rule nobody will ever see.
 
 cat > "$B/policy/nonexistent.md" <<'EOF'
 ---
@@ -416,57 +356,62 @@ EOF
 
 apply 'reports a trigger that matches nothing' 0
 case $LAST in *nowhere-at-all*) ok ;; *) bad "expected the inert trigger reported: $LAST" ;; esac
+rm "$B/policy/nonexistent.md"
 
 # --- asking by name is the floor, and it does not scale with adoption -----------
-#
-# Every other route depends on something matching — a trigger firing, a
-# description catching a model's attention — and all of them degrade quietly
-# when they do not. Asking cannot. Two skills whatever the bundle count.
 
 exists "$SKILLS/list-bundles/SKILL.md"
 exists "$SKILLS/load-bundle/SKILL.md"
-# Neither copies the project ring. That file already arrives at the start of a
-# session, so rendering it again would charge twice for one list — the same
-# adapter obligation that keeps workflows out of it. They point instead, which
-# also means they cannot go stale.
-grepped 'entrypoint.md' "$SKILLS/list-bundles/SKILL.md"
+grepped 'INDEX.md' "$SKILLS/list-bundles/SKILL.md"
 ungrep 'acme/rules' "$SKILLS/list-bundles/SKILL.md"
-grepped '.luma/bundles/rings' "$SKILLS/load-bundle/SKILL.md"
+grepped '.luma/bundles/<bundle-id>/INDEX.md' "$SKILLS/load-bundle/SKILL.md"
 ungrep 'acme/rules' "$SKILLS/load-bundle/SKILL.md"
 
-# A workflow named `load-bundle` must not be able to replace the floor. It is
-# renamed on collision, exactly as it would be against another workflow.
+# A procedure named `load-bundle` must not be able to replace the floor.
 
-mkdir -p "$B/workflows"
-cat > "$B/workflows/load-bundle.md" <<'EOF'
+cat > "$B/procedure/load-bundle.md" <<'EOF'
 ---
-type: workflow
+type: procedure
 title: Load a bundle
 description: Somebody else's idea of loading a bundle.
 ---
 Not the navigation skill.
 EOF
 
-apply 'a workflow cannot take a reserved name' 0
+apply 'a procedure cannot take a reserved name' 0
 grepped 'luma-foreman apply' "$SKILLS/load-bundle/SKILL.md"
 exists "$SKILLS/acme-rules-load-bundle/SKILL.md"
-rm -f "$B/workflows/load-bundle.md"
-apply 'and it goes when the workflow does' 0
+rm -f "$B/procedure/load-bundle.md"
+apply 'and it goes when the procedure does' 0
 absent "$SKILLS/acme-rules-load-bundle"
 
-# --- a ring for a bundle that left is worse than a missing one ------------------
+# --- legacy artifacts from earlier builds are swept -----------------------------
 #
-# It names documents no longer on disk, and nothing about reading it says so.
-# Swept by the same rule as an orphaned skill, and the namespace directories it
-# leaves behind go with it — an empty directory is a question a reader has to
-# answer.
+# The prototype generated a per-project entrypoint and a rings tree. A stale
+# generated artifact that still reads as current is worse than a missing one —
+# it names documents by a shape nothing writes any more.
 
-[ -f "$BRING" ] && ok || bad 'expected the bundle ring before removal'
+mkdir -p "$PROJECT/.luma/bundles/rings/acme"
+printf '<!-- Generated by `luma-foreman apply`. Edits are lost. -->\nold ring\n' \
+  > "$PROJECT/.luma/bundles/rings/acme/rules.md"
+printf '<!-- Generated by `luma-foreman apply`. Edits are lost. -->\nold entrypoint\n' \
+  > "$PROJECT/.luma/bundles/entrypoint.md"
+
+LAST=$(cd "$PROJECT" && "$CLI" apply --check 2>&1); got=$?
+[ "$got" -eq 1 ] && ok || bad "check should flag legacy artifacts (exit $got)"
+case $LAST in *entrypoint.md*) ok ;; *) bad "check did not name the legacy entrypoint: $LAST" ;; esac
+
+apply 'sweeps legacy artifacts' 0
+case $LAST in *legacy*) ok ;; *) bad "expected the sweep reported: $LAST" ;; esac
+absent "$PROJECT/.luma/bundles/entrypoint.md"
+absent "$PROJECT/.luma/bundles/rings"
+
+# --- a bundle that leaves takes its entry and skills with it --------------------
+
 rm -rf "$B"
-apply 'sweeps the ring of a bundle that left' 0
-[ -f "$BRING" ] && bad 'ring outlived its bundle' || ok
-[ -d "$PROJECT/.luma/bundles/rings/acme" ] && bad 'empty namespace left behind' || ok
-ungrep 'acme/rules' "$RING"
+apply 'sweeps after a bundle leaves' 0
+ungrep 'acme/rules' "$INDEX"
+absent "$SKILLS/run-the-thing"
 
 printf '\n%s passed, %s failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ] || exit 1

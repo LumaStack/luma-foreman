@@ -245,14 +245,30 @@ def short_name(source: str) -> str:
 
 
 def sources(project_root: Path) -> dict[str, list[str]]:
-    """Every catalog this project draws from, to the bundles taken from it."""
-    out: dict[str, list[str]] = {}
+    """Every catalog this project draws from, to the bundles taken from it.
+
+    **Grouped by origin, not by spelling.** `.git`, a trailing slash, a
+    scheme, an scp-style address — git accepts them all for one repository,
+    and a listing keyed on the raw string showed one catalog as two, each
+    claiming half the bundles. The display form is the shortest spelling on
+    record, which in practice is the one without the suffix.
+    """
+    grouped: dict[str, tuple[str, list[str]]] = {}
+
+    def add(source: str, bundle_id: str | None) -> None:
+        key = adoption.origin(source)
+        display, bundles = grouped.setdefault(key, (source, []))
+        if bundle_id is not None:
+            bundles.append(bundle_id)
+        if len(source) < len(display):
+            grouped[key] = (source, bundles)
+
     for bundle_id, entry in sorted(adoption.read(project_root).items()):
-        out.setdefault(entry.source, []).append(bundle_id)
+        add(entry.source, bundle_id)
     configured = config.catalog_source(project_root)
     if configured:
-        out.setdefault(configured, [])
-    return out
+        add(configured, None)
+    return {display: bundles for display, bundles in grouped.values()}
 
 
 def show(source: str, project_root: Path) -> int:
@@ -360,7 +376,9 @@ def listing(project_root: Path) -> int:
     for i, (name, count, source, why) in enumerate(rows):
         if i:
             print()
-        default = "   (configured default)" if source == configured else ""
+        default = ("   (configured default)"
+                   if configured and adoption.same_origin(source, configured)
+                   else "")
         print(f"  {name}{default}")
         # `find` puts the source in its message, and the line below carries it.
         print(f"    {count}" + (f" — {why.replace(source, '').strip(': ')}" if why else ""))
