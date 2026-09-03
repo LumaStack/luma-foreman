@@ -45,6 +45,11 @@ class Status:
     available: str | None
     source: str
     note: str = ""
+    # A bundle written in this project — a bare manifest entry, no custody.
+    # It has no upstream to be behind, which is not the same as an upstream
+    # nobody could reach, and conflating the two makes every project holding
+    # a local bundle report a permanent unanswered question.
+    local: bool = False
 
     @property
     def behind(self) -> bool:
@@ -80,7 +85,13 @@ def survey(project_root: Path) -> list[Status]:
     for bundle_id, entry in sorted(entries.items()):
         source = registered.get(entry.catalog, "") if entry.catalog \
             else entry.source
-        if not source:
+        # No source and no catalog is a bare entry: a bundle written here,
+        # which has no upstream rather than an unreachable one. `no source on
+        # record` reads as a defect, and it would be one for a vendored copy.
+        local = not entry.source and not entry.catalog
+        if local:
+            available, note = None, "written here"
+        elif not source:
             available, note = None, (
                 f"{entry.catalog} is not registered here" if entry.catalog
                 else "no source on record"
@@ -94,6 +105,7 @@ def survey(project_root: Path) -> list[Status]:
                 available=available,
                 source=source or entry.catalog,
                 note=note,
+                local=local,
             )
         )
     return out
@@ -133,7 +145,12 @@ def main(argv: list[str]) -> int:
 
     rows = survey(project_root)
     behind = [r for r in rows if r.behind]
-    unknown = [r for r in rows if r.available is None]
+    # A bundle written here is neither current nor unanswered — there is
+    # nothing upstream to compare it against, so it is counted apart from
+    # both rather than swelling either number.
+    asked = [r for r in rows if not r.local]
+    unknown = [r for r in asked if r.available is None]
+    written_here = [r for r in rows if r.local]
 
     if as_json:
         import json
@@ -159,6 +176,8 @@ def main(argv: list[str]) -> int:
             head = f"  {name:<{width}}  {row.held:<{held}}"
             if row.behind:
                 print(f"{head}  ->  {row.available}")
+            elif row.local:
+                print(f"{head}      {row.note}")
             elif row.available is None:
                 print(f"{head}      ? {row.note}")
             else:
@@ -166,7 +185,7 @@ def main(argv: list[str]) -> int:
 
     print()
     if behind:
-        print(f"{len(behind)} of {len(rows)} adopted bundle(s) are behind.")
+        print(f"{len(behind)} of {len(asked)} adopted bundle(s) are behind.")
         print()
         print("  luma-foreman get <bundle>     take the newer version")
         print("  luma-foreman apply            then rewrite what agents read")
@@ -176,8 +195,15 @@ def main(argv: list[str]) -> int:
             "edit can reverse a rule, so the tier is a signal rather than a\n"
             "guarantee — the bundle's `## Version` section is what says why."
         )
+    elif asked:
+        print(f"all {len(asked)} adopted bundle(s) are current.")
     else:
-        print(f"all {len(rows)} adopted bundle(s) are current.")
+        print("nothing adopted — every bundle here was written in this project.")
+
+    if written_here:
+        print()
+        print(f"{len(written_here)} written here, and not compared against "
+              f"anything. A bundle\nwith no upstream cannot be behind one.")
 
     if unknown:
         print()

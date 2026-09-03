@@ -28,7 +28,7 @@ from . import adoption, lkf, outdated, project
 
 USAGE = """What this project has taken, and what shape it is in.
 
-  luma-foreman bundle list            every adopted bundle
+  luma-foreman bundle list            every bundle this project carries
   luma-foreman bundle show <name>     one bundle's receipt and contents
   luma-foreman bundle outdated        which have a newer version published
 
@@ -160,9 +160,14 @@ def _documents(home: Path) -> list[str]:
 def listing(project_root: Path) -> int:
     entries = adoption.read(project_root)
     if not entries:
-        print("nothing adopted — .luma/bundles/MANIFEST.md holds no entries.")
+        # Not "nothing adopted": a bundle written here was never adopted, and
+        # this listing now shows those too. The manifest is a receipt of what
+        # is aboard, however it got there — which is the whole reason it is
+        # not still called `adopted.toml`.
+        print("no bundles — .luma/bundles/MANIFEST.md holds no entries.")
         print()
-        print("  luma-foreman get <bundle> --from <catalog>")
+        print("  luma-foreman get <bundle> --from <catalog>   take one")
+        print("  luma-foreman bundle new <name>               write one here")
         return 0
 
     rows = {b: (e, adoption.state(project_root, e)) for b, e in entries.items()}
@@ -182,7 +187,7 @@ def listing(project_root: Path) -> int:
 
     print()
     wrong = [c for _, c in rows.values() if c != "ok"]
-    print(f"{len(rows)} adopted bundle(s)" + (f", {len(wrong)} not as adopted." if wrong else "."))
+    print(f"{len(rows)} bundle(s)" + (f", {len(wrong)} not as recorded." if wrong else "."))
     if wrong:
         print()
         print("  luma-foreman inspect --rule adoption    what to do about each")
@@ -205,13 +210,20 @@ def show(project_root: Path, requested: str) -> int:
         print(f"  {description}")
     print()
     # One of the two is on the receipt, never both: a registered catalog is
-    # recorded by name and the registry owns where that name lives.
+    # recorded by name and the registry owns where that name lives. A bundle
+    # written here has neither, and blank rows would report the absence as a
+    # missing value rather than as what it is — no custody, because nothing
+    # was taken from anywhere. The shape says which (ADR-0011), so one line
+    # says it in words instead of three saying nothing.
     if entry.catalog:
         print(f"  catalog    {entry.catalog}")
-    else:
+        print(f"  commit     {entry.commit}")
+    elif entry.source:
         print(f"  source     {entry.source}")
-    print(f"  commit     {entry.commit}")
-    print(f"  vendored   {home.relative_to(project_root)}")
+        print(f"  commit     {entry.commit}")
+    else:
+        print("  written    here — no catalog, and nothing to compare against")
+    print(f"  at         {home.relative_to(project_root)}")
     print(f"  copy       {condition}" + (f" — {STATE_NOTE[condition]}" if condition in STATE_NOTE else ""))
 
     documents = _documents(home)
@@ -237,11 +249,29 @@ def new(project_root: Path, name: str) -> int:
     and it is the only namespace this writes into: a name is a bundle's, and
     a namespace is a catalog's to give.
 
-    **It writes one file and refuses to guess the rest.** Which directories a
-    bundle needs depends on what it turns out to hold, and an empty `policy/`
-    is a question a reader has to answer — as well as a directory git will not
-    commit, so one created ahead of its contents exists only on the machine
-    that ran this. The output names them instead.
+    **It writes two things: the bundle's own manifest, and its line in the
+    project's.** A `MANIFEST.md` entry is what `bundle list`, `show` and `set`
+    read, and without one a bundle written here exists to `apply` and
+    `inspect` — which walk disk — and to nothing else. The entry is bare: no
+    source, no commit, no checksum, because those are custody facts and a
+    bundle written here has no custody. The shape *is* the distinction
+    (ADR-0011 and the MVP design); there is no `local: true`, because a flag
+    restating what the lines already show is a second copy of one fact.
+
+    **It writes no directories.** Which ones a bundle needs depends on what it
+    turns out to hold, and an empty `policy/` is a question a reader has to
+    answer — as well as a directory git will not commit, so one created ahead
+    of its contents exists only on the machine that ran this. The output names
+    them instead.
+
+    **Idempotent, and never destructive — `init`'s contract.** It adds
+    whatever is missing and leaves every existing file exactly as it is. So it
+    is also the claiming command: run it on a directory somebody drafted by
+    hand and it supplies the missing half, whichever half that is. Refusing
+    would make somebody do by hand the work the refusal had just finished
+    diagnosing, and a `BUNDLE.md` is safe either way because this never
+    overwrites one — that file is what makes a directory a bundle, so
+    replacing it discards the bundle rather than the file.
     """
     if not NAME.match(name):
         detail = (
@@ -263,48 +293,75 @@ def new(project_root: Path, name: str) -> int:
     home = adoption.vendored(project_root, bundle_id)
     manifest = home / "BUNDLE.md"
 
-    # The one refusal. A BUNDLE.md is what makes a directory a bundle, so
-    # overwriting one discards the bundle rather than the file — and every
-    # other command here reads it as the truth about what this is.
-    if manifest.is_file():
-        return _refuse(
-            f"{bundle_id} is already a bundle",
-            f"{manifest.relative_to(project_root)} exists, and this never "
-            f"overwrites one. Edit it, or `luma-foreman bundle new` under a "
-            f"different name.",
-        )
-
-    # Said out loud, because the two cases fail differently later. Written
-    # fresh, the directory holds exactly what the template says. Written onto
-    # something already there — a bundle drafted by hand before this command
-    # existed — whatever was there is now governed by a manifest nobody wrote
-    # to match it, and the version, stage and description are all placeholders
-    # describing documents that already exist.
+    # Said out loud below, because the two cases differ in what the file that
+    # lands is worth. Written fresh, the directory holds exactly what the
+    # template says. Written onto something already there — a bundle drafted
+    # by hand before this command existed — the version, stage and description
+    # are placeholders sitting over documents that already exist.
     found = sorted(
         p.relative_to(home).as_posix() + ("/" if p.is_dir() else "")
         for p in home.iterdir()
     ) if home.is_dir() else []
 
-    home.mkdir(parents=True, exist_ok=True)
-    manifest.write_text(TEMPLATE.format(name=name), encoding="utf-8")
-
     where = manifest.relative_to(project_root)
-    if found:
-        print(f"{bundle_id}: wrote {where} into a directory already there")
-        print(f"  it holds: {', '.join(found)}")
-        print("  The manifest is a template — its description, version and")
-        print("  stage describe nothing yet. Make them true of what is here.")
-    else:
-        print(f"{bundle_id}: created {where}")
+    wrote_manifest = not manifest.is_file()
+    if wrote_manifest:
+        home.mkdir(parents=True, exist_ok=True)
+        manifest.write_text(TEMPLATE.format(name=name), encoding="utf-8")
+
+    # The version comes from whichever BUNDLE.md is now on disk — the template's
+    # 0.1.0 for a new bundle, the author's own for one being claimed. Read after
+    # the write rather than assumed, so the two paths cannot diverge.
+    version = lkf.unquote((lkf.read(manifest) or {}).get("version", ""))
+
+    entries = adoption.read(project_root)
+    record = adoption.manifest_path(project_root).relative_to(project_root)
+    wrote_record = bundle_id not in entries
+    if wrote_record:
+        entries[bundle_id] = adoption.Adopted(
+            bundle=bundle_id, version=version, source="", commit="", checksum="",
+        )
+        adoption.write(project_root, entries)
+
+    print(f"{bundle_id}:")
+    report = [
+        (str(where), "created" if wrote_manifest else "already there, left alone"),
+        (str(record), f"recorded {version}".rstrip() if wrote_record
+                      else "already recorded, left alone"),
+    ]
+    width = max(len(p) for p, _ in report)
+    for path, note in report:
+        print(f"  {path:<{width}}  {note}")
+
+    if not wrote_manifest and not wrote_record:
+        print()
+        print("Nothing to do.")
+        return 0
+
+    if found and wrote_manifest:
+        print()
+        print(f"  Written into a directory already there — it holds: "
+              f"{', '.join(found)}")
+        print("  The manifest is a template, so its description, version and")
+        print("  stage describe none of it. Make them true of what is here.")
     print()
 
-    steps = [
-        (f"edit {where}", "the TODOs — a bundle nobody can describe is not one"),
-        (f"{home.relative_to(project_root)}/policy/",
-         "what this obliges — create it only when something goes in it"),
-        (f"{home.relative_to(project_root)}/procedure/",
-         "what it tells an agent to do — same rule"),
-        (f"luma-foreman bundle index {home.relative_to(project_root)}",
+    # Only what this run actually left undone. Claiming a bundle somebody
+    # wrote by hand and then telling them to fill in TODOs names placeholders
+    # that are not in their file, which reads as the command not having
+    # noticed what it just looked at.
+    at = home.relative_to(project_root)
+    steps = []
+    if wrote_manifest:
+        steps += [
+            (f"edit {where}", "the TODOs — a bundle nobody can describe is not one"),
+            (f"{at}/policy/",
+             "what this obliges — create it only when something goes in it"),
+            (f"{at}/procedure/",
+             "what it tells an agent to do — same rule"),
+        ]
+    steps += [
+        (f"luma-foreman bundle index {at}",
          "generate INDEX.md, once the documents exist"),
         ("luma-foreman apply", "wire it into the harness"),
     ]
