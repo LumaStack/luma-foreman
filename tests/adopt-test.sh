@@ -315,8 +315,10 @@ grepped 'type: luma/project' "$FRESH/.luma/PROJECT.md"
 grepped 'TODO' "$FRESH/.luma/PROJECT.md"
 
 # The two fields luma/project 0.2.0 dropped are not scaffolded any more.
-ungrep 'owns:' "$FRESH/.luma/PROJECT.md"
-ungrep 'must_not_own:' "$FRESH/.luma/PROJECT.md"
+grep -q 'owns:' "$FRESH/.luma/PROJECT.md" \
+  && bad 'owns: should no longer be scaffolded' || ok
+grep -q 'must_not_own:' "$FRESH/.luma/PROJECT.md" \
+  && bad 'must_not_own: should no longer be scaffolded' || ok
 
 # --catalog writes the one setting that has no default, and makes the next
 # command shorter by exactly the argument it records.
@@ -392,7 +394,7 @@ has 'commit'
 bundle 'bundle show resolves a bare name' 0 show widgets
 has 'acme/widgets'
 bundle 'bundle show refuses an unknown name' 2 show acme/nothing
-has 'not adopted'
+has 'not recorded'
 
 catalog 'catalog list' 0 list
 has "$CATALOG"

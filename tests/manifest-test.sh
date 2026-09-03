@@ -107,6 +107,49 @@ grepped '`org/local` 0.1.0' "$M"
 OUT=$( cd "$P" && "$CLI" bundle list )
 printf '%s\n' "$OUT" | grep -q 'local' && ok || bad "a bare entry should appear in bundle list"
 
+# -- set and unset record intent; apply performs it later ---------------------
+#
+# set writes a field's line, unset removes it, and absence is the default —
+# the same shape as the manifest's own divergence-only grammar. The fixture
+# still carries register: nothing from the round-trip section, so restoring
+# the default comes first and asserts the transition.
+
+OUT=$( cd "$P" && "$CLI" bundle unset thing register 2>&1 ); got=$?
+[ "$got" -eq 0 ] && ok || bad "unset by bare name should exit 0: $OUT"
+ungrep 'register:' "$M"
+
+OUT=$( cd "$P" && "$CLI" bundle set thing register nothing 2>&1 ); got=$?
+[ "$got" -eq 0 ] && ok || bad "set by bare name should exit 0: $OUT"
+printf '%s\n' "$OUT" | grep -q 'luma-foreman apply' && ok || bad "set should point at apply"
+grepped '  - register: nothing' "$M"
+
+OUT=$( cd "$P" && "$CLI" bundle set org/thing register nothing 2>&1 )
+printf '%s\n' "$OUT" | grep -q 'nothing to do' && ok || bad "setting the same intent twice should be a no-op"
+
+OUT=$( cd "$P" && "$CLI" bundle unset org/thing register 2>&1 ); got=$?
+[ "$got" -eq 0 ] && ok || bad "unset by full ID should exit 0: $OUT"
+ungrep 'register:' "$M"
+
+OUT=$( cd "$P" && "$CLI" bundle set org/thing register everywhere 2>&1 ); got=$?
+[ "$got" -eq 2 ] && ok || bad "an unknown value should be refused (2)"
+
+OUT=$( cd "$P" && "$CLI" bundle set org/thing lifecycle draft 2>&1 ); got=$?
+[ "$got" -eq 2 ] && ok || bad "an unknown field should be refused (2)"
+
+OUT=$( cd "$P" && "$CLI" bundle set org/absent register nothing 2>&1 ); got=$?
+[ "$got" -eq 2 ] && ok || bad "an unrecorded bundle should be refused (2)"
+
+# Two bundles sharing a bare name: the guess must stop, and the error says
+# to use the fully qualified form rather than picking a side silently.
+printf -- '- `other/thing` 2.0.0\n' >> "$M"
+OUT=$( cd "$P" && "$CLI" bundle set thing register nothing 2>&1 ); got=$?
+[ "$got" -eq 2 ] && ok || bad "an ambiguous bare name should be refused (2)"
+printf '%s\n' "$OUT" | grep -q 'fully qualified' && ok || bad "the ambiguity error should say fully qualified: $OUT"
+OUT=$( cd "$P" && "$CLI" bundle set other/thing register nothing 2>&1 ); got=$?
+[ "$got" -eq 0 ] && ok || bad "the full ID should resolve past the ambiguity: $OUT"
+grep -v '`other/thing`' "$M" | grep -v '^  - register: nothing$' > "$M.tmp" && grep -q 'org/thing' "$M.tmp" && mv "$M.tmp" "$M"
+( cd "$P" && "$CLI" bundle migrate-manifest >/dev/null 2>&1 )
+
 # -- nothing to migrate -------------------------------------------------------
 
 Q=$T/empty
