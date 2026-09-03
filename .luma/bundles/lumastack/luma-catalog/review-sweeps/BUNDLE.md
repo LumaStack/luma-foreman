@@ -1,7 +1,7 @@
 ---
 type: bundle
 title: lumastack/luma-catalog/review-sweeps
-version: 0.31.0
+version: 0.31.1
 published: 2026-09-02
 stage: draft
 survival: probationary

@@ -1,7 +1,7 @@
 ---
 type: bundle
 title: lumastack/luma-catalog/token-manager
-version: 0.12.0
+version: 0.12.1
 published: 2026-09-02
 stage: draft
 consumers: [project, organization]

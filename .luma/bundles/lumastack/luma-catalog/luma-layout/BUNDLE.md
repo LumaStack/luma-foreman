@@ -1,7 +1,7 @@
 ---
 type: bundle
 title: lumastack/luma-catalog/luma-layout
-version: 0.15.0
+version: 0.16.0
 published: 2026-09-02
 stage: draft
 consumers: [project, organization]
@@ -94,6 +94,15 @@ result. Neither is right today: `core` would promise the model this bundle does
 not contain, and an agent opening it for that would find a directory layout.
 
 ## Version
+
+`0.16.0` — **the layout speaks the current tooling.** `adopted.toml` became
+`MANIFEST.md`, a receipt in the line grammar whose kinds are distinguished by
+shape and which carries intent (`register: nothing`) as well as custody; the
+generated project `INDEX.md` joins the `bundles/` listing; and a bundle
+written here lives under the reserved `local/` namespace until publication
+renames it into a real one — the name states that it has no published
+identity yet, and publication is the moment identity is acquired.
+
 
 `0.13.3` — **the manifest declares `lifecycle: draft`.** The field was absent, and
 absent reads as `unknown` — *nobody has said*. Something was known: this is

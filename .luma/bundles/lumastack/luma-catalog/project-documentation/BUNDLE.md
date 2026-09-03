@@ -1,7 +1,7 @@
 ---
 type: bundle
 title: lumastack/luma-catalog/project-documentation
-version: 0.19.0
+version: 0.19.1
 published: 2026-09-02
 stage: draft
 consumers: [project]

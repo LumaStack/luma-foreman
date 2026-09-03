@@ -1,7 +1,7 @@
 ---
 type: bundle
 title: lumastack/luma-catalog/luma-maintainers
-version: 0.13.0
+version: 0.13.1
 published: 2026-09-02
 stage: draft
 consumers: [project, organization]
