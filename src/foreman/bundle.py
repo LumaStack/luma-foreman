@@ -28,6 +28,12 @@ USAGE = """What this project has taken, and what shape it is in.
   luma-foreman bundle index <dir>     generate a bundle's INDEX.md (--check to
                                       verify instead) — an authoring act; it
                                       refuses a vendored copy
+  luma-foreman bundle set <bundle> <field> <value>
+                                      record intent in the manifest — e.g.
+                                      set <bundle> register nothing marks it
+                                      deliberately landed and not wired
+  luma-foreman bundle unset <bundle> <field>
+                                      back to the field's default
   luma-foreman bundle migrate-manifest
                                       rewrite the record canonically as
                                       .luma/bundles/MANIFEST.md, retiring a
@@ -49,6 +55,28 @@ STATE_NOTE = {
 def _err(message: str) -> int:
     print(f"luma-foreman bundle: {message}", file=sys.stderr)
     return 2
+
+
+def _resolve(entries: dict, requested: str):
+    """One bundle from a full ID or a bare name, or an error message.
+
+    A bare name is what somebody types when only one namespace is in play.
+    Two bundles legitimately sharing a name is exactly when the guess must
+    stop: the error says to use the fully qualified form rather than picking
+    a side silently.
+    """
+    entry = entries.get(requested)
+    if entry is not None:
+        return entry
+    named = [e for e in entries.values() if e.name == requested]
+    if len(named) > 1:
+        names = ", ".join(sorted(m.bundle for m in named))
+        return (f"{requested} is ambiguous here — use the fully qualified "
+                f"<namespace>/<bundle-name>. Held: {names}")
+    if not named:
+        known = ", ".join(sorted(entries)) or "nothing is recorded"
+        return f"not recorded: {requested} (have: {known})"
+    return named[0]
 
 
 def _documents(home: Path) -> list[str]:
@@ -103,17 +131,9 @@ def listing(project_root: Path) -> int:
 
 def show(project_root: Path, requested: str) -> int:
     entries = adoption.read(project_root)
-    entry = entries.get(requested)
-    if entry is None:
-        # A bare name is what somebody types when only one namespace is in play.
-        matches = [e for b, e in entries.items() if e.name == requested]
-        if len(matches) > 1:
-            names = ", ".join(sorted(m.bundle for m in matches))
-            return _err(f"{requested} is ambiguous here: {names}")
-        if not matches:
-            known = ", ".join(sorted(entries)) or "nothing is adopted"
-            return _err(f"not adopted: {requested} (have: {known})")
-        entry = matches[0]
+    entry = _resolve(entries, requested)
+    if isinstance(entry, str):
+        return _err(entry)
 
     home = adoption.vendored(project_root, entry.bundle)
     condition = adoption.state(project_root, entry)
@@ -181,6 +201,40 @@ def main(argv: list[str]) -> int:
 
     project_root, _ = project.resolve(target or Path.cwd())
 
+    if verb in ("set", "unset"):
+        # Named for what they do — they record intent in the manifest and
+        # perform nothing: `apply` is what writes it out, and the writer must
+        # never author its own inputs. `set` writes a field's line, `unset`
+        # removes it, and absence is the default — the same shape as the
+        # file's own divergence-only grammar.
+        want = 3 if verb == "set" else 2
+        if len(operands) != want:
+            return _err(f"usage: luma-foreman bundle set <bundle> <field> <value>"
+                        if verb == "set" else
+                        "usage: luma-foreman bundle unset <bundle> <field>")
+        requested, field = operands[0], operands[1]
+        value = operands[2] if verb == "set" else ""
+        if field != "register":
+            return _err(f"'{field}' is not a field this build knows (have: register)")
+        if verb == "set" and value != "nothing":
+            return _err(f"register takes 'nothing' — absence already means wired "
+                        f"everywhere, which is what `unset` restores")
+        entries = adoption.read(project_root)
+        entry = _resolve(entries, requested)
+        if isinstance(entry, str):
+            return _err(entry)
+        if entry.register == value:
+            state = f"register: {value}" if value else "the default — wired everywhere"
+            print(f"{entry.bundle} already at {state}; nothing to do.")
+            return 0
+        from dataclasses import replace
+        entries[entry.bundle] = replace(entry, register=value)
+        adoption.write(project_root, entries)
+        said = f"register: {value}" if value else "the default — wired everywhere"
+        print(f"{entry.bundle} -> {said}")
+        print()
+        print("  luma-foreman apply    make it so")
+        return 0
     if verb == "migrate-manifest":
         if operands:
             return _err(f"migrate-manifest takes no arguments (got: {operands[0]})")

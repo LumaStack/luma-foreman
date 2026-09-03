@@ -1,4 +1,4 @@
-"""Projecting what a project adopted into what its harness actually reads.
+"""Writing what a project adopted into what its harness actually reads.
 
 **Adoption puts knowledge in the repository; nothing yet puts it in front of an
 agent.** A bundle in `.luma/bundles/` is inert until something tells Claude Code
@@ -41,7 +41,7 @@ from pathlib import Path
 
 from . import adoption, lkf, project
 
-USAGE = """Project adopted bundles into what this project's harness reads.
+USAGE = """Write adopted bundles into what this project's harness reads.
 
   luma-foreman apply             write the skills, the project index and the adapter
   luma-foreman apply --check     report what would change, write nothing
@@ -156,7 +156,7 @@ class Doc:
 
 @dataclass(frozen=True)
 class Bundle:
-    """A vendored bundle and the Documents worth projecting."""
+    """A vendored bundle and the Documents worth writing out."""
 
     bundle_id: str
     root: Path
@@ -733,7 +733,7 @@ def run(project_root: Path, check: bool, explain: bool = False) -> int:
 
     refused = _refusals(bundles)
     if refused:
-        print("cannot project — declarations this build cannot honour:", file=sys.stderr)
+        print("cannot write out — declarations this build cannot honour:", file=sys.stderr)
         for line in refused:
             print(f"  {line}", file=sys.stderr)
         return 2
@@ -814,7 +814,7 @@ def run(project_root: Path, check: bool, explain: bool = False) -> int:
     print(f"  standby    {counts['standby']} reachable, not announced")
     if parked:
         names = ", ".join(b.bundle_id for b in parked)
-        print(f"  parked     {len(parked)} register: nothing — landed, not wired: {names}")
+        print(f"  not wired  {len(parked)} register: nothing — deliberately landed only: {names}")
     if explain:
         _explain(bundles)
 
