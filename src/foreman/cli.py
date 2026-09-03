@@ -20,7 +20,7 @@ Commands:
   apply               write what this project adopted into what a harness reads
   inspect             check a project against the baseline and report shortfalls
 
-  bundle              bundles this project holds — list, show, outdated
+  bundle              bundles this project holds — new, list, show, outdated
   catalog             where bundles come from — list, show
   agent-permissions   what an agent is allowed to do in this repository
 

@@ -9,6 +9,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 
 ## [Unreleased]
 
+### Added
+
+- **`luma-foreman bundle new <name>` starts a bundle in this project.** It writes `.luma/bundles/local/<name>/BUNDLE.md` from a template and nothing else — `local/` because that is where a bundle with no published identity lives (ADR-0011), and it is the only namespace this writes into, since a name is a bundle's and a namespace is a catalog's to give. **A bundle needs no catalog to exist**, so this needs no network, no registry and no `--from`; it needs a `.luma/`, and says so when there is none.
+  **It creates no directories it cannot fill.** `policy/` and `procedure/` are named in the output instead, following `init`'s rule: git will not commit an empty directory, so one made ahead of its contents exists only on the machine that ran the command — and an empty `policy/` is a question a reader has to answer about a bundle that has no policies.
+  **One refusal, and it says which case it is.** An existing `BUNDLE.md` is never overwritten — that file is what makes a directory a bundle, so replacing it discards the bundle rather than the file. Written onto a directory somebody drafted by hand, it says so and names what was already there, because the template it just wrote describes none of it.
+  *The description is a plain line, not a folded scalar.* `foreman.lkf` is a deliberate subset that reads `>-` as the value, so the YAML-shaped template would have shipped every new bundle announcing itself as `>-` in both generated indexes. No `published:` either — a bundle written in a project has no publish moment, which is the same fact that makes its index regenerate rather than freeze.
+
 ### Fixed
 
 - **`get` no longer reports *no catalog* at a project that has one registered.** The refusal blamed the last resolution step it tried, `[catalog] source`, and sent an operator to `catalog add` for a catalog that was already there. Where the registry is not empty, the fault is in the ID rather than in the setup, and the message now says which: a **bare name** is not a bundle ID at all, since the ID is what carries the catalog's name; a **namespace nothing answers to** names a catalog this project does not have, which is not the same fact as having none. Both print the command per registered catalog — the last segment is the bundle's name either way, the guess `_resolve_id` already makes when it holds a single catalog — plus `catalog show` for what each publishes and `catalog add`/`--from` for a catalog that is not registered here. Both routes, because the bundle may not be in what this project already has.
