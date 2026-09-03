@@ -12,8 +12,10 @@ matches: eager
   PROJECT.md          what this repository is, for something outside it
   backlog/            what we intend
   bundles/            what is in force — adopted, or written here
-    adopted.toml      what this project took, and proof of what it looked like
+    MANIFEST.md       what this project carries, and proof of what arrived
+    INDEX.md          generated map, one entry per bundle — regenerate, never edit
     lumastack/luma-catalog/git-secrets/
+    local/my-bundle/  written here, not yet published
   config/
     luma-foreman.toml how a tool behaves here — one file per tool, named for it
   records/            what happened, and why
@@ -183,26 +185,38 @@ The namespace tells them apart, and it is more reliable than a directory would
 be:
 
 ```
-.luma/bundles/lumastack/luma-catalog/git-secrets/     adopted — never edit it
-.luma/bundles/acme-web/deploy/      ours — this project wrote it
+.luma/bundles/lumastack/luma-catalog/git-secrets/   adopted — never edit it
+.luma/bundles/local/deploy/                         ours — not yet published
 ```
 
-`adopted.toml` is authoritative anyway, since only adopted bundles carry a
-source and a checksum. A `vendor/` directory would put the same fact in the path
+**A bundle written here lives under the reserved `local/` namespace** — the
+name states the one true fact about it: no published identity yet, and nothing
+outside this project can cite it. Publication is the rename to a real
+namespace, its catalog's derived identity, and the move is the moment identity
+is acquired.
+
+`MANIFEST.md` is authoritative anyway, since only adopted bundles carry
+custody sublines. A `vendor/` directory would put the same fact in the path
 as well, and two copies of one fact can disagree.
 
 **Editing an adopted bundle is drift**, and a check will say so. If you need it
 to be different, that is a different bundle in your own namespace.
 
-## `adopted.toml` is written by a tool, never by hand
+## `MANIFEST.md` is written by commands, never by hand
 
-```toml
-["lumastack/luma-catalog/git-secrets"]
-version  = "0.1.0"
-source   = "https://github.com/LumaStack/luma-catalog"
-commit   = "abc1234"
-checksum = "sha256:9f2c…"
+```markdown
+- `lumastack/luma-catalog/git-secrets` 0.7.0
+  - source: https://github.com/LumaStack/luma-catalog
+  - commit: abc1234
+  - sha256: 9f2c…
+- `local/deploy` 0.1.0
 ```
+
+**The kinds are distinguished by shape.** Custody sublines mark a vendored
+copy; a bare entry is a bundle written here. And the manifest records intent
+as well as custody: `register: nothing` on an entry marks a bundle
+deliberately landed and not wired, which the tools honour by leaving it out
+of everything they generate.
 
 **`commit` records which state of the catalog this came from**, and it is the
 cheapest thing here. Two bundles adopted from the same commit are known to have
@@ -210,10 +224,10 @@ come from one internally consistent set; from different commits, that is visible
 and checkable. Nothing else answers that — a version says *which release of this
 bundle*, and a checksum says *which bytes*, and neither says *alongside what*.
 
-The checksum is the point: drift-checking compares it against the vendored files
-to detect an edited copy. **A hand-edited checksum makes that check silently
-start passing**, which is why the value lives nowhere near a file you are invited
-to edit — and why it is not in `config/`.
+The sha256 is the point: drift-checking compares it against the vendored files
+to detect an edited copy. **A hand-edited value makes that check silently
+start passing**, which is why it lives in a file whose banner says to change
+it with commands — and why it is not in `config/`.
 
 It is **not a lockfile**, though it resembles one. Bundles are committed, so
 nothing is ever restored from it. It answers three questions only: has anyone

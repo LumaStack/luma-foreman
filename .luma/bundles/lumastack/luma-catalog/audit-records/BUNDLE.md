@@ -1,7 +1,7 @@
 ---
 type: bundle
 title: lumastack/luma-catalog/audit-records
-version: 0.10.0
+version: 0.10.1
 published: 2026-09-02
 stage: draft
 consumers: [project, organization]
