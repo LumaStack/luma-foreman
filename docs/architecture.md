@@ -83,7 +83,10 @@ to run in continuous integration was never the point and would buy nothing.
 identifier, derived from the catalog's address, so `lumastack/luma-catalog`
 for this estate — and the manifest — `.luma/bundles/MANIFEST.md`,
 a receipt kept by commands — records the version, where it came from, the
-catalog commit, and a checksum of exactly what landed.
+catalog commit, and a checksum of exactly what landed. *Where it came from*
+is the catalog's registered name where one exists — the registry in
+`.luma/config/luma-foreman.toml` owns name-to-URL, so neither restates the
+other (ADR-0012) — and the raw source where nothing is registered.
 
 **Nothing is fetched later.** That is what keeps this a copy rather than an
 install, and what lets a fresh clone with no network reproduce the project

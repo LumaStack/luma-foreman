@@ -1,17 +1,20 @@
 """Where this project's knowledge comes from.
 
-**A catalog is not a registered thing.** There is no `catalog add`, no list of
-remotes, and nothing to configure beyond one optional default. A catalog is an
-argument — a path or a URL — and that is deliberate: adoption is a copy with a
-receipt, not a subscription, so there is no relationship to keep.
+**A catalog is registered once, the way an apt source is.** `catalog add`
+fetches it, learns the namespace it serves, and records name and URL in
+`.luma/config/luma-foreman.toml` — committed, so a teammate's `get` resolves
+the same way this one does. Verifying at add time is the point: a wrong
+sources entry fails when written, not when somebody runs `get` next week.
 
-**So the set is derived rather than stored.** It is the distinct `source`
-values in `MANIFEST.md`, plus `[catalog] source` if the project sets one.
-That is already how `outdated` decides where to look, and it means the
-org-private-plus-universal case works with nothing registered.
+**The registry owns name-to-URL; nothing else restates it.** A receipt
+records the catalog *name*, so a moved catalog is one config line. A catalog
+nobody registered still works — it is an argument to `--from`, and its
+receipt keeps the raw URL, like a hand-installed .deb.
 
-`list` therefore reads committed state and works offline. `show` is the only
-command here that reaches a catalog.
+**The set `list` reports is the registry plus what receipts remember** — the
+distinct sources in `MANIFEST.md` still count, so a project that registered
+nothing keeps its answer. `list` reads committed state and works offline;
+`add` and `show` reach a catalog.
 """
 
 from __future__ import annotations
@@ -29,16 +32,19 @@ from . import adoption, config, lkf, project
 
 USAGE = """Where this project's knowledge comes from.
 
-  luma-foreman catalog list           every catalog this project draws from
-  luma-foreman catalog show <name>    what a catalog publishes
+  luma-foreman catalog list            every catalog this project draws from
+  luma-foreman catalog show <name>     what a catalog publishes
+  luma-foreman catalog add <source>    register one, so `get` needs no --from
 
   --to <project>   a project other than this repository
 
-`<name>` is a short name from `list`, a path to a catalog checkout, or a git
-URL. `list` is derived from what has been adopted and works offline; `show`
-reaches the catalog and needs a network.
+`<name>` is a registered name, a short name from `list`, a path to a catalog
+checkout, or a git URL. `add` fetches the catalog to learn the namespace it
+serves, then records it in .luma/config/luma-foreman.toml — committed, so the
+whole team resolves the same way. `list` reads the registry and the receipts
+and works offline; `add` and `show` reach the catalog and need a network.
 
-Exit codes: 0 fine, 2 could not run."""
+Exit codes: 0 fine, 1 refused, 2 could not run."""
 
 
 # --------------------------------------------------------------------------
@@ -234,6 +240,12 @@ def _err(message: str) -> int:
     return 2
 
 
+def _refuse(summary: str, remedy: str) -> int:
+    print(f"luma-foreman catalog: {summary}", file=sys.stderr)
+    print(f"  {remedy}", file=sys.stderr)
+    return 1
+
+
 def short_name(source: str) -> str:
     """A typeable handle for a catalog that has only ever had a URL.
 
@@ -246,6 +258,11 @@ def short_name(source: str) -> str:
 
 def sources(project_root: Path) -> dict[str, list[str]]:
     """Every catalog this project draws from, to the bundles taken from it.
+
+    The registered catalogs, plus what the receipts remember: a name-indirect
+    receipt resolves through the registry, and one whose catalog is no longer
+    registered is shown under the bare name — a listing that silently dropped
+    it would read as the bundle coming from nowhere.
 
     **Grouped by origin, not by spelling.** `.git`, a trailing slash, a
     scheme, an scp-style address — git accepts them all for one repository,
@@ -263,8 +280,14 @@ def sources(project_root: Path) -> dict[str, list[str]]:
         if len(source) < len(display):
             grouped[key] = (source, bundles)
 
+    registered = config.registry(project_root)
     for bundle_id, entry in sorted(adoption.read(project_root).items()):
-        add(entry.source, bundle_id)
+        source = registered.get(entry.catalog, entry.catalog) if entry.catalog \
+            else entry.source
+        if source:
+            add(source, bundle_id)
+    for source in registered.values():
+        add(source, None)
     configured = config.catalog_source(project_root)
     if configured:
         add(configured, None)
@@ -339,15 +362,77 @@ def show(source: str, project_root: Path) -> int:
 
 
 
+def add(source: str, project_root: Path) -> int:
+    """Register a catalog by the namespace it serves, verified by fetching it.
+
+    The name is never an argument — it is what the catalog answers when
+    asked, the same declared-beats-derived rule `get` uses. Registering what
+    was verified is what makes the entry trustworthy: a URL that stops
+    serving its namespace fails here, at write time, instead of in a
+    teammate's `get` next week.
+    """
+    if not config.config_path(project_root).is_file():
+        return _refuse(
+            f"no .luma/config/{config.CONFIG} to register into",
+            "The registry is committed project config. Run `luma-foreman "
+            "init` first.",
+        )
+
+    catalog = find(source)
+    if isinstance(catalog, str):
+        return _err(catalog)
+    name = catalog.namespace
+    if not name:
+        return _err(
+            f"this catalog declares no namespace and none derives from "
+            f"{catalog.source} — a registry entry needs a name. Add "
+            f"`namespace:` to its CATALOG.md."
+        )
+    if name == "local" or name.startswith("local/"):
+        # ADR-0011: local/ marks a bundle with no published identity yet. A
+        # catalog claiming it could shadow every unpublished bundle at once.
+        return _refuse(
+            f"{name} is reserved for bundles written in a project",
+            "No catalog may claim the local/ namespace — see ADR-0011.",
+        )
+
+    held = config.registry(project_root).get(name)
+    if held:
+        if adoption.same_origin(held, catalog.source):
+            print(f"{name} is already registered — nothing to do")
+            return 0
+        return _refuse(
+            f"{name} is already registered from a different source",
+            f"holds:  {held}\n"
+            f"  asked:  {catalog.source}\n"
+            "  Same name, different origin — the second entry would shadow "
+            "the first. If the catalog moved, edit the entry in "
+            f".luma/config/{config.CONFIG}.",
+        )
+
+    config.register_catalog(project_root, name, catalog.source)
+    print(f"{name}: registered")
+    print(f"  source  {catalog.source}")
+    print(f"  in      .luma/config/{config.CONFIG}")
+    print()
+    print("  Commit the config — the registry is how a teammate's `get` "
+          "resolves too.")
+    print(f"  Then: luma-foreman get {name}/<bundle>")
+    return 0
+
+
 def listing(project_root: Path) -> int:
     found = sources(project_root)
     if not found:
-        print("no catalogs — nothing adopted, and no [catalog] source configured.")
+        print("no catalogs — nothing registered, and nothing adopted.")
         print()
-        print("  luma-foreman get <bundle> --from <catalog>")
+        print("  luma-foreman catalog add <url>              register one")
+        print("  luma-foreman get <bundle> --from <catalog>  or take without registering")
         return 0
 
     configured = config.catalog_source(project_root)
+    registered = config.registry(project_root)
+    by_origin = {adoption.origin(url): name for name, url in registered.items()}
 
     # How many a catalog publishes is the part worth knowing — `3 taken` says
     # nothing you did not already know, and `3 of 19 taken` says there is more
@@ -376,16 +461,24 @@ def listing(project_root: Path) -> int:
     for i, (name, count, source, why) in enumerate(rows):
         if i:
             print()
+        registered_as = by_origin.get(adoption.origin(source))
         default = ("   (configured default)"
                    if configured and adoption.same_origin(source, configured)
                    else "")
-        print(f"  {name}{default}")
+        # A registered catalog is headed by its registered name — the same
+        # string a bundle ID starts with, which is what `get` resolves by.
+        print(f"  {registered_as or name}"
+              + ("   (registered)" if registered_as else default))
         # `find` puts the source in its message, and the line below carries it.
         print(f"    {count}" + (f" — {why.replace(source, '').strip(': ')}" if why else ""))
         print(f"    {source}")
 
     print()
-    print(f"{_count(len(found), 'catalog')}, derived from what this project has adopted.")
+    if registered:
+        print(f"{_count(len(found), 'catalog')} — registered in "
+              f".luma/config/{config.CONFIG}, or remembered by receipts.")
+    else:
+        print(f"{_count(len(found), 'catalog')}, derived from what this project has adopted.")
     unreachable = [n for n, _, _, why in rows if why]
     if unreachable:
         print(f"{len(unreachable)} could not be reached, so what they publish is unknown.")
@@ -426,13 +519,23 @@ def main(argv: list[str]) -> int:
         if len(operands) != 1:
             return _err("usage: luma-foreman catalog show <name>")
         wanted = operands[0]
-        # A short name only resolves against catalogs this project already
-        # draws from; anything else is passed through as a path or URL, so a
-        # catalog nobody has adopted from is still reachable.
-        for source in sources(project_root):
-            if short_name(source) == wanted:
-                wanted = source
-                break
+        # A registered name resolves first, then a short name against
+        # catalogs this project already draws from; anything else is passed
+        # through as a path or URL, so a catalog nobody has adopted from is
+        # still reachable.
+        registered = config.registry(project_root)
+        if wanted in registered:
+            wanted = registered[wanted]
+        else:
+            for source in sources(project_root):
+                if short_name(source) == wanted:
+                    wanted = source
+                    break
         return show(wanted, project_root)
+
+    if verb == "add":
+        if len(operands) != 1:
+            return _err("usage: luma-foreman catalog add <path-or-url>")
+        return add(operands[0], project_root)
 
     return _err(f"unknown: catalog {verb} (try luma-foreman catalog --help)")

@@ -59,6 +59,12 @@ class Adopted:
     # "nothing" means deliberately landed and not wired. Values are what to
     # register into, never a boolean and never event data.
     register: str = ""
+    # The registered catalog this came from, by name — the registry in
+    # `.luma/config/luma-foreman.toml` owns name-to-URL, so a moved catalog is
+    # one config line rather than every receipt going stale. Exactly one of
+    # `catalog` and `source` is set: a fetch from an unregistered catalog
+    # keeps its raw URL, like a hand-installed .deb.
+    catalog: str = ""
 
     # Split from the right: a namespace may have any number of segments, and
     # the bundle name is always the last one. `lumastack/luma-catalog/widgets`
@@ -300,6 +306,7 @@ def parse(text: str) -> dict[str, Adopted]:
                 commit=current.get("commit", ""),
                 checksum=f"sha256:{checksum}" if checksum else "",
                 register=current.get("register", ""),
+                catalog=current.get("catalog", ""),
             )
 
     for line in text.splitlines():
@@ -321,6 +328,8 @@ def emit(entries: dict[str, Adopted]) -> str:
     for bundle in sorted(entries):
         e = entries[bundle]
         lines.append(f"- `{bundle}` {e.version}".rstrip())
+        if e.catalog:
+            lines.append(f"  - catalog: {e.catalog}")
         if e.source:
             lines.append(f"  - source: {e.source}")
         if e.commit:

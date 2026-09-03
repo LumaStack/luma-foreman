@@ -90,6 +90,19 @@ cp "$M" "$T/second"
 ( cd "$P" && "$CLI" bundle migrate-manifest ) >/dev/null 2>&1
 cmp -s "$M" "$T/second" && ok || bad "register-carrying manifest should rewrite byte-identically"
 
+# -- a name-indirect receipt survives a rewrite -------------------------------
+#
+# `catalog:` records the registered catalog by name; the registry in the
+# project config owns name-to-URL. An unrecoverable fact the tool dropped on
+# rewrite is a fact the file never really held.
+
+printf '  - catalog: corp/kit\n' >> "$M"
+( cd "$P" && "$CLI" bundle migrate-manifest ) >/dev/null 2>&1
+grepped '  - catalog: corp/kit' "$M"
+cp "$M" "$T/third"
+( cd "$P" && "$CLI" bundle migrate-manifest ) >/dev/null 2>&1
+cmp -s "$M" "$T/third" && ok || bad "catalog-carrying manifest should rewrite byte-identically"
+
 # -- bare entries: a bundle written here --------------------------------------
 
 mkdir -p "$P/.luma/bundles/org/local"

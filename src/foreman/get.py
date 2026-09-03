@@ -32,9 +32,12 @@ USAGE = """Adopt a bundle from a catalog into this project, and record what you 
 
 To see what a catalog publishes: luma-foreman catalog show <name>
 
-  --from <catalog>   a path to a catalog checkout, or a git URL. Defaults to
-                     the source recorded for an already-adopted bundle, then
-                     [catalog] source in .luma/config/luma-foreman.toml
+  --from <catalog>   a path to a catalog checkout, or a git URL. Without it
+                     the bundle ID resolves through the registered catalogs
+                     in .luma/config/luma-foreman.toml (the ID starts with
+                     the catalog's name), then the source recorded for an
+                     already-adopted bundle, then [catalog] source. Register
+                     with: luma-foreman catalog add <url>
 
 A bundle is addressed <namespace>/<name>, and the namespace is the catalog's.
 It derives from where the catalog lives — github.com/LumaStack/luma-catalog
@@ -113,6 +116,27 @@ def _resolve_id(catalog: catalogs.Catalog, requested: str) -> tuple[str, str] | 
     )
 
 
+def _same_lineage(
+    existing: adoption.Adopted,
+    catalog: catalogs.Catalog,
+    registered: dict[str, str],
+) -> bool:
+    """Does the receipt's origin match the catalog being fetched from?
+
+    A name-indirect receipt resolves through the registry first — that is the
+    indirection working: the registry says where the name lives *now*. A name
+    the registry no longer holds falls back to comparing names, because a
+    catalog's name is its namespace and derivation gives a fork a different
+    one — the same property the URL comparison leans on.
+    """
+    if existing.catalog:
+        held = registered.get(existing.catalog)
+        if held:
+            return adoption.same_origin(held, catalog.source)
+        return existing.catalog == catalog.namespace
+    return adoption.same_origin(existing.source, catalog.source)
+
+
 def run(
     requested: str,
     source: str,
@@ -122,6 +146,18 @@ def run(
     catalog = catalogs.find(source)
     if isinstance(catalog, str):
         return _err(catalog)
+
+    # Registered catalogs go name-indirect on the receipt: the registry owns
+    # name-to-URL, and a receipt restating the URL would go stale with it.
+    # Matched by origin rather than by how the catalog was named at the
+    # prompt, so --from pointing at a registered catalog's checkout still
+    # records the name.
+    registered = config.registry(project_root)
+    registered_as = next(
+        (name for name, url in registered.items()
+         if adoption.same_origin(url, catalog.source)),
+        "",
+    )
 
     resolved = _resolve_id(catalog, requested)
     if isinstance(resolved, str):
@@ -150,12 +186,12 @@ def run(
     # Two catalogs can only share an ID by both declaring the same namespace —
     # derivation makes that impossible — so this catches the deliberate case
     # and the misconfigured one, both of which somebody should decide about.
-    if (existing and existing.source
-            and not adoption.same_origin(existing.source, catalog.source)
+    if (existing and (existing.source or existing.catalog)
+            and not _same_lineage(existing, catalog, registered)
             and not force):
         return _refuse(
             f"{bundle_id} here came from a different catalog",
-            f"holds:  {existing.source}\n"
+            f"holds:  {existing.catalog or existing.source}\n"
             f"  asked:  {catalog.source}\n"
             "  Same name, different origin — an upgrade would silently swap "
             "what this bundle is. --force to switch lineage; MANIFEST.md "
@@ -177,15 +213,16 @@ def run(
             return 0
 
     upgrade = existing.version if existing else None
-    switched = bool(existing and existing.source
-                    and not adoption.same_origin(existing.source, catalog.source))
+    switched = bool(existing and (existing.source or existing.catalog)
+                    and not _same_lineage(existing, catalog, registered))
     count = _copy(src, dst)
     entries[bundle_id] = adoption.Adopted(
         bundle=bundle_id,
         version=version,
-        source=catalog.source,
+        source="" if registered_as else catalog.source,
         commit=catalog.commit,
         checksum=adoption.checksum(dst),
+        catalog=registered_as,
     )
     adoption.write(project_root, entries)
 
@@ -203,7 +240,10 @@ def run(
     else:
         verb = f"adopted {version}"
     print(f"{bundle_id}: {verb}")
-    print(f"  from     {catalog.source}")
+    if registered_as:
+        print(f"  from     {registered_as} — {catalog.source}")
+    else:
+        print(f"  from     {catalog.source}")
     print(f"  commit   {catalog.commit or '(not a git checkout)'}")
     rel = dst.relative_to(project_root).as_posix()
     print(f"  into     {rel}/  ({count} files)")
@@ -266,31 +306,50 @@ def main(argv: list[str]) -> int:
     if target and not target.is_dir():
         return _err(f"not a directory: {target}")
 
-    if source is None:
-        # A bundle already adopted records where it came from, and re-taking
-        # it is the common case — demanding --from for a fact the receipt
-        # already holds made an operator repeat the tool's own record back to
-        # it, eighteen times in one migration. The recorded source outranks
-        # the configured default deliberately: it is this bundle's lineage,
-        # and same_origin would refuse a differing default anyway.
-        entries = adoption.read(project_root)
-        entry = entries.get(requested[0])
-        if entry is None:
-            named = [e for e in entries.values() if e.name == requested[0]]
-            if len(named) == 1:
-                entry = named[0]
-        if entry and entry.source:
-            source = entry.source
-    if source is None:
-        source = config.catalog_source(project_root)
-    if source is None:
-        return _err(
-            "no catalog — pass --from <path-or-url>, or set [catalog] source "
-            f"in .luma/config/{config.CONFIG}"
-        )
-
     if len(requested) != 1:
         return _err(
             "name exactly one bundle (`luma-foreman catalog show <name>` lists them)"
         )
-    return run(requested[0], source, project_root, force)
+    wanted = requested[0]
+
+    if source is None:
+        # A bundle ID starts with the name of the catalog that publishes it,
+        # so the registry resolves it with nothing restated. Longest name
+        # first, because a name may be any number of segments. The registry
+        # outranks the receipt deliberately: a moved catalog makes the
+        # registry current truth and the receipt history.
+        registered = config.registry(project_root)
+        for name in sorted(registered, key=len, reverse=True):
+            if wanted.startswith(name + "/"):
+                source = registered[name]
+                break
+    if source is None:
+        # A bundle adopted before the registry existed records its raw
+        # source, and re-taking it is the common case — demanding --from for
+        # a fact the receipt already holds made an operator repeat the
+        # tool's own record back to it, eighteen times in one migration.
+        entries = adoption.read(project_root)
+        entry = entries.get(wanted)
+        if entry is None:
+            named = [e for e in entries.values() if e.name == wanted]
+            if len(named) == 1:
+                entry = named[0]
+        if entry and entry.source:
+            source = entry.source
+        elif entry and entry.catalog:
+            # Name-indirect, and the name resolved to nothing above — the
+            # registry entry this receipt leans on is gone.
+            return _err(
+                f"{entry.bundle} came from {entry.catalog}, which is not "
+                f"registered here — luma-foreman catalog add <url> to "
+                f"restore it, or pass --from"
+            )
+    if source is None:
+        source = config.catalog_source(project_root)
+    if source is None:
+        return _err(
+            "no catalog — luma-foreman catalog add <url> to register one, "
+            "or pass --from <path-or-url>"
+        )
+
+    return run(wanted, source, project_root, force)

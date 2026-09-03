@@ -19,13 +19,18 @@ From inside a repository you want to set up:
 ```bash
 luma-foreman init                                    # if .luma/ does not exist yet
 
-luma-foreman catalog show https://github.com/LumaStack/luma-catalog
-luma-foreman get lumastack/luma-catalog/decision-records \
-  --from https://github.com/LumaStack/luma-catalog
+luma-foreman catalog add https://github.com/LumaStack/luma-catalog
+luma-foreman catalog show lumastack/luma-catalog
+luma-foreman get lumastack/luma-catalog/decision-records
 luma-foreman apply
 
 luma-foreman bundle list
 ```
+
+**Register the catalog once and `get` needs no `--from`** — the bundle ID
+starts with the catalog's name, and the registry in
+`.luma/config/luma-foreman.toml` says where that name lives. `--from` still
+works for a catalog nobody registered.
 
 **Commit what `get` wrote.** An adopted bundle lives in the repository — that is
 what lets a fresh clone with no network reproduce the project exactly.

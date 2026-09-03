@@ -23,7 +23,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from . import adoption, catalog as catalogs, lkf, project
+from . import adoption, catalog as catalogs, config, lkf, project
 
 USAGE = """Report which adopted bundles have a newer version published.
 
@@ -70,18 +70,29 @@ def _newest(source: str, name: str, cache: dict) -> tuple[str | None, str]:
 def survey(project_root: Path) -> list[Status]:
     entries = adoption.read(project_root)
     out: list[Status] = []
+    # A name-indirect receipt resolves through the registry — that is the
+    # registry doing its one job: owning name-to-URL so the receipt does not.
+    registered = config.registry(project_root)
     # One catalog is usually the source for many bundles, and `find` clones or
     # fetches. Resolving each source once rather than once per bundle is the
     # difference between one network round trip and fifteen.
     cache: dict = {}
     for bundle_id, entry in sorted(entries.items()):
-        available, note = _newest(entry.source, entry.name, cache)
+        source = registered.get(entry.catalog, "") if entry.catalog \
+            else entry.source
+        if not source:
+            available, note = None, (
+                f"{entry.catalog} is not registered here" if entry.catalog
+                else "no source on record"
+            )
+        else:
+            available, note = _newest(source, entry.name, cache)
         out.append(
             Status(
                 bundle=bundle_id,
                 held=entry.version,
                 available=available,
-                source=entry.source,
+                source=source or entry.catalog,
                 note=note,
             )
         )

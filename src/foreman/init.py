@@ -82,6 +82,12 @@ CONFIG_BLANK = CONFIG_HEADER + """
 # Where `luma-foreman get` takes bundles from when no --from is given.
 # No default — nothing can guess which catalog is yours.
 # source = "https://github.com/LumaStack/luma-catalog"
+#
+# Registered catalogs live beside it, one entry per catalog, written by
+# `luma-foreman catalog add <url>` after verifying what the URL serves:
+#
+#   [catalog."lumastack/luma-catalog"]
+#   source = "https://github.com/LumaStack/luma-catalog"
 """
 
 CONFIG_SET = CONFIG_HEADER + """

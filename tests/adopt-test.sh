@@ -695,5 +695,121 @@ outdated 'retired upstream is not behind' 0
 has 'no longer published here'
 has 'could not be answered'
 
+# --- registered catalogs --------------------------------------------------------
+#
+# The registry is apt's sources.list: register a catalog once, then `get`
+# without restating the source. Receipts go name-indirect — the registry owns
+# name-to-URL, so a moved catalog is one config line rather than every
+# receipt going stale. A --from fetch from an unregistered catalog keeps its
+# raw URL, which every earlier receipt in this file already asserts.
+
+REGCAT=$T/regcat
+mkdir -p "$REGCAT/catalog/bundles/widgets"
+printf -- '---\ntype: luma/catalog\nnamespace: corp/kit\ndescription: d\n---\nc\n' \
+  > "$REGCAT/catalog/CATALOG.md"
+printf -- '---\ntype: bundle\nversion: 1.0.0\ndescription: w\n---\nb\n' \
+  > "$REGCAT/catalog/bundles/widgets/BUNDLE.md"
+git -C "$REGCAT" init -q
+
+REG=$T/regproj; mkdir -p "$REG"; git -C "$REG" init -q
+reg() {
+  label=$1 want=$2; shift 2
+  LAST=$(cd "$REG" && "$CLI" "$@" 2>&1); got=$?
+  [ "$got" -eq "$want" ] && ok || bad "$label (exit $got, wanted $want): $LAST"
+}
+
+# The registry is committed project config, so there has to be a config.
+reg 'add before init refused' 1 catalog add "$REGCAT"
+has 'luma-foreman init'
+reg 'init for the registry' 0 init
+
+# The name is never an argument — it is what the catalog answers when asked.
+# Fetching to learn it is the verification: a wrong entry fails at add time.
+reg 'catalog add' 0 catalog add "$REGCAT"
+has 'corp/kit: registered'
+grepped 'catalog."corp/kit"' "$REG/.luma/config/luma-foreman.toml"
+
+# Same name + same source is an idempotent no-op.
+reg 'add again is a no-op' 0 catalog add "$REGCAT"
+has 'nothing to do'
+
+# Same name + different source names the existing entry and refuses.
+CLAIM=$T/regclaim
+mkdir -p "$CLAIM/catalog/bundles/x"
+printf -- '---\ntype: luma/catalog\nnamespace: corp/kit\ndescription: d\n---\nc\n' \
+  > "$CLAIM/catalog/CATALOG.md"
+printf -- '---\ntype: bundle\nversion: 1.0.0\ndescription: x\n---\nb\n' \
+  > "$CLAIM/catalog/bundles/x/BUNDLE.md"
+git -C "$CLAIM" init -q
+reg 'same name, different source refused' 1 catalog add "$CLAIM"
+has 'different source'
+has "$REGCAT"
+
+# local/ is reserved for bundles written in a project — ADR-0011. A catalog
+# claiming it could shadow every unpublished bundle at once.
+LOCCAT=$T/regloc
+mkdir -p "$LOCCAT/catalog/bundles/x"
+printf -- '---\ntype: luma/catalog\nnamespace: local\ndescription: d\n---\nc\n' \
+  > "$LOCCAT/catalog/CATALOG.md"
+printf -- '---\ntype: bundle\nversion: 1.0.0\ndescription: x\n---\nb\n' \
+  > "$LOCCAT/catalog/bundles/x/BUNDLE.md"
+git -C "$LOCCAT" init -q
+reg 'a catalog claiming local/ refused' 1 catalog add "$LOCCAT"
+has 'reserved'
+
+# `get` resolves the bundle ID through the registry: the ID starts with the
+# catalog's name, so nothing is restated. No --from, and no receipt yet.
+reg 'get resolves through the registry' 0 get corp/kit/widgets
+has 'adopted 1.0.0'
+has 'corp/kit —'
+
+# The receipt is name-indirect: the name is recorded, the URL is not.
+grepped '  - catalog: corp/kit' "$REG/.luma/bundles/MANIFEST.md"
+grep -q -- '- source:' "$REG/.luma/bundles/MANIFEST.md" \
+  && bad 'a registered adoption restated the URL in the receipt' || ok
+
+# The listing heads a registered catalog by its registered name, offline.
+reg 'catalog list shows the registry' 0 catalog list
+has 'corp/kit'
+has '(registered)'
+
+# `catalog show` resolves a registered name.
+reg 'catalog show by registered name' 0 catalog show corp/kit
+has 'widgets'
+
+# A moved catalog is one config line. Repoint the entry; the receipt is not
+# touched and keeps working — the registry beats what the receipt remembers.
+mv "$REGCAT" "$T/regmoved"
+python3 - "$REG/.luma/config/luma-foreman.toml" <<'PYEOF'
+import sys, pathlib
+p = pathlib.Path(sys.argv[1])
+p.write_text(p.read_text().replace('/regcat"', '/regmoved"'))
+PYEOF
+reg 'a moved catalog is one config line' 0 get corp/kit/widgets
+has 'already at 1.0.0'
+
+# With the entry gone, the name-indirect receipt says what to restore rather
+# than silently falling back to a URL that no longer exists anywhere.
+python3 - "$REG/.luma/config/luma-foreman.toml" <<'PYEOF'
+import sys, pathlib
+p = pathlib.Path(sys.argv[1])
+t = p.read_text()
+p.write_text(t[:t.index('[catalog."corp/kit"]')])
+PYEOF
+reg 'an unregistered name says what to restore' 2 get corp/kit/widgets
+has 'not registered here'
+has 'catalog add'
+
+# A registry entry records the catalog's origin URL, derived by fetching —
+# a checkout with a remote registers as where it was cloned from.
+derived "$T/regurl" "https://example.invalid/corpx/kitx.git" registered
+reg 'add records the origin URL' 0 catalog add "$T/regurl"
+has 'corpx/kitx: registered'
+grepped 'source = "https://example.invalid/corpx/kitx.git"' \
+  "$REG/.luma/config/luma-foreman.toml"
+# ...and `get` resolves the ID to exactly that URL.
+reg 'registry resolution reaches the recorded URL' 2 get corpx/kitx/widgets
+has 'could not fetch catalog: https://example.invalid/corpx/kitx.git'
+
 printf '\n%d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ] || exit 1
