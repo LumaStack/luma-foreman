@@ -19,14 +19,6 @@ what you have, and neither restates the other.
 | dpkg's installed-state | `MANIFEST.md` |
 | installing a local .deb | `get --from <url>` |
 
-**[[ADR-0003-cli-speaks-convention-not-metaphor]] said the opposite while it
-was true** — *"the set of catalogs is derived, not registered … before
-anything builds catalog registration"* — and, still a draft, is corrected in
-place rather than superseded. ADR-0003 saw this coming: its standing
-consequences call the short-name problem *"the first real pressure toward
-registering catalogs rather than deriving them"* and ask for the change to
-be recorded as such when it arrives. This is that record.
-
 ## Problem
 
 Every `get` without a receipt behind it needed `--from`, restating a URL the
@@ -121,15 +113,14 @@ and keeps working.
 
 ## Standing consequences
 
-**`catalog add` is the first `catalog` command that writes.** The noun was
-reporting-only under ADR-0003; `add` acts on the project the way `get` does,
-and its exit codes follow the same convention — 0 fine or idempotent no-op,
-1 refused, 2 could not run.
+**`add` is the one `catalog` command that writes.** It acts on the project
+the way `get` does, and its exit codes follow the same convention — 0 fine
+or idempotent no-op, 1 refused, 2 could not run. Everything else under the
+noun only reports.
 
-**The config file gains a second reason to exist**, so `init`'s blank config
-now points at `catalog add` instead of only carrying the commented default.
-The bare `[catalog] source` stays read — a config that quietly stopped being
-read would fail open.
+**`init`'s blank config points at `catalog add`** beside the commented
+default. The bare `[catalog] source` stays read — a config that quietly
+stopped being read would fail open.
 
 **A registered entry is committed, so what it records must travel.** `add`
 records the catalog's origin URL as `find` resolves it; registering a
