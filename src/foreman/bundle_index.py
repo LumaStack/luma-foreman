@@ -65,16 +65,21 @@ def _entry(doc_id: str, keys: dict[str, str]) -> str:
 
 
 def _body(root: Path) -> str:
-    """The authored half: BUNDLE.md's body, minus its heading.
+    """The authored half: BUNDLE.md's body, minus its heading and its history.
 
     The generator supplies the H1 from the bundle's own metadata, so a
-    second one from the body would say the same thing twice.
+    second one from the body would say the same thing twice. And the
+    ``## Version`` changelog is history — its home is the changelog, and an
+    index carrying it charges every bundle-open for every release note ever
+    written. One adopted bundle's index reached 1,300 lines that way, in an
+    artifact whose whole point is being small enough to read speculatively.
     """
     try:
         text = (root / "BUNDLE.md").read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError):
         return ""
     _, body = lkf.split(text)
+    body = body.split("\n## Version", 1)[0]
     lines = body.strip().splitlines()
     if lines and lines[0].startswith("# "):
         lines = lines[1:]

@@ -39,6 +39,10 @@ description: Keeping credentials and private identity out of a repository.
 # Git secrets
 
 Start with identity; credentials follow.
+
+## Version
+
+`0.5.0` — history that must never reach the index.
 EOF
 
 cat > "$B/policy/never-commit-credentials.md" <<'EOF'
@@ -115,6 +119,8 @@ grepped '# lumastack/luma-catalog/git-secrets 0.5.1' "$IX"
 grepped 'Keeping credentials and private identity' "$IX"
 grepped 'Start with identity; credentials follow.' "$IX"
 ungrep  '# Git secrets' "$IX"
+ungrep  'history that must never reach the index' "$IX"
+ungrep  '## Version' "$IX"
 
 grepped '## Required — do NOT act on this bundle before reading these' "$IX"
 grepped 'policy/never-commit-private-identity' "$IX"
