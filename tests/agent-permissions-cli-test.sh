@@ -88,11 +88,20 @@ run 'bootstrap renamed' 1 bootstrap; contains 'bootstrap renamed' 'renamed to: i
 run 'refit is gone'     1 refit;     contains 'refit is gone'     'removed, with no replacement'
 run 'outdated moved'    1 outdated;  contains 'outdated moved'    'renamed to: bundle outdated'
 
-# The two read-only nouns. Both default to `list` with no verb.
+# Every noun. `--help` is the explicit route and is handled before any verb
+# dispatch, so it cannot be affected by what a bare noun resolves to.
 run 'bundle help'       0 bundle --help;   contains 'bundle help'  'bundle show <name>'
 run 'catalog help'      0 catalog --help;  contains 'catalog help' 'catalog show <name>'
 
-run 'permissions default'  0 agent-permissions;          contains 'permissions default' 'KEY'
+# ...and a bare noun shows what the noun can do, the way `luma-foreman` itself
+# already answers. All three changed together, because fixing two would move
+# the inconsistency rather than end it. Not an error — somebody asking what is
+# here should not get a non-zero status — and not the verb it used to guess.
+run 'a bare noun is the menu' 0 agent-permissions
+contains 'bare noun' 'agent-permissions allow'
+case $LAST in *KEY*) bad 'a bare noun still printed the permission table';; *) ok;; esac
+run 'the verb still spells itself' 0 agent-permissions help
+contains 'help verb' 'agent-permissions allow'
 
 # --- reads work before anything is configured ------------------------------------
 run 'keys'            0 agent-permissions keys;     contains 'keys' 'recursive_rm'
@@ -255,12 +264,12 @@ printf '%s\n' "pass=$pass fail=$fail"
 # because a permission file that silently stops being read fails OPEN.
 rm -f "$LUMA_FOREMAN_HOME/permissions.toml"
 printf 'curl = "allow"\n' > "$LUMA_FOREMAN_HOME/policy.toml"
-out=$("$CLI" agent-permissions 2>&1)
+out=$("$CLI" agent-permissions show 2>&1)
 case "$out" in *allow*) ok;; *) bad 'legacy policy.toml was not read';; esac
 
 # ...and the new name wins when both exist, so a migration is one write away.
 printf 'curl = "deny"\n' > "$LUMA_FOREMAN_HOME/permissions.toml"
-out=$("$CLI" agent-permissions 2>&1)
+out=$("$CLI" agent-permissions show 2>&1)
 case "$out" in *deny*) ok;; *) bad 'permissions.toml did not take precedence';; esac
 rm -f "$LUMA_FOREMAN_HOME/policy.toml"
 

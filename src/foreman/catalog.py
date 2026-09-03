@@ -507,9 +507,16 @@ def main(argv: list[str]) -> int:
         return _err(f"not a directory: {target}")
     project_root, _ = project.resolve(target or Path.cwd())
 
-    verb = args[0] if args else "list"
+    # A bare noun shows what the noun can do — see the note in `bundle`.
+    # Worth one extra line here: `list` reaches every catalog to count what
+    # it publishes, so the old default made the shortest thing you could
+    # type the one that needs a network.
+    verb = args[0] if args else "help"
     operands = args[1:]
 
+    if verb == "help":
+        print(USAGE)
+        return 0
     if verb == "list":
         if operands:
             return _err(f"list takes no arguments (got: {operands[0]})")
