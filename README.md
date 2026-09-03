@@ -40,7 +40,8 @@ without hand holding.
 Shared knowledge is saved inside bundles and then uploaded to a 
 [catalog](https://github.com/LumaStack/luma-catalog). You can think of a catalog 
 as a library of knowledge, you can pick and choose from. And the foreman tool helps 
-distribute selected bundles of knowledge to each project that needs them.
+distribute selected bundles of knowledge to each project that needs them. And forman
+can support as many or as few catalogs as you want to subscribe to.
 
 ## Where to go next
 
