@@ -9,6 +9,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 
 ## [Unreleased]
 
+### Added
+
+- **`luma-foreman bundle new <name>` starts a bundle in this project.** It writes `.luma/bundles/local/<name>/BUNDLE.md` from a template and nothing else — `local/` because that is where a bundle with no published identity lives (ADR-0011), and it is the only namespace this writes into, since a name is a bundle's and a namespace is a catalog's to give. **A bundle needs no catalog to exist**, so this needs no network, no registry and no `--from`; it needs a `.luma/`, and says so when there is none.
+  **It creates no directories it cannot fill.** `policy/` and `procedure/` are named in the output instead, following `init`'s rule: git will not commit an empty directory, so one made ahead of its contents exists only on the machine that ran the command — and an empty `policy/` is a question a reader has to answer about a bundle that has no policies.
+  **One refusal, and it says which case it is.** An existing `BUNDLE.md` is never overwritten — that file is what makes a directory a bundle, so replacing it discards the bundle rather than the file. Written onto a directory somebody drafted by hand, it says so and names what was already there, because the template it just wrote describes none of it.
+  *The description is a plain line, not a folded scalar.* `foreman.lkf` is a deliberate subset that reads `>-` as the value, so the YAML-shaped template would have shipped every new bundle announcing itself as `>-` in both generated indexes. No `published:` either — a bundle written in a project has no publish moment, which is the same fact that makes its index regenerate rather than freeze.
+
 ### Fixed
 
 - **`inspect` no longer reports every procedure as unreachable.** The reachability notice exempts documents that are routed without declaring anything, and its exemption list still read `("workflow", "policy")` — the type name LKF retired at `v0.0.19`. `apply` migrated to `procedure` with the rest of the rewrite; this rule did not, so every procedure in a new-format bundle was reported *present and cannot be arrived at* while being registered as a skill the whole time. `workflow` stays in the list beside it, for the reason `entrypoint` still fires: a bundle published before the rename is still adopted somewhere, and an exemption that only knows the new word starts firing on every one of them. The notice's own text said *no line on this bundle's ring*, naming an artifact that became the bundle's index; the surrounding prose in `bundles.py` and one `init` line saying *the `migrate-into-luma` workflow* are corrected to match.

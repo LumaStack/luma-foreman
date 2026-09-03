@@ -832,5 +832,92 @@ grepped 'source = "https://example.invalid/corpx/kitx.git"' \
 reg 'registry resolution reaches the recorded URL' 2 get corpx/kitx/widgets
 has 'could not fetch catalog: https://example.invalid/corpx/kitx.git'
 
+# --- starting a bundle in this project ------------------------------------------
+#
+# A bundle needs no catalog to exist: creating one is an act on a directory,
+# and `local/` is where a bundle with no published identity lives (ADR-0011).
+# Its own project, because a local bundle changes what `apply` writes out and
+# every count above is asserted against a project that has none.
+
+NEW=$T/newproj; mkdir -p "$NEW"; git -C "$NEW" init -q
+new() {
+  label=$1 want=$2; shift 2
+  LAST=$(cd "$NEW" && "$CLI" bundle "$@" 2>&1); got=$?
+  [ "$got" -eq "$want" ] && ok || bad "$label (exit $got, wanted $want): $LAST"
+}
+
+# A bundle lives in a project, so there has to be one.
+new 'new before init refused' 1 new house-rules
+has 'luma-foreman init'
+LAST=$(cd "$NEW" && "$CLI" init 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "init for the local bundle (exit $got): $LAST"
+
+new 'bundle new' 0 new house-rules
+has 'created'
+has 'local/house-rules'
+exists "$NEW/.luma/bundles/local/house-rules/BUNDLE.md"
+
+# The directories are named in the output and not created. git will not commit
+# an empty one, so a directory made ahead of its contents exists only on the
+# machine that ran this — and an empty policy/ is a question a reader has to
+# answer about a bundle that has no policies.
+has 'policy/'
+has 'procedure/'
+absent "$NEW/.luma/bundles/local/house-rules/policy"
+absent "$NEW/.luma/bundles/local/house-rules/procedure"
+
+# The manifest declares what it can honestly declare on day one, and the
+# description is a plain line: `foreman.lkf` is a subset that reads `>-` as the
+# value, so a folded scalar here would ship every bundle announcing itself as
+# `>-` in two generated indexes.
+grepped 'type: bundle' "$NEW/.luma/bundles/local/house-rules/BUNDLE.md"
+grepped 'title: local/house-rules' "$NEW/.luma/bundles/local/house-rules/BUNDLE.md"
+grepped 'version: 0.1.0' "$NEW/.luma/bundles/local/house-rules/BUNDLE.md"
+grepped 'stage: draft' "$NEW/.luma/bundles/local/house-rules/BUNDLE.md"
+grep -q 'description: >-' "$NEW/.luma/bundles/local/house-rules/BUNDLE.md" \
+  && bad 'a folded scalar the frontmatter reader does not fold' || ok
+# A bundle written here has no publish moment — that is the same fact that
+# makes its index regenerate rather than freeze.
+grep -q '^published:' "$NEW/.luma/bundles/local/house-rules/BUNDLE.md" \
+  && bad 'a local bundle claimed a publish date' || ok
+
+# The one refusal. A BUNDLE.md is what makes a directory a bundle, so
+# overwriting one discards the bundle rather than the file.
+new 'an existing bundle is never overwritten' 1 new house-rules
+has 'already a bundle'
+
+# Onto a directory somebody drafted by hand, which is the retrofit: it says so,
+# and names what was already there, because the template it just wrote
+# describes none of it.
+mkdir -p "$NEW/.luma/bundles/local/backlog/procedures"
+printf -- '---\ntype: procedure\ntitle: X\ndescription: d\n---\ns\n' \
+  > "$NEW/.luma/bundles/local/backlog/procedures/x.md"
+new 'onto a directory already there' 0 new backlog
+has 'already there'
+has 'procedures/'
+grepped 'title: local/backlog' "$NEW/.luma/bundles/local/backlog/BUNDLE.md"
+
+# The namespace is a catalog's to give, and this writes local/ only.
+new 'a namespaced name refused' 1 new lumastack/luma-catalog/widgets
+has 'local/'
+has 'bundle new widgets'
+new 'a name that is not a directory name refused' 1 new House_Rules
+has 'not a bundle name'
+new 'new takes exactly one name' 2 new one two
+has 'usage'
+
+# ...and the whole point: it reaches the harness with no catalog anywhere.
+mkdir -p "$NEW/.luma/bundles/local/house-rules/policy"
+printf -- '---\ntype: policy\ntitle: R\ndescription: What this obliges.\nmatches: eager\n---\nx\n' \
+  > "$NEW/.luma/bundles/local/house-rules/policy/rule.md"
+LAST=$(cd "$NEW" && "$CLI" bundle index .luma/bundles/local/house-rules 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "bundle index on a new bundle (exit $got): $LAST"
+grepped 'local/house-rules 0.1.0' "$NEW/.luma/bundles/local/house-rules/INDEX.md"
+LAST=$(cd "$NEW" && "$CLI" apply 2>&1); got=$?
+[ "$got" -eq 0 ] && ok || bad "apply with a local bundle (exit $got): $LAST"
+grepped 'local/house-rules' "$NEW/.luma/bundles/INDEX.md"
+grep -q '>-' "$NEW/.luma/bundles/INDEX.md" \
+  && bad 'the project index announced a bundle as >-' || ok
+
 printf '\n%d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ] || exit 1
