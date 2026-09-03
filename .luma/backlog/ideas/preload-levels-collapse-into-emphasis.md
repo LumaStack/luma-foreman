@@ -5,7 +5,7 @@ created: { by: agent:claude-opus-5, at: 2026-08-23T00:00:00Z }
 contributors: [agent:claude-opus-5]
 horizon: next
 scope: project
-lifecycle: draft
+stage: draft
 ---
 
 # Projected through an index, `preload` levels differ only in emphasis

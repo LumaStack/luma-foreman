@@ -5,7 +5,7 @@ created: { by: human:benlinton, at: 2026-08-29T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]
 horizon: someday
 scope: project
-lifecycle: draft
+stage: draft
 ---
 
 # Telling people when it did not work, and learning from that

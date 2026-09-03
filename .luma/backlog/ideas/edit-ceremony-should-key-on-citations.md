@@ -1,14 +1,14 @@
 ---
 type: luma/idea
-title: What an edit to a decision costs should key on citations, not on lifecycle
+title: What an edit to a decision costs should key on citations, not on stage
 created: { by: agent:claude-opus-5, at: 2026-08-26T00:00:00Z }
 contributors: [agent:claude-opus-5, human:benlinton]
 horizon: later
 scope: organization
-lifecycle: draft
+stage: draft
 ---
 
-# Edit ceremony should key on citations, not on `lifecycle`
+# Edit ceremony should key on citations, not on `stage`
 
 `decision-guidelines` charges ceremony by status: `draft` lets the decision
 move, `provisional` lets only the explanation move, `stable` needs agreement

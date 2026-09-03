@@ -2,7 +2,7 @@
 type: decision
 title: Every container carries an index
 decided: 2026-09-02
-lifecycle: draft
+stage: draft
 ---
 
 # ADR-0006: Every container carries an index

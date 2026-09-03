@@ -2,7 +2,7 @@
 type: decision
 title: The CLI speaks command-line convention, not the foreman metaphor
 decided: 2026-08-26
-lifecycle: draft
+stage: draft
 reopen_trigger: Bundles declare dependencies and foreman resolves them — the re-open condition of ADR-0002. At that point `install` stops being a lie and the verb is worth revisiting.
 ---
 

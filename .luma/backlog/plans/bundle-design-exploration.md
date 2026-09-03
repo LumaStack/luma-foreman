@@ -2,7 +2,7 @@
 type: document
 title: Bundle design exploration
 description: The end-to-end design for bundles — how knowledge reaches context, what a bundle is, what a document is, what a project records, how it reaches a harness, and how it reaches a repository. Written forward, entry by entry, rather than derived from what exists.
-lifecycle: draft
+stage: draft
 created: { by: human:benlinton, at: 2026-08-30T00:00:00Z }
 modified: { by: agent:claude-opus-5, at: 2026-08-31T00:00:00Z }
 ---

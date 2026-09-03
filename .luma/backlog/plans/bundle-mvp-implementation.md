@@ -2,7 +2,7 @@
 type: document
 title: Bundle MVP implementation
 description: The ratified bundle design sequenced into landable changes — what each step delivers, what gates it, and what proves it done. The design decides what; this decides in what order.
-lifecycle: draft
+stage: draft
 created: { by: agent:claude-fable-5, at: 2026-09-02T00:00:00Z }
 ---
 

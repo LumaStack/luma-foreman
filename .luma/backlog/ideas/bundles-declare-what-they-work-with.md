@@ -5,7 +5,7 @@ created: { by: human:benlinton, at: 2026-08-29T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]
 horizon: next
 scope: project
-lifecycle: draft
+stage: draft
 ---
 
 # A bundle declares what it works with, and `get` prints it

@@ -5,7 +5,7 @@ created: { by: human:benlinton, at: 2026-08-21T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]
 horizon: next
 scope: project
-lifecycle: draft
+stage: draft
 ---
 
 # A hook that stops the internal headquarters leaking into public repositories
