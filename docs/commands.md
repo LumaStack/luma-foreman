@@ -42,7 +42,9 @@ luma-foreman get <bundle> --force       # replace a copy that no longer matches
 source` in the project config.
 
 **A fetch with a receipt.** The bundle lands in
-`.luma/bundles/<org>/<name>/`, and `adopted.toml` records the version, origin,
+`.luma/bundles/<namespace>/<bundle-name>/` — the namespace derives from the
+catalog's address (`lumastack/luma-catalog`), so two catalogs from one
+organization vendor side by side — and `MANIFEST.md` records the version, origin,
 catalog commit, and a checksum of exactly what landed.
 
 **Nothing is fetched later.** Commit the copy — a fresh clone with no network
@@ -64,7 +66,7 @@ luma-foreman apply --check       # is anything stale? exit 1 if so, write nothin
 luma-foreman apply --explain     # what each Document derives to, and from what
 ```
 
-Writes a skill per workflow, `.luma/bundles/entrypoint.md` naming everything
+Writes a skill per procedure, `.luma/bundles/INDEX.md` naming everything
 adopted, and a managed block in `CLAUDE.md` pointing at it.
 
 **Thin adapters, never copies.** Each skill points at the real document under

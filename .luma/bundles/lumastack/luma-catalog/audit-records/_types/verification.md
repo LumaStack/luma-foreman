@@ -13,7 +13,7 @@ fields:
   verifier:
     field_presence: recommended
     field_type: actor
-    desc: "who or what checked (§7.4)"
+    desc: "who or what checked"
   round:
     field_presence: optional
     field_type: number

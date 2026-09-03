@@ -30,7 +30,7 @@ neighbours; a step is delivered alone, and the reader is expected to stop.**
 
 **A rule of thumb for whoever writes one: the whole thing should fit on a laptop
 screen without scrolling** — prose and `## Takeaways` together, around three
-hundred words and thirty-odd lines. The closing block the workflow adds is a few
+hundred words and thirty-odd lines. The closing block the procedure adds is a few
 lines more, so leave it room.
 
 That is a sizing heuristic and nothing else — **call them steps everywhere a
@@ -85,8 +85,8 @@ and hoping every reference moved with them.
 
 ## Running a tutorial made of these
 
-**The obligations a driving workflow has to honour**, gathered here so a second
-tutorial does not have to reverse-engineer the first. The workflow still states
+**The obligations a driving procedure has to honour**, gathered here so a second
+tutorial does not have to reverse-engineer the first. The procedure still states
 them — it is what runs — but this is the source they are copied from.
 
 - **Read one step at a time, never ahead.** A walkthrough that loads every step
@@ -102,7 +102,7 @@ them — it is what runs — but this is the source they are copied from.
   they reached and resume there; never replay what they already sat through.
 
 **And know which of your own recommendations would destroy the session running
-the tutorial.** That is what `apply_elsewhere` is for, and the driving workflow
+the tutorial.** That is what `apply_elsewhere` is for, and the driving procedure
 should name the specific hazards outright rather than leaving the agent to infer
 them mid-run.
 
@@ -111,7 +111,7 @@ them mid-run.
 **The prose the reader sees, and nothing else.** No presenter notes, no answer
 keys, no instructions to the agent — a step is read aloud more or less verbatim,
 and anything in it meant for the agent gets read aloud too. Everything aimed at
-whoever runs the walkthrough belongs in the driving workflow, or in these fields.
+whoever runs the walkthrough belongs in the driving procedure, or in these fields.
 
 **First, the explanation, written as talking to somebody.** Open with the problem,
 the pitfall or the trap. Say why they should care if it is not obvious. Then walk
@@ -130,7 +130,7 @@ means it was never given. **If a takeaway cannot be written, the step has not
 decided what it is for.**
 
 **The closing block is not part of the body.** How to proceed — practise it here,
-practise it elsewhere, say *next* when ready — is rendered by the driving workflow
+practise it elsewhere, say *next* when ready — is rendered by the driving procedure
 from `pause`, so its wording stays consistent across every step and cannot be
 improvised into sounding like the agent talking to itself.
 

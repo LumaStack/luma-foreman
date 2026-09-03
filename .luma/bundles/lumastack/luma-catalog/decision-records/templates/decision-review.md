@@ -12,7 +12,7 @@ here: they are reading twenty of these in a row.
 ## The blocks
 
 ```markdown
-**<N-1> → ADR-<NNNN>, <lifecycle>.**
+**<N-1> → ADR-<NNNN>, <stage>.**
 
 ## <N> of <total> — <title>
 
@@ -26,13 +26,13 @@ here: they are reading twenty of these in a row.
 - <whether a later entry amends or reverses it>
 - <what has changed since it was settled>
 
-**My recommendation — `ADR-<NNNN>`, `<lifecycle>`:**
+**My recommendation — `ADR-<NNNN>`, `<stage>`:**
 
 ​```yaml
 type: decision
 title: <title>
 decided: <from the entry's Settled line, or recovered>
-lifecycle: <draft|provisional|stable|archived>
+stage: <draft|provisional|stable|archived>
 reopen_trigger: <as written, or absent>
 created:  { by: <original author>, at: <when it was written> }
 modified: { by: <migrating actor>, at: <now> }
@@ -67,7 +67,7 @@ and look up — that three documents cite this entry, that entry 6 reverses it, 
 the constraint it rests on disappeared in March.
 
 **Show the frontmatter, not a description of it.** They can read
-`lifecycle: provisional` faster than a sentence proposing it. It also means
+`stage: provisional` faster than a sentence proposing it. It also means
 the post-write report can be one line, because they have already seen it.
 
 **The supersession line is never omitted**, including when the answer is `none`.
@@ -84,7 +84,7 @@ the choices.
 **Do not write anything before they answer.** The recommendation and the record
 are two turns. This template ends at a question for a reason.
 
-**Do not offer deleting it.** There is no such option in this workflow — a spent
+**Do not offer deleting it.** There is no such option in this procedure — a spent
 decision goes to `archived/`. See [[prune-archived-decisions]], which is a
 different job on a different day.
 

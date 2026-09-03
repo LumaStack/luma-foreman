@@ -7,8 +7,8 @@ description: List the knowledge bundles this project has adopted, and what each 
 
 # What this project knows
 
-Read `.luma/bundles/entrypoint.md`. It names every adopted bundle, what each is for, and the path to
-its ring.
+Read `.luma/bundles/INDEX.md`. It names every bundle this project carries, what each is for,
+and how to reach its own index.
 
 **It is not copied here on purpose.** That file already arrives at the start of
 a session, and rendering it a second time would charge twice for one list. What

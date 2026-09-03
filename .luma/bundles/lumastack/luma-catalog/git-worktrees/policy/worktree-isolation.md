@@ -2,9 +2,7 @@
 type: policy
 title: Worktree isolation
 description: Where worktrees live, how they are named, and what is shared versus isolated — so concurrent agents in one repository can never collide.
-matches:
-  - command: git worktree
-  - topic: working in or creating a worktree
+matches: eager
 ---
 
 # Worktree isolation

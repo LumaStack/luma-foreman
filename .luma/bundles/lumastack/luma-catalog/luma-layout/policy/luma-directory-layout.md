@@ -2,8 +2,7 @@
 type: policy
 title: The .luma directory layout
 description: The four directories every luma tool honours, what belongs in each, and the one invariant that makes the whole thing trustworthy.
-matches:
-  - path: ".luma/**"
+matches: eager
 ---
 
 # The `.luma` directory

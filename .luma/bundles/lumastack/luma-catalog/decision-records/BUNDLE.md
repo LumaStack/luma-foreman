@@ -1,9 +1,10 @@
 ---
 type: bundle
-version: 0.10.0
-published: 2026-08-28
+title: lumastack/luma-catalog/decision-records
+version: 0.12.0
+published: 2026-09-02
+stage: draft
 consumers: [project, organization]
-entrypoint: workflows/record-decision
 description: Decisions recorded with their reasoning, deferred alternatives, and re-open triggers. Spent decisions are archived rather than deleted.
 ---
 
@@ -14,7 +15,7 @@ gets superseded, or the constraint that forced it disappears — but the argumen
 is what survives, and it is the only thing that lets someone six months later
 tell a decision that still holds from one that was never revisited.
 
-This bundle carries the contract for a decision record, the workflow for keeping
+This bundle carries the contract for a decision record, the procedure for keeping
 them, and the rule for when to correct one versus supersede it.
 
 It applies at both levels deliberately. An organization records decisions about
@@ -30,17 +31,17 @@ whatever else comes to live there — `audit-records`, `log-records`,
 
 The suffix names the **kind** of thing: every one of them produces records, and
 each prefix says which. It also keeps the noun convention every other bundle
-follows, and leaves the imperative form free for the workflow inside — the
-bundle is `decision-records`, the workflow is [[record-decision]], and neither
+follows, and leaves the imperative form free for the procedure inside — the
+bundle is `decision-records`, the procedure is [[record-decision]], and neither
 shadows the other.
 
 *The cost, stated once:* they do not sort together in a listing. A `record-*`
 prefix would have grouped them, at the price of every bundle in the family
-reading like a workflow.
+reading like a procedure.
 
 ## What is here
 
-**Workflows**
+**Procedures**
 
 - [[record-decision]] — where records live, what to do when nothing exists yet,
   and how archiving moves a spent record into `archived/`.
@@ -49,7 +50,7 @@ reading like a workflow.
 - [[migrate-decisions]] — split an existing `DECISIONS.md` into individual
   records, once. Reconstructs supersession and repoints everything that cited
   the file.
-- [[prune-archived-decisions]] — the only workflow here that deletes anything. It
+- [[prune-archived-decisions]] — the only procedure here that deletes anything. It
   reaches `archived/` and nothing else, past a retention period the project sets.
 
 **Policy** — [[decision-guidelines]]: when to record one, what makes it survive,
@@ -78,7 +79,7 @@ Nothing globs into `archived/`, so the fix costs a directory.
 **Deleting is possible, separate, and awkward on purpose.**
 [[prune-archived-decisions]] cannot see a live record, will not run without a
 committed retention period, and takes one record at a time with a person
-confirming each. A workflow that offered pruning as a step would teach that
+confirming each. A procedure that offered pruning as a step would teach that
 pruning is a normal part of keeping records — and a project whose decisions can be
 deleted routinely is one whose decisions nobody trusts, because an absent record
 stops meaning anything in particular.
@@ -86,7 +87,7 @@ stops meaning anything in particular.
 ## Loading
 
 **Nothing here is loaded before work starts.** No document in this bundle
-declares `matches: always`, which since the default reversed is the only route to
+declares `matches: eager`, which since the default reversed is the only route to
 being in front of a reader up front — so everything here is either surfaced by a
 trigger or waits to be asked for.
 
@@ -121,13 +122,26 @@ a search procedure exists does not go looking for one: it hits a dead link,
 concludes nothing was ever decided, and re-decides it. **So the pointer is
 load-bearing in a way the procedure is not.** Anything that trims
 [[record-decision]] should leave those three lines alone — and if this bundle
-ever earns a `matches: always` document, this is the argument that would earn it.
+ever earns a `matches: eager` document, this is the argument that would earn it.
 
 The Type Definitions declare no `matches` either, which is the same outcome for a
 different reason: they are read when something needs to know what a field means,
 not held in context against the possibility.
 
 ## Version
+
+`0.10.1` — **the manifest declares `lifecycle: draft`.** The field was absent, and
+absent reads as `unknown` — *nobody has said*. Something was known: this is
+developed by its maintainers for their own use, and its shape can reverse
+without notice.
+
+**Publication did not promote it.** Being reachable by somebody who did not
+write it makes the question live rather than answering it, and the answer here
+is *still a draft* — which is a legitimate thing to publish, and says more than
+silence did.
+
+Patch: a fact written down. Nothing an adopter is obliged to do has changed, and
+`unknown` promised nothing that `draft` withdraws.
 
 `0.10.0` — **`lifecycle_status` is now `lifecycle`.**
 
@@ -211,7 +225,7 @@ now doing the wrong one.
 
 `0.8.0` — **the Loading section described a field the format removed.** It
 called `record-decision` `preload: mandatory`, graded `decision-guidelines`
-`recommended`, and filed three workflows as `optional` — two releases after
+`recommended`, and filed three procedures as `optional` — two releases after
 `preload` was released, and one after `compliance` was invented and withdrawn.
 
 **One claim was false rather than merely stale.** Nothing in this bundle is
@@ -251,7 +265,7 @@ Minor. Nothing a reader is obliged to do has changed.
 `0.5.0` — **vocabulary.** `moment` becomes `event` — a moment is a point in
 time and `applies_to` takes nouns. `compliance` is dropped wherever it was
 saying nothing: a policy binds unless it says otherwise, so only a strong
-default declares `recommended`, and a workflow's steps bind by being steps.
+default declares `recommended`, and a procedure's steps bind by being steps.
 Type Definitions use `field_presence: required` for what was
 `obligation: mandatory`, matching the format.
 
@@ -279,7 +293,7 @@ Patch: no normative sentence moved and a reader who correctly understood
 `0.2.0` behaves identically. See `writing-style` in `lumastack/luma-catalog/project-documentation`
 for the rule and the failure it prevents.
 
-`0.2.0` — archiving as a real mechanism, and the two workflows around it. New
+`0.2.0` — archiving as a real mechanism, and the two procedures around it. New
 content; existing use is unaffected except that an archived record now wants three
 fields it did not before.
 
@@ -294,10 +308,10 @@ forty records still hold is expensive to read, and nobody was actually asking to
 destroy reasoning. `archived/` answers that completely and costs a directory:
 nothing globs into it, so what a reader loads is only what still holds.
 
-**So deleting became a separate workflow that cannot reach a live record.**
+**So deleting became a separate procedure that cannot reach a live record.**
 [[prune-archived-decisions]] sees `archived/` and nothing else, refuses to run
 without a committed retention period, and confirms one record at a time. The
-awkwardness is deliberate — a workflow with a pruning *step* teaches that pruning
+awkwardness is deliberate — a procedure with a pruning *step* teaches that pruning
 is a normal part of keeping records, and a project whose decisions can be deleted
 routinely is one whose decisions nobody trusts. Once a few are gone, an absent
 record could mean never written, dropped as noise, or removed by somebody it

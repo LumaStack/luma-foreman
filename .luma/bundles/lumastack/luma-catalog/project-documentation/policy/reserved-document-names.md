@@ -72,7 +72,7 @@ exactly as its source documents it, because the failure is silent.
 | | |
 | --- | --- |
 | **`SHOUTING.md`** | the front door of a directory — `README.md`, `SPEC.md`, `DECISIONS.md` |
-| **`lowercase.md`** | anything carrying a `type:` — `BUNDLE.md`, `PROJECT.md`, a policy, a workflow, a record |
+| **`lowercase.md`** | anything carrying a `type:` — `BUNDLE.md`, `PROJECT.md`, a policy, a procedure, a record |
 
 **A record is not a front door.** It has a contract, a lifecycle, and something
 that reads it by path; the capitals would be claiming an attention it does not

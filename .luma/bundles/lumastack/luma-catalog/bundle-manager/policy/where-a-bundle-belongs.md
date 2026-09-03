@@ -154,7 +154,7 @@ An organization's catalog is its own repository that names an upstream. It is
 never a copy of the universal catalog that drifts.
 
 If adopting something appears to require forking a catalog, that is a defect
-worth reporting rather than a workflow to follow.
+worth reporting rather than a procedure to follow.
 
 ## Reach is where you found it
 

@@ -16,7 +16,7 @@ is the same message twice with nothing between them to have changed it.
 
 **After a detour it is owed**, because the reader has lost the thread and will
 not think to ask for it back. See step 2 and step 11 of the `review-next`
-workflow.
+procedure.
 
 ## The block
 
@@ -92,7 +92,7 @@ cluster will never touch.
 **→ Type `/clear`, then paste this:**   <the same command, named again>
 
 ```
-Resume the review sweep in .luma/backlog/sweeps/the-whole-of-foreman/.
+Resume the review sweep in .luma/backlog/sweeps/<slug>/.
 Read charter.md and coverage.md, then invoke review-next.
 Ordering is led — ask me which cluster is next.
 ```
@@ -141,7 +141,7 @@ because of it.**
 ## The paste block is a pointer, never a handoff note
 
 **It carries what a fresh agent cannot read for itself and nothing else** — the
-sweep's path, which files to read, which workflow to invoke, and where to
+sweep's path, which files to read, which procedure to invoke, and where to
 resume.
 
 **If it needs to carry findings or context, something was not written down.**

@@ -2,8 +2,7 @@
 type: policy
 title: What is worth capturing
 description: The test for whether an idea earns a file, what disqualifies one, and why capture optimises for flow rather than completeness.
-matches:
-  - topic: capturing an idea worth keeping
+matches: eager
 ---
 
 # What is worth capturing
@@ -44,7 +43,7 @@ weigh feasibility, do not fill in every field. Interrupting a run of ideas to
 tidy the last one is how the next three are lost.
 
 Everything except `title` and `created` can wait — and the
-workflow asks afterwards how much you want to fill in, rather than demanding it
+procedure asks afterwards how much you want to fill in, rather than demanding it
 up front. See [[capture-idea]].
 
 **Evaluation is a separate act, done later, on purpose.** An idea judged in the

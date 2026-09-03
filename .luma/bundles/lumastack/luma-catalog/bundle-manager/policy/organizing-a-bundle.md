@@ -1,21 +1,20 @@
 ---
 type: policy
 title: Organizing a bundle
-description: The layout every bundle uses, what each directory is for, and the two rules that decide whether something is a document, an asset, or a type.
-matches:
-  - topic: creating or restructuring a bundle
+description: The layout every bundle uses, what each directory is for, and what decides whether something is a document, an asset, or a type.
+matches: eager
 ---
 
 # Organizing a bundle
 
 ```
 <bundle>/
-  BUNDLE.md        the manifest — version, consumers, entrypoint
+  BUNDLE.md        the manifest — version, consumers, description
   _types/          Type Definitions — only if the bundle declares its own
-  workflows/       procedures — type: workflow
+  procedure/       procedures — type: procedure
   policy/          adopted courses of action — type: policy
   concepts/        background that explains — type: document
-  scripts/         executables a workflow invokes — never run on adoption
+  scripts/         executables a procedure invokes — never run on adoption
   templates/       assets to copy — no frontmatter
 ```
 
@@ -44,17 +43,17 @@ describes what a catalog is while living inside something else, so it stays
 lowercase too. **The rule excludes them rather than exempting them**, which is
 why there is no list to memorise.
 
-**A document that owns a directory follows the same rule.** Where a workflow
+**A document that owns a directory follows the same rule.** Where a procedure
 carries steps or assets of its own, it takes a directory and speaks for it:
 
 ```
-workflows/set-up-a-thing/
-  WORKFLOW.md      the workflow
+procedure/set-up-a-thing/
+  PROCEDURE.md     the procedure
   steps/           reachable only through it, never listed separately
 ```
 
 The **directory is the identity** — that document's ID is
-`workflows/set-up-a-thing`, and `WORKFLOW.md` is a local detail nothing
+`procedure/set-up-a-thing`, and `PROCEDURE.md` is a local detail nothing
 references. Everything beneath belongs to it and is invisible above it.
 
 **The casing is a gate, not a label.** Nobody types all caps by accident, so a
@@ -67,8 +66,8 @@ load-bearing.**
 
 Only `BUNDLE.md` is required. `_types/` is the one name reserved by the format,
 and most bundles do not need it at all — a bundle whose Documents are all
-`policy` and `workflow` declares no types, because those are built in. **The rest is convention, not specification** — the format leaves
-placement deliberately unspecified, and a bundle that puts a workflow at its
+`policy` and `procedure` declares no types, because those are built in. **The rest is convention, not specification** — the format leaves
+placement deliberately unspecified, and a bundle that puts a procedure at its
 root is perfectly conformant.
 
 Follow it anyway. A reader opening any bundle should see its shape in one
@@ -77,21 +76,21 @@ fifteen at the root.
 
 ## The three document directories follow the format's types
 
-`workflows/`, `policy/` and `concepts/` are not an arbitrary filing scheme. They
+`procedure/`, `policy/` and `concepts/` are not an arbitrary filing scheme. They
 follow the format's partition, which cuts documents by **what a consumer does
 with each one**:
 
 | tier | what belongs there | what a consumer does |
 | --- | --- | --- |
 | **`policy/`** | what to do, and what outranks what | **is bound by it** — a rule constraining its own behaviour |
-| **`workflows/`** | the procedures | **runs it** |
+| **`procedure/`** | the procedures | **runs it** |
 | **`concepts/`** | background that explains: rationale, models, open questions | **reads it** — an ordinary `document` |
 
 **What a consumer does with a document is a different question from when it
 loads.** The type answers the first, `matches` answers the second, and they are
 orthogonal — a rule binds whether or not it happens to be in front of you.
 
-**Filing by tier is still a cost decision.** A policy declaring `matches: always`
+**Filing by tier is still a cost decision.** A policy declaring `matches: eager`
 is loaded into every session that touches the bundle, so putting the argument for
 the bundle's existence there means every consumer pays for it forever to answer a
 question they are not asking. That is a `matches` decision which usually follows
@@ -101,7 +100,7 @@ the tier — not the tier itself.
 
 **Through it** — following a procedure, obeying a rule, ending a session. They
 need to know what to do and what wins when two things conflict. That is
-`policy/` and `workflows/`.
+`policy/` and `procedure/`.
 
 **On it** — deciding whether to adopt it, arguing with a step, extending it,
 judging whether it still earns its place. That is `concepts/`, and it should
@@ -131,24 +130,30 @@ the smell it used to be: a rule that binds when it applies and costs nothing
 until then. Rules for a narrow case belong exactly there.
 
 **Three outcomes, and only one is expensive.** A document declaring
-`matches: always` has its body loaded before work starts. One declaring
+`matches: eager` has its body loaded before work starts. One declaring
 triggers — a path, a command, an event, a topic — is named up front and delivered
 when the work matches. One declaring nothing is named and waits to be asked for.
 **Nobody writes the outcome; it follows from what was declared.**
 
-**`matches: always` is the one to justify.** It is the most expensive filing
+**`matches: eager` is the one to justify.** It is the most expensive filing
 decision available, and since the default reversed it can only be chosen, never
 fallen into — a document that says nothing about what surfaces it is available on
 request. *Rationale everybody loads* is usually a policy that grew an argument.
 
 **And a rule nobody loads still governs nothing.** That is a reachability problem
 rather than a typing one: the answer is something always present naming the rules
-that exist, not marking every policy `always`. See [[an-index-of-what-exists]].
+that exist, not marking every policy `eager`. See [[an-index-of-what-exists]].
 
-**Nothing in this catalog declares `matches: always`.** Nineteen bundles, and the
-expensive outcome is taken by no document at all — every rule here could say what
-surfaces it. That is the number to compare a new one against: **if a bundle needs
-it and none of these did, the reason should be written down.**
+**Almost nothing in this catalog declares it**, and the exception shows what
+earns it: a register of retired words, which is useless unless it is present
+*before* somebody uses one. Every other rule here could say what surfaces it,
+and none of them lost anything by doing so.
+
+**The bar is a written reason, not a precedent.** A document that needs the
+expensive outcome carries why beside the declaration, where whoever reads it next
+can judge it. Counting how many other bundles took it is not that reason — the
+number moves with every bundle added, and an argument resting on it goes quietly
+false while still reading fluently.
 
 Nothing enforces any of this. It is a cheap thing to check in [[audit-bundle]].
 
@@ -179,7 +184,7 @@ about the field's name.*
 ## Directories group documents; the `type` identifies them
 
 **Nothing reads the directory.** A tool looking for procedures matches
-`type: workflow`, not `workflows/`. Path-based scanning silently misses a file
+`type: procedure`, not `procedure/`. Path-based scanning silently misses a file
 somebody moved, and a capability that quietly fails to be found is worse than
 one that errors.
 
@@ -188,14 +193,14 @@ disagree the frontmatter wins.
 
 This is the opposite of the rule for **catalogs**, which do *not* sort bundles
 into directories by kind. The difference is that a bundle can be several kinds
-at once — this one is workflows *and* policy — while a document is exactly one.
+at once — this one is procedures *and* policy — while a document is exactly one.
 
 ## What goes where
 
-**`workflows/`** — procedures a person or agent follows. One document per
-procedure. If a workflow carries scripts or templates of its own, give it a
-directory: `workflows/<name>/<name>.md` beside its material. That matches the
-shape a harness wants when the workflow is written into a skill.
+**`procedure/`** — procedures a person or agent follows. One document per
+procedure. If a procedure carries scripts or templates of its own, give it a
+directory: `procedure/<name>/<name>.md` beside its material. That matches the
+shape a harness wants when the procedure is written into a skill.
 
 **`policy/`** — courses of action this bundle's adopter takes on. Rules,
 conventions, boundaries, definitions of done.
@@ -224,27 +229,27 @@ still be indexed, counted, and validated as though it were one of them.
 When in doubt, carry the example **fenced** inside an asset and copy the block
 rather than the file. It costs a paste and removes the ambiguity.
 
-**`scripts/`** — executables a workflow invokes. A checker, a generator, a
+**`scripts/`** — executables a procedure invokes. A checker, a generator, a
 migration step: anything a procedure tells somebody to *run* rather than to
 read. Nothing here ever runs on adoption; see below.
 
-Only for what **several workflows share**. A script one workflow owns goes
-beside it, in `workflows/<name>/`, so moving or retiring that workflow takes its
+Only for what **several procedures share**. A script one procedure owns goes
+beside it, in `procedure/<name>/`, so moving or retiring that procedure takes its
 script with it. A script nothing invokes is dead weight a reader has to
 evaluate.
 
 **`_types/`** — Type Definitions, for types **this bundle declares**. Reserved
 by the format, so the name is not ours to change.
 
-**Never vendor a built-in.** `document`, `workflow`, `policy`, `bundle` and
+**Never vendor a built-in.** `document`, `procedure`, `policy`, `bundle` and
 `type_definition` are supplied by the format, and copying one into a
 bundle creates a private definition that can drift from the real one while every
 consumer still assumes the format's meaning. A bundle that declares no types of
 its own has no `_types/` directory.
 
 That is not hypothetical: this catalog carried eighteen vendored copies of
-`workflow` and `policy` before they became built in, every one identical and
-every one a place drift could start.
+`procedure` (then named `workflow`) and `policy` before they became built in,
+every one identical and every one a place drift could start.
 
 ### Before declaring a type, look for one that exists
 
@@ -288,9 +293,9 @@ unquoted one parses as a nested array and the link silently never resolves.
 
 ## Bundles may carry executables; adopting one runs nothing
 
-A workflow that ships `scripts/check.sh` is ordinary, and often necessary — it
-is what travels into a harness when the workflow is written into a skill.
-Put such a script beside the workflow that owns it.
+A procedure that ships `scripts/check.sh` is ordinary, and often necessary — it
+is what travels into a harness when the procedure is written into a skill.
+Put such a script beside the procedure that owns it.
 
 **What a bundle must never do is run something as a side effect of being
 adopted.** `foreman get` copies files; nothing executes. A script here runs
@@ -300,9 +305,9 @@ The difference is who chose. Code you ran on purpose is a script. Code that ran
 because you fetched something is a supply chain, and the promotion path —
 project to organization to universal — would be one.
 
-**Say what a script needs, in the workflow that invokes it.** A language
+**Say what a script needs, in the procedure that invokes it.** A language
 runtime, a package, a network call — each is a way to fail in somebody else's
-environment, and the bundle cannot check any of them for you. A workflow that
+environment, and the bundle cannot check any of them for you. A procedure that
 says *this needs Python 3.11* costs a line; one that does not costs whoever runs
 it an afternoon.
 
@@ -376,7 +381,7 @@ This is why a bundle that needs a type **another bundle declares** carries its
 own copy rather than referencing it. Bundles have no dependencies, and vendoring
 is the mechanism.
 
-**That does not apply to built-ins.** `document`, `workflow`, `policy`, `bundle`
+**That does not apply to built-ins.** `document`, `procedure`, `policy`, `bundle`
 and `type_definition` come from the format, so a bundle using
 them is already self-contained — copying one in creates a private definition
 that can drift while every consumer still assumes the format's meaning. See
@@ -388,7 +393,8 @@ A Document's ID is its path within the bundle, so moving a document between
 directories changes its ID and breaks inbound links. Choose the directory when
 the document is created; reclassifying later is a rename with consequences.
 
-`entrypoint` in `BUNDLE.md` carries the **full ID** —
-`workflows/publish-release` — because it must be unambiguous. Wikilinks in
+Anything naming a document outside prose — a manifest field, a tool's
+configuration — carries the **full ID** — `procedure/publish-release` — because
+it must be unambiguous. Wikilinks in
 prose use the slug alone. Where two documents in different directories share a
 slug, that ambiguity is currently unresolved by the format; avoid it.

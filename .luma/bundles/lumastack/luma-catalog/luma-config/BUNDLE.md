@@ -1,9 +1,10 @@
 ---
 type: bundle
-version: 0.8.0
-published: 2026-08-29
+title: lumastack/luma-catalog/luma-config
+version: 0.10.0
+published: 2026-09-02
+stage: draft
 consumers: [project, organization]
-entrypoint: policy/where-configuration-lives
 description: Where luma configuration lives, what is committed and what belongs to the machine, and the order in which layers win.
 ---
 
@@ -68,6 +69,19 @@ Both levels. An organization's headquarters is a repository and configures its
 own tooling the same way.
 
 ## Version
+
+`0.8.1` — **the manifest declares `lifecycle: draft`.** The field was absent, and
+absent reads as `unknown` — *nobody has said*. Something was known: this is
+developed by its maintainers for their own use, and its shape can reverse
+without notice.
+
+**Publication did not promote it.** Being reachable by somebody who did not
+write it makes the question live rather than answering it, and the answer here
+is *still a draft* — which is a legitimate thing to publish, and says more than
+silence did.
+
+Patch: a fact written down. Nothing an adopter is obliged to do has changed, and
+`unknown` promised nothing that `draft` withdraws.
 
 `0.8.0` — **the organization segment is in the table, not only in the prose
 under it.**

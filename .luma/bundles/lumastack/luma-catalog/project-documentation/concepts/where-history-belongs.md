@@ -12,7 +12,7 @@ there is a reason — and the reason does not have to appear below.
 
 **The short version: history stays in loaded context only where it earns its
 place.** Everywhere else it moves somewhere holding it is the job, and the
-document, policy or workflow says what is true now.
+document, policy or procedure says what is true now.
 
 ## Where history belongs
 
@@ -53,7 +53,7 @@ and nothing about the paragraph changed.
 
 ## Earning a place in loaded context
 
-**This is not only about documents.** A policy, a workflow, a guide — anything an
+**This is not only about documents.** A policy, a procedure, a guide — anything an
 agent loads is context somebody pays for, and the question is the same for all of
 it.
 

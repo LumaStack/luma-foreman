@@ -1,9 +1,10 @@
 ---
 type: bundle
-version: 0.7.0
-published: 2026-08-28
+title: lumastack/luma-catalog/session-manager
+version: 0.9.0
+published: 2026-09-02
+stage: draft
 consumers: [project, organization]
-entrypoint: policy/session-continuity
 description: Ending an agent session without losing what it learned — checkpoint while working, hand off to a successor, or close for good, each writing for a different reader.
 ---
 
@@ -35,7 +36,7 @@ note.
 - [[where-knowledge-goes]] — how to find the durable home for something,
   without this bundle containing the list.
 
-**Workflows**
+**Procedures**
 
 - [[session-checkpoint]] — snapshot and keep working.
 - [[session-handoff]] — transfer to a named successor.
@@ -72,7 +73,7 @@ repository — and a hardcoded one would look authoritative while being wrong.
 Each adopted bundle already declares where its own kind of knowledge lives, so
 `adopted.toml` answers the question.
 
-**Cost is a constraint, not a footnote.** These workflows run inside the context
+**Cost is a constraint, not a footnote.** These procedures run inside the context
 they are protecting. A checkpoint that costs more than it saves has done harm,
 which is why it has a budget, a stopping rule, and permission to defer anything
 ambiguous rather than ask.
@@ -94,7 +95,7 @@ project without journaling is not told about it four times a day. **The report
 does not offer to fix anything**: the end of a session is the worst available
 moment to decide what a repository should adopt.
 
-## Handoff and close are not the same workflow
+## Handoff and close are not the same procedure
 
 The distinction most likely to be argued with, so: **handoff builds for a
 successor; close builds for nobody.**
@@ -172,6 +173,19 @@ eventually let it hold one.
 
 ## Version
 
+`0.7.1` — **the manifest declares `lifecycle: draft`.** The field was absent, and
+absent reads as `unknown` — *nobody has said*. Something was known: this is
+developed by its maintainers for their own use, and its shape can reverse
+without notice.
+
+**Publication did not promote it.** Being reachable by somebody who did not
+write it makes the question live rather than answering it, and the answer here
+is *still a draft* — which is a legitimate thing to publish, and says more than
+silence did.
+
+Patch: a fact written down. Nothing an adopter is obliged to do has changed, and
+`unknown` promised nothing that `draft` withdraws.
+
 `0.7.0` — **`lifecycle_status` is now `lifecycle`.**
 
 **Same values, same meaning, shorter name**, renamed in the knowledge format
@@ -246,7 +260,7 @@ in has been renamed, and `applies_to` is still read while the rename finishes.
 `0.5.0` — **vocabulary.** `moment` becomes `event` — a moment is a point in
 time and `applies_to` takes nouns. `compliance` is dropped wherever it was
 saying nothing: a policy binds unless it says otherwise, so only a strong
-default declares `recommended`, and a workflow's steps bind by being steps.
+default declares `recommended`, and a procedure's steps bind by being steps.
 Type Definitions use `field_presence: required` for what was
 `obligation: mandatory`, matching the format.
 
@@ -279,7 +293,7 @@ line below.
 
 **`session-handoff` had no rule about work continuing after the note is
 written.** It went stale within a minute of being handed over, because a pull
-request merged after step 7. `pinned` is now written last, and the workflow says
+request merged after step 7. `pinned` is now written last, and the procedure says
 plainly that once the note exists the session is over — if work continues, the
 handoff has not happened yet.
 
@@ -292,12 +306,12 @@ not close it; the closing move is a harness hook, recorded in
 
 `0.1.0`. **The rest of this has still not been run.** The reasoning is drawn from real losses
 — dead ends re-run after a compaction, learnings recorded and never applied,
-notes found months later and believed — but the workflows themselves are
+notes found months later and believed — but the procedures themselves are
 untested.
 
 **The boundary between handoff and close is the thing most likely to move.**
 They share most of their steps and differ in who reads the result, and it will
-take a few real sessions to know whether that difference earns two workflows or
+take a few real sessions to know whether that difference earns two procedures or
 one with a switch. The case for two is that they were argued from genuinely
 different situations rather than from symmetry.
 

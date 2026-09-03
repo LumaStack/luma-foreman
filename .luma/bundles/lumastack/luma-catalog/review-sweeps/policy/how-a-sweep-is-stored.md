@@ -2,9 +2,7 @@
 type: policy
 title: How a sweep is stored
 description: Where a review sweep lives, why it is backlog rather than a record, and the two units — the file that must be covered and the cluster actually reviewed in one go.
-matches:
-  - topic: running or resuming a review sweep
-  - path: ".luma/backlog/sweeps/**"
+matches: eager
 ---
 
 # How a sweep is stored
@@ -374,6 +372,56 @@ somebody else's work, and its findings are worth something.*
 **The sweep directory is a slug for what is being read** — `the-cli-surface`,
 `everything`, `docs-and-prose`. No date, and no commit: a sweep spans many of
 both, and pinning either in the name would be a claim it cannot keep.
+
+### At the close, rename it if it is far enough off
+
+**A sweep's scope moves** — exclusions arrive, whole areas get deferred — and
+the name that made sense at the start can end up making a claim the sweep did
+not keep. **`the-whole-of-foreman` that skipped every source file is a directory
+whose name is false**, and the directory name is the first thing anybody sees,
+before the charter or the index could correct it.
+
+**Only when it is far enough off.** The test is whether the name would **mislead
+somebody deciding whether to read it** — not whether it is imprecise. Most
+sweeps drift a little and should be left alone; **renaming for a small
+inaccuracy costs more than the inaccuracy does.**
+
+**At the close, not during.** Mid-sweep you do not yet know what it became, and
+a rename while slices are still being written is churn against a moving target.
+**The close is the first moment the answer is settled.**
+
+**Then grep the old slug and repair what points at it.** That is the whole
+procedure: rename the directory, correct the title, search, fix.
+
+### A slug must be greppable, which is what makes that safe
+
+**Two or three distinctive words, never one common one.** `the-docs-of-foreman`
+can be searched for and every reference found. **`docs` cannot** — it matches
+half the repository and sits inside a dozen unrelated words.
+
+**A slug that cannot be grepped is a slug that cannot be renamed**, and the cost
+of choosing one is paid later by somebody who did not choose it.
+
+**No opaque identifier is added, deliberately.** One would make renaming
+mechanical, at the price of meaningless characters in every path forever — to
+insure an artifact **designed to be spent**, archived at the close and deleted
+after. *Decision records carry `ADR-NNNN` because they are kept indefinitely and
+cited forever. A sweep is not, and should not pay the same price.*
+
+**Three things would change that**: sweeps collected across repositories, where
+a grep cannot reach the references; sweeps becoming kept records rather than
+backlog; or a second rename, where the grep needs two old names and the
+knowledge that both existed.
+
+### Provenance keeps the old name
+
+*"Raised during sweep `the-whole-of-foreman`, slice 001"* stays exactly as
+written. **It says what the sweep was called then**, and rewriting it makes a
+true sentence false — the same boundary that protects released changelog
+entries and a bundle's own version history.
+
+**Grep repairs live pointers, not history.** The test is whether the sentence
+describes the sweep now, or describes a moment.
 
 **Slices are numbered and slugged** — `001-entrypoint-and-args.md`. The number
 is the identity and the order they happened in; the slug is for finding one

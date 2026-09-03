@@ -105,7 +105,7 @@ missing bundle, and worth surfacing rather than inventing a directory for.>
 ```markdown
 ## For the successor
 
-<Who this was written for, from step 1 of the handoff workflow, and what
+<Who this was written for, from step 1 of the handoff procedure, and what
 they can be assumed to already have: tooling, bundles, memory, prior
 context.>
 ```

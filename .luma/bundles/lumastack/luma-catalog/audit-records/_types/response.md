@@ -13,7 +13,7 @@ fields:
   respondent:
     field_presence: recommended
     field_type: actor
-    desc: "who or what answered (§7.4)"
+    desc: "who or what answered"
   round:
     field_presence: optional
     field_type: number
