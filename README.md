@@ -32,8 +32,8 @@ luma-foreman apply
 ```
 
 A bundle is distributed knowledge containing policy, procedures, and more.
-- `catalog add` registers where knowledge comes from, once per project. 
-- `get` downloads bundles into this project.
+- `catalog add` registers where knowledge comes from, once per catalog. 
+- `get` downloads shared bundles into this project.
 - `apply` wires up each agent harness with thin adapaters, so all agents use the knowledge bundle at the right time without hand holding.
 
 ## Where distributed knowledge lives
