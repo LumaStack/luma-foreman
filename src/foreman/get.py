@@ -33,6 +33,7 @@ USAGE = """Adopt a bundle from a catalog into this project, and record what you 
 To see what a catalog publishes: luma-foreman catalog show <name>
 
   --from <catalog>   a path to a catalog checkout, or a git URL. Defaults to
+                     the source recorded for an already-adopted bundle, then
                      [catalog] source in .luma/config/luma-foreman.toml
 
 A bundle is addressed <namespace>/<name>, and the namespace is the catalog's.
@@ -265,6 +266,21 @@ def main(argv: list[str]) -> int:
     if target and not target.is_dir():
         return _err(f"not a directory: {target}")
 
+    if source is None:
+        # A bundle already adopted records where it came from, and re-taking
+        # it is the common case — demanding --from for a fact the receipt
+        # already holds made an operator repeat the tool's own record back to
+        # it, eighteen times in one migration. The recorded source outranks
+        # the configured default deliberately: it is this bundle's lineage,
+        # and same_origin would refuse a differing default anyway.
+        entries = adoption.read(project_root)
+        entry = entries.get(requested[0])
+        if entry is None:
+            named = [e for e in entries.values() if e.name == requested[0]]
+            if len(named) == 1:
+                entry = named[0]
+        if entry and entry.source:
+            source = entry.source
     if source is None:
         source = config.catalog_source(project_root)
     if source is None:

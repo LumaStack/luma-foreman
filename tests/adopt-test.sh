@@ -156,6 +156,12 @@ grepped '`acme/widgets` 0.1.0' "$MANIFEST"
 grepped "  - commit: $COMMIT" "$MANIFEST"
 grepped '  - sha256: ' "$MANIFEST"
 
+# Re-taking an adopted bundle needs no --from: the receipt records the
+# source, and demanding it back made an operator repeat the tool's own
+# record to it. A bundle nothing records still requires one.
+get 're-get defaults to the recorded source' 0 acme/widgets
+get 'an unrecorded bundle still needs --from' 2 acme/unheard-of
+
 # Adopting again is a no-op, not a second copy.
 get 'adopt twice' 0 acme/widgets --from "$CATALOG"
 has 'already at 0.1.0'
