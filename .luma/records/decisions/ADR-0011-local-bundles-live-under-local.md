@@ -61,6 +61,18 @@ the catalog's namespace), so hiding the rename bought nothing.
 **A bare single-segment name as the local marker** — rejected: it is a
 convention only a reader who knows it can see, where `local/` is a word.
 
+**A symlink left at `local/x` after promotion**, so inbound links keep
+resolving — rejected on the estate's own precedents. An alias lets the
+old name live forever, so the repoint never finishes (the same reason
+renamed CLI commands are errors that point, never aliases); a directory
+symlink makes discovery find one bundle under two IDs; Windows checks
+symlinks out as plain text files, silently breaking the
+readable-anywhere guarantee; and it would put a published identity back
+inside `local/`, the exact lie the namespace exists to make impossible.
+The links are intra-project by construction, the repoint is mechanical,
+and a missed one fails loudly — `inspect` reports dangling wikilinks —
+which is detection doing the job prevention was being asked for.
+
 ## Re-open when
 
 A project needs more than one tier of unpublished bundle — staged for one
