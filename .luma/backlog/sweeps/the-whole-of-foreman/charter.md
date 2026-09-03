@@ -177,7 +177,7 @@ directory and little else.
 | ideas A · B · C | the idea backlog, split on size in path order |
 | entry and shared | the command-line entry point and the modules everything uses |
 | adoption path | `get`, `init`, adoption, catalog, outdated |
-| apply | the projection engine |
+| apply | what `apply` writes, and the adapters it writes |
 | inspect | the checker and its rules |
 | agent permissions | the gate, its model, and its command surface |
 | tests | the suites |

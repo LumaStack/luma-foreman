@@ -48,6 +48,8 @@ except = [
   ".luma/backlog/ideas/routers.md",                                 # ...and these three
   ".luma/backlog/ideas/bundle-routines.md",                         # ...argue about it
   ".luma/backlog/ideas/apply-writes-an-entry-point-not-an-index.md",
+  ".luma/backlog/sweeps/the-whole-of-foreman/journal.md",            # reports the retirement
+  ".luma/backlog/sweeps/the-whole-of-foreman/slices/005-decisions.md",  # ...and its findings
 ]
 
 [[retired]]
@@ -59,6 +61,10 @@ except = [
   "src/foreman/inspect/rules/vocabulary.py",  # ...and this rule explains the word
   "tests/agent-permissions-cli-test.sh",      # ...and the tests pin those messages
   "tests/inspect-test.sh",                    # ...and its fixtures use it as data
+  # The sweep that caught the charter revival had to quote the word to report
+  # it. The charter itself stays checked — that is where the revival was.
+  ".luma/backlog/sweeps/the-whole-of-foreman/journal.md",
+  ".luma/backlog/sweeps/the-whole-of-foreman/slices/005-decisions.md",
 ]
 
 [[retired]]
@@ -70,4 +76,5 @@ except = [
   "tests/adopt-test.sh",                      # ...and one test builds an old marker
   "tests/agent-permissions-cli-test.sh",      # ...and the tests pin those messages
   "tests/inspect-test.sh",                    # ...and its fixtures use it as data
+  ".luma/backlog/sweeps/the-whole-of-foreman/journal.md",  # lists what was retired
 ]
