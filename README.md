@@ -40,8 +40,8 @@ A bundle is distributed knowledge containing policy, procedures, and more.
 
 Shared knowledge is saved inside bundles and then uploaded to a 
 [catalog](https://github.com/LumaStack/luma-catalog). You can think of a catalog 
-as a library of knowledge, you can pick and choose from. And the foreman tool helps 
-distribute selected bundles of knowledge to each project that needs them. And foreman
+as a library of knowledge, that you can pick and choose from. And the foreman tool helps 
+distribute selected bundles of knowledge to every project that needs them. Foreman
 can support as many or as few catalogs as you'd like.
 
 ## Where to go next
