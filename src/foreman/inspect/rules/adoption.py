@@ -1,6 +1,6 @@
 """Adopted bundles that are no longer what was adopted.
 
-**Adoption without this check is just a copy.** The record in `adopted.toml`
+**Adoption without this check is just a copy.** The record in `MANIFEST.md`
 claims a project holds a particular bundle at a particular version, byte for
 byte; nothing enforces that claim, and every way it can go wrong is quiet.
 
@@ -74,7 +74,7 @@ def check(repo: Path) -> Result:
             "high",
             f"{len(missing)} adopted bundle(s) are recorded but not here",
             missing,
-            "Re-adopt them, or drop the entry from .luma/bundles/adopted.toml. "
+            "Re-adopt them, or drop the entry from .luma/bundles/MANIFEST.md. "
             "Anything linking into a bundle that is not there is already broken.",
         )
 
@@ -109,7 +109,7 @@ def check(repo: Path) -> Result:
             "low",
             f"{len(orphaned)} record(s) name a bundle that is not on disk",
             orphaned,
-            "Housekeeping in .luma/bundles/adopted.toml.",
+            "Housekeeping in .luma/bundles/MANIFEST.md.",
         )
 
     return result

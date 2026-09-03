@@ -88,7 +88,7 @@ def _file_tool_decision(path: str) -> tuple[str, str] | None:
 # declares as blocking is not a preference that a preference can outrank.
 #
 # The only ways out are to stop adopting the Bundle or to fork it into your own
-# namespace — both visible in `adopted.toml`, where editing the vendored copy
+# namespace — both visible in `MANIFEST.md`, where editing the vendored copy
 # instead is drift that `inspect` reports.
 
 

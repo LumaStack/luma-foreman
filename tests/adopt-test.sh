@@ -125,7 +125,7 @@ mkdir -p "$PROJECT"
 git -C "$PROJECT" init -q
 
 VENDORED=$PROJECT/.luma/bundles/acme/widgets
-MANIFEST=$PROJECT/.luma/bundles/adopted.toml
+MANIFEST=$PROJECT/.luma/bundles/MANIFEST.md
 
 # --- listing a catalog ----------------------------------------------------------
 # `get --list` is retired: browsing a catalog was never an adoption operation.
@@ -153,9 +153,9 @@ has 'adopted 0.1.0'
 exists "$VENDORED/BUNDLE.md"
 exists "$VENDORED/workflows/make-a-widget.md"
 exists "$MANIFEST"
-grepped 'version  = "0.1.0"' "$MANIFEST"
-grepped "commit   = \"$COMMIT\"" "$MANIFEST"
-grepped 'checksum = "sha256:' "$MANIFEST"
+grepped '`acme/widgets` 0.1.0' "$MANIFEST"
+grepped "  - commit: $COMMIT" "$MANIFEST"
+grepped '  - sha256: ' "$MANIFEST"
 
 # Adopting again is a no-op, not a second copy.
 get 'adopt twice' 0 acme/widgets --from "$CATALOG"
@@ -517,7 +517,7 @@ LAST=$(cd "$LIN" && "$CLI" get widgets --from "$T/lfk" 2>&1); got=$?
 case $LAST in *"different catalog"*) ok ;; *) bad 'refusal did not say why' ;; esac
 case $LAST in *"$T/lup"*) ok ;; *) bad 'refusal did not name what is held' ;; esac
 case $LAST in *"$T/lfk"*) ok ;; *) bad 'refusal did not name what was asked for' ;; esac
-grep -q "$T/lup" "$LIN/.luma/bundles/adopted.toml" \
+grep -q "$T/lup" "$LIN/.luma/bundles/MANIFEST.md" \
   && ok || bad 'a refused switch changed the receipt'
 
 # A trailing slash is not a different catalog. The check compares origins rather
@@ -526,7 +526,7 @@ grep -q "$T/lup" "$LIN/.luma/bundles/adopted.toml" \
 # the check is pedantic is how they reach for it on the day it is right.
 LAST=$(cd "$LIN" && "$CLI" get widgets --from "$T/lup/" 2>&1); got=$?
 [ "$got" -eq 0 ] && ok || bad "a trailing slash read as a new lineage (exit $got): $LAST"
-grep -q "$T/lup" "$LIN/.luma/bundles/adopted.toml" \
+grep -q "$T/lup" "$LIN/.luma/bundles/MANIFEST.md" \
   && ok || bad 'the receipt moved for a cosmetic difference'
 
 # --force takes it, and reports a lineage change rather than a version event —
@@ -534,7 +534,7 @@ grep -q "$T/lup" "$LIN/.luma/bundles/adopted.toml" \
 LAST=$(cd "$LIN" && "$CLI" get widgets --from "$T/lfk" --force 2>&1); got=$?
 [ "$got" -eq 0 ] && ok || bad "forced switch (exit $got): $LAST"
 case $LAST in *"from another catalog"*) ok ;; *) bad "not reported as a switch: $LAST" ;; esac
-grep -q "$T/lfk" "$LIN/.luma/bundles/adopted.toml" \
+grep -q "$T/lfk" "$LIN/.luma/bundles/MANIFEST.md" \
   && ok || bad 'the receipt did not record the new source'
 
 # --- a namespace derives from where the catalog lives ---------------------------

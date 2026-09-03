@@ -6,7 +6,7 @@ argument — a path or a URL — and that is deliberate: adoption is a copy with
 receipt, not a subscription, so there is no relationship to keep.
 
 **So the set is derived rather than stored.** It is the distinct `source`
-values in `adopted.toml`, plus `[catalog] source` if the project sets one.
+values in `MANIFEST.md`, plus `[catalog] source` if the project sets one.
 That is already how `outdated` decides where to look, and it means the
 org-private-plus-universal case works with nothing registered.
 

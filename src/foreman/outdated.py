@@ -115,7 +115,7 @@ def main(argv: list[str]) -> int:
 
     if not adoption.read(project_root):
         print(
-            "nothing adopted — .luma/bundles/adopted.toml holds no entries.",
+            "nothing adopted — .luma/bundles/MANIFEST.md holds no entries.",
             file=sys.stderr,
         )
         return 2

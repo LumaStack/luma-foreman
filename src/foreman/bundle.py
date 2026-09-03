@@ -1,6 +1,6 @@
 """What this project holds, and where each piece came from.
 
-**The inventory existed before any command read it.** `adopted.toml` has always
+**The inventory existed before any command read it.** `MANIFEST.md` has always
 carried the version, source, commit and checksum of every bundle; nothing
 printed it. The closest thing was `outdated`, which needs a network and frames
 the answer as a version comparison, and the command whose name sounded right —
@@ -28,6 +28,10 @@ USAGE = """What this project has taken, and what shape it is in.
   luma-foreman bundle index <dir>     generate a bundle's INDEX.md (--check to
                                       verify instead) — an authoring act; it
                                       refuses a vendored copy
+  luma-foreman bundle migrate-manifest
+                                      rewrite the record canonically as
+                                      .luma/bundles/MANIFEST.md, retiring a
+                                      legacy adopted.toml if one remains
 
   --to <project>   a project other than this repository
 
@@ -68,7 +72,7 @@ def _documents(home: Path) -> list[str]:
 def listing(project_root: Path) -> int:
     entries = adoption.read(project_root)
     if not entries:
-        print("nothing adopted — .luma/bundles/adopted.toml holds no entries.")
+        print("nothing adopted — .luma/bundles/MANIFEST.md holds no entries.")
         print()
         print("  luma-foreman get <bundle> --from <catalog>")
         return 0
@@ -177,6 +181,20 @@ def main(argv: list[str]) -> int:
 
     project_root, _ = project.resolve(target or Path.cwd())
 
+    if verb == "migrate-manifest":
+        if operands:
+            return _err(f"migrate-manifest takes no arguments (got: {operands[0]})")
+        entries = adoption.read(project_root)
+        legacy = adoption.legacy_path(project_root)
+        if not entries and not legacy.is_file():
+            print("nothing recorded — no manifest and no legacy file to migrate.")
+            return 0
+        had_legacy = legacy.is_file()
+        adoption.write(project_root, entries)
+        target = adoption.manifest_path(project_root).relative_to(project_root)
+        print(f"wrote {target} ({len(entries)} entr{'y' if len(entries) == 1 else 'ies'})"
+              + (", retired adopted.toml" if had_legacy else ""))
+        return 0
     if verb == "list":
         if operands:
             return _err(f"list takes no arguments (got: {operands[0]})")
