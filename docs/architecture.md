@@ -92,6 +92,12 @@ exactly.
 **A bundle with no version cannot be adopted at all**, because a project holding
 one could say nothing honest about what it has.
 
+**A bundle written here, not yet published, lives under `local/`** —
+`.luma/bundles/local/<bundle-name>/`, a reserved namespace no catalog may
+derive or declare. The name states the one true fact about it: no published
+identity yet. Publication is the rename to a real namespace, and
+`migrate-bundle` owns the move (ADR-0011).
+
 ## How apply reaches an agent
 
 **`apply` writes thin adapters for each harness, never copies.** A procedure

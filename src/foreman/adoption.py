@@ -95,8 +95,9 @@ def vendored(project: Path, bundle: str) -> Path:
     address — ``lumastack/luma-catalog`` — with any number of segments, the
     bundle name always the last. Two catalogs from one organization therefore
     vendor side by side, and a bundle's full ID says where it came from just
-    by being read. It is in the path because a ``vendor/`` directory would put
-    the same fact in two places, and two copies of one fact can disagree.
+    by being read. A bundle written here and not yet published lives under
+    the reserved ``local/`` namespace instead — the path tells local from
+    vendored by shape, exactly as the manifest's bare entries do (ADR-0011).
     """
     return bundles_dir(project) / bundle
 
