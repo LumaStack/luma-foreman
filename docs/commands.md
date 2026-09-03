@@ -42,7 +42,7 @@ luma-foreman get <bundle> --force       # replace a copy that no longer matches
 source` in the project config.
 
 **A fetch with a receipt.** The bundle lands in
-`.luma/bundles/<namespace>/<name>/` — the namespace derives from the
+`.luma/bundles/<namespace>/<bundle-name>/` — the namespace derives from the
 catalog's address (`lumastack/luma-catalog`), so two catalogs from one
 organization vendor side by side — and `MANIFEST.md` records the version, origin,
 catalog commit, and a checksum of exactly what landed.

@@ -41,7 +41,7 @@ becomes lumastack/luma-catalog — unless CATALOG.md declares one, which wins.
 A fork therefore gets its own namespace without anybody arranging it.
   --to <project>     the project to adopt into (default: this repository)
 
-The bundle lands in .luma/bundles/<namespace>/<name>/ and is committed with the rest
+The bundle lands in .luma/bundles/<namespace>/<bundle-name>/ and is committed with the rest
 of the project. Nothing is resolved and nothing is fetched later — bundles
 depend on nothing, which is what keeps this a copy rather than an install.
 

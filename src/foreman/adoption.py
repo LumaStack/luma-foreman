@@ -89,7 +89,7 @@ def legacy_path(project: Path) -> Path:
 
 
 def vendored(project: Path, bundle: str) -> Path:
-    """Where a bundle lives once adopted: ``.luma/bundles/<namespace>/<name>/``.
+    """Where a bundle lives once adopted: ``.luma/bundles/<namespace>/<bundle-name>/``.
 
     The namespace is the catalog identifier, derived from the catalog's
     address — ``lumastack/luma-catalog`` — with any number of segments, the
