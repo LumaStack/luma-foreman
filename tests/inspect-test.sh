@@ -343,8 +343,8 @@ has 'no type'
 d=$(bundle bentry)
 # --- nothing may exist that no transport can reach ------------------------------
 #
-# Three routes get a Document to a reader: it declares a trigger, it is named on
-# its bundle's ring, or something reachable links to it. With none it is
+# Three routes get a Document to a reader: it declares a trigger, it is named in
+# its bundle's index, or something reachable links to it. With none it is
 # present, conformant and invisible — and invisible cannot be told from absent,
 # which is the failure the whole design exists to end.
 #
@@ -365,6 +365,25 @@ printf -- '---\ntype: policy\ntitle: Rule\nmatches: always\n---\nSee [[adrift]].
   > "$d/b/rule.md"
 run 'linked from something reachable' 0 "$d"
 lacks 'nothing can reach'
+
+# A procedure reaches its harness as a skill — registered by name and
+# description at startup — so it is routed without declaring anything, and
+# `matches` on one is legal and unread. Reporting it as unreachable is a
+# notice nobody can act on, which is what teaches people to skim notices.
+mkdir -p "$d/b/procedure"
+printf -- '---\ntype: procedure\ntitle: Do a thing\n---\nSteps.\n' \
+  > "$d/b/procedure/do-a-thing.md"
+run 'a procedure is routed by registration' 0 "$d"
+lacks 'nothing can reach'
+
+# ...and under the name the spec retired at v0.0.19, because a bundle
+# published before the rename is still adopted somewhere, and an exemption
+# that only knows the new word starts firing on every one of them.
+printf -- '---\ntype: workflow\ntitle: Old spelling\n---\nSteps.\n' \
+  > "$d/b/procedure/old-spelling.md"
+run 'the retired type name is exempt too' 0 "$d"
+lacks 'nothing can reach'
+rm "$d/b/procedure/old-spelling.md"
 
 printf -- '---\ntype: bundle\nversion: 0.1.0\nentrypoint: workflows/nope\n---\nx\n' > "$d/b/BUNDLE.md"
 run 'entrypoint resolves to nothing' 1 "$d"

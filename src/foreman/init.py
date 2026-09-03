@@ -220,7 +220,7 @@ def run(target: Path, catalog: str | None) -> int:
     if found:
         print()
         print(f"This project already keeps records in {', '.join(found)}.")
-        print("The `migrate-into-luma` workflow in luma-layout moves an")
+        print("The `migrate-into-luma` procedure in luma-layout moves an")
         print("existing project in, rather than leaving two places to look.")
     return 0
 

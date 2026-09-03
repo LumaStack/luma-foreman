@@ -8,7 +8,7 @@ is the whole reason this rule exists: the format tolerates, and foreman rejects.
 
 **Structural checks only.** Everything here follows from the format and the
 bundle model, so it holds for any bundle regardless of whose conventions it
-follows. Which directories a bundle uses, how its workflows are named, when it
+follows. Which directories a bundle uses, how its procedures are named, when it
 may call itself `1.0.0` — those are an organization's opinions, they arrive by
 adoption rather than by being compiled in, and a tool that hardcoded them would
 be deciding standards rather than enforcing them.
@@ -282,8 +282,8 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
                 missing.append(f"{rel}.md -> {target}")
 
     # **Nothing may exist that no transport can reach.** Three routes get a
-    # Document to a reader: it declares a trigger, it is named on its bundle's
-    # ring, or something reachable links to it. A Document with none is present,
+    # Document to a reader: it declares a trigger, it is named in its bundle's
+    # index, or something reachable links to it. A Document with none is present,
     # conformant, and invisible — and invisible is indistinguishable from
     # absent, which is the one thing this whole design exists to end.
     #
@@ -296,7 +296,7 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
     def _owned(doc_id: str) -> bool:
         """Is this reached through the Document owning its directory?
 
-        A tutorial's steps live under the workflow that runs them and are
+        A tutorial's steps live under the procedure that runs them and are
         reachable only through it, which is the intended shape rather than a
         defect — twenty-one steps with no trigger apiece is the design working.
         """
@@ -308,9 +308,15 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
         if doc_id != "BUNDLE"
         and doc_id != entry
         and doc_id not in triggered
-        # A workflow reaches its harness as a skill, and a policy is named on
-        # its bundle's ring whatever its class — both are already routed.
-        and kinds.get(doc_id) not in ("workflow", "policy")
+        # A procedure reaches its harness as a skill, and a policy is named in
+        # its bundle's index whatever its class — both are already routed.
+        #
+        # `workflow` is the type name the spec retired at v0.0.19, kept here
+        # for the same reason `entrypoint` still fires above: an exemption
+        # that only knows the new name starts reporting every unrepublished
+        # bundle's procedures as unreachable, and a notice nobody can act on
+        # is what teaches people to skim notices.
+        and kinds.get(doc_id) not in ("procedure", "workflow", "policy")
         # A Type Definition is resolved by the format when writing a Document of
         # its type. It is a contract consulted on demand, never reading material,
         # and nothing should link to it to make it look reachable.
@@ -325,7 +331,7 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
                 summary=f"{label}: {len(unreachable)} document(s) nothing can reach",
                 evidence=tuple(unreachable),
                 remedy=(
-                    "No trigger, no line on this bundle's ring, and nothing "
+                    "No trigger, no line in this bundle's index, and nothing "
                     "links to it — so it is present and cannot be arrived at. "
                     "Give it a matches, link it from something that is "
                     "reachable, or delete it. Being buried is fine; being "
