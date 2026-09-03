@@ -28,7 +28,7 @@ luma-foreman catalog add https://github.com/LumaStack/luma-catalog
 luma-foreman get lumastack/luma-catalog/git-workflow
 luma-foreman apply
 
-# SUCCESS! Agents will now use git correctly for this project.
+# SUCCESS! Agents now use git correctly for this project.
 ```
 
 A bundle is distributed knowledge containing policy, procedures, and more.
