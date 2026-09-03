@@ -13,11 +13,9 @@ supposed to work, everyone agrees — and six months later no two repositories
 look alike. The standards spread through best intentions, which means drift
 and failure are inevitable.
 
-An agent either amplifies this problem or becomes the solution. An unaware
-agent will confidently violate the standards everyone agreed to; an informed
-agent will uphold them just as confidently — in every project, every time.
-Agents can solve our standards problems once and for all through reliable
-distribution and governance.
+Agents can either amplify this problem or become the solution. An unaware
+agent will confidently violate our shared standards; an informed
+agent will relentlessly uphold them — in every project, every time.
 
 **So foreman standardizes knowledge delivery** for agents. It runs inside a
 repository: distributing shared knowledge, wiring up each harness, and
@@ -40,9 +38,10 @@ without hand holding.
 
 ## Where distributed knowledge lives
 
-A shared **bundle** is usually found inside a **catalog**. You can think of a
-catalog as a library of knowledge; and the foreman tool helps distribute
-individual knowledge bundles to each project that needs them.
+Shared knowledge is saved inside bundles and then uploaded to a 
+[catalog](https://github.com/LumaStack/luma-catalog). You can think of a catalog 
+as a library of knowledge, you can pick and choose from. And the foreman tool helps 
+distribute selected bundles of knowledge to each project that needs them.
 
 ## Where to go next
 
