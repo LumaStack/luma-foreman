@@ -157,7 +157,7 @@ def run(
             f"holds:  {existing.source}\n"
             f"  asked:  {catalog.source}\n"
             "  Same name, different origin — an upgrade would silently swap "
-            "what this bundle is. --force to switch lineage; adopted.toml "
+            "what this bundle is. --force to switch lineage; MANIFEST.md "
             "records the new source.",
         )
 
