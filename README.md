@@ -32,9 +32,9 @@ luma-foreman apply
 ```
 
 A bundle is distributed knowledge containing policy, procedures, and more.
-- `catalog add` registers where knowledge comes from, once — after that a bundle's ID is enough to resolve it. 
-- `get` copies any bundle into `.luma/bundles/` with a receipt — version, origin, catalog commit, checksum.
-- `apply` wires up each agent harness with thin adapaters, so an agent can use the knowledge bundle at the right time without hand holding.
+- `catalog add` registers where knowledge comes from, once per project. 
+- `get` downloads bundles into this project.
+- `apply` wires up each agent harness with thin adapaters, so all agents use the knowledge bundle at the right time without hand holding.
 
 ## Where distributed knowledge lives
 
