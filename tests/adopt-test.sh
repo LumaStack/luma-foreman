@@ -898,10 +898,61 @@ grep -q 'description: >-' "$NEW/.luma/bundles/local/house-rules/BUNDLE.md" \
 grep -q '^published:' "$NEW/.luma/bundles/local/house-rules/BUNDLE.md" \
   && bad 'a local bundle claimed a publish date' || ok
 
-# The one refusal. A BUNDLE.md is what makes a directory a bundle, so
-# overwriting one discards the bundle rather than the file.
-new 'an existing bundle is never overwritten' 1 new house-rules
-has 'already a bundle'
+# The bare entry is the whole distinction: no source, no commit, no checksum,
+# because a bundle written here has no custody. The shape says which kind it
+# is — there is no `local: true` flag restating what the lines already show.
+grepped '^- `local/house-rules` 0.1.0$' "$NEW/.luma/bundles/MANIFEST.md"
+grep -A 1 'local/house-rules' "$NEW/.luma/bundles/MANIFEST.md" | grep -q '  - ' \
+  && bad 'a bundle written here recorded custody it does not have' || ok
+
+# ...and the manifest is what `list`, `show` and `set` read, so all three now
+# see a bundle nobody adopted. `apply` and `inspect` always did — they walk
+# disk — and the two halves disagreeing is what this entry ends.
+new 'list sees a bundle written here' 0 list
+has 'house-rules'
+new 'show sees it' 0 show local/house-rules
+has 'written    here'
+lacks 'source     '
+new 'and intent can be recorded against it' 0 set local/house-rules register nothing
+has 'register: nothing'
+grepped '  - register: nothing' "$NEW/.luma/bundles/MANIFEST.md"
+new 'back to the default' 0 unset local/house-rules register
+
+# Idempotent, and never destructive — `init`'s contract. A second run adds
+# whatever is missing and leaves every existing file exactly as it is. A
+# BUNDLE.md is never overwritten either way: that file is what makes a
+# directory a bundle, so replacing it discards the bundle rather than the file.
+before=$(cat "$NEW/.luma/bundles/local/house-rules/BUNDLE.md")
+new 'a second run has nothing to do' 0 new house-rules
+has 'already there, left alone'
+has 'already recorded, left alone'
+has 'Nothing to do'
+[ "$before" = "$(cat "$NEW/.luma/bundles/local/house-rules/BUNDLE.md")" ] \
+  && ok || bad 'a second run rewrote BUNDLE.md'
+
+# The claiming half: a complete bundle somebody wrote by hand, with no entry.
+# It supplies the missing half and reads the author's own version rather than
+# the template's — refusing here would make somebody do by hand the work the
+# refusal had just finished diagnosing.
+mkdir -p "$NEW/.luma/bundles/local/handmade"
+printf -- '---\ntype: bundle\ntitle: local/handmade\nversion: 2.3.0\nstage: stable\ndescription: Written by hand.\n---\nx\n' \
+  > "$NEW/.luma/bundles/local/handmade/BUNDLE.md"
+new 'a hand-written bundle is claimed, not refused' 0 new handmade
+has 'already there, left alone'
+has 'recorded 2.3.0'
+grepped '^- `local/handmade` 2.3.0$' "$NEW/.luma/bundles/MANIFEST.md"
+# ...and it is not told to fill in TODOs that are not in its file.
+lacks 'the TODOs'
+
+# `outdated` reads the manifest too, so entries with no source now reach it. A
+# bundle written here has no upstream, which is not the same as an upstream
+# nobody could reach — reporting it as unanswered would make every project
+# holding a local bundle carry a permanent question mark. Offline, because
+# there is nothing here to ask.
+new 'a bundle written here is not an unanswered question' 0 outdated
+has 'written here'
+lacks 'no source on record'
+lacks 'could not be answered'
 
 # Onto a directory somebody drafted by hand, which is the retrofit: it says so,
 # and names what was already there, because the template it just wrote
