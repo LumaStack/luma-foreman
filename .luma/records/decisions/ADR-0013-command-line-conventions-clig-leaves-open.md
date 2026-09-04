@@ -57,10 +57,10 @@ CLIG says bare `myapp` shows full help, and for a git-like tool it names
 not say what bare `myapp subcommand` does. This extends the rule it does
 state to the level it does not: a noun behaves like the program.
 
-**An error message contains the command to run when possible.** Not a description of what
-to type, and not a syntax to work out — the literal line, ready to copy.
-Where the right command depends on what the project holds, the code reads
-that and prints the real thing:
+**An error message contains the command to run when possible.** Not a
+description of what to type, and not a syntax to work out — the literal
+line, ready to copy. Where the right command depends on what the project
+holds, the code reads that and prints the real thing:
 
 ```
 luma-foreman get: bundle-manager is not a bundle ID — a bundle is addressed
