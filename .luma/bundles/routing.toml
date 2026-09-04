@@ -6,14 +6,6 @@
 # writes here.
 
 [[rule]]
-bundle = "local/command-line-interface"
-document = "policy/command-line-interface-guidelines"
-title = "Command line interface guidelines"
-path = ".luma/bundles/local/command-line-interface/policy/command-line-interface-guidelines.md"
-on_violation = "allow"
-matches = ["eager"]
-
-[[rule]]
 bundle = "lumastack/luma-catalog/audit-records"
 document = "policy/audit-layout"
 title = "How audits are stored"
@@ -76,6 +68,14 @@ title = "Where a bundle belongs"
 path = ".luma/bundles/lumastack/luma-catalog/bundle-manager/policy/where-a-bundle-belongs.md"
 on_violation = "allow"
 matches = ["topic:deciding which catalog a bundle belongs in"]
+
+[[rule]]
+bundle = "lumastack/luma-catalog/command-line-interface"
+document = "policy/command-line-interface-guidelines"
+title = "Command line interface guidelines"
+path = ".luma/bundles/lumastack/luma-catalog/command-line-interface/policy/command-line-interface-guidelines.md"
+on_violation = "allow"
+matches = ["eager"]
 
 [[rule]]
 bundle = "lumastack/luma-catalog/decision-records"

@@ -177,7 +177,6 @@ $ luma-foreman publish command-line-interface lumastack/luma-catalog
 merged  lumastack/luma-catalog/command-line-interface 0.1.0
   vendored   .luma/bundles/lumastack/luma-catalog/command-line-interface
   removed    local/command-line-interface
-  repointed  1 reference
   applied    5 files
 ```
 
@@ -272,6 +271,21 @@ loudly — `inspect` reports dangling wikilinks". That is currently truer of the
 record than of the code: ADR-0013 cites this bundle as a bare path, not a
 wikilink, so nothing would catch it.
 
+> **Reversed by the first real handover.** Rewriting was wrong almost
+> everywhere. Of the files naming `local/command-line-interface`, one was a
+> genuine pointer and the other was this plan — which discusses the unpublished
+> identity throughout, including the three manifest states it illustrates.
+> Substituting the new ID collapsed all three into the same line and turned the
+> context paragraph into *"a bundle written here and published nowhere"* naming
+> a published bundle. ADR-0013 would have gone the same way had it argued about
+> the namespace rather than merely citing a path.
+>
+> **Nothing separates a pointer from prose about the old state by inspection**,
+> because the difference is what the sentence means. So `publish` reports and
+> exits 1, which is what `remove` already does with the same question, and what
+> ADR-0011 counted on: a missed reference fails loudly rather than being
+> prevented.
+
 ### `remove`
 
 Top-level, mirroring `get`, and the primitive `publish` uses to retire the
@@ -352,8 +366,8 @@ because foreman normalises before the request is opened, the easy-defect class
 largely never reaches the catalog. What is left is an author's judgment call or
 a real fault, and neither is safe to auto-commit.
 
-**The reference sweep exits non-zero** when something still cites a bundle that
-left.
+**The reference sweep exits non-zero** when something still cites a bundle
+that left — and it reports rather than rewrites; see the correction above.
 
 **`published:` is set when the request is opened.** Early if review runs long,
 and nothing else sets it.

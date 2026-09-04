@@ -124,6 +124,12 @@ possibilities are named rather than guessed between, and asking again takes
 has not been published. A namespaced entry always carries a checksum and says
 where it came from; `inspect --rule adoption` reports one that does not.
 
+**What still names the old ID is reported, never rewritten**, and exit 1 says
+so. Most documents mentioning a bundle's `local/` ID are documents *about* it
+not being published yet, and substituting the new ID into those makes each one
+contradict itself. Nothing tells those apart from a genuine pointer by
+inspection, because the difference is what the sentence means.
+
 Opening a request needs `gh`, authenticated, and write access to the catalog.
 
 ## apply — put it where an agent will meet it

@@ -374,29 +374,24 @@ def _open_request(
 # finishing
 
 
-def _repoint(project_root: Path, old_id: str, new_id: str, home: Path) -> list[str]:
-    """Rewrite references to *old_id*, and return the files changed.
+def _still_naming(project_root: Path, old_id: str, home: Path) -> list[str]:
+    """Files that still name the bundle's unpublished ID, for a person to judge.
 
-    Only exact occurrences of the bundle ID and of its path under
-    `.luma/bundles/`. Anything looser would edit prose on a guess, and this
-    runs unattended at the end of a handover.
+    **Reported, never rewritten.** The first real handover rewrote every
+    occurrence and got it wrong almost everywhere: the documents that mention a
+    bundle's `local/` ID are overwhelmingly documents *about* it not being
+    published yet — a decision record explaining the namespace, a plan
+    illustrating the manifest states before and after. Substituting the new ID
+    into those turns each one into a sentence that contradicts itself, and one
+    of them was the record that argued for `local/` in the first place.
+
+    Nothing distinguishes those from a genuine pointer by inspection, because
+    the difference is what the sentence means. So this reports and lets
+    somebody decide, which is what `remove` does with the same question and
+    what ADR-0011 counted on when it rejected leaving a symlink behind: a
+    missed reference fails loudly rather than being prevented.
     """
-    changed = []
-    old_path = f".luma/bundles/{old_id}"
-    new_path = f".luma/bundles/{new_id}"
-    for rel in removal.references(project_root, old_id, home):
-        path = project_root / rel
-        try:
-            text = path.read_text(encoding="utf-8")
-        except (OSError, UnicodeDecodeError):
-            continue
-        # The longer path first, or rewriting the bare ID leaves a mangled path
-        # behind it.
-        updated = text.replace(old_path, new_path).replace(old_id, new_id)
-        if updated != text:
-            path.write_text(updated, encoding="utf-8")
-            changed.append(rel)
-    return changed
+    return removal.references(project_root, old_id, home)
 
 
 def _complete(
@@ -431,7 +426,7 @@ def _complete(
         return taken
 
     home = adoption.vendored(project_root, entry.bundle)
-    changed = _repoint(project_root, entry.bundle, new_id, home)
+    naming = _still_naming(project_root, entry.bundle, home)
 
     entries = adoption.read(project_root)
     if entry.bundle in entries:
@@ -442,10 +437,6 @@ def _complete(
 
     print()
     print(f"  removed    {entry.bundle}")
-    if changed:
-        print(f"  repointed  {len(changed)} file(s):")
-        for rel in changed:
-            print(f"    {rel}")
     if version and version != entry.version:
         print()
         print(
@@ -454,6 +445,20 @@ def _complete(
         )
     print()
     apply.main(["--to", str(project_root)])
+
+    # After `apply`, so the generated artifacts have already stopped naming it
+    # and what is left is hand-written. Exit 1 for the same reason `remove`
+    # does: the handover finished, and something in the repository still points
+    # at a bundle that is no longer there.
+    if naming:
+        print()
+        print(f"  {len(naming)} file(s) still name {entry.bundle}:")
+        for rel in naming:
+            print(f"    {rel}")
+        print(f"  Each is either a pointer to repoint at {new_id}, or prose")
+        print("  about the bundle before it was published. Only a reader can")
+        print("  tell which, so neither was changed.")
+        return 1
     return 0
 
 

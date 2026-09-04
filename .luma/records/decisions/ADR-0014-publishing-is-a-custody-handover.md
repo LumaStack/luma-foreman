@@ -134,6 +134,17 @@ also the tell that the guard sits in the right place: `publish` retires the
 local copy without forcing anything, because by then the bundle is in the
 catalog and in git.
 
+**References to the old ID are reported, never rewritten.** The first real
+handover rewrote every occurrence and was wrong almost everywhere: the
+documents that mention a bundle's `local/` ID are overwhelmingly documents
+*about* it not being published yet, and substituting the new ID turns each into
+a sentence that contradicts itself — including
+[[ADR-0011-local-bundles-live-under-local]], the record that argued for the
+namespace. Nothing separates those from a genuine pointer by inspection,
+because the difference is what the sentence means. Exit 1 and a list is the
+honest answer, and it is what ADR-0011 counted on when it rejected leaving a
+symlink: a missed reference fails loudly rather than being prevented.
+
 **Forking is not automated.** A contributor without write access is told to
 fork and open the request by hand. `gh` would do it; the flow is not built or
 tested here, and half-doing it would fail in the case that matters.

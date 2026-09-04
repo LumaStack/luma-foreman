@@ -246,8 +246,30 @@ has 'opened'
 git -C "$CATALOG" merge -q "$BRANCH" -m 'merge'
 echo MERGED > "$STATE"
 
-publish 'a merged request completes the handover' 0 widgets acme/catalog
+# Two documents naming the bundle's unpublished ID, and they are not the same
+# kind of thing. One points at where the bundle lives; the other explains why it
+# lives under local/ and would contradict itself if the ID were substituted in.
+# Nothing tells them apart by inspection, because the difference is what the
+# sentence means — so both are reported and neither is rewritten.
+mkdir -p "$PROJECT/docs"
+echo 'Adopted at .luma/bundles/local/widgets — see its policy.' \
+  > "$PROJECT/docs/pointer.md"
+echo 'A bundle written here is local/widgets until a catalog takes it.' \
+  > "$PROJECT/docs/about.md"
+commit_all 'documents naming the bundle'
+
+publish 'a merged request completes the handover' 1 widgets acme/catalog
 has 'merged'
+has 'still name local/widgets'
+has 'docs/pointer.md'
+has 'docs/about.md'
+has 'Only a reader can'
+
+# The regression this pins: the first real handover rewrote every occurrence,
+# which turned prose about the unpublished state into sentences that contradict
+# themselves — including the record that argued for local/ in the first place.
+grepped 'local/widgets' "$PROJECT/docs/about.md"
+grepped 'local/widgets' "$PROJECT/docs/pointer.md"
 
 # The project now vendors its own bundle, with a full receipt.
 exists "$VENDORED/BUNDLE.md"

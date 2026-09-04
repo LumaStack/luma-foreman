@@ -1,13 +1,14 @@
 ---
 type: bundle
-title: local/command-line-interface
+title: lumastack/luma-catalog/command-line-interface
 version: 0.1.0
 stage: draft
 consumers: [project, organization]
 description: Adopting this declares that a project designs its command line against clig.dev, and follows it unless a decision in force says otherwise.
+published: 2026-09-03
 ---
 
-# local/command-line-interface
+# lumastack/luma-catalog/command-line-interface
 
 **Adopting this bundle is the declaration.** It says that this project
 designs anything a user types or reads back against
