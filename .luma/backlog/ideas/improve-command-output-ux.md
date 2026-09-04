@@ -75,4 +75,20 @@ lumastack/luma-catalog/luma-types: adopted 0.15.1
 
   Commit the copy — an adopted bundle lives in the repository.
   Then: luma-foreman apply
-test@test:~/Workspace/code/lumastack/luma-backlog% 
+test@test:~/Workspace/code/lumastack/luma-backlog% luma-foreman get lumastack/luma-catalog/github-release
+lumastack/luma-catalog/github-release: adopted 0.8.1
+  from     lumastack/luma-catalog — https://github.com/LumaStack/luma-catalog
+  commit   ce13c21e65900542c1570a6afdf903d8ac4fbf73
+  into     .luma/bundles/lumastack/luma-catalog/github-release/  (7 files)
+  checksum sha256:13f29e951ce8b60896a23541afaad8b363563bb47d27bf860b524876e9566c7d
+
+  Commit the copy — an adopted bundle lives in the repository.
+  Then: luma-foreman apply
+test@test:~/Workspace/code/lumastack/luma-backlog% luma-foreman apply                                    
+12 bundle(s) written out
+  skills     28 procedure(s) + 2 navigation -> .claude/skills/
+  index      1 project index -> .luma/bundles/INDEX.md; each bundle ships its own
+  eager      9 required reading when their bundle is in play
+  offered    11 named, opened when they match
+  standby    31 reachable, not announced
+  notice   lumastack/luma-catalog/github-release policy/changelog: nothing in this project matches 'CHANGELOG.md' — the rule can never fire

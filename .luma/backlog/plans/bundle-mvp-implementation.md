@@ -80,11 +80,30 @@ project index generated from manifest membership plus bundle metadata,
 with Required imports for `eager` bundles, per the design's mock-up; a
 skill per procedure; the two fixed-cost request skills repointed at
 indexes; `register: nothing` honored by skipping. Deleted outright: the
-per-project `rings/` generation and its orphan sweep, `routing.toml`,
-`entrypoint.md` generation, and the derived class names. Also updated in
-the same change: `docs/architecture.md`, which still describes the
-entrypoint-and-rings chain — a sentence only true in the past is a
-defect.
+per-project `rings/` generation and its orphan sweep, `entrypoint.md`
+generation, and the derived class names. Also updated in the same change:
+`docs/architecture.md`, which still describes the entrypoint-and-rings
+chain — a sentence only true in the past is a defect.
+
+**`routing.toml` was on that list and is not deleted, because this step
+cannot have both halves of what it asks for.** The line above required
+deleting it; the *done when* below requires `agent-permissions` to be
+untouched. The permission gate reads that table before every tool call to
+enforce `on_violation = "block"`, so deleting it is touching
+`agent-permissions` — and the way it breaks is the one that bundle exists to
+prevent, an adopted block rule failing open with nothing said. Contradictory
+as written, and resolved on the safe side.
+
+**It survives because it must, not because it earns its place.** Nothing
+about the design changed: the table is still a compiled artifact the design
+drops, still generated per project, still the thing that made
+`agent-permissions` and `apply` reach into each other. What holds it here is
+the absence of anywhere else for the gate to read, and it is compiled rather
+than derived only because the gate runs against a millisecond budget where
+walking `.luma/bundles/` per call would cost more than the whole gate. When
+hook delivery gives that consumer another home, the file goes with no further
+argument — see [[what-happens-to-routing-toml]] for the open question and
+what each way out costs.
 
 **Gates:** steps 2 and 3 — `apply` reads only new-format bundles and the
 manifest.
