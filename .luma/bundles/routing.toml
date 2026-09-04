@@ -6,6 +6,14 @@
 # writes here.
 
 [[rule]]
+bundle = "local/command-line-interface"
+document = "policy/command-line-interface-guidelines"
+title = "Command line interface guidelines"
+path = ".luma/bundles/local/command-line-interface/policy/command-line-interface-guidelines.md"
+on_violation = "allow"
+matches = ["eager"]
+
+[[rule]]
 bundle = "lumastack/luma-catalog/audit-records"
 document = "policy/audit-layout"
 title = "How audits are stored"
