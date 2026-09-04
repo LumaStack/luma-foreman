@@ -36,12 +36,12 @@ a date. Never block on it: if there is no network or the fetch fails, use
 what is cached and say how old it is. A stale copy of this is worth far more
 than no copy.
 
-**Then read it by seeking, not by loading it whole.** This is the only reason
-the cache saves anything: the file is roughly sixteen thousand tokens, and
-reading it from disk costs exactly what reading it from the web costs. What a
-local copy buys is *random access* — grep to the section named in step one's
-list and read forty lines, rather than eight hundred. A cache that gets
-slurped in full has bought offline access and nothing else.
+**What the cache is for.** Reading a file from disk costs exactly what
+reading it from the web costs — the tokens are the content, not the
+transport. So the cache buys two things and not a third: it works with no
+network, and it supports *random access*, so coming back for one rule costs
+forty lines instead of eight hundred. It does not buy a cheaper first read.
+Step one still says read the whole thing, and this does not overrule it.
 
 **Never commit it.** The cache is machine-local, and it stays that way for
 two reasons: it is derivable, and CLIG is CC BY-SA — a copy on one machine is
@@ -61,23 +61,32 @@ project already decided that. Its one load-bearing sentence, that the command
 line was once machine-first and is now human-first, opens the next section
 anyway.
 
-**Read *Philosophy* whole. It is fifteen hundred words and it is the part
-that keeps paying.** The guidelines under it are eight thousand words of
-specific rules, and specific rules run out — most decisions are ones nothing
-names. Philosophy is what decides those: human-first as the tiebreaker when
-the machine-convenient and human-convenient defaults disagree; *saying (just)
-enough* as the calibration for how much to print, which no rule can specify;
-consistency as the reason not to invent; discovery and conversation as the
-reason an error suggests a next step; and *chaos* as the permission to
-diverge deliberately, with the requirement that it be deliberate.
+**Read the rest whole — Philosophy and all sixteen Guidelines sections.**
+About ten thousand words, once. Not a skim, and not a search: **you cannot
+seek for a rule you do not know exists**, and the rules you would not have
+thought to look up are exactly the ones a guide is worth reading for. A
+curated list of what to check is an index of what somebody already thought
+of, so it hides the sections nobody flagged — which is where the forgotten
+guideline lives, by definition.
 
-**Then seek in *Guidelines*, do not read it.** The parts that decide whether
-code is right rather than merely nice: the stdout / stderr / exit-code
-contract; writing for a human on a terminal versus a program on a pipe, and
-everything that follows from detecting which (`--json`, `--plain`,
-`NO_COLOR`, suppressed animation); the standard flag names; when to confirm
-before a destructive action; the configuration precedence order; and the rule
-that secrets never travel through a flag or an environment variable.
+**Seeking is for coming back, never for arriving.** Once the whole thing has
+been read in this session, the cached copy answers *what was the flag for a
+dry run* at forty lines instead of eight hundred. That is what step zero
+bought. It is not a licence to skip the first read.
+
+**Where the attention goes, having read all of it.** *Philosophy* keeps
+paying longest: specific rules only fire on cases that match them, and most
+decisions are ones nothing names — human-first is the tiebreaker when the
+machine-convenient and human-convenient defaults disagree, *saying (just)
+enough* is the calibration for output volume that no rule can specify, and
+*chaos* is the permission to diverge deliberately with the requirement that
+it be deliberate. Among the Guidelines, the ones that decide whether code is
+right rather than merely nice: the stdout / stderr / exit-code contract;
+writing for a human on a terminal versus a program on a pipe, and everything
+that follows from detecting which (`--json`, `--plain`, `NO_COLOR`,
+suppressed animation); the standard flag names; when to confirm before a
+destructive action; the configuration precedence order; and the rule that
+secrets never travel through a flag or an environment variable.
 
 ## Step two: what outranks it
 
