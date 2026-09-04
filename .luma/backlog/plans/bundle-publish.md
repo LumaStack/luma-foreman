@@ -33,9 +33,19 @@ without guessing.
 
 ## The manifest, and the invariant that must not bend
 
-**A namespaced entry always carries `commit` and `sha256`.** No exceptions,
-because an exception is where a bug hides — and because `inspect` can then
-assert it outright: every namespaced entry is verifiable, or it is a finding.
+**A namespaced entry always carries `sha256` and says where it came from.** No
+exceptions, because an exception is where a bug hides — and because `inspect`
+can then assert it outright: every namespaced entry is verifiable, or it is a
+finding.
+
+> **Corrected during implementation.** This said `commit` and `sha256`, and
+> `commit` had to come out. A catalog that is not a git checkout has none to
+> record, and `get` already reports that as `(not a git checkout)` rather than
+> treating it as an error — so requiring it made a sanctioned adoption report
+> as broken, which the existing `derived()` fixture in `adopt-test.sh` caught
+> immediately. The checksum is what actually makes a copy verifiable: without
+> it `state()` skips the drift comparison entirely and the check passes
+> silently forever. The commit is custody that may honestly not exist.
 
 That means the bundle keeps its `local/` identity for the entire time a request
 is outstanding. Before the merge it genuinely has not been published; the
@@ -306,34 +316,71 @@ local removal required forcing, `publish` would have to pass `--force`
 internally when it retires the local copy. A command forcing past its own
 safety check means the guard is in the wrong place.
 
-## Open questions
+## Questions that were open, and how they were settled
 
-**What survives a decline.** `request:` is dead; does `catalog:` stay? Keeping
-it means the entry reads *intended for this catalog, no live request*, which
-remembers the destination for a retry. Clearing both returns to a bare entry
-with no memory of where you tried. Leaning toward keeping it, at the cost of an
-intent that can sit indefinitely after you have given up.
+**Announce-then-advance is not implementable, and `--check` was not needed.**
+The plan chose announce-then-advance to answer the consent problem — one verb
+spanning "open a request against someone else's repository" and "rewrite my own
+project". It cannot be built: announcing *merged, run again to finish* and then
+finishing on the next run requires distinguishing "the first time I saw this"
+from "you have been told", which is state, and removing state is the whole
+point of resolving from the request itself.
 
-**Whether `--abandon` earns its place.** The alternative is leaving a dead
-record to report itself each run — harmless, but a small complaint printed
-forever is how real warnings get ignored.
+The answer was already in the design. **`publish` advances; `bundle show`
+reports.** The reading verbs live under that noun already, so checking where a
+handover stands never means running the thing that moves it, and no flag is
+needed to make that safe.
 
-**Announce-then-advance, or `--check`.** One verb spans "open a request against
-someone else's repository" and "rewrite my own project". Someone running it to
-see where things stand gets the second.
+**What survives a decline: `catalog:` stays, `request:` is cleared.** The
+destination was a decision somebody made and is still true; only the request
+died. A retry needs no re-typing.
+
+**`--abandon` was built.** A dead record reporting itself every run is harmless
+exactly once, and thereafter is how real warnings get ignored.
+
+**`gh` is a hard requirement for opening a request**, refused with the install
+and auth commands when it is missing. It is shelled out to the way `git` is, so
+"no dependencies" — meaning no Python packages — still holds.
+
+**One path, one gate, whoever owns the catalog.** If the curator exists so a
+catalog is never corrupt, exempting the people who touch it most defeats it.
+Homebrew's two tiers exist because taps are deliberately unreviewed, which is a
+different promise than this makes.
+
+**Curator auto-fixing stayed out**, and looks unnecessary rather than deferred:
+because foreman normalises before the request is opened, the easy-defect class
+largely never reaches the catalog. What is left is an author's judgment call or
+a real fault, and neither is safe to auto-commit.
+
+**The reference sweep exits non-zero** when something still cites a bundle that
+left.
+
+**`published:` is set when the request is opened.** Early if review runs long,
+and nothing else sets it.
+
+## Still open
 
 **Publishing the same bundle to a second catalog.** Expressible under the
 two-operand shape, but the second catalog then receives a bundle whose custody
-trail says it came from the first.
+trail says it came from the first. Nothing special is done about it.
 
-**Where `published:` gets its date.** Set when the request is opened, which is
-early if review takes weeks. Nothing else sets it.
+**Forking is not automated.** A contributor without write access is told to
+fork and open the request by hand — accepted for the MVP, and tracked as
+[[publishing-should-fork-when-it-cannot-push]].
 
-**Asserted but not agreed** — flagged because they were decided quickly:
-whether `gh` should be a hard requirement rather than a fallback; whether
-publishing to your own catalog deserves a lighter path than a stranger's;
-whether curator auto-fixing easy defects is genuinely unnecessary; and whether
-the reference sweep should exit non-zero or merely report.
+## Two bugs the first real run found
+
+Worth recording because neither would have been obvious from reading the code.
+
+**The work clone stayed on the branch it built.** A second run started from
+there rather than the catalog's default branch, so the bundle appeared to be
+published already and the run refused — a stale cache reporting itself as the
+catalog's state. Reused checkouts now reset to the default branch and clean.
+
+**`remove` asked "was this committed?" after deleting.** Git reports the
+deletion itself as a change, so the answer was always *no*, and the recovery
+line would have been wrong in exactly the case somebody needs it. It is asked
+before anything is removed.
 
 ## Files
 
