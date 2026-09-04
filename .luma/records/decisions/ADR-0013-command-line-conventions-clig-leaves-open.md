@@ -9,7 +9,7 @@ reopen_trigger: A fourth failure mode is worth distinguishing at the exit code, 
 # ADR-0013: Command line conventions CLIG leaves open
 
 The [Command Line Interface Guidelines](https://clig.dev) decide this
-project's command line, by way of the `local/command-line-interface` bundle.
+project's command line, by way of the `command-line-interface` bundle.
 CLIG deliberately leaves some choices open. This is the list of what this
 project settles in those gaps, and nothing else belongs here.
 
@@ -149,9 +149,3 @@ The guidelines themselves are adopted by
 `.luma/bundles/local/command-line-interface/`, whose policy carries the
 precedence rule this record depends on: a decision in force outranks CLIG,
 precedent outranks nothing.
-
-Landed as: `#131` and `#132` (an error message contains the command to run),
-`#134` and `#136` (never overwrite the identity file; say which case it was),
-`#135` (the bare noun). The exit code trio predates all of them and is cited
-by [[ADR-0012-catalogs-are-registered-sources]] without ever having been
-decided.
