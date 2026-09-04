@@ -130,6 +130,67 @@ def _clone(url: str) -> Path | None:
     return target if out.returncode == 0 else None
 
 
+def work_clone(url: str) -> Path | None:
+    """A catalog checkout that can carry a branch, for `publish` to build on.
+
+    Separate from `_clone` and deliberately not shared with it. That one is
+    `--depth 1` and leaves a detached HEAD, which is right for reading a bundle
+    out and wrong for committing one in. Keeping them apart also keeps the
+    read path unable to be dirtied by the write path.
+
+    **Still cache by luma-config's test** — deleting it loses no decision,
+    because the branch this builds is pushed to the remote before anybody is
+    told about it. Nothing here is the only copy of anything.
+    """
+    target = _cache_dir().parent / "publishing" / re.sub(
+        r"[^A-Za-z0-9._-]", "-", url
+    )
+    if (target / ".git").exists():
+        if _git(target, "fetch", "--quiet", "origin") is not None:
+            return target if _reset_to_default(target) else None
+        # A cache that will not refresh is a cache worth discarding — it may be
+        # a half-written clone from a run that died.
+        shutil.rmtree(target, ignore_errors=True)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        out = subprocess.run(
+            ["git", "clone", "--quiet", url, str(target)],
+            capture_output=True, text=True, timeout=300,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return target if out.returncode == 0 else None
+
+
+def _reset_to_default(checkout: Path) -> bool:
+    """Put a reused checkout back on the catalog's default branch, clean.
+
+    Without this a second run starts on the branch the first one built, so the
+    catalog appears to already publish the bundle being offered and the run
+    refuses — a stale cache reporting itself as the catalog's state. The whole
+    point of the directory being cache is that this is safe: the previous
+    branch is on the remote, and nothing here is the only copy.
+    """
+    head = _git(checkout, "rev-parse", "--abbrev-ref", "origin/HEAD")
+    if not head:
+        # No origin/HEAD — a remote that never advertised one. Try the names a
+        # default branch actually has before giving up.
+        head = next(
+            (f"origin/{n}" for n in ("main", "master")
+             if _git(checkout, "rev-parse", "--verify", "--quiet",
+                     f"origin/{n}") is not None),
+            None,
+        )
+    if not head:
+        return False
+    branch = head.split("/", 1)[-1]
+    if _git(checkout, "checkout", "--quiet", "-B", branch, head) is None:
+        return False
+    _git(checkout, "reset", "--quiet", "--hard", head)
+    _git(checkout, "clean", "-qfd")
+    return True
+
+
 def _root(start: Path) -> Path | None:
     """A catalog's content directory — where ``CATALOG.md`` sits.
 

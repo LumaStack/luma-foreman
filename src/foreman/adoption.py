@@ -39,11 +39,21 @@ HEADER = """\
 """
 
 # One bullet per bundle, `key: value` sublines, nothing nested. The kinds are
-# distinguished by shape: custody sublines mark a vendored copy, a bare entry
-# is a bundle written here, and `register:` appears only when intent diverges
-# from the default (wire everywhere).
+# distinguished by shape: `commit`/`sha256` mark a vendored copy, an entry
+# under `local/` is a bundle written here, and `register:` appears only when
+# intent diverges from the default (wire everywhere).
+#
+# **A namespaced entry always carries `commit` and `sha256`.** That invariant is
+# what makes every vendored copy verifiable, and it is why a bundle keeps its
+# `local/` ID for as long as a publication request is outstanding — before the
+# merge it has not been published, and the request may yet be declined.
 ENTRY = re.compile(r"^- `([^`]+)`(?:\s+(\S+))?\s*$")
 SUBLINE = re.compile(r"^  - ([a-z][a-z0-9_-]*):\s*(.*?)\s*$")
+
+# The reserved namespace for a bundle written here and published nowhere
+# (ADR-0011). No catalog may claim it, so nothing outside a project can cite a
+# bundle under it.
+LOCAL = "local"
 
 
 @dataclass(frozen=True)
@@ -64,7 +74,24 @@ class Adopted:
     # one config line rather than every receipt going stale. Exactly one of
     # `catalog` and `source` is set: a fetch from an unregistered catalog
     # keeps its raw URL, like a hand-installed .deb.
+    #
+    # On a `local/` entry it means the opposite direction — the catalog this
+    # bundle has been offered to — and the field is deliberately the same one,
+    # because it is continuous: written when the request opens, unchanged when
+    # the handover completes. It names the catalog that has or will have
+    # custody. Which side of that you are on is carried by the bundle ID and by
+    # whether `request` is set, which is the distinguish-by-shape rule the rest
+    # of this file already runs on.
     catalog: str = ""
+    # An outstanding publication request — the pull request opened against
+    # `catalog`. Present only on a `local/` entry, and cleared when the request
+    # is merged or abandoned.
+    #
+    # It earns a place by this file's own test: the manifest holds what cannot
+    # be recomputed. A request URL cannot be derived, and the other party can
+    # destroy the evidence. Without it, nothing can tell *declined* from *never
+    # asked*, and `publish` would re-open a request a maintainer just closed.
+    request: str = ""
 
     # Split from the right: a namespace may have any number of segments, and
     # the bundle name is always the last one. `lumastack/luma-catalog/widgets`
@@ -154,6 +181,28 @@ def discover(project: Path) -> dict[str, Path]:
         for home in sorted(homes)
         if not any(other != home and other in home.parents for other in homes)
     }
+
+
+def resolve(entries: dict[str, Adopted], requested: str) -> Adopted | str:
+    """One bundle from a full ID or a bare name, or a message saying what is wrong.
+
+    A bare name is what somebody types when only one namespace is in play.
+    Two bundles legitimately sharing a name is exactly when the guess must
+    stop: the message says to use the fully qualified form rather than picking
+    a side silently.
+    """
+    entry = entries.get(requested)
+    if entry is not None:
+        return entry
+    named = [e for e in entries.values() if e.name == requested]
+    if len(named) > 1:
+        names = ", ".join(sorted(m.bundle for m in named))
+        return (f"{requested} is ambiguous here — use the fully qualified "
+                f"<namespace>/<bundle-name>. Held: {names}")
+    if not named:
+        known = ", ".join(sorted(entries)) or "nothing is recorded"
+        return f"not recorded: {requested} (have: {known})"
+    return named[0]
 
 
 def by_namespace(bundle_ids: list[str]) -> list[tuple[str, list[str]]]:
@@ -307,6 +356,7 @@ def parse(text: str) -> dict[str, Adopted]:
                 checksum=f"sha256:{checksum}" if checksum else "",
                 register=current.get("register", ""),
                 catalog=current.get("catalog", ""),
+                request=current.get("request", ""),
             )
 
     for line in text.splitlines():
@@ -330,6 +380,8 @@ def emit(entries: dict[str, Adopted]) -> str:
         lines.append(f"- `{bundle}` {e.version}".rstrip())
         if e.catalog:
             lines.append(f"  - catalog: {e.catalog}")
+        if e.request:
+            lines.append(f"  - request: {e.request}")
         if e.source:
             lines.append(f"  - source: {e.source}")
         if e.commit:
