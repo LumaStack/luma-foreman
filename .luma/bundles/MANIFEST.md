@@ -5,6 +5,7 @@
 
 # Bundles
 
+- `local/command-line-interface` 0.1.0
 - `lumastack/luma-catalog/audit-records` 0.10.1
   - source: https://github.com/LumaStack/luma-catalog
   - commit: ce13c21e65900542c1570a6afdf903d8ac4fbf73

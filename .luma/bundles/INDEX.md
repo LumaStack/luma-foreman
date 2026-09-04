@@ -6,6 +6,7 @@ Every container has an index. This is the project's: one entry per bundle, what 
 
 ## Offered — open a bundle's index when its line matches the work
 
+- `local/command-line-interface` 0.1.0 — Adopting this declares that a project designs its command line against clig.dev, and follows it unless a decision in force says otherwise.
 - `lumastack/luma-catalog/audit-records` 0.10.1 — Audits as records — findings written by one party, answered by another, closed by the first. The whole exchange lives in git.
 - `lumastack/luma-catalog/backlog-ideas` 0.14.1 — Ideas as individual files rather than one growing IDEAS.md — what earns a file, how capture stays fast, and how the list gets tended rather than accumulating.
 - `lumastack/luma-catalog/bundle-manager` 0.15.1 — Creating, updating, auditing, repairing, migrating and retiring bundles — the layout they use and which catalog they belong in.

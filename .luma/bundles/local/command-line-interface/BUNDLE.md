@@ -1,0 +1,33 @@
+---
+type: bundle
+title: local/command-line-interface
+version: 0.1.0
+stage: draft
+consumers: [project, organization]
+description: Adopting this declares that a project designs its command line against clig.dev, and follows it unless a decision in force says otherwise.
+---
+
+# local/command-line-interface
+
+**Adopting this bundle is the declaration.** It says that this project
+designs anything a user types or reads back against
+[clig.dev](https://clig.dev), and that the only thing permitted to overrule
+it is a decision this project recorded and put in force. Precedent is not a
+decision.
+
+## What is here
+
+One policy, and it is the bundle: [[command-line-interface-guidelines]] —
+read it before adding or changing a command, a verb, a flag, or a message.
+
+## Why it points rather than restates
+
+clig.dev is CC BY-SA 4.0. A summary of it is a derivative work, so a bundle
+carrying one drags a second licence and a ShareAlike obligation into every
+repository that adopts it — for prose that already exists, in one place,
+maintained by the people who wrote it.
+
+**The cost, stated plainly:** this bundle's substance is not vendored, so
+unlike everything else a project adopts, it does not survive without network
+access. If that matters more than the licence does, the answer is to write
+rules from your own practice — not to copy theirs.
