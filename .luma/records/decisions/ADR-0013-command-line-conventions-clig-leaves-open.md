@@ -146,6 +146,6 @@ concrete, read it.
 ## References
 
 The guidelines themselves are adopted by
-`.luma/bundles/local/command-line-interface/`, whose policy carries the
-precedence rule this record depends on: a decision in force outranks CLIG,
-precedent outranks nothing.
+`.luma/bundles/lumastack/luma-catalog/command-line-interface/`, whose policy
+carries the precedence rule this record depends on: a decision in force
+outranks CLIG, precedent outranks nothing.

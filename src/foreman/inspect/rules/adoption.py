@@ -69,6 +69,40 @@ def check(repo: Path) -> Result:
             case "edited":
                 edited.append(f"{bundle_id} {entry.version}")
 
+    # A namespaced entry always carries a checksum and says where it came from.
+    # That invariant is what makes every vendored copy verifiable, and it holds
+    # precisely because a bundle keeps its `local/` ID for as long as a
+    # publication request is outstanding — before the merge it has not been
+    # published, and the request may yet be declined.
+    #
+    # An entry that breaks it is not a bundle in a bad state; it is a receipt
+    # nothing can check, and `state()` skips the comparison when the checksum is
+    # empty — so the drift check passes for it silently, forever. That is the
+    # one failure the checksum exists to prevent.
+    #
+    # **The commit is deliberately not required.** A catalog that is not a git
+    # checkout has none to record, which `get` already reports as `(not a git
+    # checkout)` rather than treating as an error. Demanding it here would make
+    # a sanctioned adoption report as broken.
+    unverifiable = [
+        f"{bundle_id} {entry.version}".rstrip()
+        for bundle_id, entry in sorted(recorded.items())
+        if entry.namespace != adoption.LOCAL
+        and not (entry.checksum and (entry.catalog or entry.source))
+    ]
+    if unverifiable:
+        bad(
+            "high",
+            f"{len(unverifiable)} entry(s) claim a catalog namespace without "
+            f"custody and a checksum",
+            unverifiable,
+            "A bundle under a catalog's namespace is a vendored copy, and one "
+            "nothing can verify is a receipt nobody can check — the drift check "
+            "passes for it silently. Re-take it with `luma-foreman get "
+            "<bundle>`. A bundle written here and not yet published belongs "
+            "under local/, whether or not a catalog has been asked to take it.",
+        )
+
     if missing:
         bad(
             "high",

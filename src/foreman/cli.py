@@ -17,6 +17,8 @@ USAGE = """usage: luma-foreman <command> [args]
 Commands:
   init                stand `.luma/` up in a repository that has none
   get                 adopt a bundle from a catalog into this project
+  remove              drop a bundle this project holds
+  publish             offer a bundle written here to a catalog
   apply               write what this project adopted into what a harness reads
   inspect             check a project against the baseline and report shortfalls
 
@@ -189,6 +191,14 @@ def main(argv: list[str] | None = None) -> int:
         from . import get
 
         return get.main(argv[1:])
+    if command == "remove":
+        from . import remove
+
+        return remove.main(argv[1:])
+    if command == "publish":
+        from . import publish
+
+        return publish.main(argv[1:])
     if command == "apply":
         from . import apply
 

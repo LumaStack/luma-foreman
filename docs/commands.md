@@ -65,6 +65,73 @@ one could say nothing honest about what it has.
 `CATALOG.md` declares one, which wins. A fork gets its own namespace without
 anybody arranging it.
 
+## remove — drop a bundle
+
+```bash
+luma-foreman remove lumastack/luma-catalog/git-secrets
+luma-foreman remove local/widgets --force
+```
+
+The inverse of `get`, and shaped like it: one bundle ID, this project only,
+finished the moment it returns. A bare name works where only one namespace
+holds it.
+
+**It refuses when removing would lose work nothing else holds.** That is one
+rule covering two cases — a bundle written here that is not committed, and a
+vendored copy somebody edited. Everything else is recoverable, and the output
+says how: `get` restores a clean vendored copy byte-identical, git restores a
+committed local one, and the literal command to do it is printed.
+
+**Exit 1 also means something still points at it.** Removing a bundle turns
+anything citing it into a dangling reference, and the files are named. `inspect`
+catches a dangling wikilink afterwards; a bundle cited as a bare path in prose
+is exactly what it does not catch.
+
+Run `apply` afterwards, so the generated skills and the project index stop
+naming what left.
+
+## publish — offer a bundle to a catalog
+
+```bash
+luma-foreman publish command-line-interface lumastack/luma-catalog
+luma-foreman publish command-line-interface lumastack/luma-catalog --again
+luma-foreman publish command-line-interface --abandon
+```
+
+**Two operands, because where a bundle is going is not in its name.** `get` and
+`remove` need one ID since the namespace already says which catalog; a bundle
+written here has no namespace to read, and the same bundle may legitimately go
+to more than one catalog.
+
+**Publishing is a custody handover.** Once the bundle lands, this project stops
+owning it and starts vendoring it like anything else — the bare manifest entry
+becomes a receipt, and editing the bundle afterwards is drift rather than
+authorship.
+
+**It is one idempotent command, run whenever.** It advances the handover as far
+as it can and says where it stopped: opening a pull request against the
+catalog, reporting one still under review, or — once a maintainer has merged
+it — taking the published bundle back and retiring the local one. To read the
+state without advancing anything, use `bundle show`.
+
+**The only automatic transition is the merged one.** A declined request, or one
+that is no longer visible, reports and changes nothing. A 404 is not proof of
+rejection — it also means moved, private, or a token that expired — so the
+possibilities are named rather than guessed between, and asking again takes
+`--again` so a maintainer is never sent a duplicate nobody decided to send.
+
+**A bundle keeps its `local/` identity until the merge**, because until then it
+has not been published. A namespaced entry always carries a checksum and says
+where it came from; `inspect --rule adoption` reports one that does not.
+
+**What still names the old ID is reported, never rewritten**, and exit 1 says
+so. Most documents mentioning a bundle's `local/` ID are documents *about* it
+not being published yet, and substituting the new ID into those makes each one
+contradict itself. Nothing tells those apart from a genuine pointer by
+inspection, because the difference is what the sentence means.
+
+Opening a request needs `gh`, authenticated, and write access to the catalog.
+
 ## apply — put it where an agent will meet it
 
 ```bash

@@ -117,26 +117,9 @@ def _refuse(summary: str, remedy: str) -> int:
     return 1
 
 
-def _resolve(entries: dict, requested: str):
-    """One bundle from a full ID or a bare name, or an error message.
-
-    A bare name is what somebody types when only one namespace is in play.
-    Two bundles legitimately sharing a name is exactly when the guess must
-    stop: the error says to use the fully qualified form rather than picking
-    a side silently.
-    """
-    entry = entries.get(requested)
-    if entry is not None:
-        return entry
-    named = [e for e in entries.values() if e.name == requested]
-    if len(named) > 1:
-        names = ", ".join(sorted(m.bundle for m in named))
-        return (f"{requested} is ambiguous here — use the fully qualified "
-                f"<namespace>/<bundle-name>. Held: {names}")
-    if not named:
-        known = ", ".join(sorted(entries)) or "nothing is recorded"
-        return f"not recorded: {requested} (have: {known})"
-    return named[0]
+# Lives in `adoption` since `remove` needs the same answer, and two commands
+# resolving a name differently is the failure that would be hardest to see.
+_resolve = adoption.resolve
 
 
 def _documents(home: Path) -> list[str]:
@@ -215,12 +198,31 @@ def show(project_root: Path, requested: str) -> int:
     # missing value rather than as what it is — no custody, because nothing
     # was taken from anywhere. The shape says which (ADR-0011), so one line
     # says it in words instead of three saying nothing.
-    if entry.catalog:
+    # A bundle written here that has been offered to a catalog: the entry
+    # carries the destination and the outstanding request, and no custody yet
+    # because the request may still be declined. This is where publication
+    # state is *read* — `publish` advances the handover, and somebody who only
+    # wants to know where it stands should not have to run the thing that
+    # moves it.
+    # Told apart by the invariant rather than by which fields are set: a
+    # vendored copy always carries a commit and a checksum. On a bundle written
+    # here `catalog` means the opposite direction — where it has been offered —
+    # so reading it as custody would report an unpublished bundle as adopted,
+    # with a blank where the commit belongs.
+    vendored = bool(entry.commit and entry.checksum)
+    if vendored and entry.catalog:
         print(f"  catalog    {entry.catalog}")
         print(f"  commit     {entry.commit}")
-    elif entry.source:
+    elif vendored:
         print(f"  source     {entry.source}")
         print(f"  commit     {entry.commit}")
+    elif entry.request:
+        print(f"  offered    {entry.catalog}")
+        print(f"  request    {entry.request}")
+        print("  written    here — not published until that request merges")
+    elif entry.catalog:
+        print(f"  offered    {entry.catalog} — no request open")
+        print("  written    here — nothing has taken it yet")
     else:
         print("  written    here — no catalog, and nothing to compare against")
     print(f"  at         {home.relative_to(project_root)}")
