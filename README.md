@@ -55,3 +55,7 @@ Foreman can support as many or as few catalogs as you'd like.
   lives. Read before adding a capability.
 
 Requires Python 3.11+ and git. No dependencies, no build step.
+
+## License
+
+Licensed under the [Apache License, Version 2.0](LICENSE).
