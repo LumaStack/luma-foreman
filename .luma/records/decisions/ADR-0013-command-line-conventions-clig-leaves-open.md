@@ -10,12 +10,18 @@ reopen_trigger: A fourth failure mode is worth distinguishing at the exit code, 
 
 The [Command Line Interface Guidelines](https://clig.dev) decide this
 project's command line, by way of the `local/command-line-interface` bundle.
-CLIG deliberately leaves some choices open and this project departs from it
-in one place. This is that list, and nothing else belongs here.
+CLIG deliberately leaves some choices open. This is the list of what this
+project settles in those gaps, and nothing else belongs here.
+
+**There are no departures.** Every entry below answers a question CLIG
+declines to answer, not one it answers differently. That is worth stating
+because the bundle requires a divergence to be recorded with its reasoning,
+so an empty set is itself the claim: anything in this project's command line
+that disagrees with CLIG is a defect rather than a choice.
 
 ## Problem
 
-Seven conventions were being re-derived per command, and re-derived
+Some conventions were being re-derived per command, and re-derived
 differently each time. They existed only in the shape of code and in commit
 messages, which meant every new verb re-opened questions somebody had already
 answered — what a bare noun does, whether an idempotent no-op is an error,
@@ -46,20 +52,15 @@ a working tool from a broken one.
 `luma-foreman agent-permissions`. Not an error — somebody asking what is here
 should not get a non-zero status.
 
-**`--help` is handled before verb dispatch.** What a bare noun resolves to
-can never reach it. This is what keeps the previous decision cheap to revisit:
-it is one word in each module, and the explicit route is structurally
-untouched by it.
+CLIG says bare `myapp` shows full help, and for a git-like tool it names
+`myapp help`, `myapp help subcommand` and `myapp subcommand --help`. It does
+not say what bare `myapp subcommand` does. This extends the rule it does
+state to the level it does not: a noun behaves like the program.
 
-**Menus list reads before writes.** This is the one **departure** from CLIG,
-which says to order by usage frequency. Frequency is unmeasured here and
-would be guessed; kind is observable from the code, and the ordering it
-produces puts the commands that cannot damage anything where a reader lands
-first.
-
-**A refusal names the fix as something to copy.** Not a syntax to
-reconstruct — where the fix depends on project state, the message reads that
-state and prints the real command:
+**An error message contains the command to run.** Not a description of what
+to type, and not a syntax to work out — the literal line, ready to copy.
+Where the right command depends on what the project holds, the code reads
+that and prints the real thing:
 
 ```
 luma-foreman get: bundle-manager is not a bundle ID — a bundle is addressed
@@ -68,9 +69,14 @@ luma-foreman get: bundle-manager is not a bundle ID — a bundle is addressed
     luma-foreman get lumastack/luma-catalog/bundle-manager
 ```
 
-CLIG says to suggest corrections and to ask before acting on them. Reading
-project state to make the suggestion concrete goes further, and it is the
-half that turns a refusal into an answer.
+That last line is generated from the catalogs actually registered in this
+project. The alternative — *"pass a fully qualified bundle ID"* — is true,
+and leaves the reader to find out which catalogs exist and reassemble the
+command themselves.
+
+CLIG says to suggest corrections and to ask before acting on one. It does not
+say the suggestion has to be executable, which is the part that turns a
+refusal into an answer.
 
 **Never overwrite the file that makes a thing what it is.** A `BUNDLE.md` is
 what makes a directory a bundle, so replacing it discards the bundle rather
@@ -87,8 +93,8 @@ reader needs to know which one they are in.
 
 **These are the choices CLIG declines to make, and a project that has not
 made them answers them differently every time.** That is not a criticism of
-the guide: exit code meanings and menu ordering are properly local, and a
-guide that fixed them would be wrong somewhere.
+the guide: which exit codes mean what is properly local, and a guide that
+fixed it would be wrong somewhere.
 
 **Recording them is what makes them binding.** The bundle's own rule is that
 precedent is not a decision — what a program already does carries no
@@ -96,11 +102,13 @@ authority. Every convention here was established practice before it was
 written down, which under that rule meant none of it bound anything. The
 gap this closes is not knowledge, it is standing.
 
-**The departure is the load-bearing entry.** The bundle requires that a
-divergence from CLIG be written down with its reasoning, because a convention
-broken on purpose and one broken by accident are identical in the code. Menu
-ordering by kind is the only place this project currently diverges, and
-without this record a later reader would have no way to tell which it was.
+**What is deliberately absent is as much of the decision as what is here.**
+Anything CLIG settles stays out, however much this project relies on it:
+`noun verb` ordering, ordering menus by usage frequency, and `-h`/`--help`
+being answered whatever else was typed are all followed here and none of
+them is recorded, because following a guide needs no record. A list that
+restated the guide would need maintaining against it, and would eventually
+disagree with it silently.
 
 ## Alternatives
 
@@ -115,11 +123,6 @@ has seven, four of which write. A default verb gets more arbitrary with every
 verb added, and the arbitrariness is invisible until somebody is surprised
 by it. The re-open trigger above is the case that would change this back.
 
-**Ordering menus by frequency, as CLIG says.** Deferred rather than
-rejected — it is the better rule the moment frequency is *measured*. Nothing
-here measures it, and a guessed frequency ordering is a worse version of the
-same guess with none of the honesty.
-
 **Recording these in the bundle instead.** Rejected: the bundle is written to
 be promoted, and conventions specific to this project would make it
 un-adoptable by anyone else. The bundle points at CLIG and states the
@@ -128,9 +131,9 @@ for.
 
 ## Standing consequences
 
-**A new noun inherits all of this** — bare invocation prints its menu,
-`--help` is parsed before its verbs, its menu lists reads first, and its help
-states its exit codes.
+**A new noun inherits all of this** — bare invocation prints its menu, and
+its help states its exit codes. It inherits CLIG's rules the same way, which
+this record does not restate.
 
 **A command that can no-op must exit 0 and say so.** *Nothing to do* is a
 successful outcome, and reporting it as a failure makes every wrapper script
@@ -147,9 +150,8 @@ The guidelines themselves are adopted by
 precedence rule this record depends on: a decision in force outranks CLIG,
 precedent outranks nothing.
 
-Landed as: `#131` and `#132` (refusals name a copyable command), `#134` and
-`#136` (never overwrite the identity file; say which case it was), `#135`
-(the bare noun, `--help` before dispatch, reads before writes). The exit code
-trio predates all of them and is cited by
-[[ADR-0012-catalogs-are-registered-sources]] without ever having been
+Landed as: `#131` and `#132` (an error message contains the command to run),
+`#134` and `#136` (never overwrite the identity file; say which case it was),
+`#135` (the bare noun). The exit code trio predates all of them and is cited
+by [[ADR-0012-catalogs-are-registered-sources]] without ever having been
 decided.
