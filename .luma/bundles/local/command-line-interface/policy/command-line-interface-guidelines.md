@@ -1,11 +1,52 @@
 ---
 type: policy
 title: Command line interface guidelines
-description: Read our command line interface guidelines before designing or changing CLIs.
+description: Read command line interface guidelines before designing or changing CLIs.
 matches: eager
 ---
 
 # Command line interface guidelines
+
+## Step zero: keep a local copy
+
+**Cache it, and read the copy.**
+
+```
+~/.cache/luma/luma-foreman/guides/clig.dev.md
+```
+
+**Fetch the markdown source, not the rendered page.** `clig.dev` serves HTML
+— 86KB of markup wrapping the text, which greps badly and reads worse. The
+document's own source is one file:
+
+```
+curl -sSL https://raw.githubusercontent.com/cli-guidelines/cli-guidelines/main/content/_index.md
+```
+
+**Fetch to the file, never through the context window.** `curl -o <path>`
+puts the bytes on disk at no token cost; fetching it *into* a reply spends
+the whole document in order to save it. Write the date fetched and the source
+URL as the first line of the file, so nothing can read the content without
+seeing how old it is.
+
+**Refresh when the recorded date is not today, and only then.** That is
+"once per session" expressed as something a reader can actually check — an
+agent has no memory of what it did earlier in the session, but it can compare
+a date. Never block on it: if there is no network or the fetch fails, use
+what is cached and say how old it is. A stale copy of this is worth far more
+than no copy.
+
+**Then read it by seeking, not by loading it whole.** This is the only reason
+the cache saves anything: the file is roughly sixteen thousand tokens, and
+reading it from disk costs exactly what reading it from the web costs. What a
+local copy buys is *random access* — grep to the section named in step one's
+list and read forty lines, rather than eight hundred. A cache that gets
+slurped in full has bought offline access and nothing else.
+
+**Never commit it.** The cache is machine-local, and it stays that way for
+two reasons: it is derivable, and CLIG is CC BY-SA — a copy on one machine is
+nobody's business, a copy in a published repository is distribution and
+carries the licence with it.
 
 ## Step one: read [clig.dev](https://clig.dev)
 

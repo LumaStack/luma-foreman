@@ -22,12 +22,17 @@ carrying one drags a second licence and a ShareAlike obligation into every
 repository that adopts it — for prose that already exists, in one place,
 maintained by the people who wrote it.
 
-**The cost, stated plainly:** this bundle's substance is not vendored, so
-unlike everything else a project adopts, it does not survive without network
-access. If that matters more than the licence does, the answer is to write
-rules from your own practice — not to copy theirs.
+**The cost, and what pays it down:** this bundle's substance is not vendored,
+so unlike everything else a project adopts it does not arrive with the
+repository. Step zero of the policy closes most of that gap — a machine-local
+cache under `~/.cache/`, refreshed at most daily, read by seeking rather than
+whole. That copy is never committed: on one machine it is nobody's business,
+in a published repository it is distribution and carries the licence with it.
+
+What the cache cannot give back is reproducibility. A fresh clone on a
+machine that has never fetched it has a URL and nothing else.
 
 ## Required — do NOT act on this bundle before reading these
 
-- `policy/command-line-interface-guidelines` (policy) — Read our command line interface guidelines before designing or changing CLIs.
+- `policy/command-line-interface-guidelines` (policy) — Read command line interface guidelines before designing or changing CLIs.
   - matches: eager
