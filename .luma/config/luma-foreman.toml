@@ -78,3 +78,6 @@ except = [
   "tests/inspect-test.sh",                    # ...and its fixtures use it as data
   ".luma/backlog/sweeps/the-whole-of-foreman/journal.md",  # lists what was retired
 ]
+
+[catalog."lumastack/luma-catalog"]
+source = "https://github.com/LumaStack/luma-catalog"

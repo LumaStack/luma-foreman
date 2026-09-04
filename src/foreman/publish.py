@@ -34,7 +34,9 @@ declined — manufacturing exactly the noise a curated catalog exists to avoid.
 
 from __future__ import annotations
 
+import contextlib
 import datetime
+import io
 import re
 import shutil
 import subprocess
@@ -278,8 +280,15 @@ def _open_request(
     if problem:
         return _err(problem)
 
+    # Regenerated, not copied: the local bundle's index names it under
+    # `local/`. Its output is swallowed because it reports the path it wrote,
+    # which here is a cache directory the reader has no business knowing about
+    # — what matters is the request, and the file is in its diff.
     from . import bundle_index
-    bundle_index.main([str(dest)])
+    with contextlib.redirect_stdout(io.StringIO()):
+        indexed = bundle_index.main([str(dest)])
+    if indexed != 0:
+        return _err(f"could not regenerate the index for {name}")
 
     branch = f"publish-{name}-{entry.version}"
     commit_message = (
