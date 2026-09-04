@@ -55,14 +55,29 @@ sees — read the [Command Line Interface Guidelines](https://clig.dev) (CLIG).*
 It is one page, and adopting this bundle is the act of saying that a project
 designs against it.
 
-**What to look for**, so the read is targeted rather than a skim: the
-stdout / stderr / exit-code contract; writing for a human on a terminal
-versus a program on a pipe, and everything that follows from detecting which
-(`--json`, `--plain`, `NO_COLOR`, suppressed animation); the standard flag
-names; when to confirm before a destructive action; the configuration
-precedence order; and the rule that secrets never travel through a flag or
-an environment variable. Those are the parts that decide whether code is
-right or wrong, rather than merely nice.
+**Skip the foreword.** Eight hundred words arguing that the command line is
+worth caring about — history, and a good closing line. You are here because a
+project already decided that. Its one load-bearing sentence, that the command
+line was once machine-first and is now human-first, opens the next section
+anyway.
+
+**Read *Philosophy* whole. It is fifteen hundred words and it is the part
+that keeps paying.** The guidelines under it are eight thousand words of
+specific rules, and specific rules run out — most decisions are ones nothing
+names. Philosophy is what decides those: human-first as the tiebreaker when
+the machine-convenient and human-convenient defaults disagree; *saying (just)
+enough* as the calibration for how much to print, which no rule can specify;
+consistency as the reason not to invent; discovery and conversation as the
+reason an error suggests a next step; and *chaos* as the permission to
+diverge deliberately, with the requirement that it be deliberate.
+
+**Then seek in *Guidelines*, do not read it.** The parts that decide whether
+code is right rather than merely nice: the stdout / stderr / exit-code
+contract; writing for a human on a terminal versus a program on a pipe, and
+everything that follows from detecting which (`--json`, `--plain`,
+`NO_COLOR`, suppressed animation); the standard flag names; when to confirm
+before a destructive action; the configuration precedence order; and the rule
+that secrets never travel through a flag or an environment variable.
 
 ## Step two: what outranks it
 
