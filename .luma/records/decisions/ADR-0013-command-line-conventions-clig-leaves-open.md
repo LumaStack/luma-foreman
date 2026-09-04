@@ -49,15 +49,15 @@ a working tool from a broken one.
 
 **A bare noun prints its menu and exits 0**, at every level:
 `luma-foreman`, `luma-foreman bundle`, `luma-foreman catalog`,
-`luma-foreman agent-permissions`. Not an error — somebody asking what is here
-should not get a non-zero status.
+`luma-foreman agent-permissions`. Asking a tool what it can do is a
+legitimate request rather than a mistake, and the zero is what says so.
 
 CLIG says bare `myapp` shows full help, and for a git-like tool it names
 `myapp help`, `myapp help subcommand` and `myapp subcommand --help`. It does
 not say what bare `myapp subcommand` does. This extends the rule it does
 state to the level it does not: a noun behaves like the program.
 
-**An error message contains the command to run.** Not a description of what
+**An error message contains the command to run when possible.** Not a description of what
 to type, and not a syntax to work out — the literal line, ready to copy.
 Where the right command depends on what the project holds, the code reads
 that and prints the real thing:
