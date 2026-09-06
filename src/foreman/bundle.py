@@ -61,6 +61,16 @@ STATE_NOTE = {
     "missing": "recorded but not on disk",
 }
 
+# The same facts as a tag, for a row in `bundle list`. The prose above belongs
+# to `bundle show`, which is looking at one bundle and has the room to explain;
+# in a list it repeats what the mark and the legend already say, at the width of
+# a sentence. Kept as its own map rather than a truncation, because a tag is
+# written to be read in a column and a sentence is not.
+STATE_TAG = {
+    "edited": "edited",
+    "missing": "missing",
+}
+
 # One segment, the shape a directory name and a bundle ID's last part share.
 # The namespace is always `local`, so a name carrying a slash is somebody
 # addressing a catalog bundle with the command that cannot make one.
@@ -263,16 +273,22 @@ def listing(project_root: Path) -> int:
                 f"  {branch} {mark} {name:<{width}}  {entry.version:<{held}}"
                 f"  {skilled:<{cell}}"
             )
-            # Only when it is not the default. Nineteen rows saying `offered`
-            # is the word becoming wallpaper, and `eager` — the posture that
-            # actually costs something in every session — was lost among them.
-            # The `·` attaches it to the row rather than to the count beside it.
-            if posture and posture != "offered":
-                line += f"  · {posture}"
-            # The per-row note survives the glyph: `◐` says *look at this* and
-            # an edited copy and an unapplied one are looked at differently.
-            note = STATE_NOTE.get(condition)
-            print(f"{line.rstrip()}  {note}" if note else line.rstrip())
+            # One column for everything worth saying about the row beyond its
+            # mark, so a reader's eye lands in the same place whether what is
+            # notable is how the bundle loads or what is wrong with it.
+            #
+            # A posture only when it is not the default: nineteen rows saying
+            # `offered` is the word becoming wallpaper, and it buried `eager`,
+            # the posture that costs something in every session.
+            #
+            # A state tag because `◐` covers more than one condition — an
+            # edited copy and an unapplied one are looked at differently, and
+            # the mark alone cannot say which.
+            tags = [t for t in (
+                posture if posture and posture != "offered" else "",
+                STATE_TAG.get(condition, ""),
+            ) if t]
+            print((line + "".join(f"  · {t}" for t in tags)).rstrip())
 
     print()
     counts: dict[str, int] = {}

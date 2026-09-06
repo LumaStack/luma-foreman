@@ -142,6 +142,9 @@ rm -rf "$PROJECT/.luma/bundles/acme/bolts"
 
 list 'a missing copy is reported and fails' 1
 has '○'
+# Everything notable about a row lands in one column, so the eye finds it in the
+# same place whether it is how the bundle loads or what is wrong with it.
+has '· missing'
 has 'recorded, not on disk'
 has 'luma-foreman get acme/bolts'
 
@@ -168,6 +171,9 @@ echo 'drifted' >> "$PROJECT/.luma/bundles/acme/widgets/procedure/do-widgets.md"
 
 list 'drift gets the remedy for drift' 1
 has '◐'
+# `◐` covers more than one condition, so the mark alone cannot say which — the
+# tag is what tells an edited copy from an unapplied one at a glance.
+has '· edited'
 has 'not as recorded'
 has 'inspect --rule adoption'
 lacks 'adopted, not applied'

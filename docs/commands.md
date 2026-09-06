@@ -212,7 +212,7 @@ lumastack/luma-catalog
   ├─ ● audit-records           0.10.1  3 skills
   ├─ ◐ backlog-ideas           0.14.1  3 skills
   ├─ ⊘ command-line-interface  0.1.0             · standby
-  ├─ ○ decision-records        0.12.1
+  ├─ ○ decision-records        0.12.1            · missing
   └─ ● git-secrets             0.7.1   3 skills  · eager
 
 local
