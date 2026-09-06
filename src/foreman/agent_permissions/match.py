@@ -45,8 +45,18 @@ DOWNLOADS = re.compile(
 
 # The CLI's own writing subcommands, and shell-level writes aimed at the policy
 # directory or the gate. Reads stay ungated on purpose.
+# `luma-` is optional because the tool is commonly installed under both names,
+# and a second name the rule does not know is a hole in the one rule whose whole
+# job is stopping an agent editing the rules — failing OPEN, silently, which is
+# the direction that costs most.
+#
+# `[^\w.\-]` before it still does the work: `-` is excluded, so `acme-foreman`
+# cannot match, and `luma-foreman` cannot match at the short name either — the
+# engine backtracks and takes the full name.
+TOOL = r"(?:luma-)?foreman"
+
 CLI_WRITE = re.compile(
-    r"(?:^|[^\w.\-])luma-foreman\s+agent-permissions\s+(?:-\S+\s+)*"
+    rf"(?:^|[^\w.\-]){TOOL}\s+agent-permissions\s+(?:-\S+\s+)*"
     r"(?:set|unset|reset|edit|allow|ask|deny|install)(?:\s|$)"
 )
 PERMISSIONS_PATH = re.compile(
@@ -63,7 +73,12 @@ WRITE_OP = re.compile(r">|>>|tee|sed\s+-i|\bcp\b|\bmv\b|\brm\b|install|truncate|
 # policy reset curl` — how you run it from a checkout — was not exempt, so with
 # curl=deny the gate refused the command that would lift the deny. Same lockout
 # as before, reached by a different route.
-CLI_INVOCATION = re.compile(r"^\s*(?:[\w./\-]*/)?luma-foreman\s+agent-permissions(?:\s|$)")
+#
+# The short name matters more here than in `CLI_WRITE`. This is the exemption
+# that keeps the undo reachable — with `curl = deny` set, it is what stops the
+# gate refusing `agent-permissions reset curl`. A name it did not know would
+# reinstate exactly the lockout it exists to prevent, under the other spelling.
+CLI_INVOCATION = re.compile(rf"^\s*(?:[\w./\-]*/)?{TOOL}\s+agent-permissions(?:\s|$)")
 SEPARATORS = (";", "&", "|", "`", "$(", "<(")
 
 # curl/wget = "safe": a plain fetch is fine; writing to disk, uploading a body,

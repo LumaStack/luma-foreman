@@ -280,6 +280,16 @@ tb ask  'luma-foreman agent-permissions edit'
 tb ask  'luma-foreman agent-permissions install'          # reinstalling the gate counts
 tb ask  './bin/luma-foreman agent-permissions allow downloads'  # ...and when invoked via a path
 
+# The short name is the same program, so it is the same gate. A second name
+# that the rule does not know is a hole in the one rule whose whole job is
+# stopping an agent editing the rules — and it fails OPEN, silently.
+tb ask  'foreman agent-permissions allow downloads'
+tb ask  'foreman agent-permissions deny recursive_rm'
+tb ask  'foreman agent-permissions -g allow downloads'
+tb ask  'foreman agent-permissions install'
+tb none 'foreman agent-permissions show'          # ...and reads stay ungated under it too
+tb none 'foreman bundle list'                     # ...as does everything that is not policy
+
 tb none 'cat ~/.config/luma/luma-foreman/permissions.toml'   # reading is fine
 tb none 'luma-foreman agent-permissions show'             # ...as are all the read verbs
 tb none 'luma-foreman agent-permissions list'
