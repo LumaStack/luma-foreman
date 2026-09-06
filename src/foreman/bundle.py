@@ -229,12 +229,12 @@ def listing(project_root: Path) -> int:
     groups = adoption.by_namespace(list(rows))
     width = max(len(n) for _, names in groups for n in names)
     held = max(len(e.version) for e, _ in rows.values())
-    stance = max(
-        (len(survey.get(b, ("", 0))[0]) for b in rows), default=0
-    )
     # Right-aligned so 3 and 12 line up under each other, which is the whole
     # reason to print a number rather than a mark saying *some*.
     tally = max((len(str(survey.get(b, ("", 0))[1])) for b in rows), default=1)
+    # The whole skills cell, padded even when empty, so a posture tag after it
+    # lands in one column rather than wherever the row happens to end.
+    cell = tally + 1 + len("skills")
 
     marks: dict[str, str] = {}
     skills = 0
@@ -242,7 +242,7 @@ def listing(project_root: Path) -> int:
         if i:
             print()
         print(namespace)
-        for name in names:
+        for position, name in enumerate(names):
             bundle_id = f"{namespace}/{name}" if namespace else name
             entry, condition = rows[bundle_id]
             state = _state(project_root, entry)
@@ -250,13 +250,25 @@ def listing(project_root: Path) -> int:
             mark = adoption.mark(state)
             posture, procedures = survey.get(bundle_id, ("", 0))
             skills += procedures
-            line = (
-                f"  {mark} {name:<{width}}  {entry.version:<{held}}"
-                f"  {posture:<{stance}}"
+            # Ties every row to the heading above it, which is the one piece of
+            # structure this listing has. The convention is `tree`'s, and by now
+            # `npm ls`, `cargo tree`, `pstree` and `systemctl status` — the last
+            # of which decorates a flat list exactly like this one.
+            branch = "└─" if position == len(names) - 1 else "├─"
+            skilled = (
+                f"{procedures:>{tally}} {adoption.count(procedures, 'skill').split(' ', 1)[1]}"
+                if procedures else ""
             )
-            if procedures:
-                noun = "skill" if procedures == 1 else "skills"
-                line += f"  {procedures:>{tally}} {noun}"
+            line = (
+                f"  {branch} {mark} {name:<{width}}  {entry.version:<{held}}"
+                f"  {skilled:<{cell}}"
+            )
+            # Only when it is not the default. Nineteen rows saying `offered`
+            # is the word becoming wallpaper, and `eager` — the posture that
+            # actually costs something in every session — was lost among them.
+            # The `·` attaches it to the row rather than to the count beside it.
+            if posture and posture != "offered":
+                line += f"  · {posture}"
             # The per-row note survives the glyph: `◐` says *look at this* and
             # an edited copy and an unapplied one are looked at differently.
             note = STATE_NOTE.get(condition)
@@ -267,9 +279,9 @@ def listing(project_root: Path) -> int:
     for state in marks.values():
         if state:
             counts[state] = counts.get(state, 0) + 1
-    summary = f"{len(rows)} bundle(s)"
+    summary = adoption.count(len(rows), "bundle")
     if skills:
-        summary += f" · {skills} skill(s)"
+        summary += f" · {adoption.count(skills, 'skill')}"
     print(summary)
 
     # Only states actually present get a line. A legend explaining marks that

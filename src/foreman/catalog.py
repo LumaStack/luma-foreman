@@ -282,9 +282,9 @@ def find(source: str) -> Catalog | str:
 
 
 
-def _count(n: int, noun: str) -> str:
-    """`1 bundle`, `19 bundles`. A `(s)` makes the reader do the work."""
-    return f"{n} {noun}" if n == 1 else f"{n} {noun}s"
+# In `adoption` since `bundle list` needs the same phrasing, and two commands
+# counting the same things differently is the sort of seam a reader notices.
+_count = adoption.count
 
 
 def _terminal_width() -> int:

@@ -78,6 +78,11 @@ DISABLED = "⊘"    # here, and deliberately turned off
 ABSENT = "○"      # not here — never taken, or recorded and gone from disk
 
 
+def count(n: int, noun: str) -> str:
+    """`1 bundle`, `19 bundles`. A `(s)` makes the reader do the work."""
+    return f"{n} {noun}" if n == 1 else f"{n} {noun}s"
+
+
 def mark(standing: str) -> str:
     """The glyph for a standing — and `UNWIRED` for anything not named here.
 

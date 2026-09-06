@@ -209,16 +209,20 @@ many skills it holds:
 
 ```
 lumastack/luma-catalog
-  ● audit-records           0.10.1  offered    3 skills
-  ◐ git-secrets             0.7.1   offered    3 skills
-  ⊘ token-manager           0.12.1  standby    2 skills
-  ○ versioning              0.7.1   eager
+  ├─ ● audit-records           0.10.1  3 skills
+  ├─ ◐ backlog-ideas           0.14.1  3 skills
+  ├─ ⊘ command-line-interface  0.1.0             · standby
+  ├─ ○ decision-records        0.12.1
+  └─ ● git-secrets             0.7.1   3 skills  · eager
 
-19 bundle(s) · 45 skill(s)
+local
+  └─ ● widgets                 0.1.0   1 skill
+
+20 bundles · 44 skills
 
   ◐ 1 adopted, not applied     luma-foreman apply
-  ⊘ 1 turned off               luma-foreman bundle set token-manager register
-  ○ 1 recorded, not on disk    luma-foreman get lumastack/luma-catalog/versioning
+  ⊘ 1 turned off               luma-foreman bundle set command-line-interface register
+  ○ 1 recorded, not on disk    luma-foreman get lumastack/luma-catalog/decision-records
 ```
 
 | | |
@@ -248,9 +252,19 @@ than a vague explanation.
 
 **The posture is derived from the bundle's own `matches`**, per ADR-0007, and is
 the bundle's rather than its documents': `eager` is in every session, `offered`
-is opened when the work matches, `standby` is reached by name. The skill count
-is what the bundle holds, not what is currently loaded — the mark already says
-whether it is active.
+is opened when the work matches, `standby` is reached by name. **Only a posture
+that is not `offered` is shown** — the default on every row is a word becoming
+wallpaper, and it buried `eager`, the one that costs something in every session.
+The `·` attaches the tag to the row rather than to the count beside it.
+
+The skill count is what the bundle holds, not what is currently loaded — the
+mark already says whether it is active.
+
+**The output is decorated for a person reading it.** Box-drawing and status
+marks are plain UTF-8, so they survive copy and paste and `grep` matches lines
+through them untouched — but field extraction with `awk` or `cut` is not what
+this output is for, and `inspect` and `bundle outdated` carry `--json` where
+machine consumption is real.
 
 ## catalog — where knowledge comes from
 

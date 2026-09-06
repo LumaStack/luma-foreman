@@ -94,10 +94,22 @@ has 'luma-foreman apply'
 lacks '⊘'
 lacks 'turned off'
 
-# Posture is read from each bundle's own matcher, not guessed.
-has 'eager'
-has 'standby'
-has 'offered'
+# Posture is read from each bundle's own matcher, not guessed — and shown only
+# where it is not the default. Nineteen rows saying `offered` is the word
+# becoming wallpaper, and `eager`, the posture that costs something in every
+# session, was the one lost among them. The `·` attaches the tag to the row
+# rather than to the skill count beside it.
+has '· eager'
+has '· standby'
+lacks 'offered'
+
+# Rows are tied to the heading above them, last one closing the group.
+has '├─'
+has '└─'
+
+# Counted in words rather than with a `(s)` that makes the reader do the work.
+has 'bundles'
+lacks 'bundle(s)'
 
 # The count is what a bundle holds, and says so in the singular where it is one.
 has '1 skill'
