@@ -145,19 +145,26 @@ UNWIRED = adoption.UNWIRED
 DISABLED = adoption.DISABLED
 ABSENT = adoption.ABSENT
 
-# Keyed on the reason rather than on the glyph, because `◐` deliberately covers
-# two of them and they are fixed differently. Merging them in the mark is right
-# — both mean *look at this* — and merging them here would print `apply` at
-# somebody whose copy is applied and edited, which is a remedy that does
+# Keyed on the reason rather than on the glyph, because `◐` is a catch-all and
+# the reasons under it are fixed differently. Merging them in the mark is right
+# — all of them mean *look at this* — and merging them here would print `apply`
+# at somebody whose copy is applied and edited, which is a remedy that does
 # nothing. Each carries the one command that resolves it, per ADR-0013.
+#
+# The glyph is not stored beside them: `adoption.mark` owns that, so a reason
+# added here inherits `◐` without anybody choosing it.
 LEGEND = {
-    "unapplied": (UNWIRED, "adopted, not applied", "luma-foreman apply"),
-    "drifted": (UNWIRED, "not as recorded",
-                "luma-foreman inspect --rule adoption"),
-    "disabled": (DISABLED, "turned off",
-                 "luma-foreman bundle set {bundle} register"),
-    "absent": (ABSENT, "recorded, not on disk", "luma-foreman get {bundle}"),
+    "unapplied": ("adopted, not applied", "luma-foreman apply"),
+    "drifted": ("not as recorded", "luma-foreman inspect --rule adoption"),
+    "disabled": ("turned off", "luma-foreman bundle set {bundle} register"),
+    "absent": ("recorded, not on disk", "luma-foreman get {bundle}"),
 }
+
+# What a state with no entry above says for itself. `◐` is deliberately a
+# residual, so a reason nobody has named yet still gets a line and a way in —
+# a row marked as not working with nothing explaining it is worse than a vague
+# explanation.
+UNNAMED = ("here, and not working", "luma-foreman inspect")
 
 
 def _posture(matches: tuple[str, ...]) -> str:
@@ -240,7 +247,7 @@ def listing(project_root: Path) -> int:
             entry, condition = rows[bundle_id]
             state = _state(project_root, entry)
             marks[bundle_id] = state
-            mark = LEGEND[state][0] if state else WIRED
+            mark = adoption.mark(state)
             posture, procedures = survey.get(bundle_id, ("", 0))
             skills += procedures
             line = (
@@ -256,7 +263,10 @@ def listing(project_root: Path) -> int:
             print(f"{line.rstrip()}  {note}" if note else line.rstrip())
 
     print()
-    counts = {m: sum(1 for v in marks.values() if v == m) for m in LEGEND}
+    counts: dict[str, int] = {}
+    for state in marks.values():
+        if state:
+            counts[state] = counts.get(state, 0) + 1
     summary = f"{len(rows)} bundle(s)"
     if skills:
         summary += f" · {skills} skill(s)"
@@ -264,15 +274,20 @@ def listing(project_root: Path) -> int:
 
     # Only states actually present get a line. A legend explaining marks that
     # are not on the screen is a legend nobody reads by the third time.
-    if any(counts.values()):
+    if counts:
         print()
-        first = {s: next(b for b, v in marks.items() if v == s)
-                 for s, n in counts.items() if n}
-        label = max(len(t) for s, (_, t, _) in LEGEND.items() if counts[s])
-        for state, (mark, text, fix) in LEGEND.items():
-            if counts[state]:
-                remedy = fix.format(bundle=first[state])
-                print(f"  {mark} {counts[state]} {text:<{label}}  {remedy}")
+        first = {s: next(b for b, v in marks.items() if v == s) for s in counts}
+        # Named reasons in their declared order, then anything this version does
+        # not have a name for — so a newer manifest read by an older foreman
+        # still explains itself rather than showing a mark and going quiet.
+        order = [s for s in LEGEND if s in counts]
+        order += [s for s in counts if s not in LEGEND]
+        label = max(len(LEGEND.get(s, UNNAMED)[0]) for s in order)
+        for state in order:
+            text, fix = LEGEND.get(state, UNNAMED)
+            remedy = fix.format(bundle=first[state])
+            print(f"  {adoption.mark(state)} {counts[state]} "
+                  f"{text:<{label}}  {remedy}")
 
     # No trailing `inspect --rule adoption` line any more: every state that
     # would have earned it now has a legend entry naming the command that fixes

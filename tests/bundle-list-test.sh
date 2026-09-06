@@ -160,5 +160,21 @@ has 'not as recorded'
 has 'inspect --rule adoption'
 lacks 'adopted, not applied'
 
+# --- ◐ is a residual, not a pair of conditions -----------------------------------
+# Asserted below the CLI because no unnamed state exists to drive it through one,
+# which is exactly why it would rot unnoticed. The failure direction is the whole
+# point: enumerating the bad states and calling everything else healthy means a
+# condition nobody thought of reports as ●, and a bundle broken in a new way
+# claiming to work is the reading that costs most.
+
+MARK=$(cd "$ROOT" && python3 -c "import sys; sys.path.insert(0,'src'); from foreman import adoption; print(adoption.mark('a-condition-nobody-has-named'))" 2>&1)
+[ "$MARK" = "◐" ] && ok || bad "an unnamed standing should mark as ◐, got '$MARK'"
+
+for pair in ':●' 'disabled:⊘' 'absent:○' 'drifted:◐' 'unapplied:◐'; do
+  state=${pair%:*} want=${pair#*:}
+  MARK=$(cd "$ROOT" && python3 -c "import sys; sys.path.insert(0,'src'); from foreman import adoption; print(adoption.mark('$state'))" 2>&1)
+  [ "$MARK" = "$want" ] && ok || bad "standing '$state' should mark as $want, got '$MARK'"
+done
+
 printf '\n%d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ] || exit 1

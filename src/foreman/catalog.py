@@ -378,14 +378,10 @@ def show(source: str, project_root: Path) -> int:
         entry = held_here.get(bundle_id)
         # `standing` answers for a bundle this project holds; not holding one at
         # all is the case only this side has, and it reads as absent too.
-        mark = {
-            None: adoption.ABSENT,
-            "absent": adoption.ABSENT,
-            "disabled": adoption.DISABLED,
-            "drifted": adoption.UNWIRED,
-            "unapplied": adoption.UNWIRED,
-            "": adoption.WIRED,
-        }[None if entry is None else adoption.standing(project_root, entry)]
+        mark = adoption.mark(
+            "absent" if entry is None
+            else adoption.standing(project_root, entry)
+        )
         rows.append((
             mark,
             name,

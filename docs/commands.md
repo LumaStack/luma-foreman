@@ -224,18 +224,27 @@ lumastack/luma-catalog
 | | |
 | --- | --- |
 | `●` | here, wired, working |
-| `◐` | here, and not reaching an agent — unapplied, or edited and drifted |
+| `◐` | here, and not working — **the catch-all** |
 | `⊘` | here, and deliberately turned off |
 | `○` | not here — never taken, or recorded and gone from disk |
+
+**`◐` is a residual rather than a list of conditions.** Everything except
+deliberately-off falls into it. Today that is an unapplied copy and a drifted
+one, because those are the two failures anything currently detects — a third
+would land there without the marks changing. The default runs that way round on
+purpose: naming the bad states and calling everything else healthy would report
+a bundle broken in some new way as `●`.
 
 **The same four marks mean the same four things in `catalog show`**, which sees
 these bundles from the catalog's side. One reader learns them once, and the two
 commands cannot disagree about a bundle because one function answers for both.
 
 **Only states that are present get a legend line**, each naming the command that
-resolves that state. `◐` covers two causes deliberately — both mean *look at
-this* — but they are fixed differently, so an unapplied copy is offered `apply`
-and a drifted one is offered `inspect`.
+resolves that state. The legend keys on the cause rather than the mark, because
+the causes under `◐` are fixed differently — an unapplied copy is offered
+`apply`, a drifted one `inspect`. A cause with no entry still gets a line and a
+way in, since a row marked as not working with nothing explaining it is worse
+than a vague explanation.
 
 **The posture is derived from the bundle's own `matches`**, per ADR-0007, and is
 the bundle's rather than its documents': `eager` is in every session, `offered`

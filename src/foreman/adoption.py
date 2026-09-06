@@ -73,9 +73,32 @@ LOCAL = "local"
 # as *off*, and a mark that misleads everybody is worse than one that drifts a
 # column for some.
 WIRED = "●"       # here, wired, working
-UNWIRED = "◐"     # here, and not reaching an agent — unapplied, or drifted
+UNWIRED = "◐"     # here, and not working — the catch-all
 DISABLED = "⊘"    # here, and deliberately turned off
 ABSENT = "○"      # not here — never taken, or recorded and gone from disk
+
+
+def mark(standing: str) -> str:
+    """The glyph for a standing — and `UNWIRED` for anything not named here.
+
+    **`◐` is the residual, not a pair of conditions.** It means *here, and not
+    working*, with everything except deliberately-off falling into it. Today
+    that is an unapplied copy and a drifted one, because those are the two
+    failures anything currently detects; a third would land here without this
+    function being touched, which is the point.
+
+    Written as a default rather than an enumeration so the failure direction is
+    right. Listing the bad states and calling everything else healthy means a
+    condition nobody thought of reports as `●` — a bundle that is broken in a
+    new way claiming to work, which is the reading that costs most. The three
+    states below are the ones a reader can act on specifically; the residual is
+    honest about being a residual.
+    """
+    return {
+        "": WIRED,
+        "disabled": DISABLED,
+        "absent": ABSENT,
+    }.get(standing, UNWIRED)
 
 
 @dataclass(frozen=True)
@@ -359,6 +382,12 @@ def standing(project: Path, entry: Adopted) -> str:
     not on disk cannot meaningfully be turned off; one deliberately turned off
     is not *failing* to be applied, it is doing what somebody asked. Reporting
     the shallower state first sends a reader to fix something that is not wrong.
+
+    **`drifted` and `unapplied` are today's known failures, not the whole set.**
+    Both render as `◐`, which is the catch-all for *here and not working* — so a
+    condition worth distinguishing later is a new key returned from here, and
+    `mark` puts it under the same glyph without being changed. Only a state a
+    reader can act on differently earns its own name.
     """
     if state(project, entry) == "missing":
         return "absent"
