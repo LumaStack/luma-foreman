@@ -41,12 +41,49 @@ _types/idea/
 Whether migrations are prose an agent follows or something executable is open,
 and the answer probably differs by tool.
 
+## Putting it in `type:` itself
+
+The candidate spellings, and what decides between them:
+
+| | |
+| --- | --- |
+| `type: idea@1.0` | **the strongest.** `@` is a YAML reserved indicator only at the *start* of a plain scalar, so this is safe. And *name at version* reads instantly from npm, Go modules and pip |
+| `type: idea:1.0` | legal — a colon not followed by a space stays in the scalar — but colon is the structural separator, so a line carries two of them and `type: idea: 1.0` is a parse error |
+| `type: idea (1.0)` | two tokens where readers expect one, whitespace-significant, parens to strip. The most work for a parser that is a deliberate minimal subset |
+| `type: idea#1.0` | **rule out.** `#` opens a comment when preceded by whitespace, so `type: idea #1.0` silently becomes `idea` and the version vanishes with no error |
+
+Namespaced types already carry a `/` — `luma/idea@1.0` — and none of these
+collide with it.
+
+## The bootstrap problem, which probably decides more than the syntax
+
+**Putting a version inside `type:` is the one change the estate's own technique
+cannot absorb.** `change-a-shared-type` says *"Add the new form; keep the old
+one. Both valid"* — that works for any field a reader can fall back on, and not
+for the field every reader dispatches on. `luma/idea@1.0` is an unknown type to
+every tool shipping today.
+
+In foreman alone that is `bundle_index.py:105` (`== "procedure"`) and
+`apply.py:175` (`d.type == kind`), across 236 documents in 12 type values, and
+foreman is one of several tools that read this.
+
+**Which suggests the order matters more than the spelling.** Teach readers to
+split on the separator and compare the name before anything writes a version.
+That change is small, ships harmlessly, and is field-tolerance applied to the
+*value* rather than to the field — after which versioned and unversioned forms
+coexist exactly as the procedure intends.
+
+**The alternative is a sibling field** — `type_version: 1.0` — which old
+readers ignore for free, since unknown frontmatter keys are already ignored. It
+rolls out with no sequencing at all. What it buys in safety it pays for in
+drift: a sibling can go stale against the type it describes, and an in-band
+version cannot be separated from what it versions.
+
 ## Open
 
-**What carries the version.** A field on every document is the obvious answer
-and the most invasive — it touches every file the estate has. Whether a bundle
-declaring the type versions it was built against would do instead is worth
-weighing, since that is one line per bundle rather than one per document.
+**What carries the version.** In-band on `type:`, a sibling field, or one line
+per bundle declaring what it was built against — one line per bundle rather
+than one per document, at the cost of granularity.
 
 **Which version is recorded** — the type's, or the format's. They move at
 different rates and conflating them is how a version stops meaning anything.
