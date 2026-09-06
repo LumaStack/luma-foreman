@@ -78,6 +78,14 @@ on_violation = "allow"
 matches = ["eager"]
 
 [[rule]]
+bundle = "lumastack/luma-catalog/command-line-interface"
+document = "policy/command-line-style-guide"
+title = "Command line style guide"
+path = ".luma/bundles/lumastack/luma-catalog/command-line-interface/policy/command-line-style-guide.md"
+on_violation = "allow"
+matches = ["eager"]
+
+[[rule]]
 bundle = "lumastack/luma-catalog/decision-records"
 document = "policy/decision-guidelines"
 title = "Writing a decision record"
