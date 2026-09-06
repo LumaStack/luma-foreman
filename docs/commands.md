@@ -204,6 +204,68 @@ luma-foreman bundle outdated         # which have a newer version published
 **`list` and `show` read committed state and work offline. `outdated` reaches
 each bundle's catalog and needs a network.**
 
+`list` reports what each bundle is doing here, how it reaches an agent, and how
+many skills it holds:
+
+```
+lumastack/luma-catalog
+  ├─ ● audit-records           0.10.1  3 skills
+  ├─ ◐ backlog-ideas           0.14.1  3 skills
+  ├─ ⊘ command-line-interface  0.1.0             · standby
+  ├─ ○ decision-records        0.12.1            · missing
+  └─ ● git-secrets             0.7.1   3 skills  · eager
+
+local
+  └─ ● widgets                 0.1.0   1 skill
+
+20 bundles · 44 skills
+
+  ◐ 1 adopted, not applied     luma-foreman apply
+  ⊘ 1 turned off               luma-foreman bundle set command-line-interface register
+  ○ 1 recorded, not on disk    luma-foreman get lumastack/luma-catalog/decision-records
+```
+
+| | |
+| --- | --- |
+| `●` | here, wired, working |
+| `◐` | here, and not working — **the catch-all** |
+| `⊘` | here, and deliberately turned off |
+| `○` | not here — never taken, or recorded and gone from disk |
+
+**`◐` is a residual rather than a list of conditions.** Everything except
+deliberately-off falls into it. Today that is an unapplied copy and a drifted
+one, because those are the two failures anything currently detects — a third
+would land there without the marks changing. The default runs that way round on
+purpose: naming the bad states and calling everything else healthy would report
+a bundle broken in some new way as `●`.
+
+**The same four marks mean the same four things in `catalog show`**, which sees
+these bundles from the catalog's side. One reader learns them once, and the two
+commands cannot disagree about a bundle because one function answers for both.
+
+**Only states that are present get a legend line**, each naming the command that
+resolves that state. The legend keys on the cause rather than the mark, because
+the causes under `◐` are fixed differently — an unapplied copy is offered
+`apply`, a drifted one `inspect`. A cause with no entry still gets a line and a
+way in, since a row marked as not working with nothing explaining it is worse
+than a vague explanation.
+
+**The posture is derived from the bundle's own `matches`**, per ADR-0007, and is
+the bundle's rather than its documents': `eager` is in every session, `offered`
+is opened when the work matches, `standby` is reached by name. **Only a posture
+that is not `offered` is shown** — the default on every row is a word becoming
+wallpaper, and it buried `eager`, the one that costs something in every session.
+The `·` attaches the tag to the row rather than to the count beside it.
+
+The skill count is what the bundle holds, not what is currently loaded — the
+mark already says whether it is active.
+
+**The output is decorated for a person reading it.** Box-drawing and status
+marks are plain UTF-8, so they survive copy and paste and `grep` matches lines
+through them untouched — but field extraction with `awk` or `cut` is not what
+this output is for, and `inspect` and `bundle outdated` carry `--json` where
+machine consumption is real.
+
 ## catalog — where knowledge comes from
 
 ```bash

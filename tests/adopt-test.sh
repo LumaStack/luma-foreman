@@ -457,7 +457,9 @@ bundle  'unknown verb refused' 2 nonsense
 # turns into a finding.
 printf 'edited\n' >> "$VENDORED/policy/rules.md"
 bundle 'bundle list flags an edit' 1 list
-has 'edited here'
+# A tag in the listing, a sentence in `show`. The mark says something is wrong
+# and cannot say which of the things `◐` covers this is, so the tag does.
+has '· edited'
 bundle 'bundle show flags an edit' 1 show acme/widgets
 has 'edited'
 get 'restore the copy' 0 acme/widgets --force --from "$CATALOG"

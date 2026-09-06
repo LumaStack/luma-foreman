@@ -61,6 +61,16 @@ STATE_NOTE = {
     "missing": "recorded but not on disk",
 }
 
+# The same facts as a tag, for a row in `bundle list`. The prose above belongs
+# to `bundle show`, which is looking at one bundle and has the room to explain;
+# in a list it repeats what the mark and the legend already say, at the width of
+# a sentence. Kept as its own map rather than a truncation, because a tag is
+# written to be read in a column and a sentence is not.
+STATE_TAG = {
+    "edited": "edited",
+    "missing": "missing",
+}
+
 # One segment, the shape a directory name and a bundle ID's last part share.
 # The namespace is always `local`, so a name carrying a slash is somebody
 # addressing a catalog bundle with the command that cannot make one.
@@ -140,6 +150,77 @@ def _documents(home: Path) -> list[str]:
     return out
 
 
+WIRED = adoption.WIRED
+UNWIRED = adoption.UNWIRED
+DISABLED = adoption.DISABLED
+ABSENT = adoption.ABSENT
+
+# Keyed on the reason rather than on the glyph, because `◐` is a catch-all and
+# the reasons under it are fixed differently. Merging them in the mark is right
+# — all of them mean *look at this* — and merging them here would print `apply`
+# at somebody whose copy is applied and edited, which is a remedy that does
+# nothing. Each carries the one command that resolves it, per ADR-0013.
+#
+# The glyph is not stored beside them: `adoption.mark` owns that, so a reason
+# added here inherits `◐` without anybody choosing it.
+LEGEND = {
+    "unapplied": ("adopted, not applied", "luma-foreman apply"),
+    "drifted": ("not as recorded", "luma-foreman inspect --rule adoption"),
+    "disabled": ("turned off", "luma-foreman bundle set {bundle} register"),
+    "absent": ("recorded, not on disk", "luma-foreman get {bundle}"),
+}
+
+# What a state with no entry above says for itself. `◐` is deliberately a
+# residual, so a reason nobody has named yet still gets a line and a way in —
+# a row marked as not working with nothing explaining it is worse than a vague
+# explanation.
+UNNAMED = ("here, and not working", "luma-foreman inspect")
+
+
+def _posture(matches: tuple[str, ...]) -> str:
+    """How the bundle itself reaches an agent, derived from its own `matches`.
+
+    Container-relative, per ADR-0007, and the bundle level is not the document
+    level: a document with no matcher is standby because nothing should announce
+    it, while a **bundle** with none is offered, because a bundle nothing
+    announces cannot be found at all. That is the rule `apply` already builds
+    the project index from, read here rather than re-derived.
+    """
+    if matches == ("eager",):
+        return "eager"
+    if matches == ("nothing",):
+        return "standby"
+    return "offered"
+
+
+def _survey(project_root: Path) -> dict[str, tuple[str, int]]:
+    """Posture and skill count per bundle, or an empty map if the tree will not read.
+
+    **Degrades rather than fails.** This walks every document to count what a
+    bundle would register, which is the one part of this listing that can throw
+    on a malformed bundle. `bundle list` answering *what do I hold* is worth
+    more than it being complete, and `inspect` is what reports a bundle that
+    cannot be parsed.
+    """
+    try:
+        from . import apply
+        found = apply.discover(project_root)
+    except Exception:
+        return {}
+    return {
+        b.bundle_id: (
+            _posture(b.matches),
+            sum(1 for d in b.docs if d.type == "procedure"),
+        )
+        for b in found
+    }
+
+
+# Lives in `adoption` because `catalog show` reports the same states from the
+# catalog's side, and the two disagreeing is invisible to a reader.
+_state = adoption.standing
+
+
 def listing(project_root: Path) -> int:
     entries = adoption.read(project_root)
     if not entries:
@@ -154,27 +235,93 @@ def listing(project_root: Path) -> int:
         return 0
 
     rows = {b: (e, adoption.state(project_root, e)) for b, e in entries.items()}
+    survey = _survey(project_root)
     groups = adoption.by_namespace(list(rows))
     width = max(len(n) for _, names in groups for n in names)
     held = max(len(e.version) for e, _ in rows.values())
+    # Right-aligned so 3 and 12 line up under each other, which is the whole
+    # reason to print a number rather than a mark saying *some*.
+    tally = max((len(str(survey.get(b, ("", 0))[1])) for b in rows), default=1)
+    # The whole skills cell, padded even when empty, so a posture tag after it
+    # lands in one column rather than wherever the row happens to end.
+    cell = tally + 1 + len("skills")
 
+    marks: dict[str, str] = {}
+    skills = 0
     for i, (namespace, names) in enumerate(groups):
         if i:
             print()
         print(namespace)
-        for name in names:
-            entry, condition = rows[f"{namespace}/{name}" if namespace else name]
-            line = f"  {name:<{width}}  {entry.version:<{held}}"
-            note = STATE_NOTE.get(condition)
-            print(f"{line}  {note}" if note else line.rstrip())
+        for position, name in enumerate(names):
+            bundle_id = f"{namespace}/{name}" if namespace else name
+            entry, condition = rows[bundle_id]
+            state = _state(project_root, entry)
+            marks[bundle_id] = state
+            mark = adoption.mark(state)
+            posture, procedures = survey.get(bundle_id, ("", 0))
+            skills += procedures
+            # Ties every row to the heading above it, which is the one piece of
+            # structure this listing has. The convention is `tree`'s, and by now
+            # `npm ls`, `cargo tree`, `pstree` and `systemctl status` — the last
+            # of which decorates a flat list exactly like this one.
+            branch = "└─" if position == len(names) - 1 else "├─"
+            skilled = (
+                f"{procedures:>{tally}} {adoption.count(procedures, 'skill').split(' ', 1)[1]}"
+                if procedures else ""
+            )
+            line = (
+                f"  {branch} {mark} {name:<{width}}  {entry.version:<{held}}"
+                f"  {skilled:<{cell}}"
+            )
+            # One column for everything worth saying about the row beyond its
+            # mark, so a reader's eye lands in the same place whether what is
+            # notable is how the bundle loads or what is wrong with it.
+            #
+            # A posture only when it is not the default: nineteen rows saying
+            # `offered` is the word becoming wallpaper, and it buried `eager`,
+            # the posture that costs something in every session.
+            #
+            # A state tag because `◐` covers more than one condition — an
+            # edited copy and an unapplied one are looked at differently, and
+            # the mark alone cannot say which.
+            tags = [t for t in (
+                posture if posture and posture != "offered" else "",
+                STATE_TAG.get(condition, ""),
+            ) if t]
+            print((line + "".join(f"  · {t}" for t in tags)).rstrip())
 
     print()
-    wrong = [c for _, c in rows.values() if c != "ok"]
-    print(f"{len(rows)} bundle(s)" + (f", {len(wrong)} not as recorded." if wrong else "."))
-    if wrong:
+    counts: dict[str, int] = {}
+    for state in marks.values():
+        if state:
+            counts[state] = counts.get(state, 0) + 1
+    summary = adoption.count(len(rows), "bundle")
+    if skills:
+        summary += f" · {adoption.count(skills, 'skill')}"
+    print(summary)
+
+    # Only states actually present get a line. A legend explaining marks that
+    # are not on the screen is a legend nobody reads by the third time.
+    if counts:
         print()
-        print("  luma-foreman inspect --rule adoption    what to do about each")
-    return 1 if wrong else 0
+        first = {s: next(b for b, v in marks.items() if v == s) for s in counts}
+        # Named reasons in their declared order, then anything this version does
+        # not have a name for — so a newer manifest read by an older foreman
+        # still explains itself rather than showing a mark and going quiet.
+        order = [s for s in LEGEND if s in counts]
+        order += [s for s in counts if s not in LEGEND]
+        label = max(len(LEGEND.get(s, UNNAMED)[0]) for s in order)
+        for state in order:
+            text, fix = LEGEND.get(state, UNNAMED)
+            remedy = fix.format(bundle=first[state])
+            print(f"  {adoption.mark(state)} {counts[state]} "
+                  f"{text:<{label}}  {remedy}")
+
+    # No trailing `inspect --rule adoption` line any more: every state that
+    # would have earned it now has a legend entry naming the command that fixes
+    # that state specifically, and a general remedy printed under a specific one
+    # reads as a second thing to try rather than the same thing again.
+    return 1 if any(c != "ok" for _, c in rows.values()) else 0
 
 
 def show(project_root: Path, requested: str) -> int:
