@@ -204,6 +204,45 @@ luma-foreman bundle outdated         # which have a newer version published
 **`list` and `show` read committed state and work offline. `outdated` reaches
 each bundle's catalog and needs a network.**
 
+`list` reports what each bundle is doing here, how it reaches an agent, and how
+many skills it holds:
+
+```
+lumastack/luma-catalog
+  ● audit-records           0.10.1  offered    3 skills
+  ◐ git-secrets             0.7.1   offered    3 skills
+  ⊘ token-manager           0.12.1  standby    2 skills
+  ○ versioning              0.7.1   eager
+
+19 bundle(s) · 45 skill(s)
+
+  ◐ 1 adopted, not applied     luma-foreman apply
+  ⊘ 1 turned off               luma-foreman bundle set token-manager register
+  ○ 1 recorded, not on disk    luma-foreman get lumastack/luma-catalog/versioning
+```
+
+| | |
+| --- | --- |
+| `●` | here, wired, working |
+| `◐` | here, and not reaching an agent — unapplied, or edited and drifted |
+| `⊘` | here, and deliberately turned off |
+| `○` | not here — never taken, or recorded and gone from disk |
+
+**The same four marks mean the same four things in `catalog show`**, which sees
+these bundles from the catalog's side. One reader learns them once, and the two
+commands cannot disagree about a bundle because one function answers for both.
+
+**Only states that are present get a legend line**, each naming the command that
+resolves that state. `◐` covers two causes deliberately — both mean *look at
+this* — but they are fixed differently, so an unapplied copy is offered `apply`
+and a drifted one is offered `inspect`.
+
+**The posture is derived from the bundle's own `matches`**, per ADR-0007, and is
+the bundle's rather than its documents': `eager` is in every session, `offered`
+is opened when the work matches, `standby` is reached by name. The skill count
+is what the bundle holds, not what is currently loaded — the mark already says
+whether it is active.
+
 ## catalog — where knowledge comes from
 
 ```bash

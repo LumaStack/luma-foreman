@@ -140,6 +140,70 @@ def _documents(home: Path) -> list[str]:
     return out
 
 
+WIRED = adoption.WIRED
+UNWIRED = adoption.UNWIRED
+DISABLED = adoption.DISABLED
+ABSENT = adoption.ABSENT
+
+# Keyed on the reason rather than on the glyph, because `◐` deliberately covers
+# two of them and they are fixed differently. Merging them in the mark is right
+# — both mean *look at this* — and merging them here would print `apply` at
+# somebody whose copy is applied and edited, which is a remedy that does
+# nothing. Each carries the one command that resolves it, per ADR-0013.
+LEGEND = {
+    "unapplied": (UNWIRED, "adopted, not applied", "luma-foreman apply"),
+    "drifted": (UNWIRED, "not as recorded",
+                "luma-foreman inspect --rule adoption"),
+    "disabled": (DISABLED, "turned off",
+                 "luma-foreman bundle set {bundle} register"),
+    "absent": (ABSENT, "recorded, not on disk", "luma-foreman get {bundle}"),
+}
+
+
+def _posture(matches: tuple[str, ...]) -> str:
+    """How the bundle itself reaches an agent, derived from its own `matches`.
+
+    Container-relative, per ADR-0007, and the bundle level is not the document
+    level: a document with no matcher is standby because nothing should announce
+    it, while a **bundle** with none is offered, because a bundle nothing
+    announces cannot be found at all. That is the rule `apply` already builds
+    the project index from, read here rather than re-derived.
+    """
+    if matches == ("eager",):
+        return "eager"
+    if matches == ("nothing",):
+        return "standby"
+    return "offered"
+
+
+def _survey(project_root: Path) -> dict[str, tuple[str, int]]:
+    """Posture and skill count per bundle, or an empty map if the tree will not read.
+
+    **Degrades rather than fails.** This walks every document to count what a
+    bundle would register, which is the one part of this listing that can throw
+    on a malformed bundle. `bundle list` answering *what do I hold* is worth
+    more than it being complete, and `inspect` is what reports a bundle that
+    cannot be parsed.
+    """
+    try:
+        from . import apply
+        found = apply.discover(project_root)
+    except Exception:
+        return {}
+    return {
+        b.bundle_id: (
+            _posture(b.matches),
+            sum(1 for d in b.docs if d.type == "procedure"),
+        )
+        for b in found
+    }
+
+
+# Lives in `adoption` because `catalog show` reports the same states from the
+# catalog's side, and the two disagreeing is invisible to a reader.
+_state = adoption.standing
+
+
 def listing(project_root: Path) -> int:
     entries = adoption.read(project_root)
     if not entries:
@@ -154,27 +218,67 @@ def listing(project_root: Path) -> int:
         return 0
 
     rows = {b: (e, adoption.state(project_root, e)) for b, e in entries.items()}
+    survey = _survey(project_root)
     groups = adoption.by_namespace(list(rows))
     width = max(len(n) for _, names in groups for n in names)
     held = max(len(e.version) for e, _ in rows.values())
+    stance = max(
+        (len(survey.get(b, ("", 0))[0]) for b in rows), default=0
+    )
+    # Right-aligned so 3 and 12 line up under each other, which is the whole
+    # reason to print a number rather than a mark saying *some*.
+    tally = max((len(str(survey.get(b, ("", 0))[1])) for b in rows), default=1)
 
+    marks: dict[str, str] = {}
+    skills = 0
     for i, (namespace, names) in enumerate(groups):
         if i:
             print()
         print(namespace)
         for name in names:
-            entry, condition = rows[f"{namespace}/{name}" if namespace else name]
-            line = f"  {name:<{width}}  {entry.version:<{held}}"
+            bundle_id = f"{namespace}/{name}" if namespace else name
+            entry, condition = rows[bundle_id]
+            state = _state(project_root, entry)
+            marks[bundle_id] = state
+            mark = LEGEND[state][0] if state else WIRED
+            posture, procedures = survey.get(bundle_id, ("", 0))
+            skills += procedures
+            line = (
+                f"  {mark} {name:<{width}}  {entry.version:<{held}}"
+                f"  {posture:<{stance}}"
+            )
+            if procedures:
+                noun = "skill" if procedures == 1 else "skills"
+                line += f"  {procedures:>{tally}} {noun}"
+            # The per-row note survives the glyph: `◐` says *look at this* and
+            # an edited copy and an unapplied one are looked at differently.
             note = STATE_NOTE.get(condition)
-            print(f"{line}  {note}" if note else line.rstrip())
+            print(f"{line.rstrip()}  {note}" if note else line.rstrip())
 
     print()
-    wrong = [c for _, c in rows.values() if c != "ok"]
-    print(f"{len(rows)} bundle(s)" + (f", {len(wrong)} not as recorded." if wrong else "."))
-    if wrong:
+    counts = {m: sum(1 for v in marks.values() if v == m) for m in LEGEND}
+    summary = f"{len(rows)} bundle(s)"
+    if skills:
+        summary += f" · {skills} skill(s)"
+    print(summary)
+
+    # Only states actually present get a line. A legend explaining marks that
+    # are not on the screen is a legend nobody reads by the third time.
+    if any(counts.values()):
         print()
-        print("  luma-foreman inspect --rule adoption    what to do about each")
-    return 1 if wrong else 0
+        first = {s: next(b for b, v in marks.items() if v == s)
+                 for s, n in counts.items() if n}
+        label = max(len(t) for s, (_, t, _) in LEGEND.items() if counts[s])
+        for state, (mark, text, fix) in LEGEND.items():
+            if counts[state]:
+                remedy = fix.format(bundle=first[state])
+                print(f"  {mark} {counts[state]} {text:<{label}}  {remedy}")
+
+    # No trailing `inspect --rule adoption` line any more: every state that
+    # would have earned it now has a legend entry naming the command that fixes
+    # that state specifically, and a general remedy printed under a specific one
+    # reads as a second thing to try rather than the same thing again.
+    return 1 if any(c != "ok" for _, c in rows.values()) else 0
 
 
 def show(project_root: Path, requested: str) -> int:

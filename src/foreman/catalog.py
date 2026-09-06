@@ -375,12 +375,17 @@ def show(source: str, project_root: Path) -> int:
     for name in names:
         manifest = lkf.read(catalog.root / "bundles" / name / "BUNDLE.md") or {}
         bundle_id = f"{catalog.namespace}/{name}" if catalog.namespace else name
-        if bundle_id not in held_here:
-            mark = "○"
-        elif adoption.applied(project_root, bundle_id):
-            mark = "●"
-        else:
-            mark = "◐"
+        entry = held_here.get(bundle_id)
+        # `standing` answers for a bundle this project holds; not holding one at
+        # all is the case only this side has, and it reads as absent too.
+        mark = {
+            None: adoption.ABSENT,
+            "absent": adoption.ABSENT,
+            "disabled": adoption.DISABLED,
+            "drifted": adoption.UNWIRED,
+            "unapplied": adoption.UNWIRED,
+            "": adoption.WIRED,
+        }[None if entry is None else adoption.standing(project_root, entry)]
         rows.append((
             mark,
             name,
@@ -388,10 +393,19 @@ def show(source: str, project_root: Path) -> int:
             " ".join(str(manifest.get("description", "")).split()),
         ))
 
-    taken = sum(1 for m, _, _, _ in rows if m != "○")
+    taken = sum(1 for m, _, _, _ in rows if m != adoption.ABSENT)
     if catalog.namespace:
         print(f"{catalog.namespace} — {len(names)} bundles, {taken} taken")
-    print("● taken and applied   ◐ taken, not applied yet   ○ not taken")
+    # Only the marks actually on the screen are explained. A legend for states
+    # nothing below is in is a legend a reader stops reading.
+    shown = {m for m, _, _, _ in rows}
+    key = {
+        adoption.WIRED: "taken and applied",
+        adoption.UNWIRED: "taken, not applied yet",
+        adoption.DISABLED: "taken, turned off",
+        adoption.ABSENT: "not taken",
+    }
+    print("   ".join(f"{m} {t}" for m, t in key.items() if m in shown))
     print()
 
     # The name is a heading rather than a column. As a column it reserved its

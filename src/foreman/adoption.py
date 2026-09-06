@@ -55,6 +55,28 @@ SUBLINE = re.compile(r"^  - ([a-z][a-z0-9_-]*):\s*(.*?)\s*$")
 # bundle under it.
 LOCAL = "local"
 
+# What a bundle is doing here, as one character. Shared by `bundle list` and
+# `catalog show` — the two commands that report on the same states from
+# different sides — and kept here for the reason `resolve` is: two commands
+# using one mark to mean two things is a disagreement a reader cannot see.
+#
+# Three sit on a fullness continuum, working through partly-there to absent.
+# `DISABLED` deliberately does not: being turned off is not a degree of health,
+# it is somebody's decision, and a glyph that read as *less working* would
+# misdescribe it.
+#
+# `⊘` is a different East Asian width class from the circles, so where a
+# terminal renders ambiguous glyphs double-width its rows sit one column left.
+# That is unfixable rather than unfixed — the same string aligns differently by
+# a terminal setting nothing can query, so padding for one configuration breaks
+# the other. Every width-consistent alternative is a circle that does not read
+# as *off*, and a mark that misleads everybody is worse than one that drifts a
+# column for some.
+WIRED = "●"       # here, wired, working
+UNWIRED = "◐"     # here, and not reaching an agent — unapplied, or drifted
+DISABLED = "⊘"    # here, and deliberately turned off
+ABSENT = "○"      # not here — never taken, or recorded and gone from disk
+
 
 @dataclass(frozen=True)
 class Adopted:
@@ -320,6 +342,33 @@ def state(project: Path, entry: Adopted) -> str:
     if entry.checksum and checksum(home) != entry.checksum:
         return "edited"
     return "ok"
+
+
+def standing(project: Path, entry: Adopted) -> str:
+    """What a bundle is doing here — ``absent``, ``disabled``, ``drifted``,
+    ``unapplied``, or ``""`` when it is simply working.
+
+    One implementation because two commands ask and must agree: `bundle list`
+    reports it from the project's side and `catalog show` from the catalog's,
+    and the same bundle answering differently in the two is a disagreement a
+    reader has no way to see. `catalog show` reported a bundle whose directory
+    had been deleted as *taken and applied*, because it asked the manifest
+    whether the bundle was held and never asked the disk.
+
+    **Ordered most-absent first, and the order is the point.** A bundle that is
+    not on disk cannot meaningfully be turned off; one deliberately turned off
+    is not *failing* to be applied, it is doing what somebody asked. Reporting
+    the shallower state first sends a reader to fix something that is not wrong.
+    """
+    if state(project, entry) == "missing":
+        return "absent"
+    if entry.register == "nothing":
+        return "disabled"
+    if state(project, entry) != "ok":
+        return "drifted"
+    if not applied(project, entry.bundle):
+        return "unapplied"
+    return ""
 
 
 def read(project: Path) -> dict[str, Adopted]:
