@@ -30,21 +30,37 @@ from pathlib import Path
 
 from . import adoption, config, lkf, project
 
-USAGE = """Where this project's knowledge comes from.
+# Three verbs do not need grouping, so there is one section rather than an
+# invented split — the shape follows the noun rather than a template.
+USAGE = """Manage catalogs — where this project's knowledge comes from.
 
-  luma-foreman catalog list            every catalog this project draws from
-  luma-foreman catalog show <name>     what a catalog publishes
-  luma-foreman catalog add <source>    register one, so `get` needs no --from
+USAGE
+  luma-foreman catalog <command> [args]
 
-  --to <project>   a project other than this repository
+COMMANDS
+  list                Every catalog this project draws from
+  show <name>         What a catalog publishes
+  add <source>        Register one, so `get` needs no --from
 
-`<name>` is a registered name, a short name from `list`, a path to a catalog
-checkout, or a git URL. `add` fetches the catalog to learn the namespace it
-serves, then records it in .luma/config/luma-foreman.toml — committed, so the
-whole team resolves the same way. `list` reads the registry and the receipts
-and works offline; `add` and `show` reach the catalog and need a network.
+FLAGS
+  --to <project>      Work on a repository other than this one
+  --help              Show this
 
-Exit codes: 0 fine, 1 refused, 2 could not run."""
+EXAMPLES
+  $ luma-foreman catalog list
+  $ luma-foreman catalog add https://github.com/LumaStack/luma-catalog
+  $ luma-foreman catalog show lumastack/luma-catalog
+
+NOTES
+  <name> is a registered name, a short name from `list`, a path to a catalog
+  checkout, or a git URL.
+  `add` fetches the catalog to learn the namespace it serves, then records it
+  in .luma/config/luma-foreman.toml — committed, so the whole team resolves
+  the same way.
+  `list` works offline; `add` and `show` reach the catalog and need a network.
+
+EXIT CODES
+  0 fine   1 refused   2 could not run"""
 
 
 # --------------------------------------------------------------------------

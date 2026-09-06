@@ -26,35 +26,51 @@ from pathlib import Path
 
 from . import adoption, lkf, outdated, project
 
-USAGE = """What this project has taken, and what shape it is in.
+# Nine verbs is too many for one list, and the reads-then-writes split the old
+# text explained in a paragraph is a thing sections can just show.
+#
+# `NOTES` keeps what terseness would otherwise delete, on one test: a line stays
+# if a reader can act on it. *`index` refuses a vendored copy* changes what
+# somebody types; *check a project against the baseline* did not, which is why
+# that phrasing is gone from `inspect`.
+USAGE = """Manage bundles — what this project has taken, and what shape it is in.
 
-  luma-foreman bundle list            every bundle this project carries
-  luma-foreman bundle show <name>     one bundle's receipt and contents
-  luma-foreman bundle outdated        which have a newer version published
+USAGE
+  luma-foreman bundle <command> [args]
 
-  luma-foreman bundle new <name>      start a bundle in this project, under
-                                      the reserved local/ namespace
-  luma-foreman bundle index <dir>     generate a bundle's INDEX.md (--check to
-                                      verify instead) — an authoring act; it
-                                      refuses a vendored copy
-  luma-foreman bundle set <bundle> <field> <value>
-                                      record intent in the manifest — e.g.
-                                      set <bundle> register nothing marks it
-                                      deliberately landed and not wired
-  luma-foreman bundle unset <bundle> <field>
-                                      back to the field's default
-  luma-foreman bundle migrate-manifest
-                                      rewrite the record canonically as
-                                      .luma/bundles/MANIFEST.md, retiring a
-                                      legacy adopted.toml if one remains
+READING
+  list                          Every bundle this project carries
+  show <name>                   One bundle's receipt and contents
+  outdated                      Which have a newer version published
 
-  --to <project>   a project other than this repository
+AUTHORING
+  new <name>                    Start a bundle here, under local/
+  index <dir>                   Generate a bundle's INDEX.md — --check verifies
 
-The reads come first, and the writes below them. `list` and `show` read
-committed state and `new` writes one bundle, so all three work offline;
-`outdated` reaches each bundle's catalog and does not.
+INTENT
+  set <bundle> <field> <value>  Record intent in the manifest
+  unset <bundle> <field>        Back to the field's default
+  migrate-manifest              Rewrite the record as MANIFEST.md, retiring
+                                a legacy adopted.toml
 
-Exit codes: 0 fine, 1 something is wrong or behind, 2 could not run."""
+FLAGS
+  --to <project>                Work on a repository other than this one
+  --help                        Show this
+
+EXAMPLES
+  $ luma-foreman bundle list
+  $ luma-foreman bundle show git-workflow
+  $ luma-foreman bundle new house-rules
+  $ luma-foreman bundle set git-secrets register nothing
+
+NOTES
+  `index` is an authoring act and refuses a vendored copy.
+  `set <bundle> register nothing` marks a bundle deliberately landed, not wired.
+  `list`, `show` and `new` work offline; `outdated` reaches each bundle's
+  catalog and does not.
+
+EXIT CODES
+  0 fine   1 something is wrong or behind   2 could not run"""
 
 STATE_NOTE = {
     "edited": "edited here — the next `get` discards it",

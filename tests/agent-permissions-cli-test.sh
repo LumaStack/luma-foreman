@@ -58,7 +58,7 @@ for f in "$CLI" "$ROOT/libexec/permission-gate.py" "$ROOT"/src/foreman/*.py "$RO
 done
 
 # --- dispatcher -----------------------------------------------------------------
-run 'help'            0 help;            contains 'help' 'Commands:'
+run 'help'            0 help;            contains 'help' 'CORE COMMANDS'
 run 'unknown command' 1 not-a-command
 
 # All three spellings answer, and all three answer the same thing — a version
@@ -90,18 +90,20 @@ run 'outdated moved'    1 outdated;  contains 'outdated moved'    'renamed to: b
 
 # Every noun. `--help` is the explicit route and is handled before any verb
 # dispatch, so it cannot be affected by what a bare noun resolves to.
-run 'bundle help'       0 bundle --help;   contains 'bundle help'  'bundle show <name>'
-run 'catalog help'      0 catalog --help;  contains 'catalog help' 'catalog show <name>'
+# Verbs are listed bare under a section heading now, rather than each row
+# repeating the noun it already sits under.
+run 'bundle help'       0 bundle --help;   contains 'bundle help'  'show <name>'
+run 'catalog help'      0 catalog --help;  contains 'catalog help' 'show <name>'
 
 # ...and a bare noun shows what the noun can do, the way `luma-foreman` itself
 # already answers. All three changed together, because fixing two would move
 # the inconsistency rather than end it. Not an error — somebody asking what is
 # here should not get a non-zero status — and not the verb it used to guess.
 run 'a bare noun is the menu' 0 agent-permissions
-contains 'bare noun' 'agent-permissions allow'
+contains 'bare noun' 'allow <key>'
 case $LAST in *KEY*) bad 'a bare noun still printed the permission table';; *) ok;; esac
 run 'the verb still spells itself' 0 agent-permissions help
-contains 'help verb' 'agent-permissions allow'
+contains 'help verb' 'allow <key>'
 
 # --- reads work before anything is configured ------------------------------------
 run 'keys'            0 agent-permissions keys;     contains 'keys' 'recursive_rm'
