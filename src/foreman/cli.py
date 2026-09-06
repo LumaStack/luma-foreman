@@ -12,47 +12,97 @@ from . import __version__
 from .inspect import registry, report
 from .agent_permissions import commands
 
-USAGE = """usage: luma-foreman <command> [args]
+# Sectioned rather than one list, because the commands are not one kind of
+# thing: most act on this repository's knowledge, one governs what an agent may
+# do, and two are what somebody runs before they have either. A flat menu made
+# a reader work that out for themselves every time.
+#
+# **Ordered by how often they are reached**, which is what CLIG asks for and
+# what the old alphabetical-ish order was not. `get` and `apply` are the loop;
+# `init` is run once and sits with the other thing a newcomer needs.
+#
+# The tagline is the README's, word for word. Two copies of a positioning line
+# that drift apart is worse than one in the wrong place.
+USAGE = """Predictable intelligence and reliable governance — for every project.
 
-Commands:
-  init                stand `.luma/` up in a repository that has none
-  get                 adopt a bundle from a catalog into this project
-  remove              drop a bundle this project holds
-  publish             offer a bundle written here to a catalog
-  apply               write what this project adopted into what a harness reads
-  inspect             check a project against the baseline and report shortfalls
+USAGE
+  luma-foreman <command> <subcommand> [args]
 
-  bundle              bundles this project holds — list, show, new, outdated
-  catalog             where bundles come from — list, show, add
-  agent-permissions   what an agent is allowed to do in this repository
+CORE COMMANDS
+  get                 Fetch a bundle for this repository
+  apply               Adopt bundles into agent harnesses
+  inspect             Check health
+  bundle              Manage bundles
+  catalog             Manage catalogs — where bundles come from
+  publish             Publish to a catalog
+  remove              Drop a bundle
 
-Run `luma-foreman <command> --help` for a command's own options, and
-`luma-foreman --version` for which version this is."""
+RESTRICT
+  agent-permissions   Restrict agents in this repository
 
-POLICY_USAGE = """Read and write the per-project agent permissions that the permission gate
-consults on every Bash tool call. Changes take effect on the NEXT tool call — no
-session restart, because the hook re-reads these files each time it runs.
+GETTING STARTED
+  init                Set this repository up, safely
+  help                Show this
 
-  luma-foreman agent-permissions                    the effective permissions here
-  luma-foreman agent-permissions list               the same thing, spelled the way git/npm/gh spell it
-  luma-foreman agent-permissions keys [<key>]       what you can set, and what each key gates
+FLAGS
+  --help              Show help for command
+  --version           Show version
 
-  luma-foreman agent-permissions allow <key>        shorthand for: set <key> allow
-  luma-foreman agent-permissions ask <key>          shorthand for: set <key> ask
-  luma-foreman agent-permissions deny <key>         shorthand for: set <key> deny
-  luma-foreman agent-permissions set <key> <value>  the general form — reaches safe, trusted, always
-  luma-foreman agent-permissions reset [<key>]      drop one override, or every override in this scope
+EXAMPLES
+  $ luma-foreman init
+  $ luma-foreman catalog add https://github.com/LumaStack/luma-catalog
+  $ luma-foreman get lumastack/luma-catalog/git-workflow
+  $ luma-foreman apply
+  $ luma-foreman bundle list
 
-  luma-foreman agent-permissions projects           every project that has a config
-  luma-foreman agent-permissions path               print the config file path
-  luma-foreman agent-permissions edit               open it in $EDITOR
-  luma-foreman agent-permissions install            install or update the gate, and report
-                                                    what settings.json still needs
-  luma-foreman agent-permissions doctor             check it is actually working, not just wired up
+LEARN MORE
+  Use `luma-foreman <command> --help` for a command's own options.
+  Find more at https://github.com/LumaStack/luma-foreman"""
 
-Add -g/--global to any write to target the global fallback instead of this
-project. Reads always show the merged result. Add --json to `policy`, `keys`
-and `doctor` for machine-readable output."""
+POLICY_USAGE = """Restrict what an agent may do in this repository.
+
+USAGE
+  luma-foreman agent-permissions <command> [args]
+
+READING
+  show                The effective permissions here — also `list`, or no command
+  keys [<key>]        What you can set, and what each key gates
+
+SETTING
+  allow <key>         Shorthand for: set <key> allow
+  ask <key>           Shorthand for: set <key> ask
+  deny <key>          Shorthand for: set <key> deny
+  set <key> <value>   The general form — reaches safe, trusted, always
+  reset [<key>]       Drop one override, or every override in this scope — also `unset`
+
+THE GATE
+  install             Install or update the gate, and report what
+                      settings.json still needs
+  doctor              Check it is working, not just wired up
+
+THE CONFIG FILE
+  projects            Every project that has a config
+  path                Print the config file path
+  edit                Open it in $EDITOR
+
+FLAGS
+  -g, --global        Target the global fallback instead of this project
+  --json              Machine-readable output for show, keys and doctor
+  --help              Show this
+
+EXAMPLES
+  $ luma-foreman agent-permissions
+  $ luma-foreman agent-permissions deny network
+  $ luma-foreman agent-permissions install
+  $ luma-foreman agent-permissions doctor
+
+NOTES
+  Changes take effect on the NEXT tool call — no session restart, because the
+  hook re-reads these files each time it runs.
+  Reads always show the merged result; -g/--global affects writes only.
+
+EXIT CODES
+  0 fine   1 refused, or something is wrong"""
 
 # Renamed commands are a hard error, not an alias — ADR-0003. This is the only
 # thing between somebody typing the old name and a bare failure, so it has to
@@ -125,7 +175,12 @@ def _policy(argv: list[str]) -> int:
     return commands._err(f"unknown command: {verb} (try luma-foreman agent-permissions --help)")
 
 
-INSPECT_USAGE = """Check a project against the baseline and report where it falls short.
+# Not "against the baseline". That noun appeared in exactly two sentences in the
+# whole repository — this one and its copy in the docs — and named nothing: no
+# concept, no file, no config. It read as more specific than it was and sent a
+# reader looking for something that does not exist. What the five rules actually
+# do is compare what a repository declares against what is there.
+INSPECT_USAGE = """Check what this repository declares against what is actually here.
 
   luma-foreman inspect [<path>]      inspect a repository (default: the current one)
   luma-foreman inspect --json        machine-readable findings, for continuous integration

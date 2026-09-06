@@ -92,3 +92,36 @@ test@test:~/Workspace/code/lumastack/luma-backlog% luma-foreman apply
   offered    11 named, opened when they match
   standby    31 reachable, not announced
   notice   lumastack/luma-catalog/github-release policy/changelog: nothing in this project matches 'CHANGELOG.md' — the rule can never fire
+## What has shipped, and what is left
+
+**The menus are done.** The top level and all three nouns — `bundle`, `catalog`,
+`agent-permissions` — are sectioned after `gh`: a tagline, `USAGE`, grouped
+commands ordered by how often they are reached, `FLAGS`, `EXAMPLES`, `NOTES`,
+`EXIT CODES`. The transcripts above are what they looked like before.
+
+`bundle list` is done separately — a mark per row, the posture where it is not
+the default, a skill count.
+
+**Four verbs still print the old shape**: `get`, `apply`, `inspect` and `init`.
+Only `inspect`'s opening line changed, because that is where a phantom noun
+lived. So the tool now reads as two designs depending on which command somebody
+happens to run, which is worse than being uniformly plain.
+
+**`NOTES` earns its place on one test, and it is the test worth keeping**: a
+line stays if a reader can act on it. *`index` refuses a vendored copy* changes
+what somebody types. *Check a project against the baseline* changed nothing, and
+named a concept that existed nowhere in the repository — it was deleted rather
+than reworded.
+
+**No subcommand answers `--help`.** `luma-foreman bundle list --help` prints the
+whole `bundle` menu. The top-level help promised `<command> <subcommand> --help`
+until it was corrected to promise only what exists. Whether per-subcommand help
+is worth building, or whether a noun's menu is the right granularity, is open —
+`bundle` has nine verbs and some of them take arguments worth explaining.
+
+**Colour is the lever nothing has pulled.** There is no ANSI anywhere in
+foreman. Dimming versions and counts so names carry a row would do more than any
+further layout change. CLIG wants it gated on a terminal with `NO_COLOR`
+honoured, which is the same mechanism
+[[output-should-know-whether-a-person-is-reading]] needs — so that idea is
+probably the prerequisite rather than a sibling.

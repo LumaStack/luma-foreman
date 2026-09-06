@@ -163,8 +163,9 @@ luma-foreman inspect --json         # machine-readable, for continuous integrati
 luma-foreman inspect --rule adoption
 ```
 
-Checks a repository against the baseline and reports where it falls short.
-**Every check works in a bare clone with no configuration.**
+Checks what a repository declares against what is actually there, and reports
+where they disagree. **Every check works in a bare clone with no
+configuration.**
 
 ### What each rule catches
 
