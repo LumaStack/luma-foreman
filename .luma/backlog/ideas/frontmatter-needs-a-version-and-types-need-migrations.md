@@ -79,6 +79,51 @@ rolls out with no sequencing at all. What it buys in safety it pays for in
 drift: a sibling can go stale against the type it describes, and an in-band
 version cannot be separated from what it versions.
 
+## Half of this already exists, which narrows it
+
+**Type definitions already carry a version, and bundles already record which
+one they took.** `_types/idea.md` declares `version: "0.1.0"`, and every
+vendored copy carries:
+
+```yaml
+vendored_from:
+  resource: https://github.com/LumaStack/luma-catalog
+  version: "0.1.0"          # the type's own version, not the bundle's
+  at: 2026-08-23
+```
+
+`luma-types` `0.3.0` moved to exactly this deliberately, after the failure it
+exists to prevent had already happened: *"a vendored `luma/catalog` recorded
+`0.1.0` while the bundle read `0.2.0`"*.
+
+**So this is not inventing versioning — it is extending it one hop.** Types are
+versioned, and bundles say which version they hold. **Documents say nothing**,
+and that is the entire remaining gap. A `type_version` on a document would cite
+the number the type definition already declares, so there is nothing new to
+mint and nothing to keep in step by hand.
+
+It also makes the folder idea land cleanly: migrations sit beside a schema that
+already has versions to key them on.
+
+## `type_version` and `lkf_version` are not alternatives
+
+They answer different questions, and picking one is really deciding which
+failure is being prevented:
+
+| | |
+| --- | --- |
+| `type_version` | this document was written against `luma/idea` at `0.1.0`. Catches a field that moved, an enum that gained a value, a key that was renamed |
+| `lkf_version` | this document was written against the *format* — frontmatter grammar, `matches` syntax, what a Document is. Catches a change beneath every type at once |
+
+They move at different rates, which is the argument for not conflating them —
+the format is at `v0.0.x` and individual types are at `0.1.0`, `0.2.0`, `0.3.0`
+independently. **They also differ in granularity**: a type version is per
+vendored copy, and a format version is estate-wide, so a bundle could honestly
+carry the second and only a document can carry the first.
+
+Both may eventually be wanted. Only one is needed to make a document
+migratable, and it is `type_version`.
+
 ## Open
 
 **What carries the version.** In-band on `type:`, a sibling field, or one line
