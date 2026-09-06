@@ -124,6 +124,25 @@ carry the second and only a document can carry the first.
 Both may eventually be wanted. Only one is needed to make a document
 migratable, and it is `type_version`.
 
+## Where this got to, as a lean rather than a decision
+
+**A sibling `type_version` looks stronger than in-band, and it is the discovery
+about `vendored_from` that moved it.** The case against a sibling was drift — a
+field that can go stale against the type it describes. That risk shrinks a long
+way once the value is *copied from a number the type already publishes* rather
+than minted by whoever writes the document. And it needs no sequencing at all,
+where in-band needs every reader taught to split before anything may write a
+version.
+
+**`@` stays the spelling if in-band ever wins**, on the YAML-safety and
+npm/Go/pip-familiarity grounds above. Worth recording so the analysis is not
+redone.
+
+**Not decided, deliberately.** The field-tolerance workaround is written down
+and working, so there is no forcing event — and a version scheme chosen without
+one is the kind of confidently-written rule that overreaches or does not last.
+See [[confusion-earns-a-retro-not-a-rule]].
+
 ## Open
 
 **What carries the version.** In-band on `type:`, a sibling field, or one line
