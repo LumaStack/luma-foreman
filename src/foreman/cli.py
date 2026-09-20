@@ -32,6 +32,7 @@ CORE COMMANDS
   get                 Fetch a bundle for this repository
   apply               Adopt bundles into agent harnesses
   inspect             Check health
+  lint                Validate documents against their type definitions
   bundle              Manage bundles
   catalog             Manage catalogs — where bundles come from
   publish             Publish to a catalog
@@ -242,6 +243,10 @@ def main(argv: list[str] | None = None) -> int:
         return _policy(argv[1:])
     if command == "inspect":
         return _inspect(argv[1:])
+    if command == "lint":
+        from . import lint
+
+        return lint.main(argv[1:])
     if command == "get":
         from . import get
 
