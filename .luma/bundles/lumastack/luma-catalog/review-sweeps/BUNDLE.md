@@ -2,8 +2,8 @@
 type: bundle
 type_version: "0.0.1"
 title: lumastack/luma-catalog/review-sweeps
-version: 0.32.0
-published: 2026-09-19
+version: 0.33.0
+published: 2026-09-20
 stage: draft
 survival: probationary
 consumers: [project]
@@ -132,6 +132,14 @@ call graph, and while a headquarters could be read the same way, nobody has —
 adding `organization` on that basis would be claiming a fit nothing has tested.
 
 ## Version
+
+`0.33.0` — **the sweep's enums say their values where a validator can read
+them.** `goal_discipline`, `scope_discipline`, `strategy_discipline` and
+`approval` carried their vocabularies in `desc` prose; they now declare
+`values:`, which the spec requires of an enum and `luma-foreman lint`
+reported. The `sweep` type bumps to `0.0.2`; no field is added, removed, or
+re-presenced, so every existing document conforms as written and re-stamps
+its `type_version` at leisure.
 
 `0.29.0` — **at the close, rename the sweep if it is far enough off.**
 

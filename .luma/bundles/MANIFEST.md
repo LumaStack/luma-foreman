@@ -65,10 +65,10 @@
   - catalog: lumastack/luma-catalog
   - commit: d5d3b50c1f66dad0aaf78ac82ee381f87714088c
   - sha256: 82847db74ca5614e86bc9acf9508bf5a816671e72e9a8e49a0044dbc474e2fa2
-- `lumastack/luma-catalog/review-sweeps` 0.32.0
+- `lumastack/luma-catalog/review-sweeps` 0.33.0
   - catalog: lumastack/luma-catalog
-  - commit: d5d3b50c1f66dad0aaf78ac82ee381f87714088c
-  - sha256: 615853b104182468492403f6b3dee48ddd051c1ab1bc49ef2e6761788a84333f
+  - commit: c43517bf6b42c62b42313c16671c865c6ce9184c
+  - sha256: bbb1267034cd40c6483e2b572079c0ca218ef96ee6c6bd64f465c007cfd95375
 - `lumastack/luma-catalog/session-manager` 0.10.0
   - catalog: lumastack/luma-catalog
   - commit: d5d3b50c1f66dad0aaf78ac82ee381f87714088c
