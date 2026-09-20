@@ -76,10 +76,15 @@ INDEX = Path(".luma/bundles/INDEX.md")
 LEGACY_ENTRYPOINT = Path(".luma/bundles/entrypoint.md")
 LEGACY_RINGS = Path(".luma/bundles/rings")
 
-# `_types/` holds contracts, not reading material — a Type Definition is
-# consulted when writing a document of that type, which is a job the procedure
-# already sends you to. Listing them would double the index to say nothing.
-SKIP = ("_types",)
+# `type_definitions/` holds contracts, not reading material — a Type Definition
+# is consulted when writing a document of that type, which is a job the
+# procedure already sends you to, and everything beside `DEFINITION.md` in a
+# type's folder (`CHANGELOG.md`, `migrations/`, prior versions) is record
+# scoped to the contract (LKF v0.0.21, One folder per type). Listing any of it
+# would double the index to say nothing; the directory-level skip covers the
+# whole folder. `_types/` was this directory's spelling before v0.0.21, and the
+# estate re-adopted with the rename, so nothing writes it any more.
+SKIP = ("type_definitions",)
 
 SLUG = re.compile(r"[^a-z0-9-]+")
 

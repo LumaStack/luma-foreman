@@ -67,7 +67,7 @@ catalog() {
 CATALOG=$T/catalog
 mkdir -p "$CATALOG/catalog/bundles/widgets/procedure" \
          "$CATALOG/catalog/bundles/widgets/policy" \
-         "$CATALOG/catalog/bundles/widgets/_types"
+         "$CATALOG/catalog/bundles/widgets/type_definitions/widget"
 
 cat > "$CATALOG/catalog/CATALOG.md" <<'EOF'
 ---
@@ -104,13 +104,18 @@ preload: mandatory
 Rules go here.
 EOF
 
-# A Type Definition, to prove _types/ is never projected as reading material.
-cat > "$CATALOG/catalog/bundles/widgets/_types/widget.md" <<'EOF'
+# A Type Definition, to prove type_definitions/ is never projected as reading
+# material — the record beside the contract included.
+cat > "$CATALOG/catalog/bundles/widgets/type_definitions/widget/DEFINITION.md" <<'EOF'
 ---
 type: type_definition
+type_version: "0.0.1"
 defines: widget
+version: "0.0.1"
 ---
 EOF
+printf -- '# Changelog — widget\n## 0.0.1\n- Versioning begins.\n' \
+  > "$CATALOG/catalog/bundles/widgets/type_definitions/widget/CHANGELOG.md"
 
 git -C "$CATALOG" init -q
 git -C "$CATALOG" add -A
