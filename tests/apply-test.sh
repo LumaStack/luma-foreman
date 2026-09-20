@@ -50,7 +50,7 @@ apply() {
 
 PROJECT=$T/project
 B=$PROJECT/.luma/bundles/acme/rules
-mkdir -p "$B/policy" "$B/concepts" "$B/_types" \
+mkdir -p "$B/policy" "$B/concepts" "$B/type_definitions/widget" \
          "$B/procedure/run-the-thing/steps" "$PROJECT/.claude"
 (cd "$PROJECT" && git init -q . 2>/dev/null) || true
 
@@ -129,14 +129,24 @@ title: First step
 Do the first bit.
 EOF
 
-cat > "$B/_types/widget.md" <<'EOF'
+cat > "$B/type_definitions/widget/DEFINITION.md" <<'EOF'
 ---
 type: type_definition
+type_version: "0.0.1"
 defines: widget
+version: "0.0.1"
 title: Widget
 description: The shape of a widget record.
 ---
 Fields go here.
+EOF
+
+# Record beside the contract (LKF v0.0.21) — skipped with the folder, never
+# projected as reading material.
+cat > "$B/type_definitions/widget/CHANGELOG.md" <<'EOF'
+# Changelog — widget
+## 0.0.1
+- Versioning begins.
 EOF
 
 CLAUDE=$PROJECT/CLAUDE.md
@@ -164,6 +174,11 @@ grepped 'Offered — open a bundle' "$INDEX"
 ungrep 'house-rules' "$INDEX"
 ungrep 'stylesheets' "$INDEX"
 ungrep 'why-widgets' "$INDEX"
+
+# --- type_definitions/ is contract, not reading material ------------------------
+
+ungrep 'The shape of a widget record' "$INDEX"
+ungrep 'Changelog' "$INDEX"
 
 # --- procedures are carried by skills, and are not named twice ------------------
 

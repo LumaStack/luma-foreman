@@ -54,7 +54,19 @@ RESERVED_BY_LOWER = {"bundle.md": "BUNDLE.md", "catalog.md": "CATALOG.md",
 # Where a lowercase match is correct rather than a mistake, and the rule is what
 # says so: a template is a pattern for making a bundle and a Type Definition
 # describes what one is. Neither is the thing its directory is.
-EXEMPT_DIRS = ("templates", "_types")
+#
+# `_types` is the spelling LKF v0.0.21 retired for `type_definitions`. It stays
+# here for the same reason `workflow` stays in the reachability exemption below:
+# an exemption that only knows the new name starts flagging every unrepublished
+# bundle, and a finding nobody can act on is what teaches people to skim.
+EXEMPT_DIRS = ("templates", "_types", "type_definitions")
+
+# A type's folder is contract plus record — `CHANGELOG.md`, `migrations/`, and
+# prior versions kept beside `DEFINITION.md` (LKF v0.0.21, One folder per
+# type). Record is consulted on demand like the contract itself: nothing links
+# to it, and flagging it as an orphaned Asset would fire on every
+# folder-shaped type. `_types` kept as above.
+TYPE_DIRS = ("_types", "type_definitions")
 
 RULE = "bundles"
 
@@ -125,7 +137,8 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
             # that ships one.
             continue
         if path.suffix != ".md":
-            assets.append(rel)
+            if rel.split("/", 1)[0] not in TYPE_DIRS:
+                assets.append(rel)
             continue
         try:
             text = path.read_text(encoding="utf-8")
@@ -133,7 +146,8 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
             continue
         front, _ = _split(text)
         if front is None:
-            assets.append(rel)
+            if rel.split("/", 1)[0] not in TYPE_DIRS:
+                assets.append(rel)
             continue
         keys = _keys(front)
         if "type" not in keys:
@@ -319,8 +333,11 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
         and kinds.get(doc_id) not in ("procedure", "workflow", "policy")
         # A Type Definition is resolved by the format when writing a Document of
         # its type. It is a contract consulted on demand, never reading material,
-        # and nothing should link to it to make it look reachable.
-        and not doc_id.startswith("_types/")
+        # and nothing should link to it to make it look reachable. The same goes
+        # for everything beside it in the type's folder — a prior version or a
+        # migration is record (LKF v0.0.21, One folder per type). `_types/` is
+        # the pre-v0.0.21 spelling, kept like `workflow` above.
+        and not doc_id.startswith(tuple(f"{d}/" for d in TYPE_DIRS))
         and not _owned(doc_id)
         and doc_id.rsplit("/", 1)[-1] not in wiki_linked
     )

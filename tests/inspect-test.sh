@@ -225,13 +225,19 @@ has 'c/bundle.md'
 # Not every lowercase match is a mistake, and the rule itself says which. A
 # template is a pattern for making a bundle, and a Type Definition describes
 # what one is — neither is the thing its directory is, so both are correct.
+# `_types` is the pre-v0.0.21 spelling, still exempt so an unrepublished
+# bundle stays quiet.
 d=$(bundle casefine)
-mkdir -p "$d/b/templates" "$d/b/_types"
+mkdir -p "$d/b/templates" "$d/b/type_definitions/catalog" "$d/b/_types"
 printf -- '---\ntype: bundle\nversion: 0.1.0\n---\n[t](templates/bundle.md)\n' > "$d/b/BUNDLE.md"
 printf -- 'copy this\n' > "$d/b/templates/bundle.md"
+printf -- '---\ntype: type_definition\ntype_version: "0.0.1"\ndefines: catalog\nversion: "0.0.1"\n---\nx\n' \
+  > "$d/b/type_definitions/catalog/DEFINITION.md"
+printf -- '# Changelog\n## 0.0.1\n- Begins.\n' > "$d/b/type_definitions/catalog/CHANGELOG.md"
 printf -- '---\ntype: type_definition\ndefines: catalog\n---\nx\n' > "$d/b/_types/catalog.md"
-run 'templates and _types keep their casing' 0 "$d"
+run 'templates and type_definitions keep their casing' 0 "$d"
 lacks 'wrong case'
+lacks 'asset(s) nothing links to'
 
 # --- triggers that can never fire -----------------------------------------------
 #

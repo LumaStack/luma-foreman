@@ -41,3 +41,8 @@ then:
 
 Sequences naturally with the estate migration behind
 [[retire-the-migration-tolerances]] — one re-adopt wave can carry both.
+
+**The spec change shipped: LKF `v0.0.21` renamed the directory and made every
+Type Definition a folder.** The estate-wide execution plan, including this
+repository's blast-radius list, is [[migrate-estate-to-type-definitions]] —
+execute it, then prune this idea.

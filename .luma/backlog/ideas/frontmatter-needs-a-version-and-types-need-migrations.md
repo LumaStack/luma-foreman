@@ -10,6 +10,13 @@ stage: draft
 
 # Frontmatter needs a version, and a type definition needs migrations
 
+> **Answered upstream.** LKF `v0.0.21` shipped the sibling-field design this
+> document leaned toward: `type_version` on every Document, written beneath
+> `type`, plus folder-shaped Type Definitions carrying `CHANGELOG.md` and
+> `migrations/`. The estate rollout is [[migrate-estate-to-type-definitions]];
+> prune this idea once that plan's foreman work is done. The analysis below
+> stays until then as the reasoning record.
+
 **Nothing in a document's frontmatter says which version of its type it was
 written against**, so as type definitions change there is no way to know what a
 given file needs doing to it. A reader can tell a valid document from an
