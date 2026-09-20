@@ -53,7 +53,7 @@ Sequences naturally with the estate migration behind
 [[retire-the-migration-tolerances]] — one re-adopt wave can carry both.
 
 **The spec change shipped: LKF `v0.0.21` renamed the directory and made every
-Type Definition a folder.** The estate-wide execution plan was
-`migrate-estate-to-type-definitions`, executed in full and pruned with this
-idea — its content survives in git history and in the per-repository pull
-requests named above.
+Type Definition a folder.** The estate-wide execution plan is
+[[migrate-estate-to-type-definitions]], executed in full — kept in `plans/`
+for now as a reference, past its own prune-when-done rule, at the
+maintainer's request.
