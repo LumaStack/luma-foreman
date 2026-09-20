@@ -7,16 +7,18 @@ contributors: [human:benlinton, agent:claude-opus-5]
 horizon: next
 scope: project
 stage: draft
+archived: 2026-09-20
 ---
 
 # Frontmatter needs a version, and a type definition needs migrations
 
-> **Answered upstream.** LKF `v0.0.21` shipped the sibling-field design this
-> document leaned toward: `type_version` on every Document, written beneath
-> `type`, plus folder-shaped Type Definitions carrying `CHANGELOG.md` and
-> `migrations/`. The estate rollout is [[migrate-estate-to-type-definitions]];
-> prune this idea once that plan's foreman work is done. The analysis below
-> stays until then as the reasoning record.
+> **Answered upstream, and pruned.** LKF `v0.0.21` shipped the sibling-field
+> design this document leaned toward: `type_version` on every Document,
+> written beneath `type`, plus folder-shaped Type Definitions carrying
+> `CHANGELOG.md` and `migrations/`. The estate rollout finished 2026-09-20 —
+> every typed document in all eight repositories carries `type_version` — and
+> the migration tolerances that rollout gated were retired the same day
+> (#160). The analysis below stays as the reasoning record.
 
 **Nothing in a document's frontmatter says which version of its type it was
 written against**, so as type definitions change there is no way to know what a
