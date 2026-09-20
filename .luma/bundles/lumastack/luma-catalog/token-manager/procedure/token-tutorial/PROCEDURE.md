@@ -1,5 +1,6 @@
 ---
 type: procedure
+type_version: "0.0.1"
 title: Walk me through token usage best practices
 description: A paced tutorial on where an agent session's tokens actually go — presented a step at a time, pausing after each one for questions or practice, and ending in a short quiz. Use when somebody wants to learn the material rather than measure a setup.
 ---

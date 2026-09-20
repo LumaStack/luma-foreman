@@ -1,5 +1,6 @@
 ---
 type: procedure
+type_version: "0.0.1"
 title: Close a sweep
 description: Finish or abandon a sweep honestly — check coverage, confirm nothing worth keeping is still trapped in the notes, then archive it. Use when the last unit is done, or when it is being stopped early.
 ---

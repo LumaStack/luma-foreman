@@ -1,8 +1,9 @@
 ---
 type: bundle
+type_version: "0.0.1"
 title: lumastack/luma-catalog/token-manager
-version: 0.12.1
-published: 2026-09-02
+version: 0.13.0
+published: 2026-09-19
 stage: draft
 consumers: [project, organization]
 description: Where an agent session's tokens actually go — a paced tutorial on the mechanism and the fixes that follow from it, and an audit that measures a real setup instead of guessing at it.

@@ -1,5 +1,6 @@
 ---
 type: decision
+type_version: "0.0.1"
 title: The acting type is procedure
 decided: 2026-09-02
 stage: draft

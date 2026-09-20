@@ -1,5 +1,6 @@
 ---
 type: luma/idea
+type_version: "0.1.0"
 title: bundle show reports a stale version for a local bundle
 created: { by: agent:claude-opus-5, at: 2026-09-10T18:10:36Z }
 contributors: [human:luma-foundry, agent:claude-opus-5]

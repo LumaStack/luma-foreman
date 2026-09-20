@@ -1,5 +1,6 @@
 ---
 type: document
+type_version: "0.0.1"
 title: Bundle design MVP
 description: The design for loading bundles and context — one declaration on a document, loading postures derived from it, an index in every container, what apply compiles for a harness now, and the eventual state the same declarations grow into.
 stage: draft

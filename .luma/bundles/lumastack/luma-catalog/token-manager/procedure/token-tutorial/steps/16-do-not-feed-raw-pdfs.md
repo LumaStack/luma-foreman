@@ -1,5 +1,6 @@
 ---
 type: luma/tutorial_step
+type_version: "0.3.0"
 title: Do not hand over a PDF as it is
 step: 16
 pause: practice

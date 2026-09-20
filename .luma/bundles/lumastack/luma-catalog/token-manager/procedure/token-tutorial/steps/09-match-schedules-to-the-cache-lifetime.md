@@ -1,5 +1,6 @@
 ---
 type: luma/tutorial_step
+type_version: "0.3.0"
 title: Check what your scheduled tasks do when you're not looking
 step: 9
 pause: apply_here

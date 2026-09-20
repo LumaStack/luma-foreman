@@ -1,5 +1,6 @@
 ---
 type: luma/tutorial_step
+type_version: "0.3.0"
 title: Choose your model and effort once, at the start
 step: 4
 pause: apply_elsewhere

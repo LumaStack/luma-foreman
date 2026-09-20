@@ -1,5 +1,6 @@
 ---
 type: procedure
+type_version: "0.0.1"
 title: Add a setting
 description: Decide where a new configuration value lives and how strongly it binds. Use when introducing any value somebody might want to change.
 ---

@@ -1,5 +1,6 @@
 ---
 type: luma/idea
+type_version: "0.1.0"
 title: Nothing checks that a citation resolves
 created: { by: agent:claude-opus-5, at: 2026-08-29T00:00:00Z }
 contributors: [agent:claude-opus-5, human:benlinton]

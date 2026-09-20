@@ -1,5 +1,6 @@
 ---
 type: decision
+type_version: "0.0.1"
 title: Loading posture is derived from matches
 decided: 2026-09-02
 stage: draft

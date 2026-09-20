@@ -1,5 +1,6 @@
 ---
 type: luma/idea
+type_version: "0.1.0"
 title: A committed per-project permission floor, under the machine-local layer
 created: { by: human:benlinton, at: 2026-08-17T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]

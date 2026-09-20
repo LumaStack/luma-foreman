@@ -1,5 +1,6 @@
 ---
 type: luma/tutorial_step
+type_version: "0.3.0"
 title: Put cheap models where they cannot cost you anything
 step: 5
 pause: apply_here

@@ -1,5 +1,6 @@
 ---
 type: luma/idea
+type_version: "0.1.0"
 title: Generated files and sections should be obviously different from curated ones
 created: { by: human:luma-foundry, at: 2026-09-10T08:05:00Z }
 contributors: [human:luma-foundry, agent:claude-opus-5]

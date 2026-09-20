@@ -1,5 +1,6 @@
 ---
 type: journal
+type_version: "0.0.1"
 title: Journal — the whole of luma-foreman
 created: 2026-08-29
 ---

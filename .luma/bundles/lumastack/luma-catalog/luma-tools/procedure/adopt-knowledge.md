@@ -1,5 +1,6 @@
 ---
 type: procedure
+type_version: "0.0.1"
 title: Adopt knowledge into a project
 description: Take bundles from a catalog into a repository and make an agent aware of them. Use when setting a project up, when adding a capability, or when an agent keeps needing to be told where to look.
 ---

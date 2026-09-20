@@ -1,5 +1,6 @@
 ---
 type: policy
+type_version: "0.0.1"
 title: Where configuration lives
 description: Two homes and one cache — what is committed, what belongs to the machine, and the test that tells them apart.
 matches: eager

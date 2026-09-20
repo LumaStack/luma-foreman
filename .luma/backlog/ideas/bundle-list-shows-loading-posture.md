@@ -1,5 +1,6 @@
 ---
 type: luma/idea
+type_version: "0.1.0"
 title: The loading posture vocabulary is user-facing now, and two of the words are unsettled
 created: { by: human:benlinton, at: 2026-09-03T00:00:00Z }
 contributors: [human:benlinton, agent:claude-fable-5, agent:claude-opus-5]

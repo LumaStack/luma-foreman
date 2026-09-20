@@ -1,5 +1,6 @@
 ---
 type: coverage
+type_version: "0.0.1"
 title: Coverage — the whole of luma-foreman
 indexed_at: 398d84045cf9
 ---

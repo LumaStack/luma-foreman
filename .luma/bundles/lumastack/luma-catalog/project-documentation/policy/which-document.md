@@ -1,5 +1,6 @@
 ---
 type: policy
+type_version: "0.0.1"
 title: Which document to write
 description: The documents most projects can have, what each is called, and the condition that earns it. Write one when its condition is met, not before.
 matches:

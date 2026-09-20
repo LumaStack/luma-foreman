@@ -1,5 +1,6 @@
 ---
 type: policy
+type_version: "0.0.1"
 title: What a slice produces
 description: A slice produces a record and never a rewrite — what gets recorded, why a proposed fix is a suggestion rather than a directive, and when a fix may land during the sweep at all.
 matches:

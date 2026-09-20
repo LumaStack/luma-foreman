@@ -1,5 +1,6 @@
 ---
 type: policy
+type_version: "0.0.1"
 title: The project descriptor
 description: The file a repository publishes about itself for something outside it to read — where it lives, what belongs in it, and why the repository has to own it rather than whoever collects it.
 matches:

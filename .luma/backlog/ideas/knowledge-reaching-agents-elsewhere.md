@@ -1,5 +1,6 @@
 ---
 type: luma/idea
+type_version: "0.1.0"
 title: How committed knowledge reaches an agent working elsewhere
 created: { by: human:benlinton, at: 2026-08-09T00:00:00Z }
 contributors: [human:benlinton]

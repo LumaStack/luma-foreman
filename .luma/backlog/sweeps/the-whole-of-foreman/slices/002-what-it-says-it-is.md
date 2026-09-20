@@ -1,5 +1,6 @@
 ---
 type: slice
+type_version: "0.0.1"
 title: What this project says it is
 created: 2026-08-29
 covers:

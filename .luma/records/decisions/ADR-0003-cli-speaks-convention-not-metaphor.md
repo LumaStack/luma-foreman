@@ -1,5 +1,6 @@
 ---
 type: decision
+type_version: "0.0.1"
 title: The CLI speaks command-line convention, not the foreman metaphor
 decided: 2026-08-26
 stage: draft

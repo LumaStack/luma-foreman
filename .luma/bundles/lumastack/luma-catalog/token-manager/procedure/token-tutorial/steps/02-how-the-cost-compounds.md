@@ -1,5 +1,6 @@
 ---
 type: luma/tutorial_step
+type_version: "0.3.0"
 title: How the cost actually compounds
 step: 2
 pause: practice

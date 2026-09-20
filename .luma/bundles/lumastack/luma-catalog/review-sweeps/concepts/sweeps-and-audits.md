@@ -1,5 +1,6 @@
 ---
 type: document
+type_version: "0.0.1"
 title: Sweeps and audits
 description: Why these are different practices rather than two rigours of the same one — what each is complete against, which one puts somebody on the hook, and the two kinds of independence they need for opposite reasons.
 ---

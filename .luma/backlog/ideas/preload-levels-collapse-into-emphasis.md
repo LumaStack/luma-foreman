@@ -1,5 +1,6 @@
 ---
 type: luma/idea
+type_version: "0.1.0"
 title: Projected through an index, preload levels differ only in emphasis
 created: { by: agent:claude-opus-5, at: 2026-08-23T00:00:00Z }
 contributors: [agent:claude-opus-5]

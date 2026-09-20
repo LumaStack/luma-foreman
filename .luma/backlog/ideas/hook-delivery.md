@@ -1,5 +1,6 @@
 ---
 type: luma/idea
+type_version: "0.1.0"
 title: Building hook delivery
 description: How the fired transport gets built — which hook carries what, the once-per-session rule that keeps it from costing more than it saves, and the three questions to settle before any of it.
 stage: draft

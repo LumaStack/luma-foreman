@@ -1,5 +1,6 @@
 ---
 type: policy
+type_version: "0.0.1"
 title: Where documentation lives
 description: Prose goes in docs/. What stays at the repository root and why, and which documents this bundle deliberately does not own.
 matches:

@@ -1,5 +1,6 @@
 ---
 type: luma/idea
+type_version: "0.1.0"
 title: How bundles compose
 description: Three layers where there is currently one — distribution, composition, delivery — with capabilities as the composition currency, additive providers instead of conditional dependencies, and what foreman does about it.
 stage: draft

@@ -1,5 +1,6 @@
 ---
 type: slice
+type_version: "0.0.1"
 title: The permissions document, skipped
 created: 2026-08-29
 covers:

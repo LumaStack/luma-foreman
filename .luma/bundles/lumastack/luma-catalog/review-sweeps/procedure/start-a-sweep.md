@@ -1,5 +1,6 @@
 ---
 type: procedure
+type_version: "0.0.1"
 title: Start a sweep
 description: Settle what is being read and what is not, choose an order, and build the index that makes coverage checkable. Use when beginning a file-by-file review of a project.
 ---

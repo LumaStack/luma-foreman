@@ -1,5 +1,6 @@
 ---
 type: decision
+type_version: "0.0.1"
 title: Command line conventions CLIG leaves open
 decided: 2026-09-03
 stage: draft

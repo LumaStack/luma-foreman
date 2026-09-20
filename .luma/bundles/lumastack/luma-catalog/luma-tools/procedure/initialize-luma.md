@@ -1,5 +1,6 @@
 ---
 type: procedure
+type_version: "0.0.1"
 title: Initialize luma
 description: Stand up .luma/ in a repository that does not have one. Install foreman if it is missing, then run init. Use when setting up luma in a project for the first time.
 ---

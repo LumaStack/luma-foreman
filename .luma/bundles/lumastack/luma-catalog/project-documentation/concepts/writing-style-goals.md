@@ -1,5 +1,6 @@
 ---
 type: document
+type_version: "0.0.1"
 title: Writing style goals
 description: Our writing style should always follow these goals.
 ---

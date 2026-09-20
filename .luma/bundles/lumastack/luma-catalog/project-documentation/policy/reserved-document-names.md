@@ -1,5 +1,6 @@
 ---
 type: policy
+type_version: "0.0.1"
 title: Reserved document names
 description: Which filenames are claimed by an outside convention or matched by a tool, where the capitals are load-bearing and where they are only typography, and the one distinction no convention gives you.
 matches:

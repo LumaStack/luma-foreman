@@ -1,5 +1,6 @@
 ---
 type: procedure
+type_version: "0.0.1"
 title: Add a document
 description: Decide whether a document is needed, which one it is, and where it goes. Use when writing anything new, or when a document is outgrowing the file it is in.
 ---

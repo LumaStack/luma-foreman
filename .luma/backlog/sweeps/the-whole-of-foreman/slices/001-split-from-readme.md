@@ -1,5 +1,6 @@
 ---
 type: slice
+type_version: "0.0.1"
 title: The documents split out of the README
 created: 2026-08-29
 covers:
