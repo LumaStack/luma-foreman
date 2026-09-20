@@ -102,6 +102,14 @@ on_violation = "allow"
 matches = ["eager"]
 
 [[rule]]
+bundle = "lumastack/luma-catalog/command-line-interface"
+document = "policy/exit-codes"
+title = "Exit codes are one set per tool"
+path = ".luma/bundles/lumastack/luma-catalog/command-line-interface/policy/exit-codes.md"
+on_violation = "allow"
+matches = ["topic:choosing or changing an exit code, or adding a subcommand that can fail in a new way"]
+
+[[rule]]
 bundle = "lumastack/luma-catalog/decision-records"
 document = "policy/decision-guidelines"
 title = "Writing a decision record"

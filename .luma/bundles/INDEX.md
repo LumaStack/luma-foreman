@@ -21,7 +21,7 @@ Every container has an index. This is the project's: one entry per bundle, what 
 - `lumastack/luma-catalog/luma-tools` 0.13.0 — Using the luma tools — which one does what, getting them onto a machine, standing a project up, and the get-then-apply loop that puts knowledge in front of an agent.
 - `lumastack/luma-catalog/luma-types` 0.16.0 — The type definitions more than one luma tool has to agree on — namespaced, vendored, and deliberately not built into the knowledge format.
 - `lumastack/luma-catalog/project-documentation` 0.20.0 — The prose a repository publishes — where it lives, what a README is for, and which documents are worth having at all.
-- `lumastack/luma-catalog/review-sweeps` 0.32.0 — The review sweep — reading a whole codebase with an agent beside you, ordered and resumable, with the reader's own read as the thing being protected.
+- `lumastack/luma-catalog/review-sweeps` 0.33.0 — The review sweep — reading a whole codebase with an agent beside you, ordered and resumable, with the reader's own read as the thing being protected.
 - `lumastack/luma-catalog/session-manager` 0.10.0 — Ending an agent session without losing what it learned — checkpoint while working, hand off to a successor, or close for good, each writing for a different reader.
 - `lumastack/luma-catalog/token-manager` 0.13.0 — Where an agent session's tokens actually go — a paced tutorial on the mechanism and the fixes that follow from it, and an audit that measures a real setup instead of guessing at it.
 - `lumastack/luma-catalog/versioning` 0.8.0 — What a version number promises, when to bump which part, and the rules that get decided wrongly — for anything versioned, not only releases.

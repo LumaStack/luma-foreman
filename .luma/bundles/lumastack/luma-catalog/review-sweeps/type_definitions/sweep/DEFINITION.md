@@ -2,7 +2,7 @@
 type: type_definition
 type_version: "0.0.1"
 defines: sweep
-version: "0.0.1"
+version: "0.0.2"
 fields:
   goal:
     field_presence: required
@@ -11,15 +11,18 @@ fields:
   goal_discipline:
     field_presence: optional
     field_type: enum
-    desc: "strict | adaptive | exploratory — how freely the aim may move. Default adaptive"
+    values: [strict, adaptive, exploratory]
+    desc: "how freely the aim may move. Default adaptive"
   scope_discipline:
     field_presence: optional
     field_type: enum
-    desc: "strict | adaptive | exploratory — how freely the boundary may move. Default adaptive"
+    values: [strict, adaptive, exploratory]
+    desc: "how freely the boundary may move. Default adaptive"
   strategy_discipline:
     field_presence: optional
     field_type: enum
-    desc: "strict | adaptive | exploratory — how freely the method may move. Default adaptive"
+    values: [strict, adaptive, exploratory]
+    desc: "how freely the method may move. Default adaptive"
   scope:
     field_presence: required
     field_type: text
@@ -31,7 +34,8 @@ fields:
   approval:
     field_presence: optional
     field_type: enum
-    desc: "required | recommended | optional | prohibited — how strongly a person's sign-off is expected on each row. Default recommended"
+    values: [required, recommended, optional, prohibited]
+    desc: "how strongly a person's sign-off is expected on each row. Default recommended"
   pairing:
     field_presence: required
     field_type: text
