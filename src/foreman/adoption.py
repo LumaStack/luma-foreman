@@ -11,9 +11,12 @@ nothing is ever restored from this file. It records the unrecoverable facts —
 custody, and intent (`register`) — and never derived state: whether a bundle
 is *wired* is answered by comparison, not by a record that could lie.
 
-**The legacy spelling, ``adopted.toml``, is still read** where no manifest
-exists, and any write completes the migration by replacing it. A receipt that
-quietly stopped being read would fail open.
+**The legacy spelling, ``adopted.toml``, is no longer read implicitly.** It was,
+until every estate repository re-adopted on the migrated catalog (2026-09-20);
+now the one path that touches it is the explicit ``bundle migrate-manifest``,
+which reads it once, folds it into the manifest, and retires it. Nothing deletes
+it quietly either — a receipt this stopped reading should sit visibly where its
+owner can see it, not vanish on the next write.
 """
 
 from __future__ import annotations
@@ -287,11 +290,10 @@ def applied(project: Path, bundle_id: str) -> bool:
 
     claude = project / "CLAUDE.md"
     index = project / apply.INDEX
-    if not index.is_file():
-        # The predecessor artifact, read until the next apply sweeps it — a
-        # project mid-migration still reaches its agent through it, and
-        # reporting every bundle unreachable would be the check lying.
-        index = project / apply.LEGACY_ENTRYPOINT
+    # The predecessor artifact, entrypoint.md, was read here until every
+    # estate repository re-applied (2026-09-20). A project that still has one
+    # answers unapplied now, which is true: the next apply sweeps the artifact
+    # and writes the index that counts.
     if not claude.is_file() or not index.is_file():
         return False
     try:
@@ -408,19 +410,20 @@ def standing(project: Path, entry: Adopted) -> str:
 def read(project: Path) -> dict[str, Adopted]:
     """Every bundle the manifest records, keyed by ID.
 
-    Prefers ``MANIFEST.md``; falls back to the legacy ``adopted.toml`` where
-    no manifest exists yet. An entry missing a field it should have is kept
-    with the field empty rather than raised on: the file is machine-written,
-    so a malformed one means something went wrong upstream of here, and the
-    caller's job is to report that rather than to crash inside a read.
+    ``MANIFEST.md`` only — the legacy ``adopted.toml`` migrates through
+    ``bundle migrate-manifest``, never through an implicit fallback here. An
+    entry missing a field it should have is kept with the field empty rather
+    than raised on: the file is machine-written, so a malformed one means
+    something went wrong upstream of here, and the caller's job is to report
+    that rather than to crash inside a read.
     """
     path = manifest_path(project)
-    if path.is_file():
-        try:
-            return parse(path.read_text(encoding="utf-8"))
-        except (OSError, UnicodeDecodeError):
-            return {}
-    return _read_legacy(project)
+    if not path.is_file():
+        return {}
+    try:
+        return parse(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError):
+        return {}
 
 
 def parse(text: str) -> dict[str, Adopted]:
@@ -477,21 +480,22 @@ def emit(entries: dict[str, Adopted]) -> str:
 
 
 def write(project: Path, entries: dict[str, Adopted]) -> None:
-    """Rewrite the whole manifest from *entries*, and retire the legacy file.
+    """Rewrite the whole manifest from *entries*.
 
     Whole-file rather than in-place because the file has no hand-written
     content to preserve — it says so at the top — and rewriting is the only way
-    a removed adoption actually leaves. Any write completes the migration: two
-    records of one fact could disagree, so the legacy file goes the moment the
-    manifest exists.
+    a removed adoption actually leaves. A legacy ``adopted.toml`` is left
+    where it is: this function no longer reads one, so deleting it here would
+    destroy a record nothing captured. ``bundle migrate-manifest`` is the path
+    that reads it, folds it in, and retires it — explicitly.
     """
     path = manifest_path(project)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(emit(entries), encoding="utf-8")
-    legacy_path(project).unlink(missing_ok=True)
 
 
-def _read_legacy(project: Path) -> dict[str, Adopted]:
+def read_legacy(project: Path) -> dict[str, Adopted]:
+    """The legacy ``adopted.toml``, read only by ``bundle migrate-manifest``."""
     path = legacy_path(project)
     if not path.is_file():
         return {}

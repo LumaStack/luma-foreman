@@ -188,12 +188,11 @@ version: 0.1.0
 description: Written here, never adopted.
 ---
 EOF
-cat > "$P/.luma/bundles/adopted.toml" <<'EOF'
-["org/vendored"]
-version = "1.0.0"
-source = "https://catalog.invalid/example"
-commit = "0000000000000000000000000000000000000000"
-checksum = "0000000000000000000000000000000000000000000000000000000000000000"
+cat > "$P/.luma/bundles/MANIFEST.md" <<'EOF'
+- `org/vendored` 1.0.0
+  - source: https://catalog.invalid/example
+  - commit: 0000000000000000000000000000000000000000
+  - sha256: sha256:0000000000000000000000000000000000000000000000000000000000000000
 EOF
 
 "$CLI" bundle index "$P/.luma/bundles/org/vendored" >/dev/null 2>"$ERR"

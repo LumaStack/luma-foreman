@@ -263,24 +263,18 @@ printf -- '---\ntype: policy\ntitle: T\nmatches:\n  - event: before-commit\n  - 
 run 'well-formed triggers are quiet' 0 "$d"
 lacks 'rule=bundles'
 
-# --- asking for a permanent seat ------------------------------------------------
+# --- the retired keyword is a finding now -----------------------------------------
 #
-# Legal, and the most expensive thing a bundle can do: it loads into every
-# session of every adopter, forever. Deliberate now rather than accidental —
-# `matches: always` is the only route to it — so this confirms a choice rather
-# than catching a slip. Still worth saying out loud rather than leaving somebody
-# to discover it in a context budget.
+# `always` was the pre-v0.0.19 spelling of `eager`, read as a tolerance until
+# every estate repository re-adopted on the renamed catalog (2026-09-20). It is
+# an unknown keyword now, like any other: the rule it guarded never fires, and
+# that is exactly what the trigger check exists to report.
 
 d=$(bundle alwayson)
 printf -- '---\ntype: policy\ntitle: T\nmatches: always\n---\nx\n' > "$d/b/p.md"
-run 'matches always is surfaced' 0 "$d"
-has 'whenever this bundle opens'
-# A notice, not a finding: the choice is legal and deliberate, so it is printed
-# as loudly as anything else and exits 0. Failing a build over a correct
-# decision is how a check gets switched off.
-has 'NOTICE'
-has 'never fails a run'
-lacks 'LOW '
+run 'the retired always keyword is a finding' 1 "$d"
+has 'not a trigger'
+lacks 'whenever this bundle opens'
 
 # And the reverse, which is the default flipping: a policy that says nothing
 # gets a permanent seat no longer. Silence used to buy the costliest delivery
@@ -292,14 +286,17 @@ run 'a policy that says nothing is quiet' 0 "$d"
 lacks 'whenever this bundle opens'
 
 # A notice never suppresses a finding, and a finding never demotes to a notice.
-# Both in one run: exit follows the finding alone.
+# Both in one run: exit follows the finding alone. The notice vehicle is an
+# unreachable concept; the finding is a trigger that is not one.
 
 d=$(bundle both)
-printf -- '---\ntype: policy\ntitle: T\nmatches: always\n---\nx\n' > "$d/b/p.md"
+mkdir -p "$d/b/concepts"
+printf -- '---\ntype: document\ntitle: Adrift\n---\nNobody can get here.\n' > "$d/b/concepts/adrift.md"
 printf -- '---\ntype: policy\ntitle: U\nmatches:\n  - nonsense: x\n---\ny\n' > "$d/b/q.md"
 run 'a notice does not hide a finding' 1 "$d"
 has 'NOTICE'
 has 'HIGH'
+has 'never fails a run'
 has 'finding(s) and 1 notice(s)'
 
 # --- the old name is gone, not merely discouraged -------------------------------
@@ -367,7 +364,7 @@ has 'nothing can reach'
 
 # Linked from something reachable, it is reached. One hop or ten, the answer is
 # the same and the notice goes.
-printf -- '---\ntype: policy\ntitle: Rule\nmatches: always\n---\nSee [[adrift]].\n' \
+printf -- '---\ntype: policy\ntitle: Rule\nmatches: eager\n---\nSee [[adrift]].\n' \
   > "$d/b/rule.md"
 run 'linked from something reachable' 0 "$d"
 lacks 'nothing can reach'

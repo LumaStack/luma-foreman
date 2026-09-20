@@ -39,7 +39,10 @@ EOF
 M=$P/.luma/bundles/MANIFEST.md
 L=$P/.luma/bundles/adopted.toml
 
-# -- legacy fallback ----------------------------------------------------------
+# -- legacy is not read implicitly ----------------------------------------------
+#
+# The fallback read retired with the estate's re-adoption (2026-09-20). The one
+# path that still opens adopted.toml is `bundle migrate-manifest`, below.
 
 cat > "$L" <<'EOF'
 ["org/thing"]
@@ -50,7 +53,7 @@ checksum = "sha256:2222222222222222222222222222222222222222222222222222222222222
 EOF
 
 OUT=$( cd "$P" && "$CLI" bundle list )
-printf '%s\n' "$OUT" | grep -q 'thing' && ok || bad "legacy adopted.toml should still be read by bundle list"
+printf '%s\n' "$OUT" | grep -q 'thing' && bad "adopted.toml must not be read implicitly" || ok
 
 # -- migration ----------------------------------------------------------------
 

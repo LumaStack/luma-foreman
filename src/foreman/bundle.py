@@ -622,13 +622,17 @@ def main(argv: list[str]) -> int:
     if verb == "migrate-manifest":
         if operands:
             return _err(f"migrate-manifest takes no arguments (got: {operands[0]})")
-        entries = adoption.read(project_root)
+        # The one path that still reads adopted.toml — explicitly, on request.
+        # Legacy entries fold in under the manifest's, so re-running against a
+        # stale straggler cannot overwrite anything the manifest already says.
         legacy = adoption.legacy_path(project_root)
-        if not entries and not legacy.is_file():
+        had_legacy = legacy.is_file()
+        entries = {**adoption.read_legacy(project_root), **adoption.read(project_root)}
+        if not entries and not had_legacy:
             print("nothing recorded — no manifest and no legacy file to migrate.")
             return 0
-        had_legacy = legacy.is_file()
         adoption.write(project_root, entries)
+        legacy.unlink(missing_ok=True)
         target = adoption.manifest_path(project_root).relative_to(project_root)
         print(f"wrote {target} ({len(entries)} entr{'y' if len(entries) == 1 else 'ies'})"
               + (", retired adopted.toml" if had_legacy else ""))
