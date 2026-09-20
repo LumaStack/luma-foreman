@@ -7,9 +7,19 @@ contributors: [human:benlinton, agent:claude-fable-5]
 horizon: next
 scope: project
 stage: draft
+archived: 2026-09-20
 ---
 
 # Retire the migration tolerances once the estate has re-adopted
+
+> **Done, and pruned.** The gate was satisfied 2026-09-20 — the estate-wide
+> query (zero `_types/` directories, zero typed documents missing
+> `type_version`, all eight repositories) came back empty — and the three
+> tolerances were removed the same day: `always` now resolves like any unknown
+> keyword and inspect reports it as a finding; the implicit `adopted.toml`
+> read is gone, with `bundle migrate-manifest` kept as the one explicit
+> migration path; `applied()` answers from the project index alone. The
+> analysis below is the record of why they existed.
 
 **Three tolerances were left in foreman so old-format bundles keep working
 while the rest of the estate migrates. Once every estate repository has

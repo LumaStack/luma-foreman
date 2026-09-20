@@ -104,13 +104,15 @@ def matches(path: Path) -> tuple[str, ...]:
     start = MATCHES.search(front)
     if start is None:
         return ()
-    # Both spellings are read until the apply rewrite retires the old one:
-    # the vendored bundles here still say `always` while the catalog migrates
-    # to spec v0.0.19's `eager`. Callers decide what each means; an unknown
-    # keyword still resolves to nothing, the safe direction.
+    # `eager` and `nothing` are the spec's keywords. Anything else — the
+    # retired spelling `always` included, since the estate finished
+    # re-adopting on 2026-09-20 — passes through untranslated: every caller
+    # already lands an unknown keyword as nothing-loads, the safe direction,
+    # and the reporting surfaces (bundle index, inspect) name it. A filter
+    # here would hide the one thing worth reporting: a rule that never fires.
     keyword = unquote(start.group(1).strip())
     if keyword:
-        return (keyword,) if keyword in ("always", "eager", "nothing") else ()
+        return (keyword,)
     out: list[str] = []
     for line in front[start.end() :].splitlines():
         if line.strip() == "":

@@ -429,8 +429,8 @@ case $LAST in *" of "*" taken"*) ok ;; *) bad "no published count: $LAST" ;; esa
 # Unreachable is reported per row and does not fail the run. A blank where a
 # number belongs reads as zero, which is the one thing that must not happen.
 GONE=$T/gone; mkdir -p "$GONE/.luma/bundles/acme/x"; git -C "$GONE" init -q
-printf -- '["acme/x"]\nversion  = "1.0.0"\nsource   = "https://example.invalid/nope.git"\ncommit   = "c"\nchecksum = "sha256:c"\n' \
-  > "$GONE/.luma/bundles/adopted.toml"
+printf -- '- `acme/x` 1.0.0\n  - source: https://example.invalid/nope.git\n  - commit: c\n  - sha256: sha256:c\n' \
+  > "$GONE/.luma/bundles/MANIFEST.md"
 printf -- '---\ntype: bundle\nversion: 1.0.0\n---\nb\n' > "$GONE/.luma/bundles/acme/x/BUNDLE.md"
 LAST=$(cd "$GONE" && "$CLI" catalog list 2>&1); got=$?
 [ "$got" -eq 0 ] && ok || bad "unreachable catalog failed the run (exit $got): $LAST"
@@ -441,8 +441,8 @@ case $LAST in *"? published"*) ok ;; *) bad "did not mark the count unknown: $LA
 # half the bundles.
 mkdir -p "$GONE/.luma/bundles/acme/y"
 printf -- '---\ntype: bundle\nversion: 1.0.0\n---\nb\n' > "$GONE/.luma/bundles/acme/y/BUNDLE.md"
-printf -- '\n["acme/y"]\nversion  = "1.0.0"\nsource   = "https://example.invalid/nope"\ncommit   = "c"\nchecksum = "sha256:c"\n' \
-  >> "$GONE/.luma/bundles/adopted.toml"
+printf -- '- `acme/y` 1.0.0\n  - source: https://example.invalid/nope\n  - commit: c\n  - sha256: sha256:c\n' \
+  >> "$GONE/.luma/bundles/MANIFEST.md"
 LAST=$(cd "$GONE" && "$CLI" catalog list 2>&1); got=$?
 case $LAST in *"1 catalog,"*) ok ;; *) bad "two spellings of one catalog were listed twice: $LAST" ;; esac
 lacks 'nope.git' '' 2>/dev/null || true

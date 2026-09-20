@@ -34,10 +34,11 @@ from ..finding import Finding, Notice, Result, Skipped
 # rendered dead, since OR semantics make everything next to it unreachable.
 TRIGGER_KINDS = ("path", "tool", "command", "event", "topic")
 # The scalar forms. Anything else in that position is a typo, and it resolves
-# to `nothing` — the safe direction, and reported rather than absorbed.
-# `eager` is the spec's word as of LKF v0.0.19; `always` is its retired
-# spelling, still read until the apply rewrite retires it everywhere at once.
-KEYWORDS = ("eager", "always", "nothing")
+# to `nothing` — the safe direction, and reported rather than absorbed. That
+# now includes `always`, the spelling LKF v0.0.19 retired for `eager`: the
+# estate finished re-adopting on 2026-09-20, so a document still saying it is
+# stale, and reporting that beats quietly honouring it.
+KEYWORDS = ("eager", "nothing")
 # `event` reaches what no other trigger can: a lifecycle point, fired however
 # it is arrived at. Four of these overlap with `command` on purpose — a command
 # trigger catches a literal invocation, an event catches the point itself — and
@@ -169,7 +170,6 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
     # come, which is the failure the whole applicability design exists to end.
     unknown_kind: list[str] = []
     unknown_event: list[str] = []
-    always_on: list[str] = []
     triggered: set[str] = set()
     kinds: dict[str, str] = {}
     for doc_id, keys in docs.items():
@@ -188,8 +188,6 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
                 unknown_kind.append(f"{doc_id}: {kind}")
             elif kind == "event" and value not in EVENTS:
                 unknown_event.append(f"{doc_id}: {value}")
-        if triggers == ("always",):
-            always_on.append(doc_id)
         if triggers:
             triggered.add(doc_id)
         kinds[doc_id] = str(keys.get("type", "")).strip()
@@ -206,23 +204,6 @@ def _audit(root: Path, repo: Path) -> tuple[list[Finding], list[Notice], list[st
             unknown_event,
             "event is a closed vocabulary — " + ", ".join(sorted(EVENTS)) +
             ". A name nothing fires is a rule that never arrives.")
-    if always_on:
-        # Not a defect, and the old remedy said so outright — "worth confirming
-        # rather than fixing" is a notice by definition, and it was exiting 1
-        # over a choice somebody made deliberately.
-        notices.append(
-            Notice(
-                rule=RULE,
-                summary=f"{label}: {len(always_on)} document(s) load whenever this bundle opens",
-                evidence=tuple(sorted(always_on)),
-                remedy=(
-                    "matches: always asks to arrive unasked every time this "
-                    "bundle is opened, in every adopter, forever. Confirm it "
-                    "was meant: if the rule governs a particular activity, say "
-                    "so and it arrives when that activity does."
-                ),
-            )
-        )
 
     manifest = docs.get("BUNDLE")
     if manifest is None:
