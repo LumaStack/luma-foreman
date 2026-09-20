@@ -7,9 +7,18 @@ contributors: [human:benlinton, agent:claude-fable-5]
 horizon: next
 scope: project
 stage: draft
+archived: 2026-09-20
 ---
 
 # Rename `_types/` to `type_definitions/`
+
+> **Done, and pruned.** LKF `v0.0.21` shipped the rename (and went further:
+> every Type Definition is a folder), and the blast-radius list below was
+> executed in full by 2026-09-20 — foreman's code (#158), the bundle-manager
+> prose and template plus every type-carrying bundle (luma-catalog#168), and
+> the re-adopt across the estate (#159, luma-backlog#147, luma-leader#72,
+> luma-catalog-curator#25). The estate-wide query returns zero `_types/`
+> anywhere. The argument below is the record of why the name changed.
 
 **The bundle directory for Type Definitions should be named after what it
 holds, like its siblings.** The files in it are documents declaring
@@ -44,6 +53,7 @@ Sequences naturally with the estate migration behind
 [[retire-the-migration-tolerances]] — one re-adopt wave can carry both.
 
 **The spec change shipped: LKF `v0.0.21` renamed the directory and made every
-Type Definition a folder.** The estate-wide execution plan, including this
-repository's blast-radius list, is [[migrate-estate-to-type-definitions]] —
-execute it, then prune this idea.
+Type Definition a folder.** The estate-wide execution plan was
+`migrate-estate-to-type-definitions`, executed in full and pruned with this
+idea — its content survives in git history and in the per-repository pull
+requests named above.

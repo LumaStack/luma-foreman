@@ -44,7 +44,8 @@ skills until it re-adopts — worth confirming during the migration itself.
 
 **The gate became checkable with LKF `v0.0.21`.** Documents now carry
 `type_version`, and the estate stamped them during the
-[[migrate-estate-to-type-definitions]] wave — so "every repository migrated"
+`migrate-estate-to-type-definitions` wave (a temporary plan, pruned with the
+wave it drove) — so "every repository migrated"
 is a query over frontmatter rather than a belief: grep the estate for typed
 documents with no `type_version`, and for any `_types/` directory still on
 disk. When both come back empty, the tolerances above have nothing left to
