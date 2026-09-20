@@ -1,5 +1,6 @@
 ---
 type: policy
+type_version: "0.0.1"
 title: Presenting a file
 description: How a file is put in front of the reader — the shape, the order it arrives in, and the difference between a deep presentation and a shallow one.
 matches:

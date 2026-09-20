@@ -1,5 +1,6 @@
 ---
 type: procedure
+type_version: "0.0.1"
 title: Verify an audit response
 description: Check whether each finding is genuinely resolved and record a disposition. Use after a response is filed — this is what closes the loop.
 ---

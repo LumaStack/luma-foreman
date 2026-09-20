@@ -1,5 +1,6 @@
 ---
 type: decision
+type_version: "0.0.1"
 title: Catalogs are registered sources
 decided: 2026-09-03
 stage: draft

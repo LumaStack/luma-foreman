@@ -1,8 +1,9 @@
 ---
 type: bundle
+type_version: "0.0.1"
 title: lumastack/luma-catalog/luma-tools
-version: 0.12.1
-published: 2026-09-02
+version: 0.13.0
+published: 2026-09-19
 stage: draft
 consumers: [project, organization]
 description: Using the luma tools — which one does what, getting them onto a machine, standing a project up, and the get-then-apply loop that puts knowledge in front of an agent.

@@ -1,5 +1,6 @@
 ---
 type: luma/idea
+type_version: "0.1.0"
 title: Nothing validates frontmatter against the type that declares it
 created: { by: human:benlinton, at: 2026-09-08T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]

@@ -1,5 +1,6 @@
 ---
 type: slice
+type_version: "0.0.1"
 title: ADR-0001, and the scope change that made this a prose sweep
 created: 2026-08-29
 covers:

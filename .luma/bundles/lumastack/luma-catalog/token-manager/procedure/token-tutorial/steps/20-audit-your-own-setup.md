@@ -1,5 +1,6 @@
 ---
 type: luma/tutorial_step
+type_version: "0.3.0"
 title: Measure your own setup
 step: 20
 pause: apply_elsewhere

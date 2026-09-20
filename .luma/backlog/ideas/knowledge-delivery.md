@@ -1,5 +1,6 @@
 ---
 type: luma/idea
+type_version: "0.1.0"
 title: Building knowledge delivery
 description: The sequence for building what how-knowledge-arrives describes — six steps, each shippable on its own, and the decisions each one will force.
 stage: draft

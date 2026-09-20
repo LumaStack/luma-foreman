@@ -1,5 +1,6 @@
 ---
 type: policy
+type_version: "0.0.1"
 title: Command line style guide
 description: The two templates a command's help follows — the bare tool and a command of its own — explained a piece at a time, plus the output conventions that go with them.
 matches: eager
@@ -253,8 +254,12 @@ they go looking for it.
 
 ### `EXIT CODES`
 
-**Every command states its own**, on one line, because what `1` means is local:
-refused, behind, findings present.
+**Every command states its own**, on one line, because what `1` means is local
+to the tool: refused, behind, findings present.
+
+**Local to the tool, not to the subcommand.** A subcommand states which codes
+it can return; it does not get its own meanings for them — see
+[[exit-codes]].
 
 **`0` includes doing nothing.** *Nothing to do* is a successful outcome, and
 reporting it as a failure makes every wrapper treat a settled state as a

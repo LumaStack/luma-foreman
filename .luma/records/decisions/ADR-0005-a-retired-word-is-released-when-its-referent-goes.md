@@ -1,5 +1,6 @@
 ---
 type: decision
+type_version: "0.0.1"
 title: A retired word is released when its referent goes, not when time passes
 decided: 2026-08-26
 stage: draft

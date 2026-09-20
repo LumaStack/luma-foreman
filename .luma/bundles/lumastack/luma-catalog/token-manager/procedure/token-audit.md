@@ -1,5 +1,6 @@
 ---
 type: procedure
+type_version: "0.0.1"
 title: Audit token usage
 description: Measure one setup for token waste — memory files, tool deferral, model and effort, output filtering, subagents, schedule intervals and cache hit rate — and report it ranked by cost. Reports only; changes nothing. Use before deciding what to fix.
 ---

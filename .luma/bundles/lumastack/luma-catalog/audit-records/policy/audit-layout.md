@@ -1,5 +1,6 @@
 ---
 type: policy
+type_version: "0.0.1"
 title: How audits are stored
 description: Where an audit lives, how it is named, and the three-party loop — auditor, respondent, auditor again — that makes the record settle rather than accumulate.
 matches: eager

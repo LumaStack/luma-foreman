@@ -1,5 +1,6 @@
 ---
 type: sweep
+type_version: "0.0.1"
 title: The whole of luma-foreman
 created: 2026-08-28
 stage: provisional

@@ -1,5 +1,6 @@
 ---
 type: policy
+type_version: "0.0.1"
 title: What each luma tool does
 description: The tools, the one job each performs, and when to use them. Read before installing or invoking any of them.
 matches:

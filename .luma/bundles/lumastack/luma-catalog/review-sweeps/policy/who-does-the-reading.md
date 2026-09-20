@@ -1,5 +1,6 @@
 ---
 type: policy
+type_version: "0.0.1"
 title: Who does the reading
 description: The two parties in a sweep, why neither has to be human, and what changes when no human is in it — including the check that loses its observer.
 matches:

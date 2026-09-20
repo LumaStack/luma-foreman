@@ -1,5 +1,6 @@
 ---
 type: decision
+type_version: "0.0.1"
 title: refit is removed rather than renamed, and there is no composite status command
 decided: 2026-08-26
 stage: draft

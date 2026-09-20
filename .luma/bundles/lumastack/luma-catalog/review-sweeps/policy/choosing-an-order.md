@@ -1,5 +1,6 @@
 ---
 type: policy
+type_version: "0.0.1"
 title: Choosing an order
 description: The orders a sweep can run in, what each buys and costs, and why the choice is made once per sweep and written down rather than defaulted to.
 matches:

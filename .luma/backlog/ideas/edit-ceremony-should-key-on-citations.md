@@ -1,5 +1,6 @@
 ---
 type: luma/idea
+type_version: "0.1.0"
 title: What an edit to a decision costs should key on citations, not on stage
 created: { by: agent:claude-opus-5, at: 2026-08-26T00:00:00Z }
 contributors: [agent:claude-opus-5, human:benlinton]

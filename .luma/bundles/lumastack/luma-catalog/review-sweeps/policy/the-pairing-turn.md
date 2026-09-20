@@ -1,5 +1,6 @@
 ---
 type: policy
+type_version: "0.0.1"
 title: The pairing turn
 description: Orientation before the reader reads, judgement only after they have spoken — the turn order that keeps a paired review from becoming one party's review with the other signing it.
 matches:

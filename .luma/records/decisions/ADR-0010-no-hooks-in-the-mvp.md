@@ -1,5 +1,6 @@
 ---
 type: decision
+type_version: "0.0.1"
 title: No hooks in the MVP
 decided: 2026-09-02
 stage: draft

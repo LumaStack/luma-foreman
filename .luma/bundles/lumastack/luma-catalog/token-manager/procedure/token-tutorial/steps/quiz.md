@@ -1,5 +1,6 @@
 ---
 type: luma/tutorial_quiz
+type_version: "0.1.0"
 title: Quiz
 after_step: 20
 ---

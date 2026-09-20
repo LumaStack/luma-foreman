@@ -1,5 +1,6 @@
 ---
 type: luma/idea
+type_version: "0.1.0"
 title: What happens to routing.toml
 created: { by: agent:claude-opus-5, at: 2026-09-03T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]

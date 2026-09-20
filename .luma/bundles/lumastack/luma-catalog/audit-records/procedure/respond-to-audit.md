@@ -1,5 +1,6 @@
 ---
 type: procedure
+type_version: "0.0.1"
 title: Respond to an audit
 description: Take a position on every finding — agreed, partially agreed, disagreed, or accepted — and point at the evidence. Use when an audit has been filed against something you are accountable for.
 ---

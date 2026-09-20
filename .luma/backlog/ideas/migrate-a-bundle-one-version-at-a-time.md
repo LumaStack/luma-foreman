@@ -1,5 +1,6 @@
 ---
 type: luma/idea
+type_version: "0.1.0"
 title: A bundle should carry migrations, one version at a time so they chain
 created: { by: human:luma-foundry, at: 2026-09-10T06:38:27Z }
 contributors: [human:luma-foundry, agent:claude-opus-5]

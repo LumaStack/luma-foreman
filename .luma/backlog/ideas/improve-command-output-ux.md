@@ -1,5 +1,6 @@
 ---
 type: luma/idea
+type_version: "0.1.0"
 title: Improve command-line output UX
 description: The command line output for v0.1.0 could use some pretty-ing up.
 stage: draft

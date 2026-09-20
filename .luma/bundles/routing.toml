@@ -63,11 +63,27 @@ matches = ["eager"]
 
 [[rule]]
 bundle = "lumastack/luma-catalog/bundle-manager"
+document = "policy/what-a-bundle-may-carry"
+title = "What a bundle may carry"
+path = ".luma/bundles/lumastack/luma-catalog/bundle-manager/policy/what-a-bundle-may-carry.md"
+on_violation = "allow"
+matches = ["topic:putting somebody else's writing, code or data into a bundle", "topic:deciding whether to vendor an external document or link to it"]
+
+[[rule]]
+bundle = "lumastack/luma-catalog/bundle-manager"
 document = "policy/where-a-bundle-belongs"
 title = "Where a bundle belongs"
 path = ".luma/bundles/lumastack/luma-catalog/bundle-manager/policy/where-a-bundle-belongs.md"
 on_violation = "allow"
 matches = ["topic:deciding which catalog a bundle belongs in"]
+
+[[rule]]
+bundle = "lumastack/luma-catalog/command-line-interface"
+document = "policy/ascii-styleguide"
+title = "ASCII style guide"
+path = ".luma/bundles/lumastack/luma-catalog/command-line-interface/policy/ascii-styleguide.md"
+on_violation = "allow"
+matches = ["eager"]
 
 [[rule]]
 bundle = "lumastack/luma-catalog/command-line-interface"

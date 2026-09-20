@@ -1,5 +1,6 @@
 ---
 type: luma/idea
+type_version: "0.1.0"
 title: Frontmatter needs a version, and a type definition needs migrations
 created: { by: human:benlinton, at: 2026-09-06T00:00:00Z }
 contributors: [human:benlinton, agent:claude-opus-5]

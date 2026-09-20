@@ -1,5 +1,6 @@
 ---
 type: decision
+type_version: "0.0.1"
 title: MVP bundle distribution
 decided: 2026-08-23
 stage: draft

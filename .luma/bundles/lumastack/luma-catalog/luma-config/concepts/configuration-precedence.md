@@ -1,5 +1,6 @@
 ---
 type: document
+type_version: "0.0.1"
 title: Configuration precedence
 description: Six layers, and why the committed file appears twice. What a project may suggest, what it may mandate, and what an operator may override.
 ---

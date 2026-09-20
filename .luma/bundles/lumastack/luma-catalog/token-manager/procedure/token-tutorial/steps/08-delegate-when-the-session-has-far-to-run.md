@@ -1,5 +1,6 @@
 ---
 type: luma/tutorial_step
+type_version: "0.3.0"
 title: Delegate when the session still has a long way to run
 step: 8
 pause: practice

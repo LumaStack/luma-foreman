@@ -1,8 +1,9 @@
 ---
 type: bundle
+type_version: "0.0.1"
 title: lumastack/luma-catalog/audit-records
-version: 0.10.1
-published: 2026-09-02
+version: 0.11.0
+published: 2026-09-19
 stage: draft
 consumers: [project, organization]
 description: Audits as records — findings written by one party, answered by another, closed by the first. The whole exchange lives in git.

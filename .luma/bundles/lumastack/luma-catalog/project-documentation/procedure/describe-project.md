@@ -1,5 +1,6 @@
 ---
 type: procedure
+type_version: "0.0.1"
 title: Describe a project
 description: Write or refresh the descriptor a repository publishes about itself at .luma/PROJECT.md. Use when a repository is one of several, or when what it is for has changed.
 ---

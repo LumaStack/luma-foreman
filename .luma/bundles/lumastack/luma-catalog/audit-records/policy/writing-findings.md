@@ -1,5 +1,6 @@
 ---
 type: policy
+type_version: "0.0.1"
 title: Writing a finding
 description: What makes a finding actionable rather than an opinion — the five parts, how to rate severity, and the failures that make audits get ignored.
 matches:

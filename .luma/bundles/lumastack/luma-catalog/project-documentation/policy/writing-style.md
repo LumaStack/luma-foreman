@@ -1,5 +1,6 @@
 ---
 type: policy
+type_version: "0.0.1"
 title: Writing style
 description: How prose is written here — the conventions a reader should be able to rely on across every document. Read before writing or editing documentation.
 matches:
