@@ -1,0 +1,9 @@
+# luma-backlog configuration — see docs/spec.md §8
+# The source of truth. Deliberately minimal; keys are added when something
+# needs them, not in advance — and only keys the binary actually reads.
+
+# The prefix of every NEW work item key (WORK-0042). Optional; WORK when
+# absent. Changing it never renames existing records — the prefix is written
+# into each record at creation. Jira Cloud rules: an uppercase letter, then
+# uppercase letters or digits, two to ten characters.
+work_item_key: FORE
