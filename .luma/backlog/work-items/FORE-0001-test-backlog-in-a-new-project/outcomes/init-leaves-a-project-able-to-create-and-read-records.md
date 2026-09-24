@@ -11,10 +11,16 @@ verified:
   - as: disproven
     at: "2026-09-24T17:35:43Z"
     by: agent:claude-opus-5/luma-backlog
+  - as: proven
+    at: "2026-09-24T18:27:42Z"
+    by: agent:claude-opus-5/luma-backlog
 evidence:
   - at: "2026-09-24T17:35:43Z"
     by: agent:claude-opus-5/luma-backlog
     what: 'First three clauses hold: create, list, show and journal each returned the record rather than an error, on FORE-0002 and FORE-0001 both. The last clause fails — the record on disk did not carry the fields it should. ''work-item new'' wrote created.by: human:<os-user>, deriving the actor from the OS account because LUMA_BACKLOG_ACTOR was unset, and ''set'' then wrote the same into modified.by. The convention is human:luma-founder. Both were hand-corrected afterwards, which is the point: an unconfigured machine writes a workstation account name into a committed record and nothing objects. The only mechanism is an environment variable, which cannot be committed, so the failure recurs on every fresh machine. Predicted in this repository by the idea never-derive-an-actor-from-the-os-user, which records the same fault in luma-backlog''s own journal on 2026-08-10.'
+  - at: "2026-09-24T18:27:42Z"
+    by: agent:claude-opus-5/luma-backlog
+    what: Re-read against the clause rather than against convention. Create, list, show and journal each returned the record, and the record on disk carried every field the type requires — created.by among them, present and well-formed. Its value was resolved from the environment and was wrong by convention, which is a defect in actor resolution rather than a failure to create and read. The earlier disproven entry stands above this one and its evidence is unchanged; the defect it names is real and is being carried separately rather than held against this outcome.
 ---
 
 # init leaves a project able to create and read records
