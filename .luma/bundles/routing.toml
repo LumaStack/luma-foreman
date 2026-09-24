@@ -22,6 +22,30 @@ on_violation = "allow"
 matches = ["topic:writing a finding in an audit"]
 
 [[rule]]
+bundle = "lumastack/luma-catalog/backlog"
+document = "policy/adopting-a-rule-the-corpus-does-not-meet"
+title = "Adopting a rule the corpus does not meet"
+path = ".luma/bundles/lumastack/luma-catalog/backlog/policy/adopting-a-rule-the-corpus-does-not-meet.md"
+on_violation = "allow"
+matches = ["topic:adopting a rule, tightening a policy, or changing what a record must contain"]
+
+[[rule]]
+bundle = "lumastack/luma-catalog/backlog"
+document = "policy/showing-records"
+title = "Showing records"
+path = ".luma/bundles/lumastack/luma-catalog/backlog/policy/showing-records.md"
+on_violation = "allow"
+matches = ["eager"]
+
+[[rule]]
+bundle = "lumastack/luma-catalog/backlog"
+document = "policy/when-a-work-item-splits"
+title = "When a work item splits"
+path = ".luma/bundles/lumastack/luma-catalog/backlog/policy/when-a-work-item-splits.md"
+on_violation = "allow"
+matches = ["eager"]
+
+[[rule]]
 bundle = "lumastack/luma-catalog/backlog-ideas"
 document = "policy/capturing-ideas"
 title = "What is worth capturing"

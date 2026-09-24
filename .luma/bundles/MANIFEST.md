@@ -9,6 +9,10 @@
   - catalog: lumastack/luma-catalog
   - commit: d5d3b50c1f66dad0aaf78ac82ee381f87714088c
   - sha256: d8cfb0aa5fea83c29ce3991dad647b7e64ec575d9ffa8a5cb10ac1e002b3f6e0
+- `lumastack/luma-catalog/backlog` 0.49.0
+  - catalog: lumastack/luma-catalog
+  - commit: e7a4ce7a698e53e15261f8bfc191e0390adeec54
+  - sha256: b36067d9e842d46412c47c5f473b5fbea72a392a5fdb3c3aa786e12bdbed77f3
 - `lumastack/luma-catalog/backlog-ideas` 0.15.0
   - catalog: lumastack/luma-catalog
   - commit: d5d3b50c1f66dad0aaf78ac82ee381f87714088c
