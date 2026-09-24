@@ -4,7 +4,7 @@ type_version: "0.1.0"
 title: How bundles compose
 description: Three layers where there is currently one — distribution, composition, delivery — with capabilities as the composition currency, additive providers instead of conditional dependencies, and what foreman does about it.
 stage: draft
-created: { by: human:benlinton, at: 2026-08-29T00:00:00Z }
+created: { by: human:luma-founder, at: 2026-08-29T00:00:00Z }
 modified: { by: agent:claude-opus-5, at: 2026-08-29T00:00:00Z }
 ---
 

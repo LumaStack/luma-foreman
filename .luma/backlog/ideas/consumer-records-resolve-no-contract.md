@@ -3,7 +3,7 @@ type: luma/idea
 type_version: "0.1.0"
 title: Consumer records resolve no contract, so validation never sees them
 created: { by: agent:claude-fable-5, at: 2026-09-20T00:00:00Z }
-contributors: [human:benlinton, agent:claude-fable-5]
+contributors: [human:luma-founder, agent:claude-fable-5]
 horizon: next
 scope: organization
 stage: draft

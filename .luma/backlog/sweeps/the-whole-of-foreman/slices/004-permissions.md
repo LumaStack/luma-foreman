@@ -6,7 +6,7 @@ created: 2026-08-29
 covers:
   - docs/claude-agent-permissions.md
 contributors:
-  - human:benlinton
+  - human:luma-founder
   - agent:claude-opus-5
 ---
 

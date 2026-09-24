@@ -2,8 +2,8 @@
 type: luma/idea
 type_version: "0.1.0"
 title: Catalogs as registered sources, the way apt has sources.list
-created: { by: human:benlinton, at: 2026-09-03T00:00:00Z }
-contributors: [human:benlinton, agent:claude-fable-5]
+created: { by: human:luma-founder, at: 2026-09-03T00:00:00Z }
+contributors: [human:luma-founder, agent:claude-fable-5]
 horizon: next
 scope: project
 stage: draft

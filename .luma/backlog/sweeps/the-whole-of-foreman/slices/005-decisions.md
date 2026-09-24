@@ -6,7 +6,7 @@ created: 2026-08-29
 covers:
   - .luma/records/decisions/ADR-0001-apply-writes-adapters-not-copies.md
 contributors:
-  - human:benlinton
+  - human:luma-founder
   - agent:claude-opus-5
 ---
 

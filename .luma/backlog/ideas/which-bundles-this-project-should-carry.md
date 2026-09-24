@@ -2,8 +2,8 @@
 type: luma/idea
 type_version: "0.1.0"
 title: Which bundles this project should carry, and what decides it
-created: { by: human:benlinton, at: 2026-08-27T00:00:00Z }
-contributors: [human:benlinton, agent:claude-opus-5]
+created: { by: human:luma-founder, at: 2026-08-27T00:00:00Z }
+contributors: [human:luma-founder, agent:claude-opus-5]
 horizon: next
 scope: project
 stage: draft

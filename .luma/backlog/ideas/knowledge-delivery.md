@@ -4,7 +4,7 @@ type_version: "0.1.0"
 title: Building knowledge delivery
 description: The sequence for building what how-knowledge-arrives describes — six steps, each shippable on its own, and the decisions each one will force.
 stage: draft
-created: { by: human:benlinton, at: 2026-08-27T00:00:00Z }
+created: { by: human:luma-founder, at: 2026-08-27T00:00:00Z }
 modified: { by: agent:claude-opus-5, at: 2026-08-27T00:00:00Z }
 ---
 

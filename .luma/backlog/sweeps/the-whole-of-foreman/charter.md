@@ -14,7 +14,7 @@ ordering: led
 approval: recommended
 pairing: human-agent
 contributors:
-  - human:benlinton
+  - human:luma-founder
   - agent:opus-5
 ---
 

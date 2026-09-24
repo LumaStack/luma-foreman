@@ -4,7 +4,7 @@ type_version: "0.1.0"
 title: Improve command-line output UX
 description: The command line output for v0.1.0 could use some pretty-ing up.
 stage: draft
-created: { by: human:benlinton, at: 2026-09-03T00:00:00Z }
+created: { by: human:luma-founder, at: 2026-09-03T00:00:00Z }
 ---
 
 # Improve command-line output UX
