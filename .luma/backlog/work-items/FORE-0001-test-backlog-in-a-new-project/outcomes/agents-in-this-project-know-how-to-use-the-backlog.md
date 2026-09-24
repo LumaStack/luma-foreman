@@ -7,6 +7,14 @@ verify_by: "luma-foreman apply has run, .luma/bundles/ carries the backlog bundl
 work_item: '[[work-items/FORE-0001-test-backlog-in-a-new-project]]'
 stage: draft
 created: {by: 'agent:claude-opus-5/luma-backlog', at: '2026-09-24T14:16:27Z'}
+verified:
+  - as: proven
+    at: "2026-09-24T17:21:31Z"
+    by: agent:claude-opus-5/luma-backlog
+evidence:
+  - at: "2026-09-24T17:21:31Z"
+    by: agent:claude-opus-5/luma-backlog
+    what: 'All four checks in verify_by read. (1) apply has run: CLAUDE.md carries the luma:begin generated marker, and .claude/skills/ holds generated adapters each stamped ''luma-foreman:generated from lumastack/luma-catalog/backlog''. (2) .luma/bundles/lumastack/luma-catalog/backlog/ is present with its BUNDLE.md, INDEX.md, policy/, procedure/, templates/ and type_definitions/. (3) Seven procedures appear as skills: backlog-capture, -journal, -refine, -rundown, -show, -transition, -verify. (4) Demonstrated live rather than asserted: this verification was reached by invoking the backlog-verify skill, which routed to the vendored procedure and its required policy reading, and this entry follows that procedure''s evidence rules. The adapter carries no copy of the procedure, so the route cannot drift.'
 ---
 
 # Agents in this project know how to use the backlog

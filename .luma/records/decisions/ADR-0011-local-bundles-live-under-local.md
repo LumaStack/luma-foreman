@@ -3,7 +3,7 @@ type: decision
 type_version: "0.0.1"
 title: Local bundles live under local/
 decided: 2026-09-02
-lifecycle: draft
+stage: draft
 ---
 
 # ADR-0011: Local bundles live under local/
