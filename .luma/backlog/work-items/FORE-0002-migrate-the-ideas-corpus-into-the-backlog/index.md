@@ -20,3 +20,12 @@ modified: {by: 'agent:claude-opus-5/luma-backlog', at: '2026-09-24T17:34:54Z'}
 ## Out of scope
 
 ## Constraints
+
+## Related work
+
+- The reusable procedure this produced: [`plans/migrate-ideas-into-the-backlog`](../../plans/migrate-ideas-into-the-backlog.md)
+  — written so another project with the same problem can repeat it without
+  rediscovering the refusals and silent failures this run found.
+- [[work-items/FORE-0003-deprecate-backlog-ideas-and-learn-how-deprecation-goes]]
+  — retires the bundle this corpus belonged to, which only makes sense once the
+  corpus is empty.

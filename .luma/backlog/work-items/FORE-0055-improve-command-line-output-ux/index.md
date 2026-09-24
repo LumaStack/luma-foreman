@@ -1,0 +1,136 @@
+---
+type: work-item
+key: FORE-0055
+title: Improve command-line output UX
+workflow_status: captured
+rank: 010.0540.000
+kind: idea
+stage: draft
+created: {by: 'human:luma-founder', at: '2026-09-03T00:00:00'}
+description: 'test@test:~/Workspace/code/lumastack/luma-backlog% luma-foreman usage: luma-foreman <command> [args] Commands: init stand `.luma/` up in a repository that has none get adopt a bundle from a catalog into this project apply write what this project adopted into what a harness reads inspect check a project against the baseline and report shortfalls'
+modified: {by: 'agent:claude-opus-5/luma-backlog', at: '2026-09-24T19:43:49Z'}
+---
+
+# Improve command-line output UX
+
+## Output from real world use for prototype v0.1.0
+
+test@test:~/Workspace/code/lumastack/luma-backlog% luma-foreman
+usage: luma-foreman <command> [args]
+
+Commands:
+  init                stand `.luma/` up in a repository that has none
+  get                 adopt a bundle from a catalog into this project
+  apply               write what this project adopted into what a harness reads
+  inspect             check a project against the baseline and report shortfalls
+
+  bundle              bundles this project holds — list, show, outdated
+  catalog             where bundles come from — list, show
+  agent-permissions   what an agent is allowed to do in this repository
+
+Run `luma-foreman <command> --help` for a command's own options.
+test@test:~/Workspace/code/lumastack/luma-backlog% luma-foreman init
+luma-foreman init:
+  .luma/PROJECT.md                created — every TODO in it is yours to answer
+  .luma/config/luma-foreman.toml  created
+
+  Nothing to gitignore — .luma/ is committed in full. Anything here
+  that should not be is machine-local and belongs in ~/.config/luma/.
+
+Next steps:
+  luma-foreman catalog show <catalog>              what a catalog publishes
+  luma-foreman get luma/<bundle> --from <catalog>  take one
+test@test:~/Workspace/code/lumastack/luma-backlog% luma-foreman catalog
+no catalogs — nothing registered, and nothing adopted.
+
+  luma-foreman catalog add <url>              register one
+  luma-foreman get <bundle> --from <catalog>  or take without registering
+test@test:~/Workspace/code/lumastack/luma-backlog% luma-foreman catalog list
+no catalogs — nothing registered, and nothing adopted.
+
+  luma-foreman catalog add <url>              register one
+  luma-foreman get <bundle> --from <catalog>  or take without registering
+test@test:~/Workspace/code/lumastack/luma-backlog% luma-foreman catalog add https://github.com/LumaStack/luma-catalog
+lumastack/luma-catalog: registered
+  source  https://github.com/LumaStack/luma-catalog
+  in      .luma/config/luma-foreman.toml
+
+  Commit the config — the registry is how a teammate's `get` resolves too.
+  Then: luma-foreman get lumastack/luma-catalog/<bundle>
+test@test:~/Workspace/code/lumastack/luma-backlog% luma-foreman catalog list                                         
+  lumastack/luma-catalog   (registered)
+    0 of 24 bundles taken
+    https://github.com/LumaStack/luma-catalog
+
+1 catalog — registered in .luma/config/luma-foreman.toml, or remembered by receipts.
+
+  luma-foreman catalog show <name>    what one publishes
+test@test:~/Workspace/code/lumastack/luma-backlog% 
+
+test@test:~/Workspace/code/lumastack/luma-backlog% luma-foreman catalog add https://github.com/LumaStack/luma-catalog
+lumastack/luma-catalog is already registered — nothing to do
+test@test:~/Workspace/code/lumastack/luma-backlog% luma-foreman get LumaStack/luma-catalog/luma-types                
+luma-foreman get: no catalog — luma-foreman catalog add <url> to register one, or pass --from <path-or-url>
+test@test:~/Workspace/code/lumastack/luma-backlog% luma-foreman get lumastack/luma-catalog/luma-types
+lumastack/luma-catalog/luma-types: adopted 0.15.1
+  from     lumastack/luma-catalog — https://github.com/LumaStack/luma-catalog
+  commit   ce13c21e65900542c1570a6afdf903d8ac4fbf73
+  into     .luma/bundles/lumastack/luma-catalog/luma-types/  (7 files)
+  checksum sha256:b95583c57b3cf0c88b00bc034a668ed5f1a7e9811553cf7eeda8f87e72dfa281
+
+  Commit the copy — an adopted bundle lives in the repository.
+  Then: luma-foreman apply
+test@test:~/Workspace/code/lumastack/luma-backlog% luma-foreman get lumastack/luma-catalog/github-release
+lumastack/luma-catalog/github-release: adopted 0.8.1
+  from     lumastack/luma-catalog — https://github.com/LumaStack/luma-catalog
+  commit   ce13c21e65900542c1570a6afdf903d8ac4fbf73
+  into     .luma/bundles/lumastack/luma-catalog/github-release/  (7 files)
+  checksum sha256:13f29e951ce8b60896a23541afaad8b363563bb47d27bf860b524876e9566c7d
+
+  Commit the copy — an adopted bundle lives in the repository.
+  Then: luma-foreman apply
+test@test:~/Workspace/code/lumastack/luma-backlog% luma-foreman apply                                    
+12 bundle(s) written out
+  skills     28 procedure(s) + 2 navigation -> .claude/skills/
+  index      1 project index -> .luma/bundles/INDEX.md; each bundle ships its own
+  eager      9 required reading when their bundle is in play
+  offered    11 named, opened when they match
+  standby    31 reachable, not announced
+  notice   lumastack/luma-catalog/github-release policy/changelog: nothing in this project matches 'CHANGELOG.md' — the rule can never fire
+## What has shipped, and what is left
+
+**The menus are done.** The top level and all three nouns — `bundle`, `catalog`,
+`agent-permissions` — are sectioned after `gh`: a tagline, `USAGE`, grouped
+commands ordered by how often they are reached, `FLAGS`, `EXAMPLES`, `NOTES`,
+`EXIT CODES`. The transcripts above are what they looked like before.
+
+`bundle list` is done separately — a mark per row, the posture where it is not
+the default, a skill count.
+
+**Four verbs still print the old shape**: `get`, `apply`, `inspect` and `init`.
+Only `inspect`'s opening line changed, because that is where a phantom noun
+lived. So the tool now reads as two designs depending on which command somebody
+happens to run, which is worse than being uniformly plain.
+
+**`NOTES` earns its place on one test, and it is the test worth keeping**: a
+line stays if a reader can act on it. *`index` refuses a vendored copy* changes
+what somebody types. *Check a project against the baseline* changed nothing, and
+named a concept that existed nowhere in the repository — it was deleted rather
+than reworded.
+
+**No subcommand answers `--help`.** `luma-foreman bundle list --help` prints the
+whole `bundle` menu. The top-level help promised `<command> <subcommand> --help`
+until it was corrected to promise only what exists. Whether per-subcommand help
+is worth building, or whether a noun's menu is the right granularity, is open —
+`bundle` has nine verbs and some of them take arguments worth explaining.
+
+**Colour is the lever nothing has pulled.** There is no ANSI anywhere in
+foreman. Dimming versions and counts so names carry a row would do more than any
+further layout change. CLIG wants it gated on a terminal with `NO_COLOR`
+honoured, which is the same mechanism
+[[work-items/FORE-0027-output-should-know-whether-a-person-is-reading-it]] needs — so that idea is
+probably the prerequisite rather than a sibling.
+
+## Related work
+
+- Born from the idea it replaces: [`improve-command-output-ux`](../../ideas/improve-command-output-ux.md)
