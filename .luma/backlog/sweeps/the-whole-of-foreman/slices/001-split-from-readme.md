@@ -9,7 +9,7 @@ covers:
   - docs/architecture.md
   - docs/inspect.md
 contributors:
-  - human:benlinton
+  - human:luma-founder
   - agent:claude-opus-5
 ---
 

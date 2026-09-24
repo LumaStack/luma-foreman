@@ -8,7 +8,7 @@ covers:
   - .luma/PROJECT.md
   - docs/scope.md
 contributors:
-  - human:benlinton
+  - human:luma-founder
   - agent:claude-opus-5
 ---
 
@@ -39,7 +39,7 @@ have list syntax and free-text values, so they look structured and nothing can
 validate, match against, or enforce them. Recorded in the journal rather than
 routed, because the shape is a direction and not yet a task.
 
-**The row is `reviewed_by: human:benlinton` with `approved_by` empty**, which is
+**The row is `reviewed_by: human:luma-founder` with `approved_by` empty**, which is
 the state that drove `review-sweeps` 0.18.0. Under `approval: recommended` that
 is a known compromise, not a shortfall.
 

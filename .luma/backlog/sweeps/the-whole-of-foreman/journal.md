@@ -209,7 +209,7 @@ on four specific answers. `review-sweeps` 0.20.0 stops this happening again.
 
 **`CLAUDE.md` was the fifth and the reader took it back** — *"CLAUDE is
 approved, it needs work but good enough for MVP."* A sign-off with a finding
-attached, which is why the row reads `approved_by: human:benlinton` with
+attached, which is why the row reads `approved_by: human:luma-founder` with
 `outcome: findings` rather than `clean`.
 
 **What the work is was not specified**, and that is recorded rather than

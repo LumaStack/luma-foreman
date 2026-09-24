@@ -3,7 +3,7 @@ type: luma/idea
 type_version: "0.1.0"
 title: bundle index can regenerate a vendored copy adopted from a registered catalog
 created: { by: agent:claude-opus-5, at: 2026-09-06T00:00:00Z }
-contributors: [agent:claude-opus-5, human:benlinton]
+contributors: [agent:claude-opus-5, human:luma-founder]
 horizon: next
 scope: project
 stage: draft

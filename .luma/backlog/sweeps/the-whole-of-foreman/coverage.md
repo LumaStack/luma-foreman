@@ -47,21 +47,21 @@ answers**, and the journal says which and why.
 
 | cluster | file | read by | reviewed_by | approved_by | outcome | slice |
 | --- | --- | --- | --- | --- | --- | --- |
-| what it says it is | `README.md` | both | human:benlinton | human:benlinton | clean | 001 |
-| what it says it is | `CLAUDE.md` | both | human:benlinton | human:benlinton | findings | 002 |
-| what it says it is | `.luma/PROJECT.md` | both | human:benlinton |  | findings | 002 |
-| what it says it is | ~~`docs/scope.md`~~ | both | human:benlinton |  | findings | 002 — scattered into eleven files, then deleted |
-| what it says it is | `docs/getting-started.md` | both | human:benlinton | human:benlinton | findings | 001 |
-| what it says it is | `docs/commands.md` | both | human:benlinton | human:benlinton | findings | 001 |
+| what it says it is | `README.md` | both | human:luma-founder | human:luma-founder | clean | 001 |
+| what it says it is | `CLAUDE.md` | both | human:luma-founder | human:luma-founder | findings | 002 |
+| what it says it is | `.luma/PROJECT.md` | both | human:luma-founder |  | findings | 002 |
+| what it says it is | ~~`docs/scope.md`~~ | both | human:luma-founder |  | findings | 002 — scattered into eleven files, then deleted |
+| what it says it is | `docs/getting-started.md` | both | human:luma-founder | human:luma-founder | findings | 001 |
+| what it says it is | `docs/commands.md` | both | human:luma-founder | human:luma-founder | findings | 001 |
 | — | ~~`docs/inspect.md`~~ | — | | | | 001 — collapsed into `commands.md` |
-| what it says it is | `docs/architecture.md` | both | human:benlinton | human:benlinton | findings | 001 |
-| standards and permissions | ~~`docs/standards.md`~~ | both | human:benlinton |  | findings | 003 — dropped, superseded by the adopted `luma-config` bundle |
+| what it says it is | `docs/architecture.md` | both | human:luma-founder | human:luma-founder | findings | 001 |
+| standards and permissions | ~~`docs/standards.md`~~ | both | human:luma-founder |  | findings | 003 — dropped, superseded by the adopted `luma-config` bundle |
 | standards and permissions | `docs/claude-agent-permissions.md` | — |  |  |  | skipped — agent permissions are half-baked, and settling that is outside MVP |
 | standards and permissions | `docs/examples/README.md` | — |  |  |  | skipped — reader excluded `docs/examples/` from this sweep |
 | standards and permissions | `docs/examples/american-spelling.md` | — |  |  |  | skipped — reader excluded `docs/examples/` from this sweep |
 | standards and permissions | `docs/examples/design-first-working-mode.md` | — |  |  |  | skipped — reader excluded `docs/examples/` from this sweep |
 | standards and permissions | `docs/examples/no-competitor-names-in-committed-docs.md` | — |  |  |  | skipped — reader excluded `docs/examples/` from this sweep |
-| decisions | `.luma/records/decisions/ADR-0001-apply-writes-adapters-not-copies.md` | both | human:benlinton | human:benlinton | findings | 005 |
+| decisions | `.luma/records/decisions/ADR-0001-apply-writes-adapters-not-copies.md` | both | human:luma-founder | human:luma-founder | findings | 005 |
 | decisions | `.luma/records/decisions/ADR-0002-mvp-bundle-distribution.md` | both |  |  |  |  |
 | decisions | `.luma/records/decisions/ADR-0003-cli-speaks-convention-not-metaphor.md` | both |  |  |  |  |
 | decisions | `.luma/records/decisions/ADR-0004-refit-is-removed-not-renamed.md` | both |  |  |  |  |
