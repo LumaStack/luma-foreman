@@ -83,7 +83,7 @@ believing it would have recorded something false.
 
 ## Related work
 
-- The reusable procedure this produced: [`plans/migrate-ideas-into-the-backlog`](../../plans/migrate-ideas-into-the-backlog.md)
+- The reusable procedure this produced: [`plans/migrate-ideas-into-the-backlog`](plans/migrate-ideas-into-the-backlog.md)
   — written so another project with the same problem can repeat it without
   rediscovering the refusals and silent failures this run found.
 - [[work-items/FORE-0003-deprecate-backlog-ideas-and-learn-how-deprecation-goes]]
