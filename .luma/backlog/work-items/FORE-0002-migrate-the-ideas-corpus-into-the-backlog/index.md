@@ -2,13 +2,14 @@
 type: work-item
 key: FORE-0002
 title: Migrate the ideas corpus into the backlog
-workflow_status: captured
-rank: 010.0010.000
+workflow_status: closed
+rank: 070.0050.000
 kind: change
 stage: draft
 created: {by: 'human:luma-founder', at: '2026-09-24T17:33:58Z'}
 description: 'The ideas in .luma/backlog/ideas/ sit outside the backlog corpus — isRecordPath excludes that directory, so no backlog command sees them. Move them in. The backlog''s kind: idea is the destination shape, but some are plainly defects rather than ideas, so each needs classifying rather than copying; a few are already archived as done and should not move at all. No existing procedure or skill does this properly — migrate-ideas covers splitting a single IDEAS.md into files, which this repository did long ago, and tend-ideas maintains the separate corpus rather than emptying it. Do not bend either into shape. Open and deliberately unsettled: whether every idea becomes a work item, or only the ones ready to be judged. If all of them move, backlog-ideas has no reason to stay adopted and this runs into no-way-to-un-adopt; if only some graduate, the corpus stays and this becomes recurring tending rather than a one-off.'
-modified: {by: 'agent:claude-opus-5/luma-backlog', at: '2026-09-24T17:34:54Z'}
+modified: {by: 'agent:claude-opus-5/luma-backlog', at: '2026-09-24T22:33:09Z'}
+closed: {on: 2026-09-24, as: completed, by: 'agent:claude-opus-5/luma-backlog', reason: 'The corpus is in the backlog: every idea has a work item, provenance survived, no cross-reference was orphaned, each record points back at its origin, and the plan exists so another project need not rediscover it. The idea files stay until somebody has used the back-links to review; removing them is a separate decision.'}
 ---
 
 # Migrate the ideas corpus into the backlog
@@ -82,7 +83,7 @@ believing it would have recorded something false.
 
 ## Related work
 
-- The reusable procedure this produced: [`plans/migrate-ideas-into-the-backlog`](../../plans/migrate-ideas-into-the-backlog.md)
+- The reusable procedure this produced: [`plans/migrate-ideas-into-the-backlog`](plans/migrate-ideas-into-the-backlog.md)
   — written so another project with the same problem can repeat it without
   rediscovering the refusals and silent failures this run found.
 - [[work-items/FORE-0003-deprecate-backlog-ideas-and-learn-how-deprecation-goes]]
