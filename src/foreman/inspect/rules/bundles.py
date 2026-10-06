@@ -62,6 +62,27 @@ RESERVED_BY_LOWER = {"bundle.md": "BUNDLE.md", "catalog.md": "CATALOG.md",
 # bundle, and a finding nobody can act on is what teaches people to skim.
 EXEMPT_DIRS = ("templates", "_types", "type_definitions")
 
+# What each reserved name *is*, so a lowercase one can be told from a Document
+# that merely shares its stem. The question the miscase check actually wants to
+# ask is not "where does this sit" but "what does this claim to be" — a path
+# exemption has to be extended for every tool that ever writes one of these
+# names, and is wrong the moment a layout changes.
+#
+# `index.md` and `log.md` are `None` because the real ones declare no type at
+# all: an INDEX.md is derived navigation and a LOG.md is an event history, and
+# neither is a Document. So an `index.md` carrying `type: work-item` is a record
+# that owns its directory, not a container index somebody lowercased — which is
+# what `luma-backlog` writes for every work item, and what made this rule report
+# every backlog corpus in the estate.
+#
+# The manifests are named rather than left `None` for the opposite reason: a
+# miscased `bundle.md` still says `type: bundle`, and that is precisely the
+# defect this check exists to catch. Exempting anything with a type would
+# switch it off.
+OWN_TYPE_BY_LOWER = {"bundle.md": "bundle", "catalog.md": "catalog",
+                     "project.md": "project",
+                     "index.md": None, "log.md": None}
+
 # A type's folder is contract plus record — `CHANGELOG.md`, `migrations/`, and
 # prior versions kept beside `DEFINITION.md` (LKF v0.0.21, One folder per
 # type). Record is consulted on demand like the contract itself: nothing links
@@ -420,8 +441,25 @@ def _miscased(repo: Path) -> list[str]:
             continue
         if any(part in EXEMPT_DIRS for part in rel.split("/")[:-1]):
             continue
+        if _declares_another_type(repo / rel, name.lower()):
+            continue
         found.append(f"{rel} -> {RESERVED_BY_LOWER[name.lower()]}")
     return sorted(found)
+
+
+def _declares_another_type(path: Path, lower: str) -> bool:
+    """Whether this file claims to be something other than the name it shares.
+
+    Compared on the last segment of `type`, so a namespaced spelling counts the
+    same as a bare one — `luma/catalog` and `catalog` are the same claim.
+    """
+    front = lkf.read(path)
+    if front is None:
+        return False  # no frontmatter, so it claims nothing
+    declared = front.get("type", "").strip()
+    if not declared:
+        return False
+    return declared.rsplit("/", 1)[-1] != OWN_TYPE_BY_LOWER.get(lower)
 
 
 def check(repo: Path) -> Result:

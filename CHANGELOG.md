@@ -9,6 +9,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com); versions follow
 
 ## [Unreleased]
 
+### Fixed
+
+- **The reserved-name case check asks what a file claims to be, not where it sits.** A lowercase `index.md` declaring `type: work-item` is a record that owns its directory, not a container index somebody miscased — and `luma-backlog` writes one per work item, so `inspect` reported every backlog corpus in the estate: 113 findings against `luma-backlog`, 64 against **this repository**, which meant `tests/run` was failing its own self-inspection step, and 15 against the first catalog branch to run continuous integration over a migrated corpus. Exit is 1 on any finding at any severity, so a `MEDIUM` nobody could act on was a red gate.
+  **Compared on the last segment of `type`**, so `luma/catalog` and `catalog` are the same claim and a namespaced manifest stays recognised. The manifests are named individually rather than exempted wholesale, because a miscased `bundle.md` still says `type: bundle` and that is the defect this check exists for — exempting anything carrying a type would have switched it off. `index.md` and `log.md` are the two with no type of their own, since a real INDEX.md is derived navigation and a LOG.md is an event history; neither is a Document, so declaring anything at all is enough to tell them apart.
+  *A path exemption was the obvious fix and the wrong one*: it needs extending for every tool that ever writes one of these names, and it is wrong the moment a layout changes. *The negative case is still reported* — an `index.md` with no frontmatter is the invisible-navigation case the check was written for, and declaring nothing is not declaring something else.
+
 ## [0.2.0] - 2026-09-06
 
 ### Changed
