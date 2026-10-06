@@ -222,6 +222,34 @@ run 'reserved name in the wrong case' 1 "$d"
 has 'wrong case'
 has 'c/bundle.md'
 
+# A lowercase reserved name that declares a different type is a Document that
+# happens to share the stem, not a manifest somebody miscased. `luma-backlog`
+# writes one per work item — `index.md` carrying `type: work-item` — and every
+# backlog corpus in the estate was reported until the check learned to ask what
+# a file claims to be rather than where it sits.
+d=$T/typedindex; mkdir -p "$d/work-items/BACK-0001-a" && git -C "$d" init -q 2>/dev/null
+printf -- '---\ntype: work-item\ntitle: A\n---\nx\n' > "$d/work-items/BACK-0001-a/index.md"
+run 'a typed index.md is a record, not a miscased index' 0 "$d"
+lacks 'wrong case'
+
+# The negative half, and the one that matters: an `index.md` with no frontmatter
+# is the invisible-navigation case this check exists for. Declaring nothing is
+# not declaring something else.
+d=$T/untypedindex; mkdir -p "$d/b" && git -C "$d" init -q 2>/dev/null
+printf -- '---\ntype: bundle\nversion: 0.1.0\n---\nx\n' > "$d/b/BUNDLE.md"
+printf -- 'navigation\n' > "$d/b/index.md"
+run 'an untyped index.md is still reported' 1 "$d"
+has 'wrong case'
+has 'b/index.md'
+
+# Matched on the last segment of `type`, so a namespaced manifest is recognised
+# as the thing it is and stays reported. `luma/catalog` is the spelling in use.
+d=$T/nsmanifest; mkdir -p "$d/c" && git -C "$d" init -q 2>/dev/null
+printf -- '---\ntype: luma/catalog\n---\nx\n' > "$d/c/catalog.md"
+run 'a namespaced miscased manifest is still reported' 1 "$d"
+has 'wrong case'
+has 'c/catalog.md'
+
 # Not every lowercase match is a mistake, and the rule itself says which. A
 # template is a pattern for making a bundle, and a Type Definition describes
 # what one is — neither is the thing its directory is, so both are correct.
